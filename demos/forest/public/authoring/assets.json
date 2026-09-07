@@ -60,69 +60,423 @@
     },
     "character.borin": {
       "id": "character.borin",
-      "kind": "image",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background.",
+      "kind": "spritesheet",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 192,
+        "height": 96
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/sheet.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 8,
+        "rows": 3,
+        "frameCount": 24
+      },
+      "linkedAnimationAssets": {
+        "idle-front": {
+          "label": "Idle · front",
+          "assetId": "character.borin.idle-front"
+        },
+        "idle-back": {
+          "label": "Idle · back",
+          "assetId": "character.borin.idle-back"
+        },
+        "idle-left": {
+          "label": "Idle · left",
+          "assetId": "character.borin.idle-left"
+        },
+        "walk-front": {
+          "label": "Walk · front",
+          "assetId": "character.borin.walk-front"
+        },
+        "walk-back": {
+          "label": "Walk · back",
+          "assetId": "character.borin.walk-back"
+        },
+        "walk-left": {
+          "label": "Walk · left",
+          "assetId": "character.borin.walk-left"
+        },
+        "speak-front": {
+          "label": "Speak · front",
+          "assetId": "character.borin.speak-front"
+        },
+        "speak-back": {
+          "label": "Speak · back",
+          "assetId": "character.borin.speak-back"
+        },
+        "speak-left": {
+          "label": "Speak · left",
+          "assetId": "character.borin.speak-left"
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin"
+      ]
     },
     "character.elder": {
       "id": "character.elder",
-      "kind": "image",
-      "prompt": "A small pixel-art dwarf named elder, full body, transparent background.",
+      "kind": "spritesheet",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 192,
+        "height": 96
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/sheet.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 8,
+        "rows": 3,
+        "frameCount": 24
+      },
+      "linkedAnimationAssets": {
+        "idle-front": {
+          "label": "Idle · front",
+          "assetId": "character.elder.idle-front"
+        },
+        "idle-back": {
+          "label": "Idle · back",
+          "assetId": "character.elder.idle-back"
+        },
+        "idle-left": {
+          "label": "Idle · left",
+          "assetId": "character.elder.idle-left"
+        },
+        "walk-front": {
+          "label": "Walk · front",
+          "assetId": "character.elder.walk-front"
+        },
+        "walk-back": {
+          "label": "Walk · back",
+          "assetId": "character.elder.walk-back"
+        },
+        "walk-left": {
+          "label": "Walk · left",
+          "assetId": "character.elder.walk-left"
+        },
+        "speak-front": {
+          "label": "Speak · front",
+          "assetId": "character.elder.speak-front"
+        },
+        "speak-back": {
+          "label": "Speak · back",
+          "assetId": "character.elder.speak-back"
+        },
+        "speak-left": {
+          "label": "Speak · left",
+          "assetId": "character.elder.speak-left"
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder"
+      ]
     },
     "character.innkeeper": {
       "id": "character.innkeeper",
-      "kind": "image",
-      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background.",
+      "kind": "spritesheet",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 192,
+        "height": 96
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/sheet.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 8,
+        "rows": 3,
+        "frameCount": 24
+      },
+      "linkedAnimationAssets": {
+        "idle-front": {
+          "label": "Idle · front",
+          "assetId": "character.innkeeper.idle-front"
+        },
+        "idle-back": {
+          "label": "Idle · back",
+          "assetId": "character.innkeeper.idle-back"
+        },
+        "idle-left": {
+          "label": "Idle · left",
+          "assetId": "character.innkeeper.idle-left"
+        },
+        "walk-front": {
+          "label": "Walk · front",
+          "assetId": "character.innkeeper.walk-front"
+        },
+        "walk-back": {
+          "label": "Walk · back",
+          "assetId": "character.innkeeper.walk-back"
+        },
+        "walk-left": {
+          "label": "Walk · left",
+          "assetId": "character.innkeeper.walk-left"
+        },
+        "speak-front": {
+          "label": "Speak · front",
+          "assetId": "character.innkeeper.speak-front"
+        },
+        "speak-back": {
+          "label": "Speak · back",
+          "assetId": "character.innkeeper.speak-back"
+        },
+        "speak-left": {
+          "label": "Speak · left",
+          "assetId": "character.innkeeper.speak-left"
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper"
+      ]
     },
     "character.miner": {
       "id": "character.miner",
-      "kind": "image",
-      "prompt": "A small pixel-art dwarf named miner, full body, transparent background.",
+      "kind": "spritesheet",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 192,
+        "height": 96
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/sheet.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 8,
+        "rows": 3,
+        "frameCount": 24
+      },
+      "linkedAnimationAssets": {
+        "idle-front": {
+          "label": "Idle · front",
+          "assetId": "character.miner.idle-front"
+        },
+        "idle-back": {
+          "label": "Idle · back",
+          "assetId": "character.miner.idle-back"
+        },
+        "idle-left": {
+          "label": "Idle · left",
+          "assetId": "character.miner.idle-left"
+        },
+        "walk-front": {
+          "label": "Walk · front",
+          "assetId": "character.miner.walk-front"
+        },
+        "walk-back": {
+          "label": "Walk · back",
+          "assetId": "character.miner.walk-back"
+        },
+        "walk-left": {
+          "label": "Walk · left",
+          "assetId": "character.miner.walk-left"
+        },
+        "speak-front": {
+          "label": "Speak · front",
+          "assetId": "character.miner.speak-front"
+        },
+        "speak-back": {
+          "label": "Speak · back",
+          "assetId": "character.miner.speak-back"
+        },
+        "speak-left": {
+          "label": "Speak · left",
+          "assetId": "character.miner.speak-left"
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner"
+      ]
     },
     "character.guard": {
       "id": "character.guard",
-      "kind": "image",
-      "prompt": "A small pixel-art orc guard, full body, transparent background.",
+      "kind": "spritesheet",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 192,
+        "height": 96
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/sheet.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 8,
+        "rows": 3,
+        "frameCount": 24
+      },
+      "linkedAnimationAssets": {
+        "idle-front": {
+          "label": "Idle · front",
+          "assetId": "character.guard.idle-front"
+        },
+        "idle-back": {
+          "label": "Idle · back",
+          "assetId": "character.guard.idle-back"
+        },
+        "idle-left": {
+          "label": "Idle · left",
+          "assetId": "character.guard.idle-left"
+        },
+        "walk-front": {
+          "label": "Walk · front",
+          "assetId": "character.guard.walk-front"
+        },
+        "walk-back": {
+          "label": "Walk · back",
+          "assetId": "character.guard.walk-back"
+        },
+        "walk-left": {
+          "label": "Walk · left",
+          "assetId": "character.guard.walk-left"
+        },
+        "speak-front": {
+          "label": "Speak · front",
+          "assetId": "character.guard.speak-front"
+        },
+        "speak-back": {
+          "label": "Speak · back",
+          "assetId": "character.guard.speak-back"
+        },
+        "speak-left": {
+          "label": "Speak · left",
+          "assetId": "character.guard.speak-left"
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard"
+      ]
     },
     "character.king": {
       "id": "character.king",
-      "kind": "image",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background.",
+      "kind": "spritesheet",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 192,
+        "height": 96
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/sheet.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 8,
+        "rows": 3,
+        "frameCount": 24
+      },
+      "linkedAnimationAssets": {
+        "idle-front": {
+          "label": "Idle · front",
+          "assetId": "character.king.idle-front"
+        },
+        "idle-back": {
+          "label": "Idle · back",
+          "assetId": "character.king.idle-back"
+        },
+        "idle-left": {
+          "label": "Idle · left",
+          "assetId": "character.king.idle-left"
+        },
+        "walk-front": {
+          "label": "Walk · front",
+          "assetId": "character.king.walk-front"
+        },
+        "walk-back": {
+          "label": "Walk · back",
+          "assetId": "character.king.walk-back"
+        },
+        "walk-left": {
+          "label": "Walk · left",
+          "assetId": "character.king.walk-left"
+        },
+        "speak-front": {
+          "label": "Speak · front",
+          "assetId": "character.king.speak-front"
+        },
+        "speak-back": {
+          "label": "Speak · back",
+          "assetId": "character.king.speak-back"
+        },
+        "speak-left": {
+          "label": "Speak · left",
+          "assetId": "character.king.speak-left"
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king"
+      ]
     },
     "object.coin": {
       "id": "object.coin",
@@ -367,6 +721,2472 @@
       },
       "activeVersion": "",
       "versions": {}
+    },
+    "character.borin.idle-front": {
+      "id": "character.borin.idle-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.borin.idle-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/idle-front.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "idle",
+        "front"
+      ]
+    },
+    "character.borin.idle-back": {
+      "id": "character.borin.idle-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.borin.idle-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/idle-back.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "idle",
+        "back"
+      ]
+    },
+    "character.borin.idle-left": {
+      "id": "character.borin.idle-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.borin.idle-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/idle-left.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "idle",
+        "left"
+      ]
+    },
+    "character.borin.walk-front": {
+      "id": "character.borin.walk-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.borin.walk-front",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/walk-front.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "walk",
+        "front"
+      ]
+    },
+    "character.borin.walk-back": {
+      "id": "character.borin.walk-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.borin.walk-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/walk-back.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "walk",
+        "back"
+      ]
+    },
+    "character.borin.walk-left": {
+      "id": "character.borin.walk-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.borin.walk-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/walk-left.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "walk",
+        "left"
+      ]
+    },
+    "character.borin.speak-front": {
+      "id": "character.borin.speak-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.borin.speak-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/speak-front.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "speak",
+        "front"
+      ]
+    },
+    "character.borin.speak-back": {
+      "id": "character.borin.speak-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.borin.speak-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/speak-back.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "speak",
+        "back"
+      ]
+    },
+    "character.borin.speak-left": {
+      "id": "character.borin.speak-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.borin.speak-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/borin/speak-left.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "speak",
+        "left"
+      ]
+    },
+    "character.elder.idle-front": {
+      "id": "character.elder.idle-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.elder.idle-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/idle-front.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "idle",
+        "front"
+      ]
+    },
+    "character.elder.idle-back": {
+      "id": "character.elder.idle-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.elder.idle-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/idle-back.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "idle",
+        "back"
+      ]
+    },
+    "character.elder.idle-left": {
+      "id": "character.elder.idle-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.elder.idle-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/idle-left.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "idle",
+        "left"
+      ]
+    },
+    "character.elder.walk-front": {
+      "id": "character.elder.walk-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.elder.walk-front",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/walk-front.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "walk",
+        "front"
+      ]
+    },
+    "character.elder.walk-back": {
+      "id": "character.elder.walk-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.elder.walk-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/walk-back.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "walk",
+        "back"
+      ]
+    },
+    "character.elder.walk-left": {
+      "id": "character.elder.walk-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.elder.walk-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/walk-left.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "walk",
+        "left"
+      ]
+    },
+    "character.elder.speak-front": {
+      "id": "character.elder.speak-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.elder.speak-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/speak-front.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "speak",
+        "front"
+      ]
+    },
+    "character.elder.speak-back": {
+      "id": "character.elder.speak-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.elder.speak-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/speak-back.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "speak",
+        "back"
+      ]
+    },
+    "character.elder.speak-left": {
+      "id": "character.elder.speak-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.elder.speak-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/elder/speak-left.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "elder",
+        "speak",
+        "left"
+      ]
+    },
+    "character.innkeeper.idle-front": {
+      "id": "character.innkeeper.idle-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.idle-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/idle-front.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "idle",
+        "front"
+      ]
+    },
+    "character.innkeeper.idle-back": {
+      "id": "character.innkeeper.idle-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.idle-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/idle-back.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "idle",
+        "back"
+      ]
+    },
+    "character.innkeeper.idle-left": {
+      "id": "character.innkeeper.idle-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.idle-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/idle-left.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "idle",
+        "left"
+      ]
+    },
+    "character.innkeeper.walk-front": {
+      "id": "character.innkeeper.walk-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.walk-front",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/walk-front.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "walk",
+        "front"
+      ]
+    },
+    "character.innkeeper.walk-back": {
+      "id": "character.innkeeper.walk-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.walk-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/walk-back.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "walk",
+        "back"
+      ]
+    },
+    "character.innkeeper.walk-left": {
+      "id": "character.innkeeper.walk-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.walk-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/walk-left.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "walk",
+        "left"
+      ]
+    },
+    "character.innkeeper.speak-front": {
+      "id": "character.innkeeper.speak-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.speak-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/speak-front.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "speak",
+        "front"
+      ]
+    },
+    "character.innkeeper.speak-back": {
+      "id": "character.innkeeper.speak-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.speak-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/speak-back.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "speak",
+        "back"
+      ]
+    },
+    "character.innkeeper.speak-left": {
+      "id": "character.innkeeper.speak-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.innkeeper.speak-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/innkeeper/speak-left.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "innkeeper",
+        "speak",
+        "left"
+      ]
+    },
+    "character.miner.idle-front": {
+      "id": "character.miner.idle-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.miner.idle-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/idle-front.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "idle",
+        "front"
+      ]
+    },
+    "character.miner.idle-back": {
+      "id": "character.miner.idle-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.miner.idle-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/idle-back.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "idle",
+        "back"
+      ]
+    },
+    "character.miner.idle-left": {
+      "id": "character.miner.idle-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.miner.idle-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/idle-left.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "idle",
+        "left"
+      ]
+    },
+    "character.miner.walk-front": {
+      "id": "character.miner.walk-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.miner.walk-front",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/walk-front.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "walk",
+        "front"
+      ]
+    },
+    "character.miner.walk-back": {
+      "id": "character.miner.walk-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.miner.walk-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/walk-back.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "walk",
+        "back"
+      ]
+    },
+    "character.miner.walk-left": {
+      "id": "character.miner.walk-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.miner.walk-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/walk-left.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "walk",
+        "left"
+      ]
+    },
+    "character.miner.speak-front": {
+      "id": "character.miner.speak-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.miner.speak-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/speak-front.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "speak",
+        "front"
+      ]
+    },
+    "character.miner.speak-back": {
+      "id": "character.miner.speak-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.miner.speak-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/speak-back.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "speak",
+        "back"
+      ]
+    },
+    "character.miner.speak-left": {
+      "id": "character.miner.speak-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.miner.speak-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/miner/speak-left.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "miner",
+        "speak",
+        "left"
+      ]
+    },
+    "character.guard.idle-front": {
+      "id": "character.guard.idle-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.guard.idle-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/idle-front.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. idle, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "idle",
+        "front"
+      ]
+    },
+    "character.guard.idle-back": {
+      "id": "character.guard.idle-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.guard.idle-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/idle-back.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. idle, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "idle",
+        "back"
+      ]
+    },
+    "character.guard.idle-left": {
+      "id": "character.guard.idle-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.guard.idle-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/idle-left.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. idle, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "idle",
+        "left"
+      ]
+    },
+    "character.guard.walk-front": {
+      "id": "character.guard.walk-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.guard.walk-front",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/walk-front.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. walk, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "walk",
+        "front"
+      ]
+    },
+    "character.guard.walk-back": {
+      "id": "character.guard.walk-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.guard.walk-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/walk-back.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. walk, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "walk",
+        "back"
+      ]
+    },
+    "character.guard.walk-left": {
+      "id": "character.guard.walk-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.guard.walk-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/walk-left.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. walk, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "walk",
+        "left"
+      ]
+    },
+    "character.guard.speak-front": {
+      "id": "character.guard.speak-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.guard.speak-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/speak-front.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. speak, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "speak",
+        "front"
+      ]
+    },
+    "character.guard.speak-back": {
+      "id": "character.guard.speak-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.guard.speak-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/speak-back.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. speak, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "speak",
+        "back"
+      ]
+    },
+    "character.guard.speak-left": {
+      "id": "character.guard.speak-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.guard.speak-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/guard/speak-left.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. speak, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "speak",
+        "left"
+      ]
+    },
+    "character.king.idle-front": {
+      "id": "character.king.idle-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.king.idle-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/idle-front.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "idle",
+        "front"
+      ]
+    },
+    "character.king.idle-back": {
+      "id": "character.king.idle-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.king.idle-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/idle-back.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "idle",
+        "back"
+      ]
+    },
+    "character.king.idle-left": {
+      "id": "character.king.idle-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.king.idle-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/idle-left.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "idle",
+        "left"
+      ]
+    },
+    "character.king.walk-front": {
+      "id": "character.king.walk-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.king.walk-front",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/walk-front.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "walk",
+        "front"
+      ]
+    },
+    "character.king.walk-back": {
+      "id": "character.king.walk-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.king.walk-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/walk-back.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "walk",
+        "back"
+      ]
+    },
+    "character.king.walk-left": {
+      "id": "character.king.walk-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "dimensions": {
+        "width": 96,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 1,
+        "frameCount": 4
+      },
+      "animations": [
+        {
+          "key": "character.king.walk-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/walk-left.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "walk",
+        "left"
+      ]
+    },
+    "character.king.speak-front": {
+      "id": "character.king.speak-front",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.king.speak-front",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/speak-front.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak, front.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "speak",
+        "front"
+      ]
+    },
+    "character.king.speak-back": {
+      "id": "character.king.speak-back",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.king.speak-back",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/speak-back.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak, back.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "speak",
+        "back"
+      ]
+    },
+    "character.king.speak-left": {
+      "id": "character.king.speak-left",
+      "kind": "animation",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "dimensions": {
+        "width": 48,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 32,
+        "columns": 2,
+        "rows": 1,
+        "frameCount": 2
+      },
+      "animations": [
+        {
+          "key": "character.king.speak-left",
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/characters/king/speak-left.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak, left.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "king",
+        "speak",
+        "left"
+      ]
     }
   }
 }

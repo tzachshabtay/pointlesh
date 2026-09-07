@@ -1,6 +1,7 @@
 export * from './types.js';
 export * from './navigation.js';
 export * from './character.js';
+export * from './animations.js';
 export * from './save.js';
 export * from './behaviors.js';
 export * from './cutscene.js';

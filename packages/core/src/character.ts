@@ -38,6 +38,7 @@ export class CharacterController {
   private walkCompletion: ((completed: boolean) => void) | undefined;
   private speechCompletion: (() => void) | undefined;
   private directionalMovement?: { direction: Point; walkables: readonly Polygon[]; obstacles: readonly Polygon[] };
+  private animationDurations?: number[];
   private operation = 0;
 
   constructor(config: CharacterConfig) {
@@ -72,6 +73,18 @@ export class CharacterController {
   }
 
   setScale(scale: number): void { this.state.scale = positive(scale, 'scale'); }
+
+  /** Renderer-selected frame delays, including idle cycles. Null returns to config's uniform clock. */
+  setAnimationTiming(frameDurationsMs: readonly number[] | null): void {
+    if (frameDurationsMs === null) { this.animationDurations = undefined; return; }
+    if (!frameDurationsMs.length) throw new Error('Animation timing needs at least one frame');
+    for (const duration of frameDurationsMs) positive(duration, 'Animation frame duration');
+    this.animationDurations = [...frameDurationsMs];
+    this.config.frameCount = frameDurationsMs.length;
+    this.config.frameDurationMs = frameDurationsMs[0]!;
+    this.state.animationFrame %= frameDurationsMs.length;
+    this.state.animationElapsedMs %= frameDurationsMs[this.state.animationFrame]!;
+  }
 
   /** A new click walk interrupts the old activity. Completion means the resolved destination was reached. */
   walkTo(destination: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = [], options: WalkToOptions = {}): Promise<boolean> {
@@ -166,16 +179,41 @@ export class CharacterController {
 
   tick(dtMs: number): void {
     if (!Number.isFinite(dtMs) || dtMs < 0) throw new Error('tick requires a finite, nonnegative duration');
-    if (dtMs === 0 || (this.state.activity === 'idle' && !this.directionalMovement)) return;
+    if (dtMs === 0 || (this.state.activity === 'idle' && !this.directionalMovement && !this.animationDurations)) return;
+    if (this.state.activity === 'speaking' && this.state.speech && this.state.speech.remainingMs < dtMs) {
+      const remaining = this.state.speech.remainingMs;
+      if (remaining > 0) this.tick(remaining); else this.finishSpeech();
+      this.tick(dtMs - remaining);
+      return;
+    }
     const elapsed = this.state.animationElapsedMs + dtMs;
-    const frames = Math.floor(elapsed / this.config.frameDurationMs);
-    this.state.animationElapsedMs = elapsed % this.config.frameDurationMs;
-    this.state.animationFrame = (this.state.animationFrame + frames) % this.config.frameCount;
+    let frames: number;
+    if (this.animationDurations) {
+      const durations = this.animationDurations;
+      let remaining = elapsed;
+      let frame = this.state.animationFrame % durations.length;
+      const cycle = durations.reduce((total, duration) => total + duration, 0);
+      const cycles = Math.floor(remaining / cycle);
+      frames = cycles * durations.length;
+      remaining %= cycle;
+      while (remaining >= durations[frame]!) {
+        remaining -= durations[frame]!;
+        frame = (frame + 1) % durations.length;
+        frames++;
+      }
+      this.state.animationFrame = frame;
+      this.state.animationElapsedMs = remaining;
+    } else {
+      frames = Math.floor(elapsed / this.config.frameDurationMs);
+      this.state.animationElapsedMs = elapsed % this.config.frameDurationMs;
+      this.state.animationFrame = (this.state.animationFrame + frames) % this.config.frameCount;
+    }
     if (this.state.activity === 'speaking') {
       if (this.state.speech) this.state.speech.remainingMs = Math.max(0, this.state.speech.remainingMs - dtMs);
       if (!this.state.speech || this.state.speech.remainingMs === 0) this.finishSpeech();
       return;
     }
+    if (this.state.activity === 'idle' && !this.directionalMovement) return;
     const scale = this.config.adjustSpeedToScale ? this.state.scale : 1;
     const amount = this.config.movementLinkedToAnimation && this.config.frameCount > 1
       ? frames * this.config.walkStep * scale
@@ -199,8 +237,8 @@ export class CharacterController {
     assertCharacterSnapshot(snapshot);
     if (snapshot.id !== this.config.id) throw new Error('Cannot restore a different character');
     const candidate = cloneJSON(snapshot);
-    candidate.animationFrame %= this.config.frameCount;
-    candidate.animationElapsedMs %= this.config.frameDurationMs;
+    // The renderer selects the restored activity's animation before ticking. Its
+    // frame count/delays may differ from the animation that was active on load.
     this.stop();
     Object.assign(this.state, candidate);
   }

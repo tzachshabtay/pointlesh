@@ -3,7 +3,7 @@ import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClien
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
-import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type GameState, type JSONValue } from '@pointlesh/core';
+import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
 import { PhaserAdventureCharacter, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
@@ -44,8 +44,9 @@ class ForestAdventure extends Phaser.Scene {
   actor!: Phaser.GameObjects.Sprite;
   binding!: PhaserAdventureCharacter;
   background!: Phaser.GameObjects.Image;
-  npcs: Phaser.GameObjects.Sprite[] = [];
+  npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
+  private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
   speakingVoice = 'borin';
   labels: Phaser.GameObjects.Text[] = [];
   markers!: Phaser.GameObjects.Graphics;
@@ -81,7 +82,14 @@ class ForestAdventure extends Phaser.Scene {
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
-    this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, { autoUpdate: false, baseScale: 2.4, flipLeft: true, areas: () => this.resolved().areas, camera: this.cameras.main, frame: state => state.activity === 'walking' ? state.animationFrame % 4 : state.activity === 'speaking' ? 6 + Math.floor(this.time.now / 180) % 2 : 4 + Math.floor(this.time.now / 650) % 2 });
+    this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
+      autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'character.borin',
+      baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
+      origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
+      angle: () => this.playerDefinition()?.rotation ?? 0,
+      animations: () => readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
+      areas: () => this.resolved().areas, camera: this.cameras.main,
+    });
     this.markers = this.add.graphics().setDepth(2000);
     this.behaviors.register('forest.interact', { handle: context => this.applyInteraction(context.targetId, context.item) });
     this.behaviors.register('forest.rescue', { handle: () => {} });
@@ -120,7 +128,8 @@ class ForestAdventure extends Phaser.Scene {
       get scene() { return gameScene; }
     } });
   }
-  resolved() { return resolvePointleshScene(authoredScenes, this.story.roomId); }
+  resolved() { return this.resolvedCache ??= resolvePointleshScene(authoredScenes, this.story.roomId); }
+  playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
   walkables() { return walkablePolygons(this.resolved()); }
   toolsOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]'); }
   blocked() { return this.toolsOpen() || this.editing || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
@@ -172,24 +181,27 @@ class ForestAdventure extends Phaser.Scene {
     this.story.roomId = room;
     this.background.setTexture(`room.${room}`);
     if (move) this.character.place({ x: room === 'camp' ? 160 : 471, y: 465 }, 'down');
-    for (const sprite of this.entitySprites.values()) sprite.destroy(); this.entitySprites.clear(); this.npcs = [];
+    for (const sprite of this.entitySprites.values()) sprite.destroy(); this.entitySprites.clear(); this.npcActors.clear();
     for (const star of this.stars) star.image.destroy(); this.stars = [];
     if (['forest', 'village', 'camp'].includes(room)) for (let i = 0; i < 17; i++) this.stars.push({ image: this.add.circle(70 + (i * 137) % 835, 65 + (i * 61) % 370, i % 3 === 0 ? 1.8 : 1, 0xebd98a, 0.45).setDepth(1000), speed: .5 + i % 4 * .13, start: i * 27 });
     this.refreshDesign(); this.render();
     if (this.sceneDesigner && this.sceneDesigner.designer.getSceneId() !== room) this.sceneDesigner.designer.select({ type: 'scene', sceneId: room });
   }
   refreshDesign() {
+    this.resolvedCache = undefined;
     if (this.editing || this.toolsOpen()) { this.epoch++; this.character.stop(); }
     for (const overlay of this.overlays) overlay.destroy(); this.overlays = [];
     for (const area of this.resolved().areas.filter(area => area.kind === 'walk-behind' && area.enabled)) {
       const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0);
       this.overlays.push(createWalkBehindOverlay(this, area, image, { destroyImage: true }));
     }
-    const actor = this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player');
+    const actor = this.playerDefinition();
     if (actor) {
       for (const key of ['speed', 'walkStep', 'frameDurationMs', 'frameCount'] as const) { const value = Number(actor.properties[key]); if (Number.isFinite(value) && value > 0) this.character.config[key] = key === 'frameCount' ? Math.floor(value) : value; }
       this.character.config.movementLinkedToAnimation = actor.properties.movementLinkedToAnimation !== false;
-      if (this.editing) this.character.place(actor.position);
+      this.character.config.directions = actor.properties.directions === 8 ? 8 : 4;
+      if (this.editing) this.character.place(actor.position, this.authoredFacing(actor));
+      else if (this.toolsOpen()) this.character.face(this.authoredFacing(actor));
       this.actor.setVisible(actor.enabled);
     }
     this.syncEntities(); this.binding.sync();
@@ -198,8 +210,7 @@ class ForestAdventure extends Phaser.Scene {
   syncEntities() {
     const objects = this.resolved().objects.filter(object => object.properties.role !== 'player');
     const ids = new Set(objects.map(object => object.id));
-    for (const [id, sprite] of this.entitySprites) if (!ids.has(id)) { sprite.destroy(); this.entitySprites.delete(id); }
-    this.npcs = [];
+    for (const [id, sprite] of this.entitySprites) if (!ids.has(id)) { sprite.destroy(); this.entitySprites.delete(id); this.npcActors.delete(id); }
     for (const object of objects) {
       const actorName = String(object.properties.actorName ?? '');
       const pickupId = String(object.properties.pickupId ?? '');
@@ -209,8 +220,35 @@ class ForestAdventure extends Phaser.Scene {
       if (!sprite) { sprite = this.add.sprite(object.position.x, object.position.y, texture, object.kind === 'character' ? 4 : undefined); this.entitySprites.set(object.id, sprite); }
       sprite.setPosition(object.position.x, object.position.y).setScale(object.scaleX, object.scaleY).setOrigin(object.anchorX, 1 - object.anchorY).setAngle(object.rotation).setDepth(object.position.y);
       sprite.setVisible(object.enabled && (!pickupId || targetVisible(this.story, pickupId)));
-      if (object.kind === 'character') this.npcs.push(sprite);
+      if (object.kind === 'character') {
+        let npc = this.npcActors.get(object.id);
+        if (!npc) {
+          const controller = new CharacterController({ id: object.id, position: object.position, facing: this.authoredFacing(object), directions: object.properties.directions === 8 ? 8 : 4 });
+          const current = () => this.resolved().objects.find(entity => entity.id === object.id) ?? object;
+          const binding = new PhaserAdventureCharacter(this, controller, sprite, {
+            autoUpdate: false, aiRuntime: this.aiRuntime, assetId: object.assetId,
+            animations: () => readCharacterAnimations(current().properties),
+            baseScale: () => ({ x: current().scaleX, y: current().scaleY }),
+            origin: () => ({ x: current().anchorX, y: 1 - current().anchorY }),
+            angle: () => current().rotation,
+          });
+          npc = { controller, binding, sprite, actorName }; this.npcActors.set(object.id, npc);
+        }
+        npc.actorName = actorName;
+        npc.controller.state.position = { ...object.position };
+        npc.controller.config.directions = object.properties.directions === 8 ? 8 : 4;
+        npc.controller.face(this.authoredFacing(object));
+        npc.binding.sync();
+      }
     }
+  }
+  authoredFacing(object: ResolvedPointleshObject): Direction {
+    const facing = object.properties.facing;
+    return typeof facing === 'string' && ['up', 'down', 'left', 'right', 'up-left', 'up-right', 'down-left', 'down-right'].includes(facing) ? facing as Direction : 'down';
+  }
+  refreshCharacterAnimations() {
+    this.binding.refreshAnimation();
+    for (const npc of this.npcActors.values()) npc.binding.refreshAnimation();
   }
   installTools() {
     this.sceneDesigner = installPhaserPointleshDesigner({
@@ -223,7 +261,7 @@ class ForestAdventure extends Phaser.Scene {
     });
     installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
       Object.assign(dialogs, manifest); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech();
-    }, onAiAssetsChange: next => { Object.assign(assets, next); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech(); } });
+    }, onAiAssetsChange: next => { Object.assign(assets, next); this.aiRuntime.syncManifest(assets); this.sceneDesigner?.inspector.setAiAssets(assets); this.refreshCharacterAnimations(); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech(); } });
     const callbacks = this.aiRuntime.designerCallbacks();
     const refreshAtlas = (assetId: string, textureKey: string) => {
       if (!assetId.startsWith('background.')) return;
@@ -237,8 +275,9 @@ class ForestAdventure extends Phaser.Scene {
       }
     };
     installAiAssetDesigner({ scene: this, manifest: assets, autoFirstDrafts: false, client: new ForestAssetDebugClient('http://127.0.0.1:4287'), ...callbacks,
-      onPreview: (id, key, asset) => { callbacks.onPreview(id, key, asset); refreshAtlas(id, key); },
-      onAssetReady: (id, key, asset) => { callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); }
+      onPreview: (id, key, asset) => { callbacks.onPreview(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
+      onAssetReady: (id, key, asset) => { callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
+      onManifestUpdated: manifest => { Object.assign(assets, manifest); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations(); },
     });
   }
   drawHotspots() {
@@ -265,6 +304,7 @@ class ForestAdventure extends Phaser.Scene {
       if (voice === 'borin') void this.character.say(turn.resolved.text, 3600000);
       else this.character.finishSpeech();
     } else {
+      this.speakingVoice = '';
       this.character.finishSpeech(); el('speaker').textContent = 'Borin'; el('speech').textContent = turn.decision.prompt; el('dialog-next').hidden = true;
       for (const option of turn.options) el('choices').append(button(option.text, () => {
         applyDialogChoice(this.story, option.id); this.conversation.choose(option.id); this.render();
@@ -360,10 +400,13 @@ class ForestAdventure extends Phaser.Scene {
     this.story = { roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep };
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: checkpoint[`${kind}ElapsedMs`] ?? 0 });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
-    this.changeRoom(this.story.roomId, false); this.character.restore(save.characters.borin);
+    this.changeRoom(this.story.roomId, false);
     this.conversation = conversation; conversation.onTurn(next => this.renderTurn(next));
     if (turn && turn.type !== 'end') this.renderTurn(turn);
     else if (save.extensions.speech) this.say(save.extensions.speech as string);
+    // Rebuilding dialog UI may start speech. Adopt the saved pose and animation
+    // phase last, then let the binding select that activity's authored clip.
+    this.character.restore(save.characters.borin);
     this.binding.sync(); this.render(); this.renderCutscene();
   }
   update(_time: number, delta: number) {
@@ -389,9 +432,16 @@ class ForestAdventure extends Phaser.Scene {
       this.binding.update(Math.min(delta, 100));
       if (!this.talking && this.story.roomId === 'camp' && !this.story.flags.guardAsleep) this.story.guardClock += Math.min(delta, 100);
     }
-    for (const npc of this.npcs) {
-      npc.setFrame(this.talking && npc.texture.key === `actor.${this.speakingVoice}` ? 6 + Math.floor(this.time.now / 220) % 2 : 4 + Math.floor(this.time.now / 900) % 2);
-      if (npc.texture.key === 'actor.guard') { npc.setFlipX(guardLookingAway(this.story)); npc.setAngle(this.story.flags.guardAsleep ? 80 : 0); }
+    for (const npc of this.npcActors.values()) {
+      const speaking = this.talking && npc.actorName === this.speakingVoice;
+      const speech = el('speech').textContent ?? '';
+      if (speaking && npc.controller.state.speech?.text !== speech) void npc.controller.say(speech, 3600000);
+      else if (!speaking) npc.controller.finishSpeech();
+      if (npc.actorName === 'guard') {
+        npc.controller.face(guardLookingAway(this.story) && !this.story.flags.guardAsleep ? 'up' : 'down');
+      }
+      if (!paused) npc.binding.update(Math.min(delta, 100));
+      if (npc.actorName === 'guard' && this.story.flags.guardAsleep) npc.sprite.setAngle(80);
     }
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
     el('guard-status').hidden = this.story.roomId !== 'camp' || this.story.introStep < intro.length;

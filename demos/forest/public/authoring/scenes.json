@@ -335,7 +335,75 @@
           "ignoreScaling": false,
           "movementLinkedToAnimation": true,
           "facing": "down",
-          "directions": 4
+          "directions": 4,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "character.borin",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "character.borin",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "character.borin",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "character.borin",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "character.borin",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "character.borin",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "character.borin",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "character.borin",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "character.borin",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "character.borin",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "character.borin",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "character.borin",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          }
         },
         "behaviors": [],
         "propertySchema": {}
@@ -416,7 +484,75 @@
           "facing": "down",
           "directions": 4,
           "role": "player",
-          "courage": 10
+          "courage": 10,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "character.borin",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "character.borin",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "character.borin",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "character.borin",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "character.borin",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "character.borin",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "character.borin",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "character.borin",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "character.borin",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "character.borin",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "character.borin",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "character.borin",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          }
         },
         "behaviors": [
           "forest.rescue"
@@ -459,24 +595,54 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "floor-0",
                       "x": 35,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-1",
+                      "x": 124,
+                      "y": 371
+                    },
+                    {
+                      "id": "floor-2",
+                      "x": 360,
                       "y": 355
                     },
                     {
-                      "id": "b",
-                      "x": 925,
+                      "id": "floor-3",
+                      "x": 710,
                       "y": 355
                     },
                     {
-                      "id": "c",
+                      "id": "floor-4",
+                      "x": 835,
+                      "y": 381
+                    },
+                    {
+                      "id": "floor-5",
                       "x": 925,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-6",
+                      "x": 925,
+                      "y": 494
+                    },
+                    {
+                      "id": "floor-7",
+                      "x": 850,
                       "y": 515
                     },
                     {
-                      "id": "d",
-                      "x": 35,
+                      "id": "floor-8",
+                      "x": 110,
                       "y": 515
+                    },
+                    {
+                      "id": "floor-9",
+                      "x": 35,
+                      "y": 494
                     }
                   ],
                   "closed": true
@@ -573,22 +739,44 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "foreground-0",
                       "x": 0,
-                      "y": 200
+                      "y": 160
                     },
                     {
-                      "id": "b",
-                      "x": 80,
-                      "y": 200
+                      "id": "foreground-1",
+                      "x": 57,
+                      "y": 162,
+                      "curve": {
+                        "cx": 90,
+                        "cy": 248
+                      }
                     },
                     {
-                      "id": "c",
-                      "x": 80,
+                      "id": "foreground-2",
+                      "x": 65,
+                      "y": 338,
+                      "curve": {
+                        "cx": 60,
+                        "cy": 435
+                      }
+                    },
+                    {
+                      "id": "foreground-3",
+                      "x": 102,
+                      "y": 504,
+                      "curve": {
+                        "cx": 83,
+                        "cy": 525
+                      }
+                    },
+                    {
+                      "id": "foreground-4",
+                      "x": 149,
                       "y": 540
                     },
                     {
-                      "id": "d",
+                      "id": "foreground-5",
                       "x": 0,
                       "y": 540
                     }
@@ -643,7 +831,75 @@
                 "properties": {
                   "role": "npc",
                   "actorName": "elder",
-                  "displayedScale": 2.1
+                  "displayedScale": 2.1,
+                  "animations": {
+                    "idle": {
+                      "front": {
+                        "assetId": "character.elder",
+                        "key": "idle-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.elder",
+                        "key": "idle-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.elder",
+                        "key": "idle-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.elder",
+                        "key": "idle-left",
+                        "flipX": true
+                      }
+                    },
+                    "walk": {
+                      "front": {
+                        "assetId": "character.elder",
+                        "key": "walk-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.elder",
+                        "key": "walk-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.elder",
+                        "key": "walk-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.elder",
+                        "key": "walk-left",
+                        "flipX": true
+                      }
+                    },
+                    "speak": {
+                      "front": {
+                        "assetId": "character.elder",
+                        "key": "speak-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.elder",
+                        "key": "speak-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.elder",
+                        "key": "speak-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.elder",
+                        "key": "speak-left",
+                        "flipX": true
+                      }
+                    }
+                  }
                 },
                 "behaviors": []
               }
@@ -876,24 +1132,54 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "floor-0",
                       "x": 35,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-1",
+                      "x": 85,
+                      "y": 380
+                    },
+                    {
+                      "id": "floor-2",
+                      "x": 360,
                       "y": 355
                     },
                     {
-                      "id": "b",
-                      "x": 925,
+                      "id": "floor-3",
+                      "x": 710,
                       "y": 355
                     },
                     {
-                      "id": "c",
+                      "id": "floor-4",
+                      "x": 876,
+                      "y": 373
+                    },
+                    {
+                      "id": "floor-5",
                       "x": 925,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-6",
+                      "x": 925,
+                      "y": 494
+                    },
+                    {
+                      "id": "floor-7",
+                      "x": 850,
                       "y": 515
                     },
                     {
-                      "id": "d",
-                      "x": 35,
+                      "id": "floor-8",
+                      "x": 110,
                       "y": 515
+                    },
+                    {
+                      "id": "floor-9",
+                      "x": 35,
+                      "y": 494
                     }
                   ],
                   "closed": true
@@ -990,22 +1276,36 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "foreground-0",
                       "x": 0,
-                      "y": 200
+                      "y": 401,
+                      "curve": {
+                        "cx": 55,
+                        "cy": 385
+                      }
                     },
                     {
-                      "id": "b",
-                      "x": 80,
-                      "y": 200
+                      "id": "foreground-1",
+                      "x": 121,
+                      "y": 414
                     },
                     {
-                      "id": "c",
-                      "x": 80,
+                      "id": "foreground-2",
+                      "x": 139,
+                      "y": 444
+                    },
+                    {
+                      "id": "foreground-3",
+                      "x": 92,
+                      "y": 458
+                    },
+                    {
+                      "id": "foreground-4",
+                      "x": 111,
                       "y": 540
                     },
                     {
-                      "id": "d",
+                      "id": "foreground-5",
                       "x": 0,
                       "y": 540
                     }
@@ -1060,7 +1360,75 @@
                 "properties": {
                   "role": "npc",
                   "actorName": "innkeeper",
-                  "displayedScale": 2.1
+                  "displayedScale": 2.1,
+                  "animations": {
+                    "idle": {
+                      "front": {
+                        "assetId": "character.innkeeper",
+                        "key": "idle-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.innkeeper",
+                        "key": "idle-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.innkeeper",
+                        "key": "idle-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.innkeeper",
+                        "key": "idle-left",
+                        "flipX": true
+                      }
+                    },
+                    "walk": {
+                      "front": {
+                        "assetId": "character.innkeeper",
+                        "key": "walk-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.innkeeper",
+                        "key": "walk-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.innkeeper",
+                        "key": "walk-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.innkeeper",
+                        "key": "walk-left",
+                        "flipX": true
+                      }
+                    },
+                    "speak": {
+                      "front": {
+                        "assetId": "character.innkeeper",
+                        "key": "speak-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.innkeeper",
+                        "key": "speak-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.innkeeper",
+                        "key": "speak-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.innkeeper",
+                        "key": "speak-left",
+                        "flipX": true
+                      }
+                    }
+                  }
                 },
                 "behaviors": []
               }
@@ -1084,7 +1452,75 @@
                 "properties": {
                   "role": "npc",
                   "actorName": "miner",
-                  "displayedScale": 2.1
+                  "displayedScale": 2.1,
+                  "animations": {
+                    "idle": {
+                      "front": {
+                        "assetId": "character.miner",
+                        "key": "idle-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.miner",
+                        "key": "idle-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.miner",
+                        "key": "idle-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.miner",
+                        "key": "idle-left",
+                        "flipX": true
+                      }
+                    },
+                    "walk": {
+                      "front": {
+                        "assetId": "character.miner",
+                        "key": "walk-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.miner",
+                        "key": "walk-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.miner",
+                        "key": "walk-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.miner",
+                        "key": "walk-left",
+                        "flipX": true
+                      }
+                    },
+                    "speak": {
+                      "front": {
+                        "assetId": "character.miner",
+                        "key": "speak-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.miner",
+                        "key": "speak-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.miner",
+                        "key": "speak-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.miner",
+                        "key": "speak-left",
+                        "flipX": true
+                      }
+                    }
+                  }
                 },
                 "behaviors": []
               }
@@ -1267,24 +1703,54 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "floor-0",
                       "x": 35,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-1",
+                      "x": 158,
+                      "y": 365
+                    },
+                    {
+                      "id": "floor-2",
+                      "x": 360,
                       "y": 355
                     },
                     {
-                      "id": "b",
-                      "x": 925,
+                      "id": "floor-3",
+                      "x": 710,
                       "y": 355
                     },
                     {
-                      "id": "c",
+                      "id": "floor-4",
+                      "x": 819,
+                      "y": 390
+                    },
+                    {
+                      "id": "floor-5",
                       "x": 925,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-6",
+                      "x": 925,
+                      "y": 494
+                    },
+                    {
+                      "id": "floor-7",
+                      "x": 850,
                       "y": 515
                     },
                     {
-                      "id": "d",
-                      "x": 35,
+                      "id": "floor-8",
+                      "x": 110,
                       "y": 515
+                    },
+                    {
+                      "id": "floor-9",
+                      "x": 35,
+                      "y": 494
                     }
                   ],
                   "closed": true
@@ -1381,22 +1847,40 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "foreground-0",
                       "x": 0,
-                      "y": 200
+                      "y": 357
                     },
                     {
-                      "id": "b",
-                      "x": 80,
-                      "y": 200
+                      "id": "foreground-1",
+                      "x": 57,
+                      "y": 354,
+                      "curve": {
+                        "cx": 84,
+                        "cy": 387
+                      }
                     },
                     {
-                      "id": "c",
-                      "x": 80,
+                      "id": "foreground-2",
+                      "x": 83,
+                      "y": 423
+                    },
+                    {
+                      "id": "foreground-3",
+                      "x": 106,
+                      "y": 472,
+                      "curve": {
+                        "cx": 77,
+                        "cy": 499
+                      }
+                    },
+                    {
+                      "id": "foreground-4",
+                      "x": 111,
                       "y": 540
                     },
                     {
-                      "id": "d",
+                      "id": "foreground-5",
                       "x": 0,
                       "y": 540
                     }
@@ -1658,24 +2142,54 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "floor-0",
                       "x": 35,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-1",
+                      "x": 167,
+                      "y": 387
+                    },
+                    {
+                      "id": "floor-2",
+                      "x": 360,
                       "y": 355
                     },
                     {
-                      "id": "b",
-                      "x": 925,
+                      "id": "floor-3",
+                      "x": 710,
                       "y": 355
                     },
                     {
-                      "id": "c",
+                      "id": "floor-4",
+                      "x": 832,
+                      "y": 378
+                    },
+                    {
+                      "id": "floor-5",
                       "x": 925,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-6",
+                      "x": 925,
+                      "y": 494
+                    },
+                    {
+                      "id": "floor-7",
+                      "x": 850,
                       "y": 515
                     },
                     {
-                      "id": "d",
-                      "x": 35,
+                      "id": "floor-8",
+                      "x": 110,
                       "y": 515
+                    },
+                    {
+                      "id": "floor-9",
+                      "x": 35,
+                      "y": 494
                     }
                   ],
                   "closed": true
@@ -1772,22 +2286,49 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "foreground-0",
                       "x": 0,
-                      "y": 200
+                      "y": 113
                     },
                     {
-                      "id": "b",
-                      "x": 163,
-                      "y": 200
+                      "id": "foreground-1",
+                      "x": 98,
+                      "y": 103,
+                      "curve": {
+                        "cx": 137,
+                        "cy": 204
+                      }
                     },
                     {
-                      "id": "c",
-                      "x": 163,
+                      "id": "foreground-2",
+                      "x": 123,
+                      "y": 311,
+                      "curve": {
+                        "cx": 92,
+                        "cy": 409
+                      }
+                    },
+                    {
+                      "id": "foreground-3",
+                      "x": 148,
+                      "y": 465,
+                      "curve": {
+                        "cx": 163,
+                        "cy": 495
+                      }
+                    },
+                    {
+                      "id": "foreground-4",
+                      "x": 208,
+                      "y": 515
+                    },
+                    {
+                      "id": "foreground-5",
+                      "x": 176,
                       "y": 540
                     },
                     {
-                      "id": "d",
+                      "id": "foreground-6",
                       "x": 0,
                       "y": 540
                     }
@@ -2075,24 +2616,54 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "floor-0",
                       "x": 35,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-1",
+                      "x": 142,
+                      "y": 374
+                    },
+                    {
+                      "id": "floor-2",
+                      "x": 360,
                       "y": 355
                     },
                     {
-                      "id": "b",
-                      "x": 925,
+                      "id": "floor-3",
+                      "x": 710,
                       "y": 355
                     },
                     {
-                      "id": "c",
+                      "id": "floor-4",
+                      "x": 865,
+                      "y": 390
+                    },
+                    {
+                      "id": "floor-5",
                       "x": 925,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-6",
+                      "x": 925,
+                      "y": 494
+                    },
+                    {
+                      "id": "floor-7",
+                      "x": 850,
                       "y": 515
                     },
                     {
-                      "id": "d",
-                      "x": 35,
+                      "id": "floor-8",
+                      "x": 110,
                       "y": 515
+                    },
+                    {
+                      "id": "floor-9",
+                      "x": 35,
+                      "y": 494
                     }
                   ],
                   "closed": true
@@ -2189,22 +2760,45 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "foreground-0",
                       "x": 0,
-                      "y": 200
+                      "y": 291
                     },
                     {
-                      "id": "b",
-                      "x": 80,
-                      "y": 200
+                      "id": "foreground-1",
+                      "x": 44,
+                      "y": 305
                     },
                     {
-                      "id": "c",
-                      "x": 80,
+                      "id": "foreground-2",
+                      "x": 57,
+                      "y": 350,
+                      "curve": {
+                        "cx": 96,
+                        "cy": 377
+                      }
+                    },
+                    {
+                      "id": "foreground-3",
+                      "x": 70,
+                      "y": 421
+                    },
+                    {
+                      "id": "foreground-4",
+                      "x": 115,
+                      "y": 474,
+                      "curve": {
+                        "cx": 86,
+                        "cy": 510
+                      }
+                    },
+                    {
+                      "id": "foreground-5",
+                      "x": 147,
                       "y": 540
                     },
                     {
-                      "id": "d",
+                      "id": "foreground-6",
                       "x": 0,
                       "y": 540
                     }
@@ -2418,24 +3012,54 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "floor-0",
                       "x": 35,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-1",
+                      "x": 116,
+                      "y": 392
+                    },
+                    {
+                      "id": "floor-2",
+                      "x": 360,
                       "y": 355
                     },
                     {
-                      "id": "b",
-                      "x": 925,
+                      "id": "floor-3",
+                      "x": 710,
                       "y": 355
                     },
                     {
-                      "id": "c",
+                      "id": "floor-4",
+                      "x": 848,
+                      "y": 366
+                    },
+                    {
+                      "id": "floor-5",
                       "x": 925,
+                      "y": 403
+                    },
+                    {
+                      "id": "floor-6",
+                      "x": 925,
+                      "y": 494
+                    },
+                    {
+                      "id": "floor-7",
+                      "x": 850,
                       "y": 515
                     },
                     {
-                      "id": "d",
-                      "x": 35,
+                      "id": "floor-8",
+                      "x": 110,
                       "y": 515
+                    },
+                    {
+                      "id": "floor-9",
+                      "x": 35,
+                      "y": 494
                     }
                   ],
                   "closed": true
@@ -2532,22 +3156,35 @@
                 "area": {
                   "vertices": [
                     {
-                      "id": "a",
+                      "id": "foreground-0",
                       "x": 0,
-                      "y": 200
+                      "y": 465,
+                      "curve": {
+                        "cx": 62,
+                        "cy": 458
+                      }
                     },
                     {
-                      "id": "b",
-                      "x": 80,
-                      "y": 200
+                      "id": "foreground-1",
+                      "x": 143,
+                      "y": 471
                     },
                     {
-                      "id": "c",
-                      "x": 80,
+                      "id": "foreground-2",
+                      "x": 172,
+                      "y": 493,
+                      "curve": {
+                        "cx": 105,
+                        "cy": 500
+                      }
+                    },
+                    {
+                      "id": "foreground-3",
+                      "x": 132,
                       "y": 540
                     },
                     {
-                      "id": "d",
+                      "id": "foreground-4",
                       "x": 0,
                       "y": 540
                     }
@@ -2602,7 +3239,75 @@
                 "properties": {
                   "role": "npc",
                   "actorName": "guard",
-                  "displayedScale": 3.1
+                  "displayedScale": 3.1,
+                  "animations": {
+                    "idle": {
+                      "front": {
+                        "assetId": "character.guard",
+                        "key": "idle-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.guard",
+                        "key": "idle-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.guard",
+                        "key": "idle-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.guard",
+                        "key": "idle-left",
+                        "flipX": true
+                      }
+                    },
+                    "walk": {
+                      "front": {
+                        "assetId": "character.guard",
+                        "key": "walk-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.guard",
+                        "key": "walk-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.guard",
+                        "key": "walk-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.guard",
+                        "key": "walk-left",
+                        "flipX": true
+                      }
+                    },
+                    "speak": {
+                      "front": {
+                        "assetId": "character.guard",
+                        "key": "speak-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.guard",
+                        "key": "speak-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.guard",
+                        "key": "speak-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.guard",
+                        "key": "speak-left",
+                        "flipX": true
+                      }
+                    }
+                  }
                 },
                 "behaviors": []
               }
@@ -2626,7 +3331,75 @@
                 "properties": {
                   "role": "npc",
                   "actorName": "king",
-                  "displayedScale": 2.1
+                  "displayedScale": 2.1,
+                  "animations": {
+                    "idle": {
+                      "front": {
+                        "assetId": "character.king",
+                        "key": "idle-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.king",
+                        "key": "idle-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.king",
+                        "key": "idle-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.king",
+                        "key": "idle-left",
+                        "flipX": true
+                      }
+                    },
+                    "walk": {
+                      "front": {
+                        "assetId": "character.king",
+                        "key": "walk-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.king",
+                        "key": "walk-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.king",
+                        "key": "walk-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.king",
+                        "key": "walk-left",
+                        "flipX": true
+                      }
+                    },
+                    "speak": {
+                      "front": {
+                        "assetId": "character.king",
+                        "key": "speak-front",
+                        "flipX": false
+                      },
+                      "back": {
+                        "assetId": "character.king",
+                        "key": "speak-back",
+                        "flipX": false
+                      },
+                      "left": {
+                        "assetId": "character.king",
+                        "key": "speak-left",
+                        "flipX": false
+                      },
+                      "right": {
+                        "assetId": "character.king",
+                        "key": "speak-left",
+                        "flipX": true
+                      }
+                    }
+                  }
                 },
                 "behaviors": []
               }

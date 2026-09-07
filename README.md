@@ -42,6 +42,10 @@ The local services use ports **4287** (AI Assets), **4288** (Scene Designer), an
 
 The demo loads its committed documents from `demos/forest/public/authoring/`. Promotion writes those JSON files, so edits survive a refresh and are included in the next build. `src/content.ts` defines the initial seed; normal builds never regenerate or overwrite promoted documents. To deliberately reset them, run `node --import tsx demos/forest/scripts/seed-authoring.ts --reset` from the repository root.
 
+In **Assets**, select **Graphics → Character Borin** and choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. In **Adventure**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
+
+Areas are native Scene Designer vector shapes. Select an area in **Adventure** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo now includes room-specific floor polygons and curved foreground outlines.
+
 The [walkthrough](docs/walkthrough.md) contains puzzle solutions and an editor tour. The [art provenance and prompts](docs/art-prompts.md) describe the six generated room backgrounds. Character sprites and ambient music are created locally by the demo; dialogue is text-based unless generated voice assets are supplied.
 
 ## Prefabs that remain extensible

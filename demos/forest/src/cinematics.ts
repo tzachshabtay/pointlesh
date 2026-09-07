@@ -152,9 +152,10 @@ export class ForestCinematic {
     const { sprite, shadow } = this.cast.get(id)!;
     const scale = pose.scale ?? (id.startsWith('guard') ? 3.8 : 3.05);
     const animation = pose.walking ? Math.floor(this.elapsedMs / 105) % 4 : 4 + Math.floor(this.elapsedMs / 650) % 2;
+    const profile = pose.walking || pose.facingLeft;
     sprite.setVisible(true).setAlpha(pose.alpha ?? 1).setPosition(pose.x, pose.y)
-      .setScale(scale).setFlipX(pose.facingLeft ?? false).setAngle(pose.angle ?? 0)
-      .setFrame(pose.frame ?? animation).setDepth(pose.y);
+      .setScale(scale).setFlipX(!!profile && !pose.facingLeft).setAngle(pose.angle ?? 0)
+      .setFrame(pose.frame ?? (profile ? 16 + animation : animation)).setDepth(pose.y);
     shadow.setVisible(true).setPosition(pose.x, pose.y - 1).setScale(scale / 2.6, 1).setDepth(pose.y - 0.5).setAlpha(0.33 * (pose.alpha ?? 1));
     if (id === 'king') {
       const y = pose.y - 25 * scale;

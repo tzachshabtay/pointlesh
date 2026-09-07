@@ -20,6 +20,7 @@ import {
   type ScenePrefabInstance,
   type ScenePrefabNumberDefaults,
 } from "@scene-designer/core";
+import { assertCharacterAnimations, mergeCharacterAnimations, readCharacterAnimations, type CharacterAnimations } from './animations.js';
 
 /** Only data belongs in a manifest. Register behavior implementations in your game. */
 export type PointleshProperty = string | number | boolean | null | PointleshProperty[] | { [key: string]: PointleshProperty };
@@ -72,7 +73,7 @@ function number(id: string, label: string, value: number, options: Omit<ScenePre
 function metadata(kind: PointleshPrefabKind, input: PointleshPrefabInput, properties: PointleshProperties): PointleshPrefabMetadata {
   return {
     kind,
-    properties: { enabled: true, ...properties, ...structuredClone(input.properties ?? {}) },
+    properties: mergeProperties({ enabled: true, ...properties }, input.properties, kind === 'character'),
     behaviors: [...new Set(input.behaviors ?? [])],
     propertySchema: structuredClone(input.propertySchema ?? {}),
   };
@@ -156,11 +157,14 @@ export function createObjectPrefab(input: PointleshObjectPrefabInput = {}): Poin
   return objectPrefab("object", input, { interactive: true, ignoreScaling: false }, []);
 }
 
-export function createCharacterPrefab(input: PointleshObjectPrefabInput & { speed?: number; walkStep?: number; frameDurationMs?: number; frameCount?: number; movementLinkedToAnimation?: boolean } = {}): PointleshPrefabDefinition {
+export function createCharacterPrefab(input: PointleshObjectPrefabInput & { speed?: number; walkStep?: number; frameDurationMs?: number; frameCount?: number; movementLinkedToAnimation?: boolean; directions?: 4 | 8; animations?: CharacterAnimations } = {}): PointleshPrefabDefinition {
+  if (input.animations !== undefined) assertCharacterAnimations(input.animations);
+  if (input.directions !== undefined && input.directions !== 4 && input.directions !== 8) throw new Error('Character directions must be 4 or 8');
   return objectPrefab("character", input, {
     interactive: true, ignoreScaling: false,
     movementLinkedToAnimation: input.movementLinkedToAnimation ?? true,
-    facing: "down", directions: 4,
+    facing: "down", directions: input.directions ?? 4,
+    animations: structuredClone(input.animations ?? {}),
   }, [
     number("speed", "Walking speed", input.speed ?? 70, { min: 1, step: 1, unit: "pixels-per-second" }),
     number("walkStep", "Pixels per animation frame", input.walkStep ?? 7, { min: 0.1, step: 0.5 }),
@@ -187,7 +191,7 @@ export function extendPointleshPrefab(base: PointleshPrefabDefinition, extension
     attributes: mergeAttributes(base.attributes, extension.attributes),
     pointlesh: {
       kind: base.pointlesh.kind,
-      properties: { ...structuredClone(base.pointlesh.properties), ...structuredClone(extension.properties ?? {}) },
+      properties: mergeProperties(base.pointlesh.properties, extension.properties, base.pointlesh.kind === 'character'),
       behaviors: [...new Set([...base.pointlesh.behaviors, ...(extension.behaviors ?? [])])],
       propertySchema: { ...structuredClone(base.pointlesh.propertySchema ?? {}), ...structuredClone(extension.propertySchema ?? {}) },
     },
@@ -206,6 +210,12 @@ export function createPointleshInstance(input: Parameters<typeof createPrefabIns
 export function isPointleshPrefab(prefab: ScenePrefabDefinition): prefab is PointleshPrefabDefinition {
   const data = (prefab as Partial<PointleshPrefabDefinition>).pointlesh;
   return !!data && ["walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character"].includes(data.kind);
+}
+
+function mergeProperties(base: PointleshProperties, overrides: PointleshProperties = {}, character = false): PointleshProperties {
+  const properties = { ...structuredClone(base), ...structuredClone(overrides) };
+  if (character && (base.animations !== undefined || overrides.animations !== undefined)) properties.animations = mergeCharacterAnimations(readCharacterAnimations(base), readCharacterAnimations(overrides));
+  return properties;
 }
 
 export type ResolvedPointleshEntity = {
@@ -274,7 +284,7 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
       const instance = rawInstance as PointleshPrefabInstance;
       const prefab = manifest.prefabs?.[instance.prefabId];
       if (!prefab || !isPointleshPrefab(prefab)) continue;
-      const properties = { ...structuredClone(prefab.pointlesh.properties), ...structuredClone(instance.pointlesh?.properties ?? {}) };
+      const properties = mergeProperties(prefab.pointlesh.properties, instance.pointlesh?.properties, prefab.pointlesh.kind === 'character');
       for (const attribute of prefab.attributes) {
         if (attribute.kind === "number") properties[attribute.id] = resolvePrefabNumber(manifest, prefab.id, attribute.id, instance);
       }

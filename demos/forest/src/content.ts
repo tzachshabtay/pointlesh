@@ -3,6 +3,7 @@ import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@d
 import { createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
 import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
 import { roomIds, roomNames, targets } from './story';
+import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
 
 export const atlasRooms = {
   village: { asset: 'background.village-pub', row: 0 }, pub: { asset: 'background.village-pub', row: 1 },
@@ -18,8 +19,44 @@ for (const id of ['village-pub', 'house-forest', 'mine-camp']) {
     versions: { original: { name: 'original', file: `art/atlas-${id}.png`, prompt: `Pixel-art ${id} room atlas`, createdAt: '2026-09-07T00:00:00.000Z', model: 'imagegen' } }
   };
 }
-for (const id of ['borin', 'elder', 'innkeeper', 'miner', 'guard', 'king']) {
-  definitions[`character.${id}`] = { id: `character.${id}`, kind: 'image', prompt: `A small pixel-art ${id === 'guard' ? 'orc guard' : 'dwarf named ' + id}, full body, transparent background.`, dimensions: { width: 24, height: 32 }, activeVersion: '', versions: {} };
+/** Real AI Assets animation children keep the same pixels available in the designer and game. */
+export const characterAssetDefinitions: Record<string, AiAssetDefinition> = {};
+for (const id of CHARACTER_IDS) {
+  const assetId = `character.${id}`;
+  const prompt = `A small pixel-art ${id === 'guard' ? 'orc guard' : 'dwarf named ' + id}, full body, transparent background.`;
+  const version = (file: string, description: string) => ({ name: 'original', file, prompt: description, createdAt: '2026-09-07T00:00:00.000Z', model: 'pointlesh-pixel-art', notes: 'Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts.' });
+  const linkedAnimationAssets: NonNullable<AiAssetDefinition['linkedAnimationAssets']> = {};
+  for (const activity of ['idle', 'walk', 'speak'] as const) for (const view of CHARACTER_VIEWS) {
+    const state = `${activity}-${view}`, childId = `${assetId}.${state}`;
+    const frameCount = CHARACTER_ACTIVITY_FRAMES[activity].length;
+    linkedAnimationAssets[state] = { label: `${activity[0].toUpperCase()}${activity.slice(1)} · ${view}`, assetId: childId };
+    characterAssetDefinitions[childId] = {
+      id: childId, kind: 'animation', prompt: `${prompt} ${activity} animation, facing ${view}; ${frameCount} horizontal frames.`,
+      dimensions: { width: 24 * frameCount, height: 32 },
+      frameGrid: { frameWidth: 24, frameHeight: 32, columns: frameCount, rows: 1, frameCount },
+      animations: [{ key: childId, frames: Array.from({ length: frameCount }, (_, frame) => frame), frameRate: activity === 'walk' ? 10 : activity === 'speak' ? 6 : 2, repeat: -1 }],
+      activeVersion: 'original', versions: { original: version(`art/characters/${id}/${state}.png`, `${prompt} ${activity}, ${view}.`) },
+      tags: ['forest', 'character', id, activity, view]
+    };
+  }
+  characterAssetDefinitions[assetId] = {
+    id: assetId, kind: 'spritesheet', prompt: `${prompt} Front, back, and left-profile rows; right facing mirrors the left profile.`,
+    dimensions: { width: 192, height: 96 }, frameGrid: { frameWidth: 24, frameHeight: 32, columns: 8, rows: 3, frameCount: 24 },
+    linkedAnimationAssets, activeVersion: 'original', versions: { original: version(`art/characters/${id}/sheet.png`, prompt) },
+    tags: ['forest', 'character', id]
+  };
+}
+Object.assign(definitions, characterAssetDefinitions);
+
+/** Facing slots use parent asset states so linked animation replacement stays editable. */
+export function characterAnimations(id: ForestCharacterId) {
+  const activity = (state: 'idle' | 'walk' | 'speak') => ({
+    front: { assetId: `character.${id}`, key: `${state}-front`, flipX: false },
+    back: { assetId: `character.${id}`, key: `${state}-back`, flipX: false },
+    left: { assetId: `character.${id}`, key: `${state}-left`, flipX: false },
+    right: { assetId: `character.${id}`, key: `${state}-left`, flipX: true }
+  });
+  return { idle: activity('idle'), walk: activity('walk'), speak: activity('speak') };
 }
 for (const [id, description] of Object.entries({ coin: 'A small gleaming copper coin', rope: 'A coil of sturdy dwarven climbing rope', mushroom: 'A purple dreamcap mushroom with silver spots' })) {
   definitions[`object.${id}`] = { id: `object.${id}`, kind: 'image', prompt: `${description}, pixel art, transparent background.`, dimensions: { width: 16, height: 16 }, activeVersion: '', versions: {} };
@@ -65,6 +102,7 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
 export const assets = defineAiAssets(definitions);
 
 const base = pointleshPrefabs({ characterAssetId: 'character.borin', objectAssetId: 'object.coin' });
+base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');
 base['forest.rescue-character'] = extendPointleshPrefab(base['pointlesh.character'], {
   id: 'forest.rescue-character', name: 'Rescue character', properties: { role: 'player', courage: 10 }, behaviors: ['forest.rescue'],
   propertySchema: { courage: { type: 'number', label: 'Courage', min: 0, max: 100 }, role: { type: 'string', label: 'Story role' } }
@@ -72,7 +110,24 @@ base['forest.rescue-character'] = extendPointleshPrefab(base['pointlesh.characte
 const rectangle = (x: number, y: number, width: number, height: number) => [
   { id: 'a', x, y }, { id: 'b', x: x + width, y }, { id: 'c', x: x + width, y: y + height }, { id: 'd', x, y: y + height }
 ];
-const roomCharacters: Partial<Record<typeof roomIds[number], { actorName: string; name: string; x: number; y: number; displayedScale: number }[]>> = {
+/** Room-specific floor outlines retain the broad corridor used by all approach points. */
+export function roomFloorVertices(room: typeof roomIds[number]) {
+  const shoulders = { village: [124, 371, 835, 381], pub: [85, 380, 876, 373], house: [158, 365, 819, 390], forest: [167, 387, 832, 378], mine: [142, 374, 865, 390], camp: [116, 392, 848, 366] }[room];
+  return [[35, 403], [shoulders[0], shoulders[1]], [360, 355], [710, 355], [shoulders[2], shoulders[3]], [925, 403], [925, 494], [850, 515], [110, 515], [35, 494]].map(([x, y], index) => ({ id: `floor-${index}`, x, y }));
+}
+/** Native quadratic edges describe a foreground trunk, table, or rocky silhouette. */
+export function roomForegroundVertices(room: typeof roomIds[number]) {
+  const outlines = {
+    village: [[0, 160], [57, 162, 90, 248], [65, 338, 60, 435], [102, 504, 83, 525], [149, 540], [0, 540]],
+    pub: [[0, 401, 55, 385], [121, 414], [139, 444], [92, 458], [111, 540], [0, 540]],
+    house: [[0, 357], [57, 354, 84, 387], [83, 423], [106, 472, 77, 499], [111, 540], [0, 540]],
+    forest: [[0, 113], [98, 103, 137, 204], [123, 311, 92, 409], [148, 465, 163, 495], [208, 515], [176, 540], [0, 540]],
+    mine: [[0, 291], [44, 305], [57, 350, 96, 377], [70, 421], [115, 474, 86, 510], [147, 540], [0, 540]],
+    camp: [[0, 465, 62, 458], [143, 471], [172, 493, 105, 500], [132, 540], [0, 540]]
+  }[room];
+  return outlines.map(([x, y, cx, cy], index) => ({ id: `foreground-${index}`, x, y, ...(cx !== undefined && cy !== undefined ? { curve: { cx, cy } } : {}) }));
+}
+const roomCharacters: Partial<Record<typeof roomIds[number], { actorName: ForestCharacterId; name: string; x: number; y: number; displayedScale: number }[]>> = {
   village: [{ actorName: 'elder', name: 'Elder Rowan', x: 387, y: 418, displayedScale: 2.1 }],
   pub: [
     { actorName: 'innkeeper', name: 'Mara the innkeeper', x: 526, y: 348, displayedScale: 2.1 },
@@ -92,14 +147,14 @@ const roomPickups: Partial<Record<typeof roomIds[number], { pickupId: string; na
 };
 export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
   const instances: ScenePrefabInstance[] = [
-    createPointleshInstance({ id: `${roomId}.floor`, prefabId: 'pointlesh.walkable', name: 'Walkable ground', overrides: { area: { vertices: rectangle(35, 355, 890, 160), closed: true } } }),
+    createPointleshInstance({ id: `${roomId}.floor`, prefabId: 'pointlesh.walkable', name: 'Walkable ground', overrides: { area: { vertices: roomFloorVertices(roomId), closed: true } } }),
     createPointleshInstance({ id: `${roomId}.perspective`, prefabId: 'pointlesh.scale', name: 'Room perspective', overrides: { area: { vertices: rectangle(0, 315, 960, 225), closed: true }, minScale: { value: 0.75 }, maxScale: { value: 1.22 } } }),
     createPointleshInstance({ id: `${roomId}.zoom`, prefabId: 'pointlesh.zoom', name: 'Gentle camera approach', overrides: { area: { vertices: rectangle(0, 315, 960, 225), closed: true }, minZoom: { value: 1.035 }, maxZoom: { value: 1 } } }),
-    createPointleshInstance({ id: `${roomId}.foreground`, prefabId: 'pointlesh.walk-behind', name: 'Foreground occlusion', overrides: { area: { vertices: rectangle(roomId === 'forest' ? 0 : 0, 200, roomId === 'forest' ? 163 : 80, 340), closed: true }, baseline: { value: 505 } } }),
+    createPointleshInstance({ id: `${roomId}.foreground`, prefabId: 'pointlesh.walk-behind', name: 'Foreground occlusion', overrides: { area: { vertices: roomForegroundVertices(roomId), closed: true }, baseline: { value: 505 } } }),
     createPointleshInstance({ id: `${roomId}.borin`, prefabId: 'forest.rescue-character', name: 'Borin', overrides: { object: { x: 471, y: 462, scaleX: 2.4, scaleY: 2.4 }, speed: { value: 165 }, walkStep: { value: 16 }, frameDurationMs: { value: 100 } } }),
     ...(roomCharacters[roomId] ?? []).map(npc => createPointleshInstance({
       id: `${roomId}.npc.${npc.actorName}`, prefabId: 'pointlesh.character', name: npc.name,
-      properties: { role: 'npc', actorName: npc.actorName, displayedScale: npc.displayedScale },
+      properties: { role: 'npc', actorName: npc.actorName, displayedScale: npc.displayedScale, animations: characterAnimations(npc.actorName) },
       overrides: { object: { assetId: `character.${npc.actorName}`, x: npc.x, y: npc.y, scaleX: npc.displayedScale, scaleY: npc.displayedScale } },
     })),
     ...(roomPickups[roomId] ?? []).map(pickup => createPointleshInstance({

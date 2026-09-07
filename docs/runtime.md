@@ -48,7 +48,7 @@ const arrived = hero.walkTo({ x: 440, y: 250 }, [floor]);
 // Keep ticking while awaiting arrived. It resolves true at the resolved destination, false on interruption/failure.
 ```
 
-In linked mode, a frame boundary moves the actor by `walkStep` world pixels. Choose the distance to match the planted foot's travel in the sprite art; change `frameDurationMs` to alter speed. With `movementLinkedToAnimation: false`, `speed` is pixels/second. A one-frame animation also uses smooth movement. The implementation uses elapsed time, including multiple frame boundaries in one update.
+In linked mode, a frame boundary moves the actor by `walkStep` world pixels. Choose the distance to match the planted foot's travel in the sprite art; change `frameDurationMs` to alter speed for a uniform manual clock. Directional ai-assets assignments derive frame count and delays from the selected authored animation instead. With `movementLinkedToAnimation: false`, `speed` is pixels/second. A one-frame animation also uses smooth movement. The implementation uses elapsed time, including multiple frame boundaries in one update.
 
 `setScale(scale)` changes rendered perspective scale and, unless `adjustSpeedToScale` is false, adjusts movement proportionally. Facing supports four or eight directions. Logical facing is separate from rendering art; an adapter may mirror or select a fallback animation when an asset has fewer directions.
 
@@ -88,7 +88,17 @@ Modes are `none`, `face`, `walk-if-point`, and `walk`. A walk point is the autho
 
 ### Speech and idle
 
-`say(text, durationMs?)` selects speaking activity and interrupts walking. It resolves when the time expires, `finishSpeech()` advances the line, or a new action replaces speech. Text defaults to at least 1.4 seconds and grows with line length. `state.speech` supplies text/remaining time to the UI; the renderer supplies text positioning and optional voice/portraits. An old activity's completion cannot reset a newer activity. Idle is the default standing state and returns to frame zero; custom fidgets can be implemented as a client behavior.
+`say(text, durationMs?)` selects speaking activity and interrupts walking. It resolves when the time expires, `finishSpeech()` advances the line, or a new action replaces speech. Text defaults to at least 1.4 seconds and grows with line length. `state.speech` supplies text/remaining time to the UI; the renderer supplies text positioning and optional voice/portraits. An old activity's completion cannot reset a newer activity. Idle is the default standing state and starts at frame zero. With authored animation timing selected, its cycle continues deterministically; custom fidgets can also be implemented as a client behavior.
+
+### Directional animation assignments
+
+Character prefabs store `properties.animations` as `CharacterAnimations`: partial `idle`, `walk` and `speak` maps. Each map accepts `front`, `back`, `left`, `right`, and optional `front-left`, `front-right`, `back-left`, `back-right` slots. An assignment is `{ assetId, key, flipX? }`; the key is an ai-assets animation key or linked animation state, and flip is false by default. Set the character's `directions` to 4 or 8 for logical facing.
+
+`readCharacterAnimations(properties)` returns validated, detached assignments. `resolveCharacterAnimation(animations, activity, facing)` maps down/up to front/back, falls back from absent diagonals to their front/back direction, then from missing walk/speak art to idle. A completely missing match returns `undefined`, allowing legacy rendering. `mergeCharacterAnimations` performs sparse per-slot inheritance for prefab instances; replacing a slot never inherits a previous flip flag. Native Pointlesh prefab resolution applies this merge while keeping other custom properties' existing merge behavior.
+
+The Phaser adapter accepts `animations: () => readCharacterAnimations(currentCharacter.properties)` and uses native ai-assets playback to follow actual linked child assets. It calls `setAnimationTiming(frameDurationsMs)` before ticking, using selected frame count, frame rate and per-frame delay overrides. The same clock drives idle, walk, speak and linked walking distance; finite speech completion switches to idle timing within the same update. Four-direction art can therefore serve eight-direction movement, and each mirrored view is explicit.
+
+Frame count/timing metadata belongs to versioned content, while the saved frame and elapsed phase belong to character state. `restore` preserves that phase until the renderer selects the restored activity's clip, avoiding truncation when an idle cycle has fewer frames than a saved walk. Refresh the binding after restore. Direct renderer integrations can remove authored timing with `setAnimationTiming(null)` and restore their own uniform configuration. Live asset/animation edits are detected by the Phaser binding, and `refreshAnimation()` forces a refresh when an external integration needs it.
 
 ## Saves
 

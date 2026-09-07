@@ -37,6 +37,33 @@ const completion = actor.walkTo({ x: 500, y: 300 }, [floor]);
 
 With movement linked to animation, each frame change permits a configured `walkStep` distance. Single-frame walks use continuous speed. Perspective scale can adjust travel distance. Idle, walking and speaking use a deterministic elapsed-millisecond state; the renderer must tick each actor exactly once.
 
+Character prefabs accept typed directional animation assignments:
+
+```ts
+import { createCharacterPrefab, readCharacterAnimations, resolveCharacterAnimation } from '@pointlesh/core';
+
+const dwarf = createCharacterPrefab({
+  assetId: 'character.dwarf', directions: 4,
+  animations: {
+    idle: { front: { assetId: 'character.dwarf', key: 'idle-front' } },
+    walk: {
+      left: { assetId: 'character.dwarf', key: 'walk-left' },
+      right: { assetId: 'character.dwarf', key: 'walk-left', flipX: true },
+    },
+    speak: { front: { assetId: 'character.dwarf', key: 'speak-front' } },
+  },
+});
+const assignment = resolveCharacterAnimation(
+  readCharacterAnimations(resolvedCharacter.properties), actor.state.activity, actor.state.facing,
+);
+```
+
+Each `idle`, `walk` and `speak` map accepts `front`, `back`, `left`, `right` and optional `front-left`, `front-right`, `back-left`, `back-right` slots. `key` references a native ai-assets animation key or linked animation state; `flipX` defaults to false. Down/up logical facing maps to front/back. An absent diagonal uses its front/back view; absent walk/speak art falls back to idle for that facing. With no matching assignment, the resolver returns `undefined` so a renderer can use its existing fallback.
+
+`assertCharacterAnimations` validates the JSON shape; `readCharacterAnimations` returns a detached typed property. `mergeCharacterAnimations` merges sparse instance overrides by activity and direction. Omitted slots inherit future prefab edits, while an assigned slot replaces its complete `{ assetId, key, flipX }` value. Native prefab resolution and derived prefab creation apply this merge automatically.
+
+Renderers can call `actor.setAnimationTiming([100, 150, 100])` when selecting authored art. These per-frame delays set the active frame count and first-frame duration, advance idle animations, and govern linked footstep travel. The Phaser adapter does this automatically for directional assignments using ai-assets playback metadata. Saved frame/elapsed values remain intact during `restore`; select the restored activity's timing before ticking. `setAnimationTiming(null)` removes the override; restore uniform `config.frameCount` and `config.frameDurationMs` if needed.
+
 ```ts
 // Held arrows/joystick: normalized diagonals and collision against the supplied geometry.
 actor.setMovementDirection({ x: 1, y: -1 }, [floor]);

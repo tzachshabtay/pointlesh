@@ -34,11 +34,33 @@ await actor.say('The king needs us.');
 
 The binding ticks on the scene's `update` event by default. If your game manages updates, pass `autoUpdate: false` and call `view.update(deltaMs)` once per frame. That method advances the controller; do not also call `actor.tick()`. Use `view.sync()` after restoring a save or editing a room when time should not advance.
 
-The binding places a sprite at the actor's feet, sets depth to foot Y, applies scale areas, and adjusts walking distance to perspective through the controller. Only pass `camera` for the actor that drives camera zoom. `baseScale` is the original sprite scale; scale areas multiply it. `depthOffset` lets your scene reserve lower depths for background art.
+The binding places a sprite at the actor's feet, sets depth to foot Y, applies scale areas, and adjusts walking distance to perspective through the controller. Only pass `camera` for the actor that drives camera zoom. `baseScale` is the original sprite scale; scale areas multiply it. `baseScale`, `origin` and `angle` also accept getters for live prefab transforms. `angle` is in degrees and composes with generated frame rotation. `depthOffset` lets your scene reserve lower depths for background art.
 
 An `areas` getter keeps the same binding valid after the designer changes `room`. Scale and zoom interpolate from the minimum to maximum coordinate of the authored axis (`x` or `y`). Later areas of the same kind win when they overlap. Disabled or open areas have no effect. Zoom smoothing is independent of frame rate. `evaluatePointleshAreaEffects()` also exposes these calculations for custom renderers and objects.
 
-For ai-assets animations, supply `aiRuntime`, `assetId` and `animation: state => ...`. The callback returns an authored ai-assets state or animation key. Pointlesh steps its frames using the controller's deterministic clock, including `MovementLinkedToAnimation`, and composes generated frame transforms with perspective scaling. Custom sheets can use the simpler `frame` callback. Keep the controller's frame count and duration aligned with authored walk cycles.
+For directional prefab animations, supply `aiRuntime` and an `animations` getter:
+
+```ts
+import { readCharacterAnimations } from '@pointlesh/core';
+
+const view = new PhaserAdventureCharacter(scene, actor, sprite, {
+  aiRuntime,
+  assetId: 'character.dwarf', // Optional fallback texture when no assignment resolves.
+  animations: () => readCharacterAnimations(currentCharacter().properties),
+  baseScale: () => ({ x: currentCharacter().scaleX, y: currentCharacter().scaleY }),
+  origin: () => ({ x: currentCharacter().anchorX, y: 1 - currentCharacter().anchorY }),
+  angle: () => currentCharacter().rotation,
+  areas: () => room.areas,
+});
+```
+
+The getter returns `CharacterAnimations`: `idle`, `walk` and `speak` maps whose front/back/left/right and optional diagonal slots hold `{ assetId, key, flipX? }`. The native ai-assets runtime resolves animation keys and linked animation states, including child assets. Explicit `flipX` is applied independently per slot. Missing diagonals use front/back; missing walking/speaking art uses the matching idle view.
+
+The selected animation supplies its actual frame count, frame rate and optional per-frame delays to the core clock. Idle animates, walking advances planted-foot distance at authored frame boundaries, and timed speech switches back to idle without losing leftover elapsed time. Directional cycles repeat while their activity remains active. No free-running Phaser animation is allowed to drift from movement. Generated frame offsets/scales/rotations compose with the current prefab transform and perspective.
+
+Assignments, linked state changes, frame metadata changes and registered preview replacements update on `sync()` or the next `update()`. Texture bindings follow the resolved animation child, so ai-assets previews/promotions remain live. `refreshAnimation()` explicitly invalidates and synchronizes playback for external authoring integrations. Restoring a saved walk while currently showing idle preserves the saved frame and elapsed time; call `view.sync()` after `actor.restore()`.
+
+Existing clients can still supply `aiRuntime`, `assetId` and `animation: state => ...`, or the simpler `frame` callback for custom sheets. These callbacks retain the configured clock when no directional assignment resolves. With legacy animation callbacks, keep the controller's frame count/duration aligned with the authored cycle yourself. A resolved directional assignment takes precedence over both callbacks.
 
 Destroying the scene or sprite detaches the binding and generated texture/animation bindings. Calling `view.destroy()` detaches it without destroying your sprite or controller.
 

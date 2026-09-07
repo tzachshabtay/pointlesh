@@ -26,6 +26,7 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   });
   inspector = installPointleshInspector({
     designer: native.designer,
+    aiAssets: options.aiAssets,
     mount: options.inspectorMount ?? options.mount,
     onPreview: options.onPreview,
   });

@@ -2,6 +2,12 @@
 
 These original pixel-art room backgrounds were generated with the built-in `image_gen` tool, then copied unmodified into the project. There are no external runtime image dependencies. No fallback CLI or post-generation image editing was used.
 
+The six characters are original code-authored pixel art in `demos/forest/src/sprites.ts`. Each has separate front, back, and left-profile drawings; the editable right-facing prefab slot mirrors the left profile. Each view includes four walk frames, two idle frames, and two speaking frames, all 24 × 32 pixels. The PNGs in `demos/forest/public/art/characters/` include a 192 × 96 sheet per character and nine animation strips per character. AI Assets registers each strip as a native animation, linked from its character asset, so its designer previews the same sequences used by the game.
+
+Regenerate the 60 committed PNGs with `npx tsx demos/forest/scripts/generate-character-art.ts`. Add `--promote` to explicitly update the authored manifests with the character animation definitions and prefab direction slots. Promotion preserves unrelated manifest entries, existing custom direction slots, and custom area shapes; it updates only untouched legacy floor and foreground rectangles to the demo's vector outlines. Normal builds never regenerate art or replace authored manifests. The generator uses Node's built-in PNG compression and requires no image-generation service.
+
+The character sheet rows are front, back, and left. Each row contains walk frames 0–3, idle frames 4–5, and speaking frames 6–7. The cinematic textures share this pixel source. These assets use the repository's MIT license.
+
 ## Atlas layout
 
 Each PNG is **1182 × 1330 pixels**, containing two approximately 16:9 rooms stacked vertically. Use the source rectangles below to exclude the tiny horizontal divider and prevent adjacent-room bleed. The game can select source rectangles directly; the source images have not been cropped or resampled.
