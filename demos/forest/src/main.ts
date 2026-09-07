@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClient } from '@ai-game-assets/phaser';
+import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey } from '@ai-game-assets/phaser';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
@@ -46,6 +46,7 @@ class ForestAdventure extends Phaser.Scene {
   background!: Phaser.GameObjects.Image;
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
+  objectTextureBindings = new Map<string, { assetId: string; binding: ReturnType<AiAssetRuntime['bindTexture']> }>();
   private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
   speakingVoice = 'borin';
   labels: Phaser.GameObjects.Text[] = [];
@@ -146,18 +147,23 @@ class ForestAdventure extends Phaser.Scene {
   }
   hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
   hover(id?: string) {
-    const target = targets[this.story.roomId].find(target => target.id === id);
+    const target = id ? targets[this.story.roomId].find(target => target.id === id) ?? this.resolved().objects.find(object => object.properties.targetId === id) : undefined;
     el('hover-label').textContent = target ? this.selected ? `Use ${items[this.selected].name} with ${target.name}` : target.name : '';
     el('hover-label').classList.toggle('visible', !!target);
     this.game.canvas.style.cursor = target ? 'pointer' : 'crosshair';
   }
-  async act(targetId: string, characterId?: string) {
+  interactionEntity(targetId: string, instanceId?: string) {
+    if (!targetVisible(this.story, targetId)) return undefined;
+    const object = this.resolved().objects.find(entity => entity.enabled && entity.properties.interactive !== false && entity.properties.targetId === targetId && (!instanceId || entity.id === instanceId));
+    if (instanceId) return object;
+    // Environmental scenery can share a story action with a character, such as the king's cage.
+    return this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled && area.closed && area.properties.interactive !== false) ?? object;
+  }
+  async act(targetId: string, instanceId?: string) {
     if (this.blocked()) return;
     this.clearMovementKeys();
-    const character = this.resolved().objects.find(object => object.kind === 'character' && object.enabled && object.properties.interactive !== false && object.properties.targetId === targetId && (!characterId || object.id === characterId));
-    const area = this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled);
-    const entity = characterId ? character : area ?? character;
-    if (!entity || !targetVisible(this.story, targetId)) return;
+    const entity = this.interactionEntity(targetId, instanceId);
+    if (!entity) return;
     const selected = this.selected;
     const operation = ++this.epoch;
     const center = 'position' in entity ? entity.position : entity.polygon.reduce((sum, point) => ({ x: sum.x + point.x / entity.polygon.length, y: sum.y + point.y / entity.polygon.length }), { x: 0, y: 0 });
@@ -167,9 +173,10 @@ class ForestAdventure extends Phaser.Scene {
     let arrived: boolean;
     try { arrived = await this.character.approach({ position: center, walkPoint }, 'walk', this.walkables()); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); return; }
-    if (operation !== this.epoch) return;
+    const current = this.interactionEntity(targetId, instanceId);
+    if (operation !== this.epoch || !current) return;
     if (!arrived) return this.say('I cannot reach that from here. There needs to be a walkable path.');
-    try { await this.behaviors.dispatch(entity.behaviors, { type: 'interact', payload: targetId }, { targetId, item: selected }); }
+    try { await this.behaviors.dispatch(current.behaviors, { type: 'interact', payload: targetId }, { targetId, item: selected }); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); }
   }
   applyInteraction(targetId: string, selected?: ItemId) {
@@ -210,7 +217,7 @@ class ForestAdventure extends Phaser.Scene {
       else if (this.toolsOpen()) this.character.face(this.authoredFacing(actor));
       this.actor.setVisible(actor.enabled);
     }
-    this.syncEntities(); this.binding.sync();
+    this.syncEntities(); this.binding.sync(); this.renderNearby();
     this.drawHotspots();
   }
   syncEntities() {
@@ -220,17 +227,46 @@ class ForestAdventure extends Phaser.Scene {
     for (const object of objects) {
       const actorName = String(object.properties.actorName ?? '');
       const pickupId = String(object.properties.pickupId ?? '');
-      const texture = object.kind === 'character' ? `actor.${actorName}` : `pickup.${pickupId}`;
-      if (!this.textures.exists(texture)) continue;
+      const asset = assets.assets[object.assetId];
+      const assetTexture = asset ? this.aiRuntime.key(object.assetId) : '';
+      // The loader also creates placeholders for ungenerated definitions. Keep
+      // the demo's pixel art until a real version or live preview is available.
+      const hasAssetTexture = !!asset && (!!asset.activeVersion || assetTexture !== aiTextureKey(object.assetId)) && this.textures.exists(assetTexture);
+      const texture = hasAssetTexture ? assetTexture : object.kind === 'character' ? `actor.${actorName}` : `pickup.${pickupId}`;
+      if (!this.textures.exists(texture)) {
+        this.entitySprites.get(object.id)?.destroy(); this.entitySprites.delete(object.id); this.npcActors.delete(object.id);
+        continue;
+      }
+      const current = () => this.resolved().objects.find(entity => entity.id === object.id) ?? object;
       let sprite = this.entitySprites.get(object.id);
-      if (!sprite) { sprite = this.add.sprite(object.position.x, object.position.y, texture, object.kind === 'character' ? 4 : undefined); this.entitySprites.set(object.id, sprite); }
+      if (!sprite) {
+        sprite = this.add.sprite(object.position.x, object.position.y, texture, hasAssetTexture ? asset.frameGrid ? 0 : undefined : object.kind === 'character' ? 4 : undefined);
+        this.entitySprites.set(object.id, sprite);
+        bindAdventureSpriteInteraction(sprite, {
+          enabled: () => !this.blocked() && current().enabled && current().properties.interactive !== false && typeof current().properties.targetId === 'string' && targetVisible(this.story, String(current().properties.targetId)),
+          onHover: hovered => this.hover(hovered ? String(current().properties.targetId) : undefined),
+          onInteract: () => { void this.act(String(current().properties.targetId), current().id); },
+        });
+        sprite.once('destroy', () => {
+          this.objectTextureBindings.get(object.id)?.binding.destroy();
+          this.objectTextureBindings.delete(object.id);
+        });
+      }
+      if (object.kind === 'object') {
+        sprite.setTexture(texture, hasAssetTexture && asset.frameGrid ? 0 : undefined);
+        const previous = this.objectTextureBindings.get(object.id);
+        if (previous?.assetId !== object.assetId) {
+          previous?.binding.destroy(); this.objectTextureBindings.delete(object.id);
+          if (asset) this.objectTextureBindings.set(object.id, { assetId: object.assetId, binding: this.aiRuntime.bindTexture(sprite, object.assetId, { setInitialTexture: false, ...(asset.frameGrid ? { frame: 0 } : {}) }) });
+        }
+      }
       sprite.setPosition(object.position.x, object.position.y).setScale(object.scaleX, object.scaleY).setOrigin(object.anchorX, 1 - object.anchorY).setAngle(object.rotation).setDepth(object.position.y);
-      sprite.setVisible(object.enabled && (!pickupId || targetVisible(this.story, pickupId)));
+      const visibilityTarget = typeof object.properties.targetId === 'string' ? object.properties.targetId : pickupId;
+      sprite.setVisible(object.enabled && (!visibilityTarget || targetVisible(this.story, visibilityTarget)));
       if (object.kind === 'character') {
         let npc = this.npcActors.get(object.id);
         if (!npc) {
           const controller = new CharacterController({ id: object.id, position: object.position, facing: this.authoredFacing(object), directions: object.properties.directions === 8 ? 8 : 4 });
-          const current = () => this.resolved().objects.find(entity => entity.id === object.id) ?? object;
           const binding = new PhaserAdventureCharacter(this, controller, sprite, {
             autoUpdate: false, aiRuntime: this.aiRuntime, assetId: object.assetId,
             animations: () => readCharacterAnimations(current().properties),
@@ -239,11 +275,6 @@ class ForestAdventure extends Phaser.Scene {
             angle: () => current().rotation,
           });
           npc = { controller, binding, sprite, actorName }; this.npcActors.set(object.id, npc);
-          bindAdventureSpriteInteraction(sprite, {
-            enabled: () => !this.blocked() && current().enabled && current().properties.interactive !== false && typeof current().properties.targetId === 'string' && targetVisible(this.story, String(current().properties.targetId)),
-            onHover: hovered => this.hover(hovered ? String(current().properties.targetId) : undefined),
-            onInteract: () => { void this.act(String(current().properties.targetId), current().id); },
-          });
         }
         npc.actorName = actorName;
         npc.controller.state.position = { ...object.position };
@@ -299,12 +330,21 @@ class ForestAdventure extends Phaser.Scene {
       const target = targets[this.story.roomId].find(target => target.id === area.id);
       if (target) this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
     }
-    for (const object of this.resolved().objects.filter(object => object.kind === 'character' && object.enabled && object.properties.interactive !== false && typeof object.properties.targetId === 'string')) {
+    for (const object of this.resolved().objects.filter(object => object.enabled && object.properties.interactive !== false && typeof object.properties.targetId === 'string')) {
       const target = targets[this.story.roomId].find(target => target.id === object.properties.targetId);
       const sprite = this.entitySprites.get(object.id);
       if (!target || !sprite?.visible || !targetVisible(this.story, target.id)) continue;
       const bounds = sprite.getBounds();
       this.labels.push(this.add.text(bounds.centerX, bounds.top - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setOrigin(.5, 0).setDepth(2100));
+    }
+  }
+  renderNearby() {
+    el('nearby').replaceChildren();
+    for (const target of targets[this.story.roomId].filter(target => targetVisible(this.story, target.id))) {
+      const node = button(target.name + (target.exit ? ' ↗' : ''), () => void this.act(target.id));
+      node.setAttribute('aria-label', `Interact with ${target.name}`);
+      node.disabled = !this.interactionEntity(target.id);
+      el('nearby').append(node);
     }
   }
   say(text: string, speaker = 'Borin') { this.epoch++; this.clearMovementKeys(); this.talking = true; this.speakingVoice = 'borin'; this.conversationActive = false; this.character.stop(); void this.character.say(text, 3600000); el('dialog').hidden = false; el('speaker').textContent = speaker; el('speech').textContent = text; el('choices').replaceChildren(); el('dialog-next').hidden = false; }
@@ -384,12 +424,8 @@ class ForestAdventure extends Phaser.Scene {
     for (let i = this.story.inventory.length; i < 6; i++) { const slot = document.createElement('span'); slot.className = 'inventory-slot empty'; slot.textContent = '·'; el('inventory').append(slot); }
     el('clear-item').hidden = !this.selected; el('inventory-hint').textContent = this.selected ? `Use ${items[this.selected].name} with…` : 'A little courage goes a long way.';
     el('objective').textContent = this.story.flags.won ? 'King Aldric is home. Well done, Borin.' : this.story.flags.guardAsleep ? 'Free the king from his cage.' : 'Find the king. Bring him home.';
-    el('nearby').replaceChildren();
-    for (const target of targets[this.story.roomId].filter(target => targetVisible(this.story, target.id))) {
-      const node = button(target.name + (target.exit ? ' ↗' : ''), () => void this.act(target.id)); node.setAttribute('aria-label', `Interact with ${target.name}`); el('nearby').append(node);
-    }
-    this.drawHotspots();
     this.syncEntities();
+    this.renderNearby(); this.drawHotspots();
   }
   snapshot(): GameState {
     return { roomId: this.story.roomId, inventory: [...this.story.inventory], flags: { ...this.story.flags }, characters: { borin: this.character.snapshot() }, selectedItem: this.selected ?? null,

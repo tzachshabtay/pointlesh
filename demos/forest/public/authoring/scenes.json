@@ -1560,9 +1560,15 @@
                 "properties": {
                   "role": "pickup",
                   "pickupId": "coin",
-                  "displayedScale": 2
+                  "displayedScale": 2,
+                  "targetId": "coin",
+                  "description": "My emergency breakfast fund.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 124
                 },
-                "behaviors": []
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             },
             {
@@ -1584,105 +1590,11 @@
                 "properties": {
                   "role": "pickup",
                   "pickupId": "rope",
-                  "displayedScale": 2
-                },
-                "behaviors": []
-              }
-            },
-            {
-              "id": "coin",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Copper coin",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 482,
-                      "y": 262
-                    },
-                    {
-                      "id": "b",
-                      "x": 550,
-                      "y": 262
-                    },
-                    {
-                      "id": "c",
-                      "x": 550,
-                      "y": 326
-                    },
-                    {
-                      "id": "d",
-                      "x": 482,
-                      "y": 326
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 516
-                },
-                "approachY": {
-                  "value": 421
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Copper coin",
-                  "exit": "",
-                  "description": "My emergency breakfast fund."
-                },
-                "behaviors": [
-                  "forest.interact"
-                ]
-              }
-            },
-            {
-              "id": "rope",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Climbing rope",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 93,
-                      "y": 340
-                    },
-                    {
-                      "id": "b",
-                      "x": 161,
-                      "y": 340
-                    },
-                    {
-                      "id": "c",
-                      "x": 161,
-                      "y": 404
-                    },
-                    {
-                      "id": "d",
-                      "x": 93,
-                      "y": 404
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 127
-                },
-                "approachY": {
-                  "value": 443
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Climbing rope",
-                  "exit": "",
-                  "description": "A coil of good dwarven climbing rope on the old chest."
+                  "displayedScale": 2,
+                  "targetId": "rope",
+                  "description": "A coil of good dwarven climbing rope on the old chest.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 68
                 },
                 "behaviors": [
                   "forest.interact"
@@ -1952,55 +1864,11 @@
                 "properties": {
                   "role": "pickup",
                   "pickupId": "mushroom",
-                  "displayedScale": 2
-                },
-                "behaviors": []
-              }
-            },
-            {
-              "id": "mushroom",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Dreamcap mushrooms",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 77,
-                      "y": 374
-                    },
-                    {
-                      "id": "b",
-                      "x": 145,
-                      "y": 374
-                    },
-                    {
-                      "id": "c",
-                      "x": 145,
-                      "y": 438
-                    },
-                    {
-                      "id": "d",
-                      "x": 77,
-                      "y": 438
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 111
-                },
-                "approachY": {
-                  "value": 448
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Dreamcap mushrooms",
-                  "exit": "",
-                  "description": "Violet caps with silver spots. Mara will know what they do."
+                  "displayedScale": 2,
+                  "targetId": "mushroom",
+                  "description": "Violet caps with silver spots. Mara will know what they do.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 39
                 },
                 "behaviors": [
                   "forest.interact"

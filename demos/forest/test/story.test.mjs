@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
 const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, targetVisible, hint } = await tsImport('../src/story.ts', import.meta.url);
@@ -74,4 +75,34 @@ test('authored scene prefabs provide reachable interactions, editable NPCs, and 
   }
   assert.equal(npcCount, 5);
   assert.deepEqual(pickups.sort(), ['coin', 'mushroom', 'rope']);
+});
+
+test('seed and promoted pickups own their interactions without duplicate hotspot polygons', async () => {
+  const { scenes } = await tsImport('../src/content.ts', import.meta.url);
+  const promoted = JSON.parse(await readFile(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  for (const manifest of [scenes, promoted]) {
+    for (const [roomId, pickupId, approach] of [['house', 'coin', { x: 516, y: 421 }], ['house', 'rope', { x: 127, y: 443 }], ['forest', 'mushroom', { x: 111, y: 448 }]]) {
+      const room = resolvePointleshScene(manifest, roomId);
+      const object = room.objects.find(object => object.id === `${roomId}.pickup.${pickupId}`);
+      assert.equal(object.kind, 'object');
+      assert.equal(object.properties.targetId, pickupId);
+      assert.ok(object.behaviors.includes('forest.interact'));
+      assert.ok(object.properties.description);
+      assert.equal(room.areas.some(area => area.id === pickupId), false);
+      const standingPoint = { x: object.position.x + object.properties.approachOffsetX, y: object.position.y + object.properties.approachOffsetY };
+      assert.deepEqual(standingPoint, approach);
+      assert.equal(isWalkable(standingPoint, walkablePolygons(room)), true);
+    }
+    assert.ok(resolvePointleshScene(manifest, 'camp').areas.some(area => area.id === 'cage'));
+  }
+});
+
+test('collected pickup targets cannot grant duplicate items', () => {
+  const state = newStory();
+  for (const [roomId, pickupId] of [['house', 'coin'], ['house', 'rope'], ['forest', 'mushroom']]) {
+    state.roomId = roomId; state.flags.knowsDreamcap = true;
+    interact(state, pickupId); interact(state, pickupId);
+    assert.equal(state.inventory.filter(item => item === pickupId).length, 1);
+    assert.equal(targetVisible(state, pickupId), false);
+  }
 });

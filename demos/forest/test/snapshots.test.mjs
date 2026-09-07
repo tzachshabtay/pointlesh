@@ -70,17 +70,17 @@ test('combined item, conversation reply, guard timer and pending walk restore in
   assert.equal(freshHero.state.activity, 'idle');
 });
 
-test('every authored hotspot and character approach point is reachable from its room spawn', () => {
+test('every authored hotspot and interactive sprite approach point is reachable from its room spawn', () => {
   for (const roomId of story.roomIds) {
     const scene = resolvePointleshScene(scenes, roomId), floors = walkablePolygons(scene);
     for (const area of scene.areas.filter(area => area.kind === 'hotspot')) {
       assert.ok(findPath({ x: 471, y: 462 }, { x: area.properties.approachX, y: area.properties.approachY }, floors), `${roomId}/${area.id} must be reachable`);
     }
-    for (const npc of scene.objects.filter(object => object.properties.role === 'npc')) {
-      assert.ok(story.targets[roomId].some(target => target.id === npc.properties.targetId), `${npc.id} maps to an existing story interaction`);
-      assert.ok(npc.behaviors.includes('forest.interact'));
-      assert.ok(findPath({ x: 471, y: 462 }, { x: npc.position.x + npc.properties.approachOffsetX, y: npc.position.y + npc.properties.approachOffsetY }, floors), `${npc.id} must be approachable`);
-      if (npc.properties.actorName !== 'king') assert.equal(scene.areas.some(area => area.id === npc.properties.targetId), false, `${npc.id} must not have a duplicate hotspot`);
+    for (const object of scene.objects.filter(object => typeof object.properties.targetId === 'string')) {
+      assert.ok(story.targets[roomId].some(target => target.id === object.properties.targetId), `${object.id} maps to an existing story interaction`);
+      assert.ok(object.behaviors.includes('forest.interact'));
+      assert.ok(findPath({ x: 471, y: 462 }, { x: object.position.x + object.properties.approachOffsetX, y: object.position.y + object.properties.approachOffsetY }, floors), `${object.id} must be approachable`);
+      if (object.properties.actorName !== 'king') assert.equal(scene.areas.some(area => area.id === object.properties.targetId), false, `${object.id} must not have a duplicate hotspot`);
     }
   }
   assert.ok(resolvePointleshScene(scenes, 'camp').areas.some(area => area.id === 'cage'), 'The cage remains an environmental puzzle target');

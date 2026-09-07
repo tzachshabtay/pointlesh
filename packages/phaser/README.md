@@ -78,7 +78,7 @@ const interaction = bindAdventureSpriteInteraction(npcSprite, {
 
 This uses native Phaser pointer input and samples the current texture frame's alpha, so transparent pixels pass through. Moving, scaling, rotating, changing frames, and flipping the sprite update the clickable shape automatically. Successful sprite interactions stop propagation to scene handlers, preventing the same click from also starting a background walk. `alphaTolerance` defaults to 1. Destroying the sprite or scene removes the binding; `interaction.destroy()` detaches it manually and restores prior input settings.
 
-The forest demo stores each NPC's story `targetId` and relative `approachOffsetX`/`approachOffsetY` in its character prefab. The same character resolves clicks and Nearby actions, and the standing point follows its authored position. Characters have no duplicate hotspot areas. The king also forwards clicks to the cage puzzle, whose environmental area remains independently interactive.
+The forest demo stores each interactive character or object's story `targetId` and relative `approachOffsetX`/`approachOffsetY` in its prefab. The same entity resolves sprite clicks and Nearby actions, and the standing point follows its authored position. Characters and rendered pickups—including the rope, coin and mushroom—have no duplicate hotspot areas. Turning off an entity's `interactive` property disables its sprite and Nearby action; collected pickups disappear and stop receiving input. The king also forwards clicks to the cage puzzle, whose environmental area remains independently interactive. The library helper accepts arbitrary callbacks, so client games can define their own object behaviors without adopting the demo's story metadata.
 
 ## Walk-behind scenery
 
@@ -112,7 +112,13 @@ editor.designer.open();
 editor.inspector.open();
 ```
 
-This reuses scene-designer's native canvas handles, curved polygons, prefab editing and minimap. The adventure inspector adds Pointlesh properties, custom JSON properties, behavior IDs, undo/redo and manifest export. Native selection and manifest changes keep the inspector synchronized. Both tools are cleaned up on scene shutdown or `editor.destroy()`.
+This reuses scene-designer's native canvas handles, curved polygons, prefab editing and minimap. The adventure inspector adds Pointlesh properties, custom JSON properties, behavior IDs, undo/redo and manifest export. Selecting an area instance or definition in the native Scenes or Prefabs panel also shows its **Area capabilities**, including the **Walk-behind** switch, without opening another panel.
+
+When walk-behind is enabled, a labeled horizontal baseline appears across the scene. Drag the line or its label vertically to change occlusion immediately; one **Undo area edit** restores the starting value. The number field, exported manifest, and runtime share the same baseline. Disabling walk-behind hides the line and turns off the effect.
+
+Vertices outside the visible canvas or behind designer panels have numbered grips at the nearest available edge. Selecting or clicking a grip leaves the shape intact; dragging brings that vertex to the visible grip position. Native curves and vertex IDs are preserved, and the native designer's undo restores the whole drag. Grips account for camera transforms, page scrolling, resizing, and adjacent grips.
+
+`installPhaserPointleshDesigner` installs both helpers and exposes them as `areaBaseline` and `areaEdgeHandles`. Standalone integrations can use `installPhaserAreaBaseline({ scene, designer, inspector })` and `installPhaserAreaEdgeHandles({ scene, designer })`; both accept an optional camera getter and return `sync()` and `destroy()`. Native selection and manifest changes keep the controls synchronized. Scene shutdown or `editor.destroy()` cleans up the panels, drawings, and input handlers.
 
 ## ai-assets and dialog-designer
 

@@ -4,4 +4,6 @@ export * from "./designer.js";
 export * from "./assets.js";
 export * from "./dialog.js";
 export * from "./interaction.js";
+export * from "./area-baseline.js";
+export * from "./area-edge-handles.js";
 export { SceneDesignerRuntime, installPhaserSceneDesigner } from "@scene-designer/phaser";

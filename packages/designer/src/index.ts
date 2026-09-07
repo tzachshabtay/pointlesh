@@ -6,6 +6,7 @@ export type {
   InstalledPointleshDesigner,
   PointleshDesignerOptions,
   PointleshInspector,
+  PointleshInspectorEditOptions,
   PointleshInspectorOptions,
 } from "./inspector.js";
 export { installSceneDesigner, SceneDesignerDebugClient } from "@scene-designer/designer";

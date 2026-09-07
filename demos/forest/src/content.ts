@@ -165,12 +165,20 @@ export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, sce
         overrides: { object: { assetId: `character.${npc.actorName}`, x: npc.x, y: npc.y, scaleX: npc.displayedScale, scaleY: npc.displayedScale } },
       });
     }),
-    ...(roomPickups[roomId] ?? []).map(pickup => createPointleshInstance({
-      id: `${roomId}.pickup.${pickup.pickupId}`, prefabId: 'pointlesh.object', name: pickup.name,
-      properties: { role: 'pickup', pickupId: pickup.pickupId, displayedScale: 2 },
-      overrides: { object: { assetId: `object.${pickup.pickupId}`, x: pickup.x, y: pickup.y, scaleX: 2, scaleY: 2 } },
-    })),
-    ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id)).map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
+    ...(roomPickups[roomId] ?? []).map(pickup => {
+      const target = targets[roomId].find(target => target.id === pickup.pickupId)!;
+      return createPointleshInstance({
+        id: `${roomId}.pickup.${pickup.pickupId}`, prefabId: 'pointlesh.object', name: pickup.name,
+        properties: {
+          role: 'pickup', pickupId: pickup.pickupId, targetId: target.id, description: target.description, displayedScale: 2,
+          approachOffsetX: (target.walkX ?? target.x) - pickup.x,
+          approachOffsetY: (target.walkY ?? Math.max(403, Math.min(494, target.y + 25))) - pickup.y,
+        },
+        behaviors: ['forest.interact'],
+        overrides: { object: { assetId: `object.${pickup.pickupId}`, x: pickup.x, y: pickup.y, scaleX: 2, scaleY: 2 } },
+      });
+    }),
+    ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id) && !(roomPickups[roomId] ?? []).some(pickup => pickup.pickupId === target.id)).map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
   ];
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure prefabs' }), prefabs: instances };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], width: 960, height: 540 }), layers: [layer] };
