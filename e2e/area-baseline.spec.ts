@@ -132,3 +132,36 @@ test('inline area undo restores the entire offscreen vertex drag', async ({ page
   await context.getByRole('button', { name: 'Redo area edit', exact: true }).click();
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest())).toEqual(after);
 });
+
+test('inline area controls remain clickable where a scrolled dock resize grip crosses them', async ({ page }) => {
+  await page.goto('/?designer=1');
+  await expect(page.locator('#loading')).toBeHidden();
+  const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
+  await native.getByRole('button', { name: 'Expand layer', exact: true }).click();
+  await native.getByText('Foreground occlusion', { exact: true }).click();
+  const context = native.getByRole('region', { name: 'Selected area adventure properties' });
+  const enabled = context.getByRole('checkbox', { name: 'Walk-behind', exact: true });
+  await enabled.uncheck();
+  const undo = context.getByRole('button', { name: 'Undo area edit', exact: true });
+  await undo.scrollIntoViewIfNeeded();
+  // The upstream dock mounts its absolute resize grips inside the scrolling panel.
+  // Choose a window height that puts its south grip across the Undo button, then
+  // scroll both into the middle of the panel, reproducing the Linux layout failure.
+  const heightAdjustment = await native.evaluate(panel => {
+    const button = panel.querySelector('.pointlesh-native-area-history button')!.getBoundingClientRect();
+    const grip = panel.querySelector('[data-edge="s"]')!.getBoundingClientRect();
+    return button.y + button.height / 2 - grip.y - grip.height / 2;
+  });
+  const viewport = page.viewportSize()!;
+  await page.setViewportSize({ ...viewport, height: Math.round(viewport.height + heightAdjustment) });
+  await native.evaluate(panel => { panel.scrollTop += 300; });
+  const overlaps = await native.evaluate(panel => {
+    const button = panel.querySelector('.pointlesh-native-area-history button')!.getBoundingClientRect();
+    const grip = panel.querySelector('[data-edge="s"]')!.getBoundingClientRect();
+    const x = button.x + button.width / 2, y = button.y + button.height / 2;
+    return x >= grip.left && x <= grip.right && y >= grip.top && y <= grip.bottom;
+  });
+  expect(overlaps).toBe(true);
+  await undo.click({ timeout: 10_000 });
+  await expect(enabled).toBeChecked();
+});
