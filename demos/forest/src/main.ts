@@ -16,6 +16,13 @@ import './style.css';
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const button = (text: string, action: () => void) => { const node = document.createElement('button'); node.textContent = text; node.onclick = action; return node; };
 const music = new ForestMusic();
+// Authoring requests use the companion service; image previews use the same public files as the game.
+class ForestAssetDebugClient extends AiAssetDebugClient {
+  override assetUrl(file: string): string {
+    if (/^(data:|blob:|https?:\/\/)/i.test(file)) return file;
+    return new URL(file.replace(/^\/+/, ''), new URL(import.meta.env.BASE_URL, location.href)).href;
+  }
+}
 let authoredScenes: SceneDesignerManifest = scenes;
 let gameScene: ForestAdventure;
 let modalOpen = false;
@@ -204,7 +211,7 @@ class ForestAdventure extends Phaser.Scene {
         texture.context.drawImage(source, 0, atlasRooms[room].row * (frameHeight + divider), source.width, frameHeight, 0, 0, 960, 540); texture.refresh();
       }
     };
-    installAiAssetDesigner({ scene: this, manifest: assets, autoFirstDrafts: false, client: new AiAssetDebugClient('http://127.0.0.1:4287'), ...callbacks,
+    installAiAssetDesigner({ scene: this, manifest: assets, autoFirstDrafts: false, client: new ForestAssetDebugClient('http://127.0.0.1:4287'), ...callbacks,
       onPreview: (id, key, asset) => { callbacks.onPreview(id, key, asset); refreshAtlas(id, key); },
       onAssetReady: (id, key, asset) => { callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); }
     });
