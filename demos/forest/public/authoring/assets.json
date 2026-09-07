@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "assets": {
+    "background.village-pub": {
+      "id": "background.village-pub",
+      "kind": "image",
+      "prompt": "Two vertically stacked pixel-art adventure rooms: village-pub. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.",
+      "dimensions": {
+        "width": 1182,
+        "height": 1330
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/atlas-village-pub.png",
+          "prompt": "Pixel-art village-pub room atlas",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "imagegen"
+        }
+      }
+    },
+    "background.house-forest": {
+      "id": "background.house-forest",
+      "kind": "image",
+      "prompt": "Two vertically stacked pixel-art adventure rooms: house-forest. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.",
+      "dimensions": {
+        "width": 1182,
+        "height": 1330
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/atlas-house-forest.png",
+          "prompt": "Pixel-art house-forest room atlas",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "imagegen"
+        }
+      }
+    },
+    "background.mine-camp": {
+      "id": "background.mine-camp",
+      "kind": "image",
+      "prompt": "Two vertically stacked pixel-art adventure rooms: mine-camp. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.",
+      "dimensions": {
+        "width": 1182,
+        "height": 1330
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/atlas-mine-camp.png",
+          "prompt": "Pixel-art mine-camp room atlas",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "imagegen"
+        }
+      }
+    },
+    "character.borin": {
+      "id": "character.borin",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background.",
+      "dimensions": {
+        "width": 24,
+        "height": 32
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "character.elder": {
+      "id": "character.elder",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background.",
+      "dimensions": {
+        "width": 24,
+        "height": 32
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "character.innkeeper": {
+      "id": "character.innkeeper",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background.",
+      "dimensions": {
+        "width": 24,
+        "height": 32
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "character.miner": {
+      "id": "character.miner",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background.",
+      "dimensions": {
+        "width": 24,
+        "height": 32
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "character.guard": {
+      "id": "character.guard",
+      "kind": "image",
+      "prompt": "A small pixel-art orc guard, full body, transparent background.",
+      "dimensions": {
+        "width": 24,
+        "height": 32
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "character.king": {
+      "id": "character.king",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background.",
+      "dimensions": {
+        "width": 24,
+        "height": 32
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "object.coin": {
+      "id": "object.coin",
+      "kind": "image",
+      "prompt": "A small gleaming copper coin, pixel art, transparent background.",
+      "dimensions": {
+        "width": 16,
+        "height": 16
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "object.rope": {
+      "id": "object.rope",
+      "kind": "image",
+      "prompt": "A coil of sturdy dwarven climbing rope, pixel art, transparent background.",
+      "dimensions": {
+        "width": 16,
+        "height": 16
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "object.mushroom": {
+      "id": "object.mushroom",
+      "kind": "image",
+      "prompt": "A purple dreamcap mushroom with silver spots, pixel art, transparent background.",
+      "dimensions": {
+        "width": 16,
+        "height": 16
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "voice.borin": {
+      "id": "voice.borin",
+      "kind": "voice",
+      "prompt": "Warm fantasy storytelling voice for Borin.",
+      "activeVersion": "",
+      "versions": {}
+    },
+    "voice.elder": {
+      "id": "voice.elder",
+      "kind": "voice",
+      "prompt": "Warm fantasy storytelling voice for Elder Rowan.",
+      "activeVersion": "",
+      "versions": {}
+    },
+    "voice.innkeeper": {
+      "id": "voice.innkeeper",
+      "kind": "voice",
+      "prompt": "Warm fantasy storytelling voice for Mara.",
+      "activeVersion": "",
+      "versions": {}
+    },
+    "voice.miner": {
+      "id": "voice.miner",
+      "kind": "voice",
+      "prompt": "Warm fantasy storytelling voice for Orrin.",
+      "activeVersion": "",
+      "versions": {}
+    },
+    "voice.chest": {
+      "id": "voice.chest",
+      "kind": "voice",
+      "prompt": "Warm fantasy storytelling voice for The runed chest.",
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.elder.greeting": {
+      "id": "line.elder.greeting",
+      "kind": "voice-line",
+      "prompt": "Borin. You have your father’s stubborn look. Good. We will need it.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.elder",
+        "text": "Borin. You have your father’s stubborn look. Good. We will need it."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.elder.king": {
+      "id": "line.elder.king",
+      "kind": "voice-line",
+      "prompt": "East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.elder",
+        "text": "East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.elder.advice": {
+      "id": "line.elder.advice",
+      "kind": "voice-line",
+      "prompt": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.elder",
+        "text": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.elder.goodbye": {
+      "id": "line.elder.goodbye",
+      "kind": "voice-line",
+      "prompt": "I know, lad. I know.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.elder",
+        "text": "I know, lad. I know."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.innkeeper.greeting": {
+      "id": "line.innkeeper.greeting",
+      "kind": "voice-line",
+      "prompt": "If you are planning a rescue, I hope you are planning to come back for supper.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.innkeeper",
+        "text": "If you are planning a rescue, I hope you are planning to come back for supper."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.innkeeper.dreamcap": {
+      "id": "line.innkeeper.dreamcap",
+      "kind": "voice-line",
+      "prompt": "Orcs love honey stout. Add a silver-spotted dreamcap from the wood and they will sleep for hours. Combine them in your satchel, then slip the brew into their stew when the guard looks away.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.innkeeper",
+        "text": "Orcs love honey stout. Add a silver-spotted dreamcap from the wood and they will sleep for hours. Combine them in your satchel, then slip the brew into their stew when the guard looks away."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.innkeeper.buy": {
+      "id": "line.innkeeper.buy",
+      "kind": "voice-line",
+      "prompt": "One copper coin. Bring me one from home, select it in your satchel, and hand it over. This is a pub, not a charity for heroes.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.innkeeper",
+        "text": "One copper coin. Bring me one from home, select it in your satchel, and hand it over. This is a pub, not a charity for heroes."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.innkeeper.goodbye": {
+      "id": "line.innkeeper.goodbye",
+      "kind": "voice-line",
+      "prompt": "Two seats. And something better than orc stew.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.innkeeper",
+        "text": "Two seats. And something better than orc stew."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.miner.greeting": {
+      "id": "line.miner.greeting",
+      "kind": "voice-line",
+      "prompt": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.miner.password": {
+      "id": "line.miner.password",
+      "kind": "voice-line",
+      "prompt": "For the king? Of course. When the chest asks its question, say: “Stone remembers.” Take the pickaxe. It will break an orc lock.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "For the king? Of course. When the chest asks its question, say: “Stone remembers.” Take the pickaxe. It will break an orc lock."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.miner.mining": {
+      "id": "line.miner.mining",
+      "kind": "voice-line",
+      "prompt": "Enough to pay Mara. So, no.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "Enough to pay Mara. So, no."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.miner.goodbye": {
+      "id": "line.miner.goodbye",
+      "kind": "voice-line",
+      "prompt": "Bring the king back first. The pickaxe can wait.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "Bring the king back first. The pickaxe can wait."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-locked.greeting": {
+      "id": "line.chest-locked.greeting",
+      "kind": "voice-line",
+      "prompt": "WHAT DOES THE MOUNTAIN REMEMBER?",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "WHAT DOES THE MOUNTAIN REMEMBER?"
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-locked.guess": {
+      "id": "line.chest-locked.guess",
+      "kind": "voice-line",
+      "prompt": "THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-open.greeting": {
+      "id": "line.chest-open.greeting",
+      "kind": "voice-line",
+      "prompt": "WHAT DOES THE MOUNTAIN REMEMBER?",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "WHAT DOES THE MOUNTAIN REMEMBER?"
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-open.open-chest": {
+      "id": "line.chest-open.open-chest",
+      "kind": "voice-line",
+      "prompt": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper."
+      },
+      "activeVersion": "",
+      "versions": {}
+    }
+  }
+}

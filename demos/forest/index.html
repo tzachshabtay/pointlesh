@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#111b19"/><meta name="description" content="A pixel-art point-and-click adventure built with Pointlesh. Explore the forest, outwit the orcs, and bring your king home."/><title>The King Under the Mountain · Pointlesh</title></head>
+<body>
+  <div id="app">
+    <header class="site-header"><a class="wordmark" href="https://github.com/tzachshabtay/pointlesh" target="_blank" rel="noreferrer"><span class="mark">✦</span> pointlesh<span class="badge">A PLAYABLE DEMO</span></a><nav><button id="sound" title="Toggle music" aria-pressed="false">♫ <span>Sound off</span></button><button id="help">How to play</button><a href="https://github.com/tzachshabtay/pointlesh" target="_blank" rel="noreferrer">Source ↗</a></nav></header>
+    <main>
+      <div class="title-row"><div><p class="eyebrow">A SMALL DWARF. A RATHER LARGE ADVENTURE.</p><h1>The King Under the Mountain</h1></div><span class="chapter">CHAPTER I <span>·</span> THE RESCUE</span></div>
+      <section class="game-shell" aria-label="The adventure">
+        <div class="scene-bar"><div><span class="location-dot"></span><span id="room-name">Bramblehollow</span><span class="region">THE ELDERWOOD</span></div><div class="game-tools"><button id="map">Map <kbd>M</kbd></button><button id="journal">Journal <kbd>J</kbd><i id="clue-dot"></i></button><button id="save">Save</button><button id="load">Load</button><button id="designer">Designer</button></div></div>
+        <div class="stage-wrap"><div id="game"></div><div id="loading">Lighting the lanterns…</div><div class="vignette"></div><div id="hover-label" aria-hidden="true"></div><div id="guard-status" hidden></div><button id="hotspots" title="Show interactive objects (Tab)">◇ <span>Show hotspots</span></button>
+          <div id="cutscene" hidden><div class="cutscene-inner"><p id="cutscene-kicker" class="eyebrow">THE STORY BEGINS</p><h2 id="cutscene-speaker"></h2><p id="cutscene-text"></p><div class="cutscene-bottom"><span id="cutscene-progress"></span><button id="cutscene-next" class="primary">Continue <span>→</span></button></div><button id="skip-intro" class="quiet">Skip introduction</button></div></div>
+          <div id="dialog" hidden><div class="dialog-portrait">✦</div><div class="dialog-body"><span id="speaker" class="eyebrow">BORIN</span><p id="speech" aria-live="polite"></p><div id="choices"></div><button id="dialog-next" class="text-button">Continue →</button></div></div>
+        </div>
+        <div class="inventory-bar"><div class="satchel-label"><span>▧</span><div>SATCHEL<small id="inventory-count">Travel light.</small></div></div><div id="inventory" aria-label="Inventory"></div><button id="clear-item" hidden>Put away ×</button><div class="inventory-hint" id="inventory-hint">A little courage goes a long way.</div></div>
+      </section>
+      <div class="under-game"><div class="objective"><span>✧</span><div><span class="eyebrow">YOUR QUEST</span><p id="objective">Find the king. Bring him home.</p></div></div><button id="hint">A little nudge? <span>↗</span></button></div>
+      <div id="nearby" aria-label="Nearby interactions"></div>
+      <footer><span>Made with <strong>pointlesh</strong> <span class="footer-dot">·</span> A TypeScript toolkit for point & click adventures</span><span>Click to walk <span>·</span> Click an object to interact <span>·</span> <kbd>Tab</kbd> for hotspots</span></footer>
+    </main>
+  </div>
+  <div id="modal-backdrop" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button id="modal-close" aria-label="Close">×</button><p class="eyebrow">THE KING UNDER THE MOUNTAIN</p><h2 id="modal-title"></h2><div id="modal-body"></div></section></div>
+  <div id="toast" role="status" hidden></div>
+  <script type="module" src="/src/main.ts"></script>
+</body></html>

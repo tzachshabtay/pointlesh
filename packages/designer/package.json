@@ -1,0 +1,17 @@
+{
+  "name": "@pointlesh/designer",
+  "version": "0.1.0",
+  "description": "Live Pointlesh prefab properties and adventure previews on Scene Designer.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist", "README.md"],
+  "publishConfig": { "access": "public" },
+  "repository": { "type": "git", "url": "git+https://github.com/tzachshabtay/pointlesh.git", "directory": "packages/designer" },
+  "scripts": { "build": "tsc -b", "typecheck": "tsc --noEmit" },
+  "dependencies": { "@pointlesh/core": "0.1.0", "@scene-designer/core": "^0.2.0", "@scene-designer/designer": "^0.2.0" },
+  "peerDependencies": { "@ai-game-assets/core": "^0.8.4" }
+}

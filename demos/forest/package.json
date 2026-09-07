@@ -1,0 +1,31 @@
+{
+  "name": "pointlesh-forest-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "dev:server": "node dev-server.mjs",
+    "build": "vite build",
+    "build:pages": "vite build --base=./",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pointlesh/core": "0.1.0",
+    "@pointlesh/designer": "0.1.0",
+    "@pointlesh/dev": "0.1.0",
+    "@pointlesh/phaser": "0.1.0",
+    "@scene-designer/core": "^0.2.0",
+    "@scene-designer/designer": "^0.2.0",
+    "@scene-designer/phaser": "^0.2.0",
+    "@ai-game-assets/core": "^0.8.4",
+    "@ai-game-assets/phaser": "^0.8.4",
+    "@dialog-designer/core": "^0.1.1",
+    "@dialog-designer/designer": "^0.1.1",
+    "@dialog-designer/phaser": "^0.1.1",
+    "phaser": "^4.2.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}

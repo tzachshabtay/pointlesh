@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "dialogs": {
+    "elder": {
+      "id": "elder",
+      "name": "elder",
+      "enabled": true,
+      "entryNodeId": "opening",
+      "nodes": {
+        "opening": {
+          "id": "opening",
+          "type": "block",
+          "name": "Greeting",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "greeting",
+              "enabled": true,
+              "voiceAssetId": "voice.elder",
+              "lineAssetId": "line.elder.greeting"
+            }
+          ],
+          "nextNodeId": "topics"
+        },
+        "topics": {
+          "id": "topics",
+          "type": "decision",
+          "name": "Topics",
+          "prompt": "What will you say?",
+          "enabled": true,
+          "options": [
+            {
+              "id": "king",
+              "text": "Where did they take the king?",
+              "enabled": true,
+              "nextNodeId": "answer-king"
+            },
+            {
+              "id": "advice",
+              "text": "I could use a little advice.",
+              "enabled": true,
+              "nextNodeId": "answer-advice"
+            },
+            {
+              "id": "goodbye",
+              "text": "I will bring him home.",
+              "enabled": true,
+              "nextNodeId": "answer-goodbye"
+            }
+          ]
+        },
+        "answer-king": {
+          "id": "answer-king",
+          "type": "block",
+          "name": "Where did they take the king?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "king",
+              "enabled": true,
+              "voiceAssetId": "voice.elder",
+              "lineAssetId": "line.elder.king"
+            }
+          ]
+        },
+        "answer-advice": {
+          "id": "answer-advice",
+          "type": "block",
+          "name": "I could use a little advice.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "advice",
+              "enabled": true,
+              "voiceAssetId": "voice.elder",
+              "lineAssetId": "line.elder.advice"
+            }
+          ]
+        },
+        "answer-goodbye": {
+          "id": "answer-goodbye",
+          "type": "block",
+          "name": "I will bring him home.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "goodbye",
+              "enabled": true,
+              "voiceAssetId": "voice.elder",
+              "lineAssetId": "line.elder.goodbye"
+            }
+          ]
+        }
+      }
+    },
+    "innkeeper": {
+      "id": "innkeeper",
+      "name": "innkeeper",
+      "enabled": true,
+      "entryNodeId": "opening",
+      "nodes": {
+        "opening": {
+          "id": "opening",
+          "type": "block",
+          "name": "Greeting",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "greeting",
+              "enabled": true,
+              "voiceAssetId": "voice.innkeeper",
+              "lineAssetId": "line.innkeeper.greeting"
+            }
+          ],
+          "nextNodeId": "topics"
+        },
+        "topics": {
+          "id": "topics",
+          "type": "decision",
+          "name": "Topics",
+          "prompt": "What will you say?",
+          "enabled": true,
+          "options": [
+            {
+              "id": "dreamcap",
+              "text": "How do I get past an orc guard?",
+              "enabled": true,
+              "nextNodeId": "answer-dreamcap"
+            },
+            {
+              "id": "buy",
+              "text": "Do you have any honey stout?",
+              "enabled": true,
+              "nextNodeId": "answer-buy"
+            },
+            {
+              "id": "goodbye",
+              "text": "Keep a seat by the fire for us.",
+              "enabled": true,
+              "nextNodeId": "answer-goodbye"
+            }
+          ]
+        },
+        "answer-dreamcap": {
+          "id": "answer-dreamcap",
+          "type": "block",
+          "name": "How do I get past an orc guard?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "dreamcap",
+              "enabled": true,
+              "voiceAssetId": "voice.innkeeper",
+              "lineAssetId": "line.innkeeper.dreamcap"
+            }
+          ]
+        },
+        "answer-buy": {
+          "id": "answer-buy",
+          "type": "block",
+          "name": "Do you have any honey stout?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "buy",
+              "enabled": true,
+              "voiceAssetId": "voice.innkeeper",
+              "lineAssetId": "line.innkeeper.buy"
+            }
+          ]
+        },
+        "answer-goodbye": {
+          "id": "answer-goodbye",
+          "type": "block",
+          "name": "Keep a seat by the fire for us.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "goodbye",
+              "enabled": true,
+              "voiceAssetId": "voice.innkeeper",
+              "lineAssetId": "line.innkeeper.goodbye"
+            }
+          ]
+        }
+      }
+    },
+    "miner": {
+      "id": "miner",
+      "name": "miner",
+      "enabled": true,
+      "entryNodeId": "opening",
+      "nodes": {
+        "opening": {
+          "id": "opening",
+          "type": "block",
+          "name": "Greeting",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "greeting",
+              "enabled": true,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.greeting"
+            }
+          ],
+          "nextNodeId": "topics"
+        },
+        "topics": {
+          "id": "topics",
+          "type": "decision",
+          "name": "Topics",
+          "prompt": "What will you say?",
+          "enabled": true,
+          "options": [
+            {
+              "id": "password",
+              "text": "The king needs us. How do I open the chest?",
+              "enabled": true,
+              "nextNodeId": "answer-password"
+            },
+            {
+              "id": "mining",
+              "text": "Finding much gold these days?",
+              "enabled": true,
+              "nextNodeId": "answer-mining"
+            },
+            {
+              "id": "goodbye",
+              "text": "I will return your pickaxe.",
+              "enabled": true,
+              "nextNodeId": "answer-goodbye"
+            }
+          ]
+        },
+        "answer-password": {
+          "id": "answer-password",
+          "type": "block",
+          "name": "The king needs us. How do I open the chest?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "password",
+              "enabled": true,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.password"
+            }
+          ]
+        },
+        "answer-mining": {
+          "id": "answer-mining",
+          "type": "block",
+          "name": "Finding much gold these days?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "mining",
+              "enabled": true,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.mining"
+            }
+          ]
+        },
+        "answer-goodbye": {
+          "id": "answer-goodbye",
+          "type": "block",
+          "name": "I will return your pickaxe.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "goodbye",
+              "enabled": true,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.goodbye"
+            }
+          ]
+        }
+      }
+    },
+    "chest-locked": {
+      "id": "chest-locked",
+      "name": "chest-locked",
+      "enabled": true,
+      "entryNodeId": "opening",
+      "nodes": {
+        "opening": {
+          "id": "opening",
+          "type": "block",
+          "name": "Greeting",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "greeting",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-locked.greeting"
+            }
+          ],
+          "nextNodeId": "topics"
+        },
+        "topics": {
+          "id": "topics",
+          "type": "decision",
+          "name": "Topics",
+          "prompt": "What will you say?",
+          "enabled": true,
+          "options": [
+            {
+              "id": "guess",
+              "text": "…where I left my keys?",
+              "enabled": true,
+              "nextNodeId": "answer-guess"
+            }
+          ]
+        },
+        "answer-guess": {
+          "id": "answer-guess",
+          "type": "block",
+          "name": "…where I left my keys?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "guess",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-locked.guess"
+            }
+          ]
+        }
+      }
+    },
+    "chest-open": {
+      "id": "chest-open",
+      "name": "chest-open",
+      "enabled": true,
+      "entryNodeId": "opening",
+      "nodes": {
+        "opening": {
+          "id": "opening",
+          "type": "block",
+          "name": "Greeting",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "greeting",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-open.greeting"
+            }
+          ],
+          "nextNodeId": "topics"
+        },
+        "topics": {
+          "id": "topics",
+          "type": "decision",
+          "name": "Topics",
+          "prompt": "What will you say?",
+          "enabled": true,
+          "options": [
+            {
+              "id": "open-chest",
+              "text": "Stone remembers.",
+              "enabled": true,
+              "nextNodeId": "answer-open-chest"
+            }
+          ]
+        },
+        "answer-open-chest": {
+          "id": "answer-open-chest",
+          "type": "block",
+          "name": "Stone remembers.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "open-chest",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-open.open-chest"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

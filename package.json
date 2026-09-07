@@ -1,0 +1,40 @@
+{
+  "name": "pointlesh",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Composable point-and-click adventure tooling for TypeScript games.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "npm@11.16.0",
+  "workspaces": [
+    "packages/*",
+    "demos/*"
+  ],
+  "scripts": {
+    "build": "npm run build:packages && npm run build --workspace pointlesh-forest-demo",
+    "build:packages": "tsc -b packages/core packages/designer packages/dev packages/phaser",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run build:packages && node --test packages/*/test/*.test.mjs demos/forest/test/*.test.mjs",
+    "dev": "npm run build:packages && npm run dev --workspace pointlesh-forest-demo",
+    "dev:server": "npm run build:packages && npm run dev:server --workspace pointlesh-forest-demo",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0",
+    "@playwright/test": "^1.55.0",
+    "tsx": "^4.20.0"
+  },
+  "overrides": {
+    "@scene-designer/core": {
+      "@ai-game-assets/core": "^0.8.4"
+    },
+    "@scene-designer/designer": {
+      "@ai-game-assets/core": "^0.8.4"
+    },
+    "@scene-designer/phaser": {
+      "@ai-game-assets/core": "^0.8.4",
+      "@ai-game-assets/phaser": "^0.8.4"
+    }
+  }
+}

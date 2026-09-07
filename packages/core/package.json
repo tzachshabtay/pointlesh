@@ -1,0 +1,38 @@
+{
+  "name": "@pointlesh/core",
+  "version": "0.1.0",
+  "description": "Engine-neutral adventure prefabs, navigation, characters, behaviors, and saves.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tzachshabtay/pointlesh.git",
+    "directory": "packages/core"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@scene-designer/core": "^0.2.0",
+    "@ai-game-assets/core": "^0.8.4",
+    "@dialog-designer/core": "^0.1.1"
+  }
+}

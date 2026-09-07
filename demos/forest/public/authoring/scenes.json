@@ -1,0 +1,2841 @@
+{
+  "schemaVersion": 2,
+  "prefabs": {
+    "pointlesh.walkable": {
+      "id": "pointlesh.walkable",
+      "name": "Walkable area",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:walkable",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        }
+      ],
+      "pointlesh": {
+        "kind": "walkable",
+        "properties": {
+          "enabled": true,
+          "walkable": true
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "pointlesh.walk-behind": {
+      "id": "pointlesh.walk-behind",
+      "name": "Walk-behind area",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:walk-behind",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        },
+        {
+          "id": "baseline",
+          "name": "Baseline",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "walk-behind",
+        "properties": {
+          "enabled": true
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "pointlesh.scale": {
+      "id": "pointlesh.scale",
+      "name": "Scale area",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:scale",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        },
+        {
+          "id": "minScale",
+          "name": "Scale at start",
+          "number": {
+            "value": 0.65,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "maxScale",
+          "name": "Scale at end",
+          "number": {
+            "value": 1,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "scale",
+        "properties": {
+          "enabled": true,
+          "axis": "y"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "pointlesh.zoom": {
+      "id": "pointlesh.zoom",
+      "name": "Camera zoom area",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:zoom",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        },
+        {
+          "id": "minZoom",
+          "name": "Zoom at start",
+          "number": {
+            "value": 1.2,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "maxZoom",
+          "name": "Zoom at end",
+          "number": {
+            "value": 1,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "smoothing",
+          "name": "Camera response",
+          "number": {
+            "value": 5,
+            "min": 0,
+            "step": 0.5
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "zoom",
+        "properties": {
+          "enabled": true,
+          "axis": "y"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "pointlesh.hotspot": {
+      "id": "pointlesh.hotspot",
+      "name": "Hotspot",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:hotspot",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        },
+        {
+          "id": "approachX",
+          "name": "Approach X",
+          "number": {
+            "value": 0,
+            "step": 1
+          },
+          "kind": "number"
+        },
+        {
+          "id": "approachY",
+          "name": "Approach Y",
+          "number": {
+            "value": 0,
+            "step": 1
+          },
+          "kind": "number"
+        },
+        {
+          "id": "approachRadius",
+          "name": "Approach distance",
+          "number": {
+            "value": 10,
+            "min": 0,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "hotspot",
+        "properties": {
+          "enabled": true,
+          "label": "Hotspot",
+          "cursor": "interact"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "pointlesh.object": {
+      "id": "pointlesh.object",
+      "name": "Object",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "object.coin",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "properties": {
+          "enabled": true,
+          "label": "object",
+          "interactive": true,
+          "ignoreScaling": false
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "pointlesh.character": {
+      "id": "pointlesh.character",
+      "name": "Character",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "character.borin",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        },
+        {
+          "id": "speed",
+          "name": "Walking speed",
+          "number": {
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
+          "number": {
+            "value": 7,
+            "min": 0.1,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
+          "number": {
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "character",
+        "properties": {
+          "enabled": true,
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.rescue-character": {
+      "id": "forest.rescue-character",
+      "name": "Rescue character",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "character.borin",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        },
+        {
+          "id": "speed",
+          "name": "Walking speed",
+          "number": {
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
+          "number": {
+            "value": 7,
+            "min": 0.1,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
+          "number": {
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "character",
+        "properties": {
+          "enabled": true,
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4,
+          "role": "player",
+          "courage": 10
+        },
+        "behaviors": [
+          "forest.rescue"
+        ],
+        "propertySchema": {
+          "courage": {
+            "type": "number",
+            "label": "Courage",
+            "min": 0,
+            "max": 100
+          },
+          "role": {
+            "type": "string",
+            "label": "Story role"
+          }
+        }
+      }
+    }
+  },
+  "scenes": {
+    "village": {
+      "id": "village",
+      "name": "Bramblehollow",
+      "width": 960,
+      "height": 540,
+      "layers": [
+        {
+          "id": "village.adventure",
+          "name": "Adventure prefabs",
+          "visible": true,
+          "locked": false,
+          "prefabs": [
+            {
+              "id": "village.floor",
+              "prefabId": "pointlesh.walkable",
+              "name": "Walkable ground",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 35,
+                      "y": 355
+                    },
+                    {
+                      "id": "b",
+                      "x": 925,
+                      "y": 355
+                    },
+                    {
+                      "id": "c",
+                      "x": 925,
+                      "y": 515
+                    },
+                    {
+                      "id": "d",
+                      "x": 35,
+                      "y": 515
+                    }
+                  ],
+                  "closed": true
+                }
+              }
+            },
+            {
+              "id": "village.perspective",
+              "prefabId": "pointlesh.scale",
+              "name": "Room perspective",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minScale": {
+                  "value": 0.75
+                },
+                "maxScale": {
+                  "value": 1.22
+                }
+              }
+            },
+            {
+              "id": "village.zoom",
+              "prefabId": "pointlesh.zoom",
+              "name": "Gentle camera approach",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minZoom": {
+                  "value": 1.035
+                },
+                "maxZoom": {
+                  "value": 1
+                }
+              }
+            },
+            {
+              "id": "village.foreground",
+              "prefabId": "pointlesh.walk-behind",
+              "name": "Foreground occlusion",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 200
+                    },
+                    {
+                      "id": "b",
+                      "x": 80,
+                      "y": 200
+                    },
+                    {
+                      "id": "c",
+                      "x": 80,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "baseline": {
+                  "value": 505
+                }
+              }
+            },
+            {
+              "id": "village.borin",
+              "prefabId": "forest.rescue-character",
+              "name": "Borin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 471,
+                  "y": 462,
+                  "scaleX": 2.4,
+                  "scaleY": 2.4
+                },
+                "speed": {
+                  "value": 165
+                },
+                "walkStep": {
+                  "value": 16
+                },
+                "frameDurationMs": {
+                  "value": 100
+                }
+              }
+            },
+            {
+              "id": "village.npc.elder",
+              "prefabId": "pointlesh.character",
+              "name": "Elder Rowan",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "character.elder",
+                  "x": 387,
+                  "y": 418,
+                  "scaleX": 2.1,
+                  "scaleY": 2.1
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "npc",
+                  "actorName": "elder",
+                  "displayedScale": 2.1
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "pub-door",
+              "prefabId": "pointlesh.hotspot",
+              "name": "The Copper Tankard",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 187,
+                      "y": 305
+                    },
+                    {
+                      "id": "b",
+                      "x": 255,
+                      "y": 305
+                    },
+                    {
+                      "id": "c",
+                      "x": 255,
+                      "y": 369
+                    },
+                    {
+                      "id": "d",
+                      "x": 187,
+                      "y": 369
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 221
+                },
+                "approachY": {
+                  "value": 403
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "The Copper Tankard",
+                  "exit": "pub",
+                  "description": "The windows glow with breakfast, gossip, and questionable decisions."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "home-door",
+              "prefabId": "pointlesh.hotspot",
+              "name": "My cottage",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 718,
+                      "y": 321
+                    },
+                    {
+                      "id": "b",
+                      "x": 786,
+                      "y": 321
+                    },
+                    {
+                      "id": "c",
+                      "x": 786,
+                      "y": 385
+                    },
+                    {
+                      "id": "d",
+                      "x": 718,
+                      "y": 385
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 752
+                },
+                "approachY": {
+                  "value": 403
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "My cottage",
+                  "exit": "house",
+                  "description": "Home. I should take supplies before venturing into the wood."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "forest-path",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Forest path",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 474,
+                      "y": 275
+                    },
+                    {
+                      "id": "b",
+                      "x": 542,
+                      "y": 275
+                    },
+                    {
+                      "id": "c",
+                      "x": 542,
+                      "y": 339
+                    },
+                    {
+                      "id": "d",
+                      "x": 474,
+                      "y": 339
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 508
+                },
+                "approachY": {
+                  "value": 403
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Forest path",
+                  "exit": "forest",
+                  "description": "Fresh orc tracks head east beneath the ancient trees."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "elder",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Elder Rowan",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 353,
+                      "y": 383
+                    },
+                    {
+                      "id": "b",
+                      "x": 421,
+                      "y": 383
+                    },
+                    {
+                      "id": "c",
+                      "x": 421,
+                      "y": 447
+                    },
+                    {
+                      "id": "d",
+                      "x": 353,
+                      "y": 447
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 387
+                },
+                "approachY": {
+                  "value": 443
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Elder Rowan",
+                  "exit": "",
+                  "description": "The oldest beard in Bramblehollow. He knows every story."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            }
+          ],
+          "objects": [],
+          "areas": []
+        }
+      ]
+    },
+    "pub": {
+      "id": "pub",
+      "name": "The Copper Tankard",
+      "width": 960,
+      "height": 540,
+      "layers": [
+        {
+          "id": "pub.adventure",
+          "name": "Adventure prefabs",
+          "visible": true,
+          "locked": false,
+          "prefabs": [
+            {
+              "id": "pub.floor",
+              "prefabId": "pointlesh.walkable",
+              "name": "Walkable ground",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 35,
+                      "y": 355
+                    },
+                    {
+                      "id": "b",
+                      "x": 925,
+                      "y": 355
+                    },
+                    {
+                      "id": "c",
+                      "x": 925,
+                      "y": 515
+                    },
+                    {
+                      "id": "d",
+                      "x": 35,
+                      "y": 515
+                    }
+                  ],
+                  "closed": true
+                }
+              }
+            },
+            {
+              "id": "pub.perspective",
+              "prefabId": "pointlesh.scale",
+              "name": "Room perspective",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minScale": {
+                  "value": 0.75
+                },
+                "maxScale": {
+                  "value": 1.22
+                }
+              }
+            },
+            {
+              "id": "pub.zoom",
+              "prefabId": "pointlesh.zoom",
+              "name": "Gentle camera approach",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minZoom": {
+                  "value": 1.035
+                },
+                "maxZoom": {
+                  "value": 1
+                }
+              }
+            },
+            {
+              "id": "pub.foreground",
+              "prefabId": "pointlesh.walk-behind",
+              "name": "Foreground occlusion",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 200
+                    },
+                    {
+                      "id": "b",
+                      "x": 80,
+                      "y": 200
+                    },
+                    {
+                      "id": "c",
+                      "x": 80,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "baseline": {
+                  "value": 505
+                }
+              }
+            },
+            {
+              "id": "pub.borin",
+              "prefabId": "forest.rescue-character",
+              "name": "Borin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 471,
+                  "y": 462,
+                  "scaleX": 2.4,
+                  "scaleY": 2.4
+                },
+                "speed": {
+                  "value": 165
+                },
+                "walkStep": {
+                  "value": 16
+                },
+                "frameDurationMs": {
+                  "value": 100
+                }
+              }
+            },
+            {
+              "id": "pub.npc.innkeeper",
+              "prefabId": "pointlesh.character",
+              "name": "Mara the innkeeper",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "character.innkeeper",
+                  "x": 526,
+                  "y": 348,
+                  "scaleX": 2.1,
+                  "scaleY": 2.1
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "npc",
+                  "actorName": "innkeeper",
+                  "displayedScale": 2.1
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "pub.npc.miner",
+              "prefabId": "pointlesh.character",
+              "name": "Orrin the miner",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "character.miner",
+                  "x": 245,
+                  "y": 420,
+                  "scaleX": 2.1,
+                  "scaleY": 2.1
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "npc",
+                  "actorName": "miner",
+                  "displayedScale": 2.1
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "innkeeper",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Mara the innkeeper",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 492,
+                      "y": 313
+                    },
+                    {
+                      "id": "b",
+                      "x": 560,
+                      "y": 313
+                    },
+                    {
+                      "id": "c",
+                      "x": 560,
+                      "y": 377
+                    },
+                    {
+                      "id": "d",
+                      "x": 492,
+                      "y": 377
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 526
+                },
+                "approachY": {
+                  "value": 421
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Mara the innkeeper",
+                  "exit": "",
+                  "description": "A brewer, a storyteller, and a formidable keeper of tabs."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "miner",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Orrin the miner",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 211,
+                      "y": 385
+                    },
+                    {
+                      "id": "b",
+                      "x": 279,
+                      "y": 385
+                    },
+                    {
+                      "id": "c",
+                      "x": 279,
+                      "y": 449
+                    },
+                    {
+                      "id": "d",
+                      "x": 211,
+                      "y": 449
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 245
+                },
+                "approachY": {
+                  "value": 445
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Orrin the miner",
+                  "exit": "",
+                  "description": "Orrin warms his boots and guards the mine’s secrets."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "pub-exit",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Back to the village",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 829,
+                      "y": 413
+                    },
+                    {
+                      "id": "b",
+                      "x": 897,
+                      "y": 413
+                    },
+                    {
+                      "id": "c",
+                      "x": 897,
+                      "y": 477
+                    },
+                    {
+                      "id": "d",
+                      "x": 829,
+                      "y": 477
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 863
+                },
+                "approachY": {
+                  "value": 473
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Back to the village",
+                  "exit": "village",
+                  "description": "The morning air might clear my head."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            }
+          ],
+          "objects": [],
+          "areas": []
+        }
+      ]
+    },
+    "house": {
+      "id": "house",
+      "name": "Borin’s Cottage",
+      "width": 960,
+      "height": 540,
+      "layers": [
+        {
+          "id": "house.adventure",
+          "name": "Adventure prefabs",
+          "visible": true,
+          "locked": false,
+          "prefabs": [
+            {
+              "id": "house.floor",
+              "prefabId": "pointlesh.walkable",
+              "name": "Walkable ground",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 35,
+                      "y": 355
+                    },
+                    {
+                      "id": "b",
+                      "x": 925,
+                      "y": 355
+                    },
+                    {
+                      "id": "c",
+                      "x": 925,
+                      "y": 515
+                    },
+                    {
+                      "id": "d",
+                      "x": 35,
+                      "y": 515
+                    }
+                  ],
+                  "closed": true
+                }
+              }
+            },
+            {
+              "id": "house.perspective",
+              "prefabId": "pointlesh.scale",
+              "name": "Room perspective",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minScale": {
+                  "value": 0.75
+                },
+                "maxScale": {
+                  "value": 1.22
+                }
+              }
+            },
+            {
+              "id": "house.zoom",
+              "prefabId": "pointlesh.zoom",
+              "name": "Gentle camera approach",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minZoom": {
+                  "value": 1.035
+                },
+                "maxZoom": {
+                  "value": 1
+                }
+              }
+            },
+            {
+              "id": "house.foreground",
+              "prefabId": "pointlesh.walk-behind",
+              "name": "Foreground occlusion",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 200
+                    },
+                    {
+                      "id": "b",
+                      "x": 80,
+                      "y": 200
+                    },
+                    {
+                      "id": "c",
+                      "x": 80,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "baseline": {
+                  "value": 505
+                }
+              }
+            },
+            {
+              "id": "house.borin",
+              "prefabId": "forest.rescue-character",
+              "name": "Borin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 471,
+                  "y": 462,
+                  "scaleX": 2.4,
+                  "scaleY": 2.4
+                },
+                "speed": {
+                  "value": 165
+                },
+                "walkStep": {
+                  "value": 16
+                },
+                "frameDurationMs": {
+                  "value": 100
+                }
+              }
+            },
+            {
+              "id": "house.pickup.coin",
+              "prefabId": "pointlesh.object",
+              "name": "Copper coin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "object.coin",
+                  "x": 516,
+                  "y": 297,
+                  "scaleX": 2,
+                  "scaleY": 2
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "pickup",
+                  "pickupId": "coin",
+                  "displayedScale": 2
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "house.pickup.rope",
+              "prefabId": "pointlesh.object",
+              "name": "Climbing rope",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "object.rope",
+                  "x": 127,
+                  "y": 375,
+                  "scaleX": 2,
+                  "scaleY": 2
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "pickup",
+                  "pickupId": "rope",
+                  "displayedScale": 2
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "coin",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Copper coin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 482,
+                      "y": 262
+                    },
+                    {
+                      "id": "b",
+                      "x": 550,
+                      "y": 262
+                    },
+                    {
+                      "id": "c",
+                      "x": 550,
+                      "y": 326
+                    },
+                    {
+                      "id": "d",
+                      "x": 482,
+                      "y": 326
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 516
+                },
+                "approachY": {
+                  "value": 421
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Copper coin",
+                  "exit": "",
+                  "description": "My emergency breakfast fund."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "rope",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Climbing rope",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 93,
+                      "y": 340
+                    },
+                    {
+                      "id": "b",
+                      "x": 161,
+                      "y": 340
+                    },
+                    {
+                      "id": "c",
+                      "x": 161,
+                      "y": 404
+                    },
+                    {
+                      "id": "d",
+                      "x": 93,
+                      "y": 404
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 127
+                },
+                "approachY": {
+                  "value": 443
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Climbing rope",
+                  "exit": "",
+                  "description": "A coil of good dwarven climbing rope on the old chest."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "house-exit",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Back to the village",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 840,
+                      "y": 301
+                    },
+                    {
+                      "id": "b",
+                      "x": 908,
+                      "y": 301
+                    },
+                    {
+                      "id": "c",
+                      "x": 908,
+                      "y": 365
+                    },
+                    {
+                      "id": "d",
+                      "x": 840,
+                      "y": 365
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 874
+                },
+                "approachY": {
+                  "value": 403
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Back to the village",
+                  "exit": "village",
+                  "description": "There is a king out there who needs me."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            }
+          ],
+          "objects": [],
+          "areas": []
+        }
+      ]
+    },
+    "forest": {
+      "id": "forest",
+      "name": "The Whispering Wood",
+      "width": 960,
+      "height": 540,
+      "layers": [
+        {
+          "id": "forest.adventure",
+          "name": "Adventure prefabs",
+          "visible": true,
+          "locked": false,
+          "prefabs": [
+            {
+              "id": "forest.floor",
+              "prefabId": "pointlesh.walkable",
+              "name": "Walkable ground",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 35,
+                      "y": 355
+                    },
+                    {
+                      "id": "b",
+                      "x": 925,
+                      "y": 355
+                    },
+                    {
+                      "id": "c",
+                      "x": 925,
+                      "y": 515
+                    },
+                    {
+                      "id": "d",
+                      "x": 35,
+                      "y": 515
+                    }
+                  ],
+                  "closed": true
+                }
+              }
+            },
+            {
+              "id": "forest.perspective",
+              "prefabId": "pointlesh.scale",
+              "name": "Room perspective",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minScale": {
+                  "value": 0.75
+                },
+                "maxScale": {
+                  "value": 1.22
+                }
+              }
+            },
+            {
+              "id": "forest.zoom",
+              "prefabId": "pointlesh.zoom",
+              "name": "Gentle camera approach",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minZoom": {
+                  "value": 1.035
+                },
+                "maxZoom": {
+                  "value": 1
+                }
+              }
+            },
+            {
+              "id": "forest.foreground",
+              "prefabId": "pointlesh.walk-behind",
+              "name": "Foreground occlusion",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 200
+                    },
+                    {
+                      "id": "b",
+                      "x": 163,
+                      "y": 200
+                    },
+                    {
+                      "id": "c",
+                      "x": 163,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "baseline": {
+                  "value": 505
+                }
+              }
+            },
+            {
+              "id": "forest.borin",
+              "prefabId": "forest.rescue-character",
+              "name": "Borin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 471,
+                  "y": 462,
+                  "scaleX": 2.4,
+                  "scaleY": 2.4
+                },
+                "speed": {
+                  "value": 165
+                },
+                "walkStep": {
+                  "value": 16
+                },
+                "frameDurationMs": {
+                  "value": 100
+                }
+              }
+            },
+            {
+              "id": "forest.pickup.mushroom",
+              "prefabId": "pointlesh.object",
+              "name": "Dreamcap mushroom",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "object.mushroom",
+                  "x": 111,
+                  "y": 409,
+                  "scaleX": 2,
+                  "scaleY": 2
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "pickup",
+                  "pickupId": "mushroom",
+                  "displayedScale": 2
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "mushroom",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Dreamcap mushrooms",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 77,
+                      "y": 374
+                    },
+                    {
+                      "id": "b",
+                      "x": 145,
+                      "y": 374
+                    },
+                    {
+                      "id": "c",
+                      "x": 145,
+                      "y": 438
+                    },
+                    {
+                      "id": "d",
+                      "x": 77,
+                      "y": 438
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 111
+                },
+                "approachY": {
+                  "value": 448
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Dreamcap mushrooms",
+                  "exit": "",
+                  "description": "Violet caps with silver spots. Mara will know what they do."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "mine-path",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Goldroot Mine",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 219,
+                      "y": 260
+                    },
+                    {
+                      "id": "b",
+                      "x": 287,
+                      "y": 260
+                    },
+                    {
+                      "id": "c",
+                      "x": 287,
+                      "y": 324
+                    },
+                    {
+                      "id": "d",
+                      "x": 219,
+                      "y": 324
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 253
+                },
+                "approachY": {
+                  "value": 403
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Goldroot Mine",
+                  "exit": "mine",
+                  "description": "A lantern flickers in the old gold mine."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "camp-path",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Orc encampment",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 750,
+                      "y": 258
+                    },
+                    {
+                      "id": "b",
+                      "x": 818,
+                      "y": 258
+                    },
+                    {
+                      "id": "c",
+                      "x": 818,
+                      "y": 322
+                    },
+                    {
+                      "id": "d",
+                      "x": 750,
+                      "y": 322
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 784
+                },
+                "approachY": {
+                  "value": 403
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Orc encampment",
+                  "exit": "camp",
+                  "description": "A crooked palisade. Smoke. Terrible singing."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "forest-exit",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Bramblehollow",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 437,
+                      "y": 455
+                    },
+                    {
+                      "id": "b",
+                      "x": 505,
+                      "y": 455
+                    },
+                    {
+                      "id": "c",
+                      "x": 505,
+                      "y": 519
+                    },
+                    {
+                      "id": "d",
+                      "x": 437,
+                      "y": 519
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 471
+                },
+                "approachY": {
+                  "value": 494
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Bramblehollow",
+                  "exit": "village",
+                  "description": "The path home winds between the roots."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            }
+          ],
+          "objects": [],
+          "areas": []
+        }
+      ]
+    },
+    "mine": {
+      "id": "mine",
+      "name": "The Goldroot Mine",
+      "width": 960,
+      "height": 540,
+      "layers": [
+        {
+          "id": "mine.adventure",
+          "name": "Adventure prefabs",
+          "visible": true,
+          "locked": false,
+          "prefabs": [
+            {
+              "id": "mine.floor",
+              "prefabId": "pointlesh.walkable",
+              "name": "Walkable ground",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 35,
+                      "y": 355
+                    },
+                    {
+                      "id": "b",
+                      "x": 925,
+                      "y": 355
+                    },
+                    {
+                      "id": "c",
+                      "x": 925,
+                      "y": 515
+                    },
+                    {
+                      "id": "d",
+                      "x": 35,
+                      "y": 515
+                    }
+                  ],
+                  "closed": true
+                }
+              }
+            },
+            {
+              "id": "mine.perspective",
+              "prefabId": "pointlesh.scale",
+              "name": "Room perspective",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minScale": {
+                  "value": 0.75
+                },
+                "maxScale": {
+                  "value": 1.22
+                }
+              }
+            },
+            {
+              "id": "mine.zoom",
+              "prefabId": "pointlesh.zoom",
+              "name": "Gentle camera approach",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minZoom": {
+                  "value": 1.035
+                },
+                "maxZoom": {
+                  "value": 1
+                }
+              }
+            },
+            {
+              "id": "mine.foreground",
+              "prefabId": "pointlesh.walk-behind",
+              "name": "Foreground occlusion",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 200
+                    },
+                    {
+                      "id": "b",
+                      "x": 80,
+                      "y": 200
+                    },
+                    {
+                      "id": "c",
+                      "x": 80,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "baseline": {
+                  "value": 505
+                }
+              }
+            },
+            {
+              "id": "mine.borin",
+              "prefabId": "forest.rescue-character",
+              "name": "Borin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 471,
+                  "y": 462,
+                  "scaleX": 2.4,
+                  "scaleY": 2.4
+                },
+                "speed": {
+                  "value": 165
+                },
+                "walkStep": {
+                  "value": 16
+                },
+                "frameDurationMs": {
+                  "value": 100
+                }
+              }
+            },
+            {
+              "id": "tool-chest",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Runed tool chest",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 224,
+                      "y": 365
+                    },
+                    {
+                      "id": "b",
+                      "x": 292,
+                      "y": 365
+                    },
+                    {
+                      "id": "c",
+                      "x": 292,
+                      "y": 429
+                    },
+                    {
+                      "id": "d",
+                      "x": 224,
+                      "y": 429
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 258
+                },
+                "approachY": {
+                  "value": 425
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Runed tool chest",
+                  "exit": "",
+                  "description": "The inscription reads: “What does the mountain remember?”"
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "gold",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Gold seam",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 624,
+                      "y": 296
+                    },
+                    {
+                      "id": "b",
+                      "x": 692,
+                      "y": 296
+                    },
+                    {
+                      "id": "c",
+                      "x": 692,
+                      "y": 360
+                    },
+                    {
+                      "id": "d",
+                      "x": 624,
+                      "y": 360
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 658
+                },
+                "approachY": {
+                  "value": 432
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Gold seam",
+                  "exit": "",
+                  "description": "All that glitters. It can wait until the king is safe."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "mine-exit",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Back to the wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 34,
+                      "y": 424
+                    },
+                    {
+                      "id": "b",
+                      "x": 102,
+                      "y": 424
+                    },
+                    {
+                      "id": "c",
+                      "x": 102,
+                      "y": 488
+                    },
+                    {
+                      "id": "d",
+                      "x": 34,
+                      "y": 488
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 68
+                },
+                "approachY": {
+                  "value": 484
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Back to the wood",
+                  "exit": "forest",
+                  "description": "Cool air drifts in from the forest."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            }
+          ],
+          "objects": [],
+          "areas": []
+        }
+      ]
+    },
+    "camp": {
+      "id": "camp",
+      "name": "The Orc Encampment",
+      "width": 960,
+      "height": 540,
+      "layers": [
+        {
+          "id": "camp.adventure",
+          "name": "Adventure prefabs",
+          "visible": true,
+          "locked": false,
+          "prefabs": [
+            {
+              "id": "camp.floor",
+              "prefabId": "pointlesh.walkable",
+              "name": "Walkable ground",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 35,
+                      "y": 355
+                    },
+                    {
+                      "id": "b",
+                      "x": 925,
+                      "y": 355
+                    },
+                    {
+                      "id": "c",
+                      "x": 925,
+                      "y": 515
+                    },
+                    {
+                      "id": "d",
+                      "x": 35,
+                      "y": 515
+                    }
+                  ],
+                  "closed": true
+                }
+              }
+            },
+            {
+              "id": "camp.perspective",
+              "prefabId": "pointlesh.scale",
+              "name": "Room perspective",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minScale": {
+                  "value": 0.75
+                },
+                "maxScale": {
+                  "value": 1.22
+                }
+              }
+            },
+            {
+              "id": "camp.zoom",
+              "prefabId": "pointlesh.zoom",
+              "name": "Gentle camera approach",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 315
+                    },
+                    {
+                      "id": "b",
+                      "x": 960,
+                      "y": 315
+                    },
+                    {
+                      "id": "c",
+                      "x": 960,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "minZoom": {
+                  "value": 1.035
+                },
+                "maxZoom": {
+                  "value": 1
+                }
+              }
+            },
+            {
+              "id": "camp.foreground",
+              "prefabId": "pointlesh.walk-behind",
+              "name": "Foreground occlusion",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 0,
+                      "y": 200
+                    },
+                    {
+                      "id": "b",
+                      "x": 80,
+                      "y": 200
+                    },
+                    {
+                      "id": "c",
+                      "x": 80,
+                      "y": 540
+                    },
+                    {
+                      "id": "d",
+                      "x": 0,
+                      "y": 540
+                    }
+                  ],
+                  "closed": true
+                },
+                "baseline": {
+                  "value": 505
+                }
+              }
+            },
+            {
+              "id": "camp.borin",
+              "prefabId": "forest.rescue-character",
+              "name": "Borin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 471,
+                  "y": 462,
+                  "scaleX": 2.4,
+                  "scaleY": 2.4
+                },
+                "speed": {
+                  "value": 165
+                },
+                "walkStep": {
+                  "value": 16
+                },
+                "frameDurationMs": {
+                  "value": 100
+                }
+              }
+            },
+            {
+              "id": "camp.npc.guard",
+              "prefabId": "pointlesh.character",
+              "name": "Grub the guard",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "character.guard",
+                  "x": 568,
+                  "y": 412,
+                  "scaleX": 3.1,
+                  "scaleY": 3.1
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "npc",
+                  "actorName": "guard",
+                  "displayedScale": 3.1
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "camp.npc.king",
+              "prefabId": "pointlesh.character",
+              "name": "King Aldric",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "assetId": "character.king",
+                  "x": 777,
+                  "y": 344,
+                  "scaleX": 2.1,
+                  "scaleY": 2.1
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "role": "npc",
+                  "actorName": "king",
+                  "displayedScale": 2.1
+                },
+                "behaviors": []
+              }
+            },
+            {
+              "id": "cauldron",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Stew cauldron",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 272,
+                      "y": 363
+                    },
+                    {
+                      "id": "b",
+                      "x": 340,
+                      "y": 363
+                    },
+                    {
+                      "id": "c",
+                      "x": 340,
+                      "y": 427
+                    },
+                    {
+                      "id": "d",
+                      "x": 272,
+                      "y": 427
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 402
+                },
+                "approachY": {
+                  "value": 466
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Stew cauldron",
+                  "exit": "",
+                  "description": "The orcs’ supper. Even a sleeping potion would improve it."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "guard",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Grub the guard",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 534,
+                      "y": 377
+                    },
+                    {
+                      "id": "b",
+                      "x": 602,
+                      "y": 377
+                    },
+                    {
+                      "id": "c",
+                      "x": 602,
+                      "y": 441
+                    },
+                    {
+                      "id": "d",
+                      "x": 534,
+                      "y": 441
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 568
+                },
+                "approachY": {
+                  "value": 437
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Grub the guard",
+                  "exit": "",
+                  "description": "An enormous orc. He turns away to inspect the stew every few seconds."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "cage",
+              "prefabId": "pointlesh.hotspot",
+              "name": "King Aldric’s cage",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 743,
+                      "y": 309
+                    },
+                    {
+                      "id": "b",
+                      "x": 811,
+                      "y": 309
+                    },
+                    {
+                      "id": "c",
+                      "x": 811,
+                      "y": 373
+                    },
+                    {
+                      "id": "d",
+                      "x": 743,
+                      "y": 373
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 721
+                },
+                "approachY": {
+                  "value": 450
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "King Aldric’s cage",
+                  "exit": "",
+                  "description": "The king is imprisoned above a steep ledge. I need a safe way down."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            },
+            {
+              "id": "camp-exit",
+              "prefabId": "pointlesh.hotspot",
+              "name": "Back to the wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "area": {
+                  "vertices": [
+                    {
+                      "id": "a",
+                      "x": 56,
+                      "y": 439
+                    },
+                    {
+                      "id": "b",
+                      "x": 124,
+                      "y": 439
+                    },
+                    {
+                      "id": "c",
+                      "x": 124,
+                      "y": 503
+                    },
+                    {
+                      "id": "d",
+                      "x": 56,
+                      "y": 503
+                    }
+                  ],
+                  "closed": true
+                },
+                "approachX": {
+                  "value": 90
+                },
+                "approachY": {
+                  "value": 494
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "label": "Back to the wood",
+                  "exit": "forest",
+                  "description": "A discreet retreat is also a kind of strategy."
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
+              }
+            }
+          ],
+          "objects": [],
+          "areas": []
+        }
+      ]
+    }
+  }
+}

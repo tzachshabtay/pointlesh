@@ -1,0 +1,42 @@
+{
+  "name": "@pointlesh/phaser",
+  "version": "0.1.0",
+  "description": "Phaser character, area effect, dialog, and designer adapters for Pointlesh.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tzachshabtay/pointlesh.git",
+    "directory": "packages/phaser"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pointlesh/core": "0.1.0",
+    "@pointlesh/designer": "0.1.0"
+  },
+  "peerDependencies": {
+    "phaser": "^4.2.0",
+    "@scene-designer/phaser": "^0.2.0",
+    "@ai-game-assets/phaser": "^0.8.4",
+    "@dialog-designer/phaser": "^0.1.1"
+  }
+}
