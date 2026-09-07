@@ -64,6 +64,22 @@ Existing clients can still supply `aiRuntime`, `assetId` and `animation: state =
 
 Destroying the scene or sprite detaches the binding and generated texture/animation bindings. Calling `view.destroy()` detaches it without destroying your sprite or controller.
 
+## Sprite interactions
+
+```ts
+import { bindAdventureSpriteInteraction } from '@pointlesh/phaser';
+
+const interaction = bindAdventureSpriteInteraction(npcSprite, {
+  enabled: () => !designerOpen && !dialogOpen,
+  onHover: hovering => showName(hovering ? npc.name : ''),
+  onInteract: () => approachAndTalk(npc.id),
+});
+```
+
+This uses native Phaser pointer input and samples the current texture frame's alpha, so transparent pixels pass through. Moving, scaling, rotating, changing frames, and flipping the sprite update the clickable shape automatically. Successful sprite interactions stop propagation to scene handlers, preventing the same click from also starting a background walk. `alphaTolerance` defaults to 1. Destroying the sprite or scene removes the binding; `interaction.destroy()` detaches it manually and restores prior input settings.
+
+The forest demo stores each NPC's story `targetId` and relative `approachOffsetX`/`approachOffsetY` in its character prefab. The same character resolves clicks and Nearby actions, and the standing point follows its authored position. Characters have no duplicate hotspot areas. The king also forwards clicks to the cage puzzle, whose environmental area remains independently interactive.
+
 ## Walk-behind scenery
 
 ```ts
@@ -77,6 +93,8 @@ foreground.sync(room.areas.find(area => area.id === 'old-oak')!);
 ```
 
 The overlay masks a duplicate background to the authored polygon and draws it at the area's baseline. It uses Phaser 4's mask filter in WebGL and a geometry mask in Canvas. The WebGL filter renders in the current camera's coordinate system, including its origin and transform order, so the foreground and background sample identical pixels during fractional zoom and scrolling. Actors with smaller foot Y appear behind the masked scenery, and actors with larger foot Y appear in front. Use identical transforms on the base and duplicate backgrounds. Use the same `depthOffset` on actors and overlays. `sync()` respects the area's independent walk-behind switch. `destroy()` removes the mask, its graphics and the supplied image; pass `destroyImage: false` to retain the image and restore its filter focus settings. Scene shutdown cleans up automatically.
+
+For continuous pixel-art zoom, use `antialias: true`, `antialiasGL: false`, and `roundPixels: false` in the Phaser game config, then call `backgroundTexture.setSmoothPixelArt(true)`. This smooths texel boundaries without making rows and columns jump during fractional zoom. Keep canvas CSS `image-rendering: auto` when the page resizes it. Avoid the global `smoothPixelArt` flag for masked duplicate backgrounds: it also forces multisampled canvas edges, while Phaser's filter framebuffers are not multisampled, which can make the room's outer edge composite differently.
 
 ## Native scene designer plus adventure inspector
 

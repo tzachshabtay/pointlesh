@@ -768,9 +768,15 @@
                         "flipX": true
                       }
                     }
-                  }
+                  },
+                  "targetId": "elder",
+                  "description": "The oldest beard in Bramblehollow. He knows every story.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 25
                 },
-                "behaviors": []
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             },
             {
@@ -917,56 +923,6 @@
                   "label": "Forest path",
                   "exit": "forest",
                   "description": "Fresh orc tracks head east beneath the ancient trees."
-                },
-                "behaviors": [
-                  "forest.interact"
-                ]
-              }
-            },
-            {
-              "id": "elder",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Elder Rowan",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 353,
-                      "y": 383
-                    },
-                    {
-                      "id": "b",
-                      "x": 421,
-                      "y": 383
-                    },
-                    {
-                      "id": "c",
-                      "x": 421,
-                      "y": 447
-                    },
-                    {
-                      "id": "d",
-                      "x": 353,
-                      "y": 447
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 387
-                },
-                "approachY": {
-                  "value": 443
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Elder Rowan",
-                  "exit": "",
-                  "description": "The oldest beard in Bramblehollow. He knows every story."
                 },
                 "behaviors": [
                   "forest.interact"
@@ -1241,9 +1197,15 @@
                         "flipX": true
                       }
                     }
-                  }
+                  },
+                  "targetId": "innkeeper",
+                  "description": "A brewer, a storyteller, and a formidable keeper of tabs.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 73
                 },
-                "behaviors": []
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             },
             {
@@ -1333,105 +1295,11 @@
                         "flipX": true
                       }
                     }
-                  }
-                },
-                "behaviors": []
-              }
-            },
-            {
-              "id": "innkeeper",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Mara the innkeeper",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 492,
-                      "y": 313
-                    },
-                    {
-                      "id": "b",
-                      "x": 560,
-                      "y": 313
-                    },
-                    {
-                      "id": "c",
-                      "x": 560,
-                      "y": 377
-                    },
-                    {
-                      "id": "d",
-                      "x": 492,
-                      "y": 377
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 526
-                },
-                "approachY": {
-                  "value": 421
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Mara the innkeeper",
-                  "exit": "",
-                  "description": "A brewer, a storyteller, and a formidable keeper of tabs."
-                },
-                "behaviors": [
-                  "forest.interact"
-                ]
-              }
-            },
-            {
-              "id": "miner",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Orrin the miner",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 211,
-                      "y": 385
-                    },
-                    {
-                      "id": "b",
-                      "x": 279,
-                      "y": 385
-                    },
-                    {
-                      "id": "c",
-                      "x": 279,
-                      "y": 449
-                    },
-                    {
-                      "id": "d",
-                      "x": 211,
-                      "y": 449
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 245
-                },
-                "approachY": {
-                  "value": 445
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Orrin the miner",
-                  "exit": "",
-                  "description": "Orrin warms his boots and guards the mine’s secrets."
+                  },
+                  "targetId": "miner",
+                  "description": "Orrin warms his boots and guards the mine’s secrets.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 25
                 },
                 "behaviors": [
                   "forest.interact"
@@ -2896,9 +2764,15 @@
                         "flipX": true
                       }
                     }
-                  }
+                  },
+                  "targetId": "guard",
+                  "description": "An enormous orc. He turns away to inspect the stew every few seconds.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 25
                 },
-                "behaviors": []
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             },
             {
@@ -2988,9 +2862,15 @@
                         "flipX": true
                       }
                     }
-                  }
+                  },
+                  "targetId": "cage",
+                  "description": "The king is imprisoned above a steep ledge. I need a safe way down.",
+                  "approachOffsetX": -56,
+                  "approachOffsetY": 106
                 },
-                "behaviors": []
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             },
             {
@@ -3037,56 +2917,6 @@
                   "label": "Stew cauldron",
                   "exit": "",
                   "description": "The orcs’ supper. Even a sleeping potion would improve it."
-                },
-                "behaviors": [
-                  "forest.interact"
-                ]
-              }
-            },
-            {
-              "id": "guard",
-              "prefabId": "pointlesh.hotspot",
-              "name": "Grub the guard",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 534,
-                      "y": 377
-                    },
-                    {
-                      "id": "b",
-                      "x": 602,
-                      "y": 377
-                    },
-                    {
-                      "id": "c",
-                      "x": 602,
-                      "y": 441
-                    },
-                    {
-                      "id": "d",
-                      "x": 534,
-                      "y": 441
-                    }
-                  ],
-                  "closed": true
-                },
-                "approachX": {
-                  "value": 568
-                },
-                "approachY": {
-                  "value": 437
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "label": "Grub the guard",
-                  "exit": "",
-                  "description": "An enormous orc. He turns away to inspect the stew every few seconds."
                 },
                 "behaviors": [
                   "forest.interact"

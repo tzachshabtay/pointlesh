@@ -150,17 +150,27 @@ export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, sce
     createPointleshInstance({ id: `${roomId}.floor`, prefabId: 'pointlesh.area', name: 'Walkable ground & perspective', properties: { walkable: true, scaleEnabled: true, zoomEnabled: true }, overrides: { area: { vertices: roomFloorVertices(roomId), closed: true }, minScale: { value: 0.75 }, maxScale: { value: 1.22 }, minZoom: { value: 1.035 }, maxZoom: { value: 1 } } }),
     createPointleshInstance({ id: `${roomId}.foreground`, prefabId: 'pointlesh.area', name: 'Foreground occlusion', properties: { walkBehindEnabled: true }, overrides: { area: { vertices: roomForegroundVertices(roomId), closed: true }, baseline: { value: 505 } } }),
     createPointleshInstance({ id: `${roomId}.borin`, prefabId: 'forest.rescue-character', name: 'Borin', overrides: { object: { x: 471, y: 462, scaleX: 2.4, scaleY: 2.4 }, speed: { value: 165 }, walkStep: { value: 16 }, frameDurationMs: { value: 100 } } }),
-    ...(roomCharacters[roomId] ?? []).map(npc => createPointleshInstance({
-      id: `${roomId}.npc.${npc.actorName}`, prefabId: 'pointlesh.character', name: npc.name,
-      properties: { role: 'npc', actorName: npc.actorName, displayedScale: npc.displayedScale, animations: characterAnimations(npc.actorName) },
-      overrides: { object: { assetId: `character.${npc.actorName}`, x: npc.x, y: npc.y, scaleX: npc.displayedScale, scaleY: npc.displayedScale } },
-    })),
+    ...(roomCharacters[roomId] ?? []).map(npc => {
+      const targetId = npc.actorName === 'king' ? 'cage' : npc.actorName;
+      const target = targets[roomId].find(target => target.id === targetId)!;
+      return createPointleshInstance({
+        id: `${roomId}.npc.${npc.actorName}`, prefabId: 'pointlesh.character', name: npc.name,
+        properties: {
+          role: 'npc', actorName: npc.actorName, targetId, description: target.description,
+          approachOffsetX: (target.walkX ?? target.x) - npc.x,
+          approachOffsetY: (target.walkY ?? Math.max(403, Math.min(494, target.y + 25))) - npc.y,
+          displayedScale: npc.displayedScale, animations: characterAnimations(npc.actorName),
+        },
+        behaviors: ['forest.interact'],
+        overrides: { object: { assetId: `character.${npc.actorName}`, x: npc.x, y: npc.y, scaleX: npc.displayedScale, scaleY: npc.displayedScale } },
+      });
+    }),
     ...(roomPickups[roomId] ?? []).map(pickup => createPointleshInstance({
       id: `${roomId}.pickup.${pickup.pickupId}`, prefabId: 'pointlesh.object', name: pickup.name,
       properties: { role: 'pickup', pickupId: pickup.pickupId, displayedScale: 2 },
       overrides: { object: { assetId: `object.${pickup.pickupId}`, x: pickup.x, y: pickup.y, scaleX: 2, scaleY: 2 } },
     })),
-    ...targets[roomId].map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
+    ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id)).map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
   ];
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure prefabs' }), prefabs: instances };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], width: 960, height: 540 }), layers: [layer] };

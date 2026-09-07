@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureCharacter, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureCharacter, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest } from '@ai-game-assets/core';
@@ -75,6 +75,7 @@ class ForestAdventure extends Phaser.Scene {
       const spec = atlasRooms[room];
       const source = this.textures.get(this.aiRuntime.key(spec.asset)).getSourceImage() as HTMLImageElement;
       const texture = this.textures.createCanvas(`room.${room}`, 960, 540)!;
+      texture.setSmoothPixelArt(true);
       texture.context.imageSmoothingEnabled = false;
       texture.context.drawImage(source, 0, spec.row * 666, 1182, 664, 0, 0, 960, 540); texture.refresh();
     }
@@ -150,16 +151,21 @@ class ForestAdventure extends Phaser.Scene {
     el('hover-label').classList.toggle('visible', !!target);
     this.game.canvas.style.cursor = target ? 'pointer' : 'crosshair';
   }
-  async act(targetId: string) {
+  async act(targetId: string, characterId?: string) {
     if (this.blocked()) return;
     this.clearMovementKeys();
-    const entity = this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled);
+    const character = this.resolved().objects.find(object => object.kind === 'character' && object.enabled && object.properties.interactive !== false && object.properties.targetId === targetId && (!characterId || object.id === characterId));
+    const area = this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled);
+    const entity = characterId ? character : area ?? character;
     if (!entity || !targetVisible(this.story, targetId)) return;
     const selected = this.selected;
     const operation = ++this.epoch;
-    const center = entity.polygon.reduce((sum, point) => ({ x: sum.x + point.x / entity.polygon.length, y: sum.y + point.y / entity.polygon.length }), { x: 0, y: 0 });
+    const center = 'position' in entity ? entity.position : entity.polygon.reduce((sum, point) => ({ x: sum.x + point.x / entity.polygon.length, y: sum.y + point.y / entity.polygon.length }), { x: 0, y: 0 });
+    const walkPoint = 'position' in entity
+      ? { x: center.x + Number(entity.properties.approachOffsetX ?? 0), y: center.y + Number(entity.properties.approachOffsetY ?? 25) }
+      : { x: Number(entity.properties.approachX), y: Number(entity.properties.approachY) };
     let arrived: boolean;
-    try { arrived = await this.character.approach({ position: center, walkPoint: { x: Number(entity.properties.approachX), y: Number(entity.properties.approachY) } }, 'walk', this.walkables()); }
+    try { arrived = await this.character.approach({ position: center, walkPoint }, 'walk', this.walkables()); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); return; }
     if (operation !== this.epoch) return;
     if (!arrived) return this.say('I cannot reach that from here. There needs to be a walkable path.');
@@ -233,6 +239,11 @@ class ForestAdventure extends Phaser.Scene {
             angle: () => current().rotation,
           });
           npc = { controller, binding, sprite, actorName }; this.npcActors.set(object.id, npc);
+          bindAdventureSpriteInteraction(sprite, {
+            enabled: () => !this.blocked() && current().enabled && current().properties.interactive !== false && typeof current().properties.targetId === 'string' && targetVisible(this.story, String(current().properties.targetId)),
+            onHover: hovered => this.hover(hovered ? String(current().properties.targetId) : undefined),
+            onInteract: () => { void this.act(String(current().properties.targetId), current().id); },
+          });
         }
         npc.actorName = actorName;
         npc.controller.state.position = { ...object.position };
@@ -287,6 +298,13 @@ class ForestAdventure extends Phaser.Scene {
       this.markers.lineStyle(1.5, 0xe9d596, .8).fillStyle(0xe9d596, .07); this.markers.fillPoints(area.polygon.map(p => new Phaser.Math.Vector2(p.x, p.y)), true).strokePoints(area.polygon.map(p => new Phaser.Math.Vector2(p.x, p.y)), true);
       const target = targets[this.story.roomId].find(target => target.id === area.id);
       if (target) this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
+    }
+    for (const object of this.resolved().objects.filter(object => object.kind === 'character' && object.enabled && object.properties.interactive !== false && typeof object.properties.targetId === 'string')) {
+      const target = targets[this.story.roomId].find(target => target.id === object.properties.targetId);
+      const sprite = this.entitySprites.get(object.id);
+      if (!target || !sprite?.visible || !targetVisible(this.story, target.id)) continue;
+      const bounds = sprite.getBounds();
+      this.labels.push(this.add.text(bounds.centerX, bounds.top - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setOrigin(.5, 0).setDepth(2100));
     }
   }
   say(text: string, speaker = 'Borin') { this.epoch++; this.clearMovementKeys(); this.talking = true; this.speakingVoice = 'borin'; this.conversationActive = false; this.character.stop(); void this.character.say(text, 3600000); el('dialog').hidden = false; el('speaker').textContent = speaker; el('speech').textContent = text; el('choices').replaceChildren(); el('dialog-next').hidden = false; }
@@ -517,4 +535,6 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }
-new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, pixelArt: true, antialias: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });
+// Use smooth texture sampling during continuous zoom, without multisampling quad
+// edges differently in the main framebuffer and the walk-behind filter framebuffer.
+new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });

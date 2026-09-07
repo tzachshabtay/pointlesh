@@ -1,5 +1,45 @@
 import { expect, test } from '@playwright/test';
 
+test('small camera zoom steps move the background smoothly without high-contrast rows and columns', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#loading')).toBeHidden();
+  await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
+  const changes = await page.evaluate(async () => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.sys.pause();
+    // Isolate the background: foreground alignment alone cannot catch this bug.
+    for (const object of scene.children.list) if (object !== scene.background) object.setVisible?.(false);
+    const pixels = async () => {
+      const image = await new Promise<HTMLImageElement>(resolve => scene.renderer.snapshot(resolve));
+      const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+      const context = canvas.getContext('2d')!; context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, canvas.width, canvas.height).data;
+    };
+    scene.cameras.main.setZoom(1.015);
+    let previous = await pixels();
+    const results = [];
+    for (let step = 1; step <= 5; step++) {
+      scene.cameras.main.setZoom(1.015 + step * .0002);
+      const next = await pixels();
+      let changedPixels = 0, abruptPixels = 0;
+      for (let index = 0; index < previous.length; index += 4) {
+        const difference = Math.max(...[0, 1, 2].map(channel => Math.abs(next[index + channel]! - previous[index + channel]!)));
+        if (difference > 0) changedPixels++;
+        if (difference > 32) abruptPixels++;
+      }
+      results.push({ changedPixels, abruptPixels }); previous = next;
+    }
+    return results;
+  });
+  for (const change of changes) {
+    expect(change.changedPixels).toBeGreaterThan(10_000);
+    // A <0.1-pixel motion used to switch thousands of pixels by up to 247/255.
+    expect(change.abruptPixels).toBe(0);
+  }
+  // The responsive page must not introduce a second nearest-neighbor resample.
+  await expect(page.locator('#game canvas')).toHaveCSS('image-rendering', 'auto');
+});
+
 test('masked room foreground matches the background exactly through fractional camera transforms', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
