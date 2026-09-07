@@ -30,7 +30,7 @@ npm ci
 npm run dev
 ```
 
-Open [http://127.0.0.1:5186](http://127.0.0.1:5186). The game runs without API keys or authoring servers. Click the ground to walk and people or objects to interact. Select one inventory item, then another to combine them. The map, journal, hotspot display and hint button help you explore. Three browser-local save slots preserve progress, including conversations and cutscene steps.
+Open [http://127.0.0.1:5186](http://127.0.0.1:5186). The game runs without API keys or authoring servers. Click anywhere to walk to the nearest reachable ground, or hold the arrow keys to walk. Click people or objects to interact. Select one inventory item, then another to combine them. The map, journal, hotspot display and hint button help you explore. Three browser-local save slots preserve progress, including conversations and the exact progress of animated cutscenes. The kidnapping and rescue sequences play automatically, with controls to advance or skip them.
 
 To promote designer edits to project files, run this in a second terminal:
 
@@ -38,7 +38,7 @@ To promote designer edits to project files, run this in a second terminal:
 npm run dev:server
 ```
 
-The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service. Generating new assets also requires the provider configuration expected by AI Assets.
+The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Open [the designer directly](http://127.0.0.1:5186/?designer=1) to enter the village editor immediately. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service. Generating new assets also requires the provider configuration expected by AI Assets.
 
 The demo loads its committed documents from `demos/forest/public/authoring/`. Promotion writes those JSON files, so edits survive a refresh and are included in the next build. `src/content.ts` defines the initial seed; normal builds never regenerate or overwrite promoted documents. To deliberately reset them, run `node --import tsx demos/forest/scripts/seed-authoring.ts --reset` from the repository root.
 

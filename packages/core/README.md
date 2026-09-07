@@ -31,11 +31,21 @@ const completion = actor.walkTo({ x: 500, y: 300 }, [floor]);
 // Once the update loop reaches the destination: await completion === true.
 ```
 
-`findPath(start, end, walkables, obstacles?)` returns a path including both endpoints, or `null` when unreachable. It supports a union of walkable polygons, concave outlines and obstacle interiors. Malformed polygons throw. Geometry helpers include `pointInPolygon`, `isWalkable`, `isSegmentWalkable`, `closestPointOnPolygon` and `distance`.
+`findPath(start, end, walkables, obstacles?)` returns an exact path including both endpoints, or `null` when unreachable. `findClosestReachablePath(start, click, walkables, obstacles?)` instead snaps inaccessible clicks to the closest point reachable from the actor, including obstacle boundaries and disconnected walkable regions. Both support polygon unions and concave outlines; malformed polygons throw. Geometry helpers include `pointInPolygon`, `isWalkable`, `isSegmentWalkable`, `clipMovementToWalkable`, `closestPointOnPolygon` and `distance`.
 
-`CharacterController` exposes `state`, `tick`, `walkTo`, `approach`, `face`, `place`, `say`, `finishSpeech`, `stop`, `snapshot` and `restore`. Approach modes are `none`, `face`, `walk-if-point` and `walk`; approach completion is false when navigation fails or is interrupted. A new walk or speech replaces the previous action. Facing is independent of available art; renderers choose directional frames.
+`CharacterController` exposes `state`, `tick`, `walkTo`, `setMovementDirection`, `approach`, `face`, `place`, `say`, `finishSpeech`, `stop`, `snapshot` and `restore`. `walkTo` snaps clicks by default; its `destination` getter reports the resolved target. Pass `{ snap: false }` as the fourth argument for an exact walk. Approach modes are `none`, `face`, `walk-if-point` and `walk`; approach always uses exact navigation and returns false when the standing point is unreachable or movement is interrupted. A new walk or speech replaces the previous action. Facing is independent of available art; renderers choose directional frames.
 
 With movement linked to animation, each frame change permits a configured `walkStep` distance. Single-frame walks use continuous speed. Perspective scale can adjust travel distance. Idle, walking and speaking use a deterministic elapsed-millisecond state; the renderer must tick each actor exactly once.
+
+```ts
+// Held arrows/joystick: normalized diagonals and collision against the supplied geometry.
+actor.setMovementDirection({ x: 1, y: -1 }, [floor]);
+actor.tick(deltaMs);
+// Release, blur, or modal input ownership; leaves unrelated click walks intact.
+actor.setMovementDirection(null, []);
+```
+
+Repeated directional updates and turns preserve frame accumulation instead of restarting `walkTo`. Motion reaches the first blocking boundary without stepping through it. Directional snapshots save the current pose as idle, because held input should not resume after loading; click-route and speech snapshots retain their progress. Save `actor.snapshot()`, not the mutable rendering `state`.
 
 Navigation treats the actor as a point and snapshots geometry at the start of a walk. Inset floors or expand obstacles for actor clearance, and cancel/replan if relevant geometry changes during motion. This is intended for room-scale adventure geometry rather than crowds or large navigation meshes.
 
@@ -65,7 +75,7 @@ The envelope includes a format version, game version, game ID, timestamp and che
 
 ## Dialog, cutscene and behavior integration
 
-`AdventureDialog(dialogManifest, assetManifest, options?)` wraps Dialog Designer's runtime with `start`, `advance`, `choose`, `current`, `onTurn`, `snapshot`, `restore` and `setManifest`. Checkpoints record the dialog ID and commands. Restore validates by replaying into a candidate without emitting the wrapper's gameplay events; subscribe to `AdventureDialog.onTurn` for game effects. Checkpoints must remain compatible with the authored conversation or be migrated by the client.
+`AdventureDialog(dialogManifest, assetManifest, options?)` wraps Dialog Designer's runtime with `start`, `advance`, `choose`, `current`, `onTurn`, `snapshot`, `restore` and `setManifest`. Checkpoints record the dialog ID, commands and their external enablement evaluations. Restore replays recorded checks without calling current predicates or emitting gameplay events, so a choice may hide itself after selection without breaking its saved reply. Future commands use live conditions. Subscribe to `AdventureDialog.onTurn` for game effects. Checkpoints must remain compatible with authored content or be migrated by the client.
 
 `CutsceneRunner({ id, version, steps }, options?)` supports player-advanced and timed steps. `onCompleteStep` applies final step effects; watching and `skip()` use the same callback. `snapshot` stores the step index and elapsed time. `restore` updates presentation without replaying effects. Timed steps require positive `durationMs`; omit it for player advancement. Game-specific visual/audio presentation remains in the client.
 

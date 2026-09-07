@@ -11,6 +11,7 @@ import { assertManifest } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, scenes } from './content';
 import { applyDialogChoice, combineItems, ending, guardLookingAway, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
+import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import './style.css';
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
@@ -29,7 +30,12 @@ let modalOpen = false;
 let toastTimer: ReturnType<typeof setTimeout>;
 function toast(text: string) { el('toast').textContent = text; el('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el('toast').hidden = true; }, 4100); }
 function closeModal() { el('modal-backdrop').hidden = true; modalOpen = false; }
-function modal(title: string) { el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false; modalOpen = true; el('modal-close').focus(); return el('modal-body'); }
+function modal(title: string) { gameScene?.clearMovementKeys(); el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false; modalOpen = true; el('modal-close').focus(); return el('modal-body'); }
+
+const cutsceneDefinition = (kind: 'intro' | 'ending') => ({ id: `forest.${kind}`, version: 1, steps: (kind === 'intro' ? intro : ending).map((step, index) => ({ id: `${kind}-${index}`, ...step, durationMs: CINEMATIC_DURATIONS[kind][index] })) });
+type ForestCheckpoint = { introStep: number; endingStep: number; introElapsedMs?: number; endingElapsedMs?: number };
+const arrowDirections: Record<string, { x: number; y: number }> = { ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 }, ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 } };
+const editingText = (target: EventTarget | null) => target instanceof HTMLElement && !!target.closest('input,textarea,select,[contenteditable="true"],[role="textbox"]');
 
 class ForestAdventure extends Phaser.Scene {
   story = newStory();
@@ -49,8 +55,10 @@ class ForestAdventure extends Phaser.Scene {
   aiRuntime!: AiAssetRuntime;
   conversation = new AdventureDialog(dialogs, assets);
   conversationActive = false;
-  introRunner = new CutsceneRunner({ id: 'forest.intro', version: 1, steps: intro.map((step, index) => ({ id: `intro-${index}`, ...step })) });
-  endingRunner = new CutsceneRunner({ id: 'forest.ending', version: 1, steps: ending.map((step, index) => ({ id: `ending-${index}`, ...step })) });
+  introRunner = new CutsceneRunner(cutsceneDefinition('intro'));
+  endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
+  cinematic?: ForestCinematic;
+  movementKeys = new Set<string>();
   talking = false;
   showHotspots = false;
   epoch = 0;
@@ -86,12 +94,13 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (this.blocked()) return;
+      this.clearMovementKeys();
       const point = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
       const target = this.hit(point.x, point.y);
       if (target) void this.act(target.id);
       else if (!this.selected) {
         this.epoch++;
-        try { void this.character.walkTo(point, this.walkables()).then(ok => { if (!ok && !this.character.isWalking) toast('Borin needs a clear path across walkable ground.'); }); }
+        try { void this.character.walkTo(point, this.walkables()); }
         catch (error) { toast(error instanceof Error ? error.message : String(error)); }
       }
     });
@@ -100,6 +109,10 @@ class ForestAdventure extends Phaser.Scene {
     this.render(); this.renderCutscene();
     el('loading').hidden = true;
     setupControls();
+    if (new URLSearchParams(location.search).get('designer') === '1') {
+      this.advanceCutscene(true);
+      el('designer').click();
+    }
     if (import.meta.env.DEV) Object.assign(window, { pointleshDemo: {
       snapshot: () => this.snapshot(),
       get manifest() { return structuredClone(authoredScenes); },
@@ -111,6 +124,16 @@ class ForestAdventure extends Phaser.Scene {
   walkables() { return walkablePolygons(this.resolved()); }
   toolsOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]'); }
   blocked() { return this.toolsOpen() || this.editing || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  clearMovementKeys() {
+    this.movementKeys.clear();
+    this.character?.setMovementDirection(null, []);
+  }
+  updateMovementKeys() {
+    if (this.blocked()) { this.clearMovementKeys(); return; }
+    const direction = [...this.movementKeys].reduce((sum, key) => ({ x: sum.x + arrowDirections[key].x, y: sum.y + arrowDirections[key].y }), { x: 0, y: 0 });
+    try { this.character.setMovementDirection(direction.x || direction.y ? direction : null, this.walkables()); }
+    catch (error) { this.clearMovementKeys(); toast(error instanceof Error ? error.message : String(error)); }
+  }
   hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
   hover(id?: string) {
     const target = targets[this.story.roomId].find(target => target.id === id);
@@ -120,6 +143,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   async act(targetId: string) {
     if (this.blocked()) return;
+    this.clearMovementKeys();
     const entity = this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled);
     if (!entity || !targetVisible(this.story, targetId)) return;
     const selected = this.selected;
@@ -143,6 +167,7 @@ class ForestAdventure extends Phaser.Scene {
     this.render();
   }
   changeRoom(room: RoomId, move = true) {
+    this.clearMovementKeys();
     this.epoch++;
     this.story.roomId = room;
     this.background.setTexture(`room.${room}`);
@@ -192,7 +217,7 @@ class ForestAdventure extends Phaser.Scene {
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200, minimap: false,
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),
-      onOpenChange: open => { this.editing = open; this.character.stop(); this.epoch++; },
+      onOpenChange: open => { this.editing = open; this.clearMovementKeys(); this.character.stop(); this.epoch++; },
       onSceneChange: sceneId => { if (roomIds.includes(sceneId as RoomId) && this.story.roomId !== sceneId) this.changeRoom(sceneId as RoomId); },
       onManifestChange: manifest => { authoredScenes = manifest; this.refreshDesign(); }
     });
@@ -225,9 +250,10 @@ class ForestAdventure extends Phaser.Scene {
       if (target) this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
     }
   }
-  say(text: string, speaker = 'Borin') { this.talking = true; this.speakingVoice = 'borin'; this.conversationActive = false; this.character.stop(); void this.character.say(text, 3600000); el('dialog').hidden = false; el('speaker').textContent = speaker; el('speech').textContent = text; el('choices').replaceChildren(); el('dialog-next').hidden = false; }
+  say(text: string, speaker = 'Borin') { this.epoch++; this.clearMovementKeys(); this.talking = true; this.speakingVoice = 'borin'; this.conversationActive = false; this.character.stop(); void this.character.say(text, 3600000); el('dialog').hidden = false; el('speaker').textContent = speaker; el('speech').textContent = text; el('choices').replaceChildren(); el('dialog-next').hidden = false; }
   dismissSpeech() { this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; }
   renderTurn(turn: DialogTurn) {
+    this.clearMovementKeys();
     if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
     this.talking = true; this.conversationActive = true;
     el('dialog').hidden = false; el('choices').replaceChildren();
@@ -250,18 +276,38 @@ class ForestAdventure extends Phaser.Scene {
     const index = isEnding ? this.story.endingStep : this.story.introStep;
     const sequence = isEnding ? ending : intro;
     const runner = isEnding ? this.endingRunner : this.introRunner;
-    runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: index, elapsedMs: 0 });
+    if (runner.snapshot().stepIndex !== index) runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: index, elapsedMs: 0 });
     el('cutscene').hidden = index >= sequence.length;
     if (index >= sequence.length) {
+      this.cinematic?.destroy(); this.cinematic = undefined;
+      document.body.classList.remove('cinematic-playing');
+      this.binding.sync();
       if (isEnding) { this.story.endingStep = -1; this.changeRoom('village'); const body = modal('A king home. A hero made.'); const p = document.createElement('p'); p.textContent = 'You brought Aldric home with a little courage, a little conversation, and an entirely unreasonable amount of stout. Thank you for playing.'; body.append(p, button('Return to Bramblehollow', closeModal)); }
       return;
     }
+    const kind = isEnding ? 'ending' : 'intro';
+    if (this.cinematic?.snapshot().kind !== kind) {
+      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind);
+      this.clearMovementKeys(); this.character.stop(); this.hover();
+    }
+    document.body.classList.add('cinematic-playing');
+    this.cinematic.render(index, runner.snapshot().elapsedMs);
     el('cutscene-kicker').textContent = isEnding ? 'THE JOURNEY HOME' : 'THE STORY BEGINS';
     const step = runner.current()!;
     el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = step.text ?? '';
     el('cutscene-progress').textContent = sequence.map((_, i) => i === index ? '◆' : '◇').join(' ');
-    el('skip-intro').hidden = isEnding;
-    el('cutscene-next').firstChild!.textContent = index === sequence.length - 1 ? isEnding ? 'Home at last ' : 'Begin adventure ' : 'Continue ';
+    el('skip-intro').hidden = false;
+    el('skip-intro').textContent = isEnding ? 'Skip to homecoming' : 'Skip introduction';
+    el('cutscene-next').firstChild!.textContent = index === sequence.length - 1 ? isEnding ? 'Home at last ' : 'Begin adventure ' : 'Next scene ';
+  }
+  advanceCutscene(skip = false) {
+    if (!this.cinematic) return;
+    const isEnding = this.story.endingStep >= 0;
+    const runner = isEnding ? this.endingRunner : this.introRunner;
+    if (skip) runner.skip(); else runner.advance();
+    if (isEnding) this.story.endingStep = runner.snapshot().stepIndex;
+    else this.story.introStep = runner.snapshot().stepIndex;
+    this.renderCutscene();
   }
   render() {
     el('room-name').textContent = roomNames[this.story.roomId];
@@ -290,13 +336,17 @@ class ForestAdventure extends Phaser.Scene {
   snapshot(): GameState {
     return { roomId: this.story.roomId, inventory: [...this.story.inventory], flags: { ...this.story.flags }, characters: { borin: this.character.snapshot() }, selectedItem: this.selected ?? null,
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
-      cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep },
+      cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock, speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '' } };
   }
   validateSave(save: GameState) {
     if (!roomIds.includes(save.roomId as RoomId) || !save.characters.borin || Object.keys(save.characters).length !== 1 || save.inventory.some(item => !(item in items)) || Object.values(save.flags).some(flag => typeof flag !== 'boolean')) throw new Error('Save references unknown adventure content');
-    const cutscene = save.cutscene as { introStep: number; endingStep: number };
+    const cutscene = save.cutscene as ForestCheckpoint;
     if (!cutscene || !Number.isInteger(cutscene.introStep) || cutscene.introStep < 0 || cutscene.introStep > intro.length || !Number.isInteger(cutscene.endingStep) || cutscene.endingStep < -1 || cutscene.endingStep > ending.length) throw new Error('Invalid cutscene checkpoint');
+    for (const kind of ['intro', 'ending'] as const) {
+      const stepIndex = cutscene[`${kind}Step`];
+      new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, stepIndex), elapsedMs: cutscene[`${kind}ElapsedMs`] ?? 0 });
+    }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
     const checkDialog = new AdventureDialog(dialogs, assets); checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const actor = new CharacterController(this.character.config); actor.restore(save.characters.borin);
@@ -304,9 +354,11 @@ class ForestAdventure extends Phaser.Scene {
   restore(save: GameState) {
     this.validateSave(save);
     const conversation = new AdventureDialog(dialogs, assets); const turn = conversation.restore((save.dialog ?? null) as DialogCheckpoint | null);
-    const checkpoint = save.cutscene as { introStep:number; endingStep:number };
-    this.epoch++; this.dismissSpeech();
-    this.story = { roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, ...checkpoint };
+    const checkpoint = save.cutscene as ForestCheckpoint;
+    this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
+    this.cinematic?.destroy(); this.cinematic = undefined;
+    this.story = { roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep };
+    for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: checkpoint[`${kind}ElapsedMs`] ?? 0 });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.changeRoom(this.story.roomId, false); this.character.restore(save.characters.borin);
     this.conversation = conversation; conversation.onTurn(next => this.renderTurn(next));
@@ -316,6 +368,22 @@ class ForestAdventure extends Phaser.Scene {
   }
   update(_time: number, delta: number) {
     if (!this.binding) return;
+    if (this.blocked() && this.movementKeys.size) this.clearMovementKeys();
+    if (this.cinematic) {
+      const designerOpen = this.toolsOpen() || this.editing;
+      this.cinematic.setVisible(!designerOpen);
+      el('cutscene').hidden = designerOpen;
+      if (!modalOpen && !designerOpen) {
+        const isEnding = this.story.endingStep >= 0;
+        const runner = isEnding ? this.endingRunner : this.introRunner;
+        const previousStep = runner.snapshot().stepIndex;
+        runner.tick(Math.min(delta, 100));
+        const checkpoint = runner.snapshot();
+        if (isEnding) this.story.endingStep = checkpoint.stepIndex; else this.story.introStep = checkpoint.stepIndex;
+        if (checkpoint.stepIndex !== previousStep) this.renderCutscene();
+        else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
+      }
+    }
     const paused = modalOpen || this.toolsOpen() || this.editing || this.story.introStep < intro.length || this.story.endingStep >= 0;
     if (!paused) {
       this.binding.update(Math.min(delta, 100));
@@ -334,8 +402,8 @@ class ForestAdventure extends Phaser.Scene {
 
 function setupControls() {
   el('dialog-next').onclick = () => gameScene.conversationActive ? gameScene.conversation.advance() : gameScene.dismissSpeech();
-  el('cutscene-next').onclick = () => { const runner = gameScene.story.endingStep >= 0 ? gameScene.endingRunner : gameScene.introRunner; runner.advance(); if (gameScene.story.endingStep >= 0) gameScene.story.endingStep = runner.snapshot().stepIndex; else gameScene.story.introStep = runner.snapshot().stepIndex; gameScene.renderCutscene(); };
-  el('skip-intro').onclick = () => { gameScene.introRunner.skip(); gameScene.story.introStep = gameScene.introRunner.snapshot().stepIndex; gameScene.renderCutscene(); };
+  el('cutscene-next').onclick = () => gameScene.advanceCutscene();
+  el('skip-intro').onclick = () => gameScene.advanceCutscene(true);
   el('hotspots').onclick = () => { gameScene.showHotspots = !gameScene.showHotspots; el('hotspots').classList.toggle('active', gameScene.showHotspots); gameScene.drawHotspots(); };
   el('clear-item').onclick = () => { gameScene.selected = undefined; gameScene.render(); };
   el('hint').onclick = () => gameScene.say(hint(gameScene.story), 'A little nudge');
@@ -350,7 +418,7 @@ function setupControls() {
     const body = modal('A corner of the Elderwood'); const grid = document.createElement('div'); grid.className = 'map-grid';
     for (const id of roomIds) { const card = document.createElement('div'); card.className = 'map-room'; const image = document.createElement('img'); image.src = gameScene.textures.get(`room.${id}`).getSourceImage() instanceof HTMLCanvasElement ? (gameScene.textures.get(`room.${id}`).getSourceImage() as HTMLCanvasElement).toDataURL() : ''; image.alt = roomNames[id]; const label = document.createElement('span'); label.textContent = roomNames[id]; const sub = document.createElement('small'); sub.textContent = id === gameScene.story.roomId ? 'YOU ARE HERE' : ({ village:'Pub · Cottage · Forest',pub:'From Bramblehollow',house:'From Bramblehollow',forest:'Village · Mine · Camp',mine:'From the Whispering Wood',camp:'From the Whispering Wood' })[id]; label.append(sub); card.append(image, label); grid.append(card); } body.append(grid);
   };
-  el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click the ground to walk. Click a person to talk, or an object to interact. Nearby buttons do the same thing and work with the keyboard.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Put away clears your selection.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'Save and load any of three slots, even during a conversation or cutscene. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
+  el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click a person to talk, or an object to interact. Nearby buttons do the same thing and work with the keyboard.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Put away clears your selection.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
   function saveMenu(mode: 'save' | 'load') {
     const body = modal(mode === 'save' ? 'Keep your place' : 'Pick up the trail');
     let saves: ReturnType<SaveStore['list']>;
@@ -366,14 +434,28 @@ function setupControls() {
   el('save').onclick = () => saveMenu('save'); el('load').onclick = () => saveMenu('load');
   el('modal-close').onclick = closeModal; el('modal-backdrop').onclick = event => { if (event.target === el('modal-backdrop')) closeModal(); };
   document.addEventListener('keydown', event => {
-    if ((event.target as HTMLElement)?.matches('input,textarea,select') || event.ctrlKey || event.metaKey || event.altKey) return;
-    if (event.key === 'Escape') { if (modalOpen) closeModal(); else if (gameScene.editing) gameScene.sceneDesigner?.designer.close(); else { gameScene.selected = undefined; gameScene.epoch++; gameScene.character.stop(); gameScene.render(); } }
+    if (editingText(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (arrowDirections[event.key]) {
+      if (gameScene.blocked()) return;
+      event.preventDefault();
+      if (!gameScene.movementKeys.has(event.key)) {
+        gameScene.epoch++; gameScene.movementKeys.add(event.key); gameScene.updateMovementKeys();
+      }
+      return;
+    }
+    if (event.key === 'Escape') { if (modalOpen) closeModal(); else if (gameScene.editing) gameScene.sceneDesigner?.designer.close(); else { gameScene.selected = undefined; gameScene.epoch++; gameScene.clearMovementKeys(); gameScene.character.stop(); gameScene.render(); } }
     if (!modalOpen && !gameScene.editing) {
       if (event.key.toLowerCase() === 'm') el('map').click(); if (event.key.toLowerCase() === 'j') el('journal').click();
       if (event.key === 'Tab' && event.target === document.body) { event.preventDefault(); el('hotspots').click(); }
       if (event.key === ' ' && event.target === document.body) { event.preventDefault(); if (!el('cutscene').hidden) el('cutscene-next').click(); else if (!el('dialog').hidden && !el('dialog-next').hidden) el('dialog-next').click(); }
     }
   });
+  document.addEventListener('keyup', event => {
+    if (gameScene.movementKeys.delete(event.key)) gameScene.updateMovementKeys();
+  });
+  window.addEventListener('blur', () => gameScene.clearMovementKeys());
+  document.addEventListener('visibilitychange', () => { if (document.hidden) gameScene.clearMovementKeys(); });
+  document.addEventListener('focusin', event => { if (editingText(event.target)) gameScene.clearMovementKeys(); });
 }
 
 // The companion servers promote to these JSON files. Published demos use the same authored data.

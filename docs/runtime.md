@@ -19,9 +19,11 @@ const route = findPath({ x: 20, y: 200 }, { x: 600, y: 200 }, [floor]);
 
 `findPath(start, end, walkables, obstacles?)` builds a visibility graph across the union of all walkable polygons and outside the interiors of obstacle polygons. It checks intervals separated by polygon edges, so thin obstacles and concave cutouts cannot be skipped by coarse sampling. Overlapping polygon intersections are graph vertices. Invalid polygons throw; unreachable or outside endpoints return `null`.
 
+`findClosestReachablePath(start, click, walkables, obstacles?)` adds click-to-walk snapping. It keeps an exactly reachable destination, otherwise projects the click onto walkable/obstacle boundaries and considers their intersections. Candidates are ordered by distance to the click and must be reachable from the starting point. A click inside a wall or on a disconnected island therefore moves toward the closest accessible point without crossing the obstruction. An invalid starting position or an empty walkable set returns `null`.
+
 Boundary points are allowed, including obstacle edges. The actor footprint is a point: author inset floors or expanded obstacles when physical clearance matters. The algorithm targets room-sized adventure scenes with dozens of polygon vertices; it is not a crowd-navigation system. `pointInPolygon`, `isWalkable`, `isSegmentWalkable`, `closestPointOnPolygon` and `distance` are available for previews and custom tools.
 
-Routes snapshot the geometry used at the start of a walk. If a door closes or an editor changes the walkable geometry during a walk, call `stop()` or request a new route. Outside clicks are rejected by default; a client can explicitly choose a reachable projected target using `closestPointOnPolygon`. There is no fallback that moves straight through walls.
+Routes snapshot the geometry used at the start of a click walk. If a door closes or an editor changes the walkable geometry during a walk, call `stop()` or request a new route. `CharacterController.walkTo` uses reachable-point snapping by default; pass `{ snap: false }` as its fourth argument for exact navigation. The low-level `findPath` and character `approach` always keep exact-destination semantics. There is no fallback that moves straight through walls.
 
 ## Characters
 
@@ -43,14 +45,31 @@ hero.tick(deltaMs);
 // Apply hero.state.position/facing/activity/animationFrame to your renderer.
 
 const arrived = hero.walkTo({ x: 440, y: 250 }, [floor]);
-// Keep ticking while awaiting arrived. It resolves true on arrival, false on interruption/failure.
+// Keep ticking while awaiting arrived. It resolves true at the resolved destination, false on interruption/failure.
 ```
 
 In linked mode, a frame boundary moves the actor by `walkStep` world pixels. Choose the distance to match the planted foot's travel in the sprite art; change `frameDurationMs` to alter speed. With `movementLinkedToAnimation: false`, `speed` is pixels/second. A one-frame animation also uses smooth movement. The implementation uses elapsed time, including multiple frame boundaries in one update.
 
 `setScale(scale)` changes rendered perspective scale and, unless `adjustSpeedToScale` is false, adjusts movement proportionally. Facing supports four or eight directions. Logical facing is separate from rendering art; an adapter may mirror or select a fallback animation when an asset has fewer directions.
 
-`walkTo` cancels a previous walk. `stop` cancels pending activity and returns to idle. `place(point, facing?)` changes rooms/checkpoints immediately and cancels pending work. `face(pointOrDirection)` selects a direction. `destination` and `isWalking` support UI/debug views. `snapshot()` makes a detached actor snapshot; `restore(snapshot)` validates before replacing state and resumes saved route/speech progress on future ticks. Restore does not recreate old promises.
+`walkTo` cancels a previous activity and snaps outside/unreachable clicks to the closest reachable point. Its `destination` getter exposes that resolved target. `stop` cancels pending activity and returns to idle. `place(point, facing?)` changes rooms/checkpoints immediately and cancels pending work. `face(pointOrDirection)` selects a direction. `snapshot()` makes a detached actor snapshot; `restore(snapshot)` validates before replacing state and resumes saved click-route/speech progress on future ticks. Restore does not recreate old promises.
+
+### Arrow keys and directional input
+
+```ts
+// Call on input changes, or repeatedly while held. Diagonal vectors are normalized.
+hero.setMovementDirection({ x: 1, y: -1 }, [floor]);
+hero.tick(deltaMs);
+
+// On key release, blur, or input blocking:
+hero.setMovementDirection(null, []);
+```
+
+`setMovementDirection(direction, walkables, obstacles?)` accepts a held-key or joystick vector. Nonzero input interrupts click walking/speech. Updating the vector preserves animation timing, so changing direction or calling the method every frame does not repeatedly restart the walk animation. Linked movement still uses planted-foot distance per animation frame, and smooth movement still uses pixels per second with perspective scaling. Normalized diagonals travel at the same speed as cardinal directions.
+
+Directional movement follows the requested heading and clips each step at the first nonwalkable boundary, reaching the boundary even when a whole animation step would overshoot. It does not automatically find a route around obstacles. A blocked actor faces the requested direction and returns to idle; changing direction lets it move away or along a boundary. Releasing with `null` or a zero vector stops only directional input and leaves any click walk intact. Clear input on blur and while an editor, dialog or menu owns the controls. After changing navigation geometry, stop movement or set the direction with the updated geometry.
+
+Held keys are transient input. During directional movement, `snapshot()` saves the current pose as idle, so loading cannot leave a movement key stuck. Click paths and speech still preserve their remaining progress. Always save `snapshot()` rather than the mutable rendering `state` object.
 
 ### Approach before an interaction
 

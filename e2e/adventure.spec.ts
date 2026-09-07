@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { expectCastMotion, expectCinematicCleanup } from './cinematic-helpers';
 
 async function ready(page: Page, skipIntro = true) {
   await page.goto('/');
@@ -48,7 +49,7 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await ready(page, false);
-  await expect(page.locator('#cutscene-text')).toContainText('Then the orcs found the king’s road');
+  await expect(page.locator('#cutscene-text')).toContainText(/orcs found the king’s road/i);
   for (let index = 0; index < 4; index++) await page.locator('#cutscene-next').click();
   await expect(page.locator('#cutscene')).toBeHidden();
   await page.getByRole('button', { name: /^Map/ }).click();
@@ -108,7 +109,10 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   await target(page, 'King Aldric’s cage');
   await expect(page.locator('#cutscene')).toBeVisible();
   await expect(page.locator('#cutscene-kicker')).toHaveText('THE JOURNEY HOME');
+  await expectCastMotion(page);
+  await page.screenshot({ path: testInfo.outputPath('animated-rescue.png'), fullPage: true });
   for (let index = 0; index < 4; index++) await page.locator('#cutscene-next').click();
+  await expectCinematicCleanup(page);
   await expect(page.getByRole('dialog')).toContainText('A king home. A hero made.');
   await page.getByRole('button', { name: 'Return to Bramblehollow', exact: true }).click();
   await expect(page.locator('#room-name')).toHaveText('Bramblehollow');
@@ -190,8 +194,11 @@ test('the player produces visible pixels above the room background with walk-beh
 });
 
 test('live prefab property edits reach the character controller and support undo', async ({ page }, testInfo) => {
-  await ready(page);
-  await page.getByRole('button', { name: 'Designer', exact: true }).click();
+  await page.goto('/?designer=1');
+  await expect(page.locator('#loading')).toBeHidden();
+  await expect(page.locator('#cutscene')).toBeHidden();
+  await expect(page.locator('body')).toHaveClass(/tools-visible/);
+  await expectCinematicCleanup(page);
   await page.getByRole('button', { name: 'Toggle Adventure', exact: true }).click();
   await page.getByRole('combobox', { name: 'Adventure entity', exact: true }).selectOption('village.borin');
   const step = page.getByRole('spinbutton', { name: 'Pixels per animation frame', exact: true });

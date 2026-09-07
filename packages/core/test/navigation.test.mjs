@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { findPath, isSegmentWalkable, pointInPolygon, closestPointOnPolygon, distance } from '../dist/index.js';
+import { findPath, findClosestReachablePath, clipMovementToWalkable, isSegmentWalkable, pointInPolygon, closestPointOnPolygon, distance } from '../dist/index.js';
 
 const point = (x, y) => ({ x, y });
 const box = (x, y, width, height) => [point(x, y), point(x + width, y), point(x + width, y + height), point(x, y + height)];
@@ -51,4 +51,39 @@ test('boundary points are usable and returned paths do not alias document vertic
 test('rejects nonfinite and self-intersecting geometry before routing', () => {
   assert.throws(() => findPath(point(NaN, 0), point(10, 10), [box(0, 0, 20, 20)]), /finite/);
   assert.throws(() => findPath(point(1, 1), point(2, 2), [[point(0, 0), point(10, 10), point(0, 10), point(10, 0)]]), /area|intersect/);
+});
+
+test('click snapping projects onto a reachable edge without changing exact findPath semantics', () => {
+  const floor = box(0, 0, 100, 100), start = point(10, 50), target = point(130, 50);
+  assert.equal(findPath(start, target, [floor]), null);
+  assert.deepEqual(findClosestReachablePath(start, target, [floor]), [start, point(100, 50)]);
+  assert.deepEqual(findClosestReachablePath(start, point(80, 40), [floor]), [start, point(80, 40)]);
+  assert.equal(findClosestReachablePath(point(-10, 50), target, [floor]), null);
+});
+
+test('snapping chooses the closest reachable component instead of a nearer disconnected island', () => {
+  const islands = [box(0, 0, 30, 30), box(40, 0, 30, 30)];
+  const path = findClosestReachablePath(point(10, 10), point(60, 10), islands);
+  assert.deepEqual(path, [point(10, 10), point(30, 10)]);
+  const floor = box(0, 0, 100, 100), wall = box(40, -10, 20, 120);
+  const blocked = findClosestReachablePath(point(10, 50), point(130, 50), [floor], [wall]);
+  assert.deepEqual(blocked.at(-1), point(40, 50));
+});
+
+test('snapping handles inside-obstacle clicks and intersections of overlapping obstacle boundaries', () => {
+  const floor = box(0, 0, 100, 100);
+  assert.deepEqual(findClosestReachablePath(point(10, 50), point(50, 50), [floor], [box(40, 20, 20, 60)]).at(-1), point(40, 50));
+  const obstacles = [box(40, 20, 30, 60), box(60, 30, 30, 40)];
+  const path = findClosestReachablePath(point(10, 50), point(65, 50), [floor], obstacles);
+  const end = path.at(-1);
+  assert.equal(end.x, 70);
+  assert.ok(end.y === 30 || end.y === 70);
+  for (let index = 1; index < path.length; index++) assert.equal(isSegmentWalkable(path[index - 1], path[index], [floor], obstacles), true);
+});
+
+test('direct movement reaches the exact first boundary and never tunnels through a thin wall', () => {
+  const floor = box(0, 0, 100, 100);
+  assert.deepEqual(clipMovementToWalkable(point(90, 50), point(120, 50), [floor]), point(100, 50));
+  assert.deepEqual(clipMovementToWalkable(point(10, 50), point(90, 50), [floor], [box(40, 0, 0.001, 100)]), point(40, 50));
+  assert.deepEqual(clipMovementToWalkable(point(100, 50), point(120, 50), [floor]), point(100, 50));
 });

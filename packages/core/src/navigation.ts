@@ -63,6 +63,18 @@ function edges(polygons: readonly Polygon[]): [Point, Point][] {
   return polygons.flatMap(polygon => polygon.map((point, index): [Point, Point] => [point, polygon[(index + 1) % polygon.length]!]));
 }
 
+function segmentCuts(start: Point, end: Point, polygons: readonly Polygon[]): number[] {
+  const cuts = [0, 1];
+  const dx = end.x - start.x, dy = end.y - start.y;
+  for (const [a, b] of edges(polygons)) {
+    for (const point of intersections(start, end, a, b)) {
+      const amount = Math.abs(dx) >= Math.abs(dy) ? (point.x - start.x) / dx : (point.y - start.y) / dy;
+      cuts.push(Math.max(0, Math.min(1, amount)));
+    }
+  }
+  return cuts.sort((a, b) => a - b);
+}
+
 export function isWalkable(point: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): boolean {
   return walkables.some(polygon => pointInPolygon(point, polygon)) && !obstacles.some(polygon => pointInPolygon(point, polygon, false));
 }
@@ -72,15 +84,7 @@ export function isSegmentWalkable(start: Point, end: Point, walkables: readonly 
   if (!isWalkable(start, walkables, obstacles) || !isWalkable(end, walkables, obstacles)) return false;
   const length = distance(start, end);
   if (length <= EPSILON) return true;
-  const cuts = [0, 1];
-  const dx = end.x - start.x, dy = end.y - start.y;
-  for (const [a, b] of edges([...walkables, ...obstacles])) {
-    for (const point of intersections(start, end, a, b)) {
-      const amount = Math.abs(dx) >= Math.abs(dy) ? (point.x - start.x) / dx : (point.y - start.y) / dy;
-      cuts.push(Math.max(0, Math.min(1, amount)));
-    }
-  }
-  cuts.sort((a, b) => a - b);
+  const cuts = segmentCuts(start, end, [...walkables, ...obstacles]);
   for (let i = 1; i < cuts.length; i++) {
     if (cuts[i]! - cuts[i - 1]! <= EPSILON) continue;
     if (!isWalkable(interpolate(start, end, (cuts[i]! + cuts[i - 1]!) / 2), walkables, obstacles)) return false;
@@ -132,6 +136,52 @@ export function findPath(start: Point, end: Point, walkables: readonly Polygon[]
     }
   }
   return null;
+}
+
+/**
+ * Route to the closest reachable point to a click. Exact reachable destinations remain unchanged.
+ * Distance to the click takes priority over walking distance; disconnected islands are never teleported to.
+ */
+export function findClosestReachablePath(start: Point, target: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): Point[] | null {
+  const exact = findPath(start, target, walkables, obstacles);
+  if (exact) return exact;
+  if (!isWalkable(start, walkables, obstacles)) return null;
+  const candidates: Point[] = [{ ...start }];
+  const add = (point: Point): void => {
+    if (isWalkable(point, walkables, obstacles) && !candidates.some(candidate => distance(candidate, point) <= EPSILON)) candidates.push({ ...point });
+  };
+  const boundaries = edges([...walkables, ...obstacles]);
+  for (const [a, b] of boundaries) {
+    add(a); add(b);
+    // Project onto each boundary, including obstacles surrounding an inside-wall click.
+    const dx = b.x - a.x, dy = b.y - a.y, squared = dx * dx + dy * dy;
+    const amount = squared ? Math.max(0, Math.min(1, ((target.x - a.x) * dx + (target.y - a.y) * dy) / squared)) : 0;
+    add(interpolate(a, b, amount));
+  }
+  // Overlaps can clip an otherwise closest edge projection. Their intersections
+  // are the endpoints of the remaining feasible intervals on that boundary.
+  for (let i = 0; i < boundaries.length; i++) {
+    for (let j = i + 1; j < boundaries.length; j++) for (const point of intersections(...boundaries[i]!, ...boundaries[j]!)) add(point);
+  }
+  candidates.sort((a, b) => distance(a, target) - distance(b, target) || distance(start, a) - distance(start, b));
+  for (const candidate of candidates) {
+    const path = findPath(start, candidate, walkables, obstacles);
+    if (path) return path;
+  }
+  return null;
+}
+
+/** Stop direct movement at the first nonwalkable interval, including arbitrarily thin obstacles. */
+export function clipMovementToWalkable(start: Point, destination: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): Point {
+  if (!isPoint(start) || !isPoint(destination)) throw new Error('Movement endpoints must be finite points');
+  if (!isWalkable(start, walkables, obstacles) || distance(start, destination) <= EPSILON) return { ...start };
+  const cuts = segmentCuts(start, destination, [...walkables, ...obstacles]);
+  for (let index = 1; index < cuts.length; index++) {
+    const from = cuts[index - 1]!, to = cuts[index]!;
+    if (to - from <= EPSILON) continue;
+    if (!isWalkable(interpolate(start, destination, (from + to) / 2), walkables, obstacles)) return interpolate(start, destination, from);
+  }
+  return { ...destination };
 }
 
 export function closestPointOnPolygon(point: Point, polygon: readonly Point[]): Point | null {

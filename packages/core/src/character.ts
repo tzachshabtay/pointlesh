@@ -1,4 +1,4 @@
-import { distance, findPath } from './navigation.js';
+import { clipMovementToWalkable, distance, findClosestReachablePath, findPath } from './navigation.js';
 import { cloneJSON, isPoint, type ApproachMode, type CharacterSnapshot, type Direction, type Point, type Polygon } from './types.js';
 
 export interface CharacterConfig {
@@ -17,6 +17,7 @@ export interface CharacterConfig {
 }
 
 export interface ApproachTarget { position: Point; walkPoint?: Point; facing?: Direction }
+export interface WalkToOptions { /** Snap an unreachable click to the nearest reachable point. Defaults to true. */ snap?: boolean }
 const DIRECTIONS: Direction[] = ['right', 'down-right', 'down', 'down-left', 'left', 'up-left', 'up', 'up-right'];
 const positive = (value: number, name: string): number => {
   if (!Number.isFinite(value) || value <= 0) throw new Error(`${name} must be finite and positive`);
@@ -36,6 +37,7 @@ export class CharacterController {
   readonly state: CharacterSnapshot;
   private walkCompletion: ((completed: boolean) => void) | undefined;
   private speechCompletion: (() => void) | undefined;
+  private directionalMovement?: { direction: Point; walkables: readonly Polygon[]; obstacles: readonly Polygon[] };
   private operation = 0;
 
   constructor(config: CharacterConfig) {
@@ -71,10 +73,12 @@ export class CharacterController {
 
   setScale(scale: number): void { this.state.scale = positive(scale, 'scale'); }
 
-  /** A new walk interrupts the old walk. Completion false means blocked, interrupted or stopped. */
-  walkTo(destination: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): Promise<boolean> {
+  /** A new click walk interrupts the old activity. Completion means the resolved destination was reached. */
+  walkTo(destination: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = [], options: WalkToOptions = {}): Promise<boolean> {
     // Validate/compute before cancelling an existing valid action.
-    const path = findPath(this.state.position, destination, walkables, obstacles);
+    const path = options.snap === false
+      ? findPath(this.state.position, destination, walkables, obstacles)
+      : findClosestReachablePath(this.state.position, destination, walkables, obstacles);
     this.stop();
     if (!path) return Promise.resolve(false);
     this.state.path = path.slice(1);
@@ -84,6 +88,26 @@ export class CharacterController {
     this.state.animationElapsedMs = 0;
     this.face(this.state.path[0]!);
     return new Promise(resolve => { this.walkCompletion = resolve; });
+  }
+
+  /**
+   * Set held-key/joystick intent. Repeated nonzero updates preserve animation/frame timing.
+   * Passing null or a zero vector releases only directional movement, not a pending click walk.
+   */
+  setMovementDirection(direction: Point | null, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): void {
+    if (direction === null || (isPoint(direction) && direction.x === 0 && direction.y === 0)) {
+      if (this.directionalMovement) this.stop();
+      return;
+    }
+    if (!isPoint(direction)) throw new Error('Movement direction must be a finite point');
+    const length = Math.hypot(direction.x, direction.y);
+    if (!Number.isFinite(length) || length === 0) throw new Error('Movement direction must have finite nonzero magnitude');
+    // Validate supplied geometry before interrupting an existing valid activity.
+    findPath(this.state.position, this.state.position, walkables, obstacles);
+    if (!this.directionalMovement) this.stop();
+    this.directionalMovement = { direction: { x: direction.x / length, y: direction.y / length }, walkables, obstacles };
+    this.state.activity = 'walking';
+    this.face({ x: this.state.position.x + direction.x, y: this.state.position.y + direction.y });
   }
 
   /** Instantly move between rooms/checkpoints and cancel pending actions. */
@@ -100,6 +124,7 @@ export class CharacterController {
     const speechCompletion = this.speechCompletion;
     this.walkCompletion = undefined;
     this.speechCompletion = undefined;
+    this.directionalMovement = undefined;
     this.state.path = [];
     this.state.speech = null;
     this.idle();
@@ -112,7 +137,7 @@ export class CharacterController {
     if (mode === 'none') return true;
     if (!['face', 'walk-if-point', 'walk'].includes(mode)) throw new Error('Unknown approach mode');
     if (mode === 'walk' || (mode === 'walk-if-point' && target.walkPoint)) {
-      const completion = this.walkTo(target.walkPoint ?? target.position, walkables, obstacles);
+      const completion = this.walkTo(target.walkPoint ?? target.position, walkables, obstacles, { snap: false });
       const operation = this.operation;
       if (!await completion || operation !== this.operation) return false;
     }
@@ -141,7 +166,7 @@ export class CharacterController {
 
   tick(dtMs: number): void {
     if (!Number.isFinite(dtMs) || dtMs < 0) throw new Error('tick requires a finite, nonnegative duration');
-    if (dtMs === 0 || this.state.activity === 'idle') return;
+    if (dtMs === 0 || (this.state.activity === 'idle' && !this.directionalMovement)) return;
     const elapsed = this.state.animationElapsedMs + dtMs;
     const frames = Math.floor(elapsed / this.config.frameDurationMs);
     this.state.animationElapsedMs = elapsed % this.config.frameDurationMs;
@@ -155,10 +180,19 @@ export class CharacterController {
     const amount = this.config.movementLinkedToAnimation && this.config.frameCount > 1
       ? frames * this.config.walkStep * scale
       : dtMs / 1000 * this.config.speed * scale;
-    this.advance(amount);
+    if (this.directionalMovement) this.advanceDirection(amount);
+    else this.advance(amount);
   }
 
-  snapshot(): CharacterSnapshot { return cloneJSON(this.state); }
+  /** Held keys are transient input: save the current pose as idle instead of restoring a stuck key. */
+  snapshot(): CharacterSnapshot {
+    const snapshot = cloneJSON(this.state);
+    if (this.directionalMovement) {
+      snapshot.activity = 'idle'; snapshot.path = [];
+      snapshot.animationFrame = 0; snapshot.animationElapsedMs = 0;
+    }
+    return snapshot;
+  }
 
   /** Restores remaining walking/speech data. Old promises resolve as interrupted; new tick resumes state. */
   restore(snapshot: CharacterSnapshot): void {
@@ -194,6 +228,17 @@ export class CharacterController {
       this.idle();
       completion?.(true);
     }
+  }
+
+  private advanceDirection(amount: number): void {
+    if (!this.directionalMovement || amount <= 0) return;
+    const { direction, walkables, obstacles } = this.directionalMovement;
+    const desired = { x: this.state.position.x + direction.x * amount, y: this.state.position.y + direction.y * amount };
+    const position = clipMovementToWalkable(this.state.position, desired, walkables, obstacles);
+    const moved = distance(this.state.position, position) > 1e-7;
+    this.state.position = position;
+    this.state.activity = moved ? 'walking' : 'idle';
+    if (!moved) this.state.animationFrame = 0;
   }
 
   private idle(): void {

@@ -146,14 +146,14 @@ export function hint(state: StoryState): string {
   return 'The king is home. There are worse reasons to have another round.';
 }
 export const intro = [
-  { speaker: 'Bramblehollow · before dawn', text: 'For three hundred years, the forest kept the dwarven village hidden. Then the orcs found the king’s road.' },
-  { speaker: 'King Aldric', text: 'They came through the mist. I sent the others home… but an old king is not as quick as he remembers.' },
-  { speaker: 'Elder Rowan', text: 'They have taken Aldric to the eastern camp. Their captain will return by nightfall. Borin, we need a quieter kind of hero.' },
-  { speaker: 'Borin', text: 'A quieter hero? I am a dwarf in iron boots. But he is our king. I will bring him home.' }
+  { speaker: 'Bramblehollow · before dawn', text: 'The orcs found the king’s road.' },
+  { speaker: 'King Aldric', text: 'Run home! Tell Rowan… tell him I may be late for breakfast.' },
+  { speaker: 'The eastern camp', text: 'By nightfall, their captain would return. The king was running out of time.' },
+  { speaker: 'Borin', text: 'An army would wake the whole camp. One dwarf? I will bring him home.' }
 ];
 export const ending = [
-  { speaker: 'Borin', text: 'One good strike. The lock falls. Aldric grips the rope, and the forest swallows two very relieved dwarves.' },
-  { speaker: 'King Aldric', text: 'No army. No grand battle. Just a clever head, a stout rope, and… is that Mara’s honey stout?' },
-  { speaker: 'Borin', text: 'A vital diplomatic expense, Your Majesty.' },
-  { speaker: 'Bramblehollow · home again', text: 'That evening, the village raised its tankards to the smallest rescue party in dwarven history. And far away, Grub slept through supper.' }
+  { speaker: 'Borin', text: 'One good strike. Keep snoring, Grub.' },
+  { speaker: 'King Aldric', text: 'A stout rope. A clever head. A very undignified descent.' },
+  { speaker: 'Borin', text: 'This way, Your Majesty. Mara is keeping breakfast warm.' },
+  { speaker: 'Bramblehollow · home again', text: 'Tankards rose for the smallest rescue party in dwarven history.' }
 ];

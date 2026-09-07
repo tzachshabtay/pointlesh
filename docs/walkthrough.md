@@ -4,15 +4,15 @@ This guide contains the complete solution to the forest demo. Borin must rescue 
 
 ## Controls
 
-Click open ground to walk. Click a person or object to approach and interact. The **Nearby** buttons below the game perform the same interactions and are keyboard-accessible. **Show hotspots** reveals interactive shapes; Tab toggles it when the page itself has keyboard focus.
+Click anywhere to walk to the closest reachable ground, or hold the arrow keys to walk directly. Diagonal input keeps the same speed; walkable boundaries stop your movement. Click a person or object to approach and interact. The **Nearby** buttons below the game perform the same interactions and are keyboard-accessible. **Show hotspots** reveals interactive shapes; Tab toggles it when the page itself has keyboard focus.
 
-Click an inventory item to select it, then click a target to use it. Click a second inventory item to attempt a combination. Click the selected item again or **Put away** to clear the selection. Continue advances speech and cutscene text. **Map** (M), **Journal** (J), and **A little nudge?** provide navigation, collected clues and a context-sensitive hint. Sound is optional.
+Click an inventory item to select it, then click a target to use it. Click a second inventory item to attempt a combination. Click the selected item again or **Put away** to clear the selection. Continue advances speech. The intro and ending are animated sequences that play automatically; **Next scene** advances the current shot, and **Skip** finishes the sequence. **Map** (M), **Journal** (J), and **A little nudge?** provide navigation, collected clues and a context-sensitive hint. Sound is optional.
 
-**Save** and **Load** provide three local browser slots. Save during a conversation, in a cutscene or partway through the puzzle; loading restores that checkpoint. Saves belong to this browser and site origin.
+**Save** and **Load** provide three local browser slots. Save during a conversation, in a cutscene or partway through the puzzle; loading restores that checkpoint, including animation timing and character positions within a cutscene. Saves belong to this browser and site origin.
 
 ## The rescue
 
-1. **Watch the introduction**, or choose **Skip introduction**. Elder Rowan explains that orcs took Aldric east. Talking to Rowan in the village supplies optional context.
+1. **Watch the introduction**, or choose **Skip introduction**. Orcs ambush Aldric, march him through the forest and imprison him in their eastern camp; Borin sets out to rescue him. Talking to Rowan in the village supplies optional context.
 
 2. **Go to Borin's cottage.** From Bramblehollow, choose **My cottage**. Collect the **Copper coin** on the workbench and the **Climbing rope** by the chest. Return to the village.
 
@@ -28,13 +28,13 @@ Click an inventory item to select it, then click a target to use it. Click a sec
 
 8. **Secure the king's escape.** Once Grub is asleep, use the **Climbing rope** on **King Aldric's cage**. Borin will not break the lock until the king has a safe way down.
 
-9. **Break the lock.** Use the **Goldroot pickaxe** on the cage. Continue through the rescue ending. Borin and Aldric return to Bramblehollow.
+9. **Break the lock.** Use the **Goldroot pickaxe** on the cage. Watch Borin break the lock, help Aldric down the rope and escape through the forest to a village reunion. Borin and Aldric return to Bramblehollow.
 
 Inventory and dialogue puzzles can be prepared in different orders. Failed combinations and mistimed cauldron attempts do not consume the required items. The journal records the important clues, and the hint button points to the next unmet requirement.
 
 ## See the library features
 
-Open **Designer** to inspect the current room. The native **Scenes** and **Prefabs** panels provide the existing Scene Designer controls; the **Adventure** panel exposes Pointlesh properties and custom behavior data. Close the scene editor to resume normal interaction.
+Open **Designer** to inspect the current room, or visit [the direct designer preview](http://127.0.0.1:5186/?designer=1) to begin in the village editor. The native **Scenes** and **Prefabs** panels provide the existing Scene Designer controls; the **Adventure** panel exposes Pointlesh properties and custom behavior data. Close the scene editor to resume normal interaction.
 
 | Feature | What to try |
 | --- | --- |
@@ -47,6 +47,7 @@ Open **Designer** to inspect the current room. The native **Scenes** and **Prefa
 | Extensible prefabs | Add a custom JSON property or behavior ID in Adventure. The manifest retains it; game code registers and dispatches behavior handlers. Unknown behavior IDs have no implementation until a client provides one. |
 | Conversations | Open **Dialogs** to inspect the native dialogue trees and line assets. Changes update the demo's authored conversation runtime. |
 | Asset references | Open **AI Assets** to inspect the catalog containing room atlases, characters and dialogue assets. Generated room backgrounds are documented in [art-prompts.md](art-prompts.md). |
+| Animated cutscenes | Save midway through the kidnapping, let the action advance and load. The cast resumes at the saved pose and time. Next scene, automatic playback and skipping all return control to the game. |
 | Save/load | Save before the guard puzzle, change rooms or consume an item, and load. Inventory, flags, journal, guard timer and presentation checkpoints are restored. |
 
 Some properties intentionally remain hooks for game-specific behavior rather than automatic rules. For example, a client can use custom properties to add keys, quests, permissions or interaction verbs; the library does not interpret arbitrary JSON as executable code.
