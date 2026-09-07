@@ -71,6 +71,49 @@ test('Pointlesh area shape action opens native vertex, insertion, deletion, and 
   await page.screenshot({ path: testInfo.outputPath('native-curved-walkable-area.png'), fullPage: true });
 });
 
+test('one area keeps independent walk, scale, zoom, and walk-behind capabilities through undo and export', async ({ page }, testInfo) => {
+  await page.goto('/?designer=1');
+  await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, 'village.floor');
+  const inspector = page.getByRole('region', { name: 'Pointlesh adventure properties' });
+  const capabilities = inspector.getByRole('region', { name: 'Area capabilities' });
+  const walkable = capabilities.getByRole('checkbox', { name: 'Walkable', exact: true });
+  const scale = capabilities.getByRole('checkbox', { name: 'Character scale', exact: true });
+  const zoom = capabilities.getByRole('checkbox', { name: 'Camera zoom', exact: true });
+  const behind = capabilities.getByRole('checkbox', { name: 'Walk-behind', exact: true });
+  const initialShape = await nativeArea(page);
+  const resolvedArea = () => page.evaluate(() => (window as any).pointleshDemo.scene.resolved().areas.find((area: any) => area.id === 'village.floor'));
+  await expect(walkable).toBeChecked(); await expect(scale).toBeChecked(); await expect(zoom).toBeChecked(); await expect(behind).not.toBeChecked();
+  expect((await resolvedArea()).kind).toBe('area');
+  await capabilities.getByRole('combobox', { name: 'Scale axis', exact: true }).selectOption('x');
+  await expect(capabilities.getByRole('combobox', { name: 'Zoom axis', exact: true })).toHaveValue('y');
+
+  await zoom.uncheck();
+  await expect(walkable).toBeChecked(); await expect(scale).toBeChecked();
+  await expect(capabilities.getByRole('spinbutton', { name: 'Zoom at start', exact: true })).toHaveCount(0);
+  await expect(capabilities.getByRole('spinbutton', { name: 'Scale at start', exact: true })).toBeVisible();
+  await expect.poll(async () => (await resolvedArea()).properties).toMatchObject({ walkable: true, scaleEnabled: true, zoomEnabled: false, scaleAxis: 'x', zoomAxis: 'y' });
+  await behind.check();
+  await expect(capabilities.getByRole('spinbutton', { name: 'Baseline', exact: true })).toBeVisible();
+  await walkable.uncheck(); await scale.uncheck();
+  await expect(behind).toBeChecked(); await expect(zoom).not.toBeChecked();
+  await expect(capabilities.getByRole('spinbutton', { name: 'Scale at start', exact: true })).toHaveCount(0);
+  await expect.poll(async () => (await resolvedArea()).properties).toMatchObject({ walkable: false, scaleEnabled: false, zoomEnabled: false, walkBehindEnabled: true });
+  await inspector.getByRole('button', { name: 'Undo', exact: true }).click();
+  await inspector.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(walkable).toBeChecked(); await expect(scale).toBeChecked();
+  await expect(zoom).not.toBeChecked(); await expect(behind).toBeChecked();
+  expect(await nativeArea(page)).toEqual(initialShape);
+
+  const downloadPromise = page.waitForEvent('download');
+  await inspector.getByRole('button', { name: 'Export JSON', exact: true }).click();
+  const manifest = JSON.parse(await readFile((await (await downloadPromise).path())!, 'utf8'));
+  const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.floor');
+  expect(instance.pointlesh.properties).toMatchObject({ walkable: true, scaleEnabled: true, zoomEnabled: false, walkBehindEnabled: true, scaleAxis: 'x' });
+  expect(instance.overrides.area).toEqual(initialShape);
+  await page.screenshot({ path: testInfo.outputPath('combined-area-capabilities.png'), fullPage: true });
+});
+
 test('direction animation pickers preserve sparse inheritance, flip overrides, undo, and JSON export', async ({ page }, testInfo) => {
   await page.goto('/?designer=1');
   await expect(page.locator('#loading')).toBeHidden();

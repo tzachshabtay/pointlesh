@@ -117,15 +117,15 @@ test('animated intro moves real sprites, restores a timed save checkpoint, and c
   await page.locator('#cutscene-next').click();
   await expect.poll(async () => (await cinematicView(page))?.stepIndex).toBe(saved.stepIndex + 1);
   await page.getByRole('button', { name: 'Load', exact: true }).click();
-  await page.getByRole('button', { name: 'load slot 2', exact: true }).click();
-  const restored = (await cinematicView(page))!;
-  expect(restored.stepIndex).toBe(saved.stepIndex);
-  expect(restored.elapsedMs).toBeGreaterThanOrEqual(saved.elapsedMs);
-  expect(restored.elapsedMs).toBeLessThan(saved.elapsedMs + 350);
-  for (const actor of saved.cast.filter(actor => actor.visible)) {
-    const next = restored.cast.find(candidate => candidate.id === actor.id)!;
-    expect(Math.hypot(next.x - actor.x, next.y - actor.y)).toBeLessThan(20);
-  }
+  const loadSlot = page.getByRole('button', { name: 'load slot 2', exact: true });
+  // Observe after the real load handler, before the next animation frame. A
+  // separate browser round trip lets playback advance on a busy machine.
+  await loadSlot.evaluate(button => button.addEventListener('click', () => {
+    (window as any).restoredCinematic = (window as any).pointleshDemo.scene.cinematic.snapshot();
+  }, { once: true }));
+  await loadSlot.click();
+  const restored = await page.evaluate(() => (window as any).restoredCinematic);
+  expect(restored).toEqual(saved);
   await expectCastMotion(page);
   await expect.poll(async () => (await cinematicView(page))?.stepIndex, { timeout: 8_000 }).toBe(saved.stepIndex + 1);
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();

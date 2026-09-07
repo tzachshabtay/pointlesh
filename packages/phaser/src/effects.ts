@@ -1,4 +1,4 @@
-import { pointInPolygon, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
+import { pointInPolygon, pointleshAreaCapabilities, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
 import type Phaser from "phaser";
 
 export type PointleshAreaEffects = {
@@ -16,8 +16,7 @@ function numeric(area: ResolvedPointleshArea, key: string, fallback: number): nu
 }
 
 /** Start/end values follow the area's bounding box along its authored x/y axis. */
-export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Point, start: number, end: number): number {
-  const axis = area.properties.axis === "x" ? "x" : "y";
+export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Point, start: number, end: number, axis: "x" | "y" = area.properties.axis === "x" ? "x" : "y"): number {
   const coordinates = area.polygon.map(vertex => vertex[axis]);
   if (!coordinates.length) return start;
   const minimum = Math.min(...coordinates), maximum = Math.max(...coordinates);
@@ -25,7 +24,7 @@ export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Poi
   return start + (end - start) * amount;
 }
 
-/** Later enabled areas win when areas of the same kind overlap, matching manifest order. */
+/** Roles compose independently. Later enabled areas win per effect, matching manifest order. */
 export function evaluatePointleshAreaEffects(areas: readonly ResolvedPointleshArea[], point: Point, defaults: PointleshAreaEffectDefaults = {}): PointleshAreaEffects {
   const effects: PointleshAreaEffects = {
     scale: defaults.defaultScale ?? 1, zoom: defaults.defaultZoom ?? 1,
@@ -34,12 +33,16 @@ export function evaluatePointleshAreaEffects(areas: readonly ResolvedPointleshAr
   for (const area of areas) {
     if (!area.enabled || !area.closed || !pointInPolygon(point, area.polygon)) continue;
     effects.activeAreaIds.push(area.id);
-    if (area.kind === "scale") {
-      effects.scale = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minScale", 0.65), numeric(area, "maxScale", 1)));
-    } else if (area.kind === "zoom") {
-      effects.zoom = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minZoom", 1.2), numeric(area, "maxZoom", 1)));
+    const roles = pointleshAreaCapabilities(area);
+    const axis = (key: string) => (area.properties[key] ?? area.properties.axis) === "x" ? "x" : "y";
+    if (roles.scale) {
+      effects.scale = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minScale", 0.65), numeric(area, "maxScale", 1), axis("scaleAxis")));
+    }
+    if (roles.zoom) {
+      effects.zoom = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minZoom", 1.2), numeric(area, "maxZoom", 1), axis("zoomAxis")));
       effects.zoomSmoothing = Math.max(0, numeric(area, "smoothing", 5));
-    } else if (area.kind === "walk-behind") {
+    }
+    if (roles.walkBehind) {
       effects.walkBehindBaseline = numeric(area, "baseline", 0);
     }
   }
@@ -69,6 +72,27 @@ export function createWalkBehindOverlay(
   scene.children.remove(graphics);
   const webgl = "gl" in scene.renderer && Boolean(scene.renderer.gl);
   const filter = webgl ? image.enableFilters().filters!.external.addMask(graphics) : undefined;
+  const originalFocus = image.focusFiltersOnCamera;
+  const originalFilterState = filter ? {
+    autoFocus: image.filtersAutoFocus, focusContext: image.filtersFocusContext,
+    originX: image.filterCamera!.originX, originY: image.filterCamera!.originY,
+    isObjectInversion: image.filterCamera!.isObjectInversion,
+  } : undefined;
+  if (filter) {
+    // Render the duplicate in the same camera coordinates as the base image.
+    // Object-focused filters first capture at image resolution, then round the
+    // transformed intermediate quad; fractional zoom/scroll exposes seams.
+    image.filtersAutoFocus = true;
+    image.filtersFocusContext = true;
+    image.focusFiltersOnCamera = function (camera) {
+      const result = originalFocus.call(this, camera);
+      // Phaser 4's context focus copies scroll/zoom/rotation but omits origin.
+      // Its object-inversion matrix also rotates and scales in a different order.
+      this.filterCamera!.setOrigin(camera.originX, camera.originY);
+      this.filterCamera!.isObjectInversion = false;
+      return result;
+    };
+  }
   const geometryMask = webgl ? undefined : graphics.createGeometryMask();
   if (geometryMask) image.setMask(geometryMask);
   let destroyed = false;
@@ -81,7 +105,7 @@ export function createWalkBehindOverlay(
       for (const point of points.slice(1)) graphics.lineTo(point.x, point.y);
       graphics.closePath().fillPath();
     }
-    image.setVisible(next.enabled && next.closed && points.length >= 3);
+    image.setVisible(next.enabled && next.closed && points.length >= 3 && pointleshAreaCapabilities(next).walkBehind);
     image.setDepth((options.depthOffset ?? 0) + numeric(next, "baseline", 0));
   };
   const destroy = () => {
@@ -89,6 +113,13 @@ export function createWalkBehindOverlay(
     destroyed = true;
     scene.events.off("shutdown", destroy);
     if (filter) image.filters?.external.remove(filter);
+    if (originalFilterState) {
+      image.focusFiltersOnCamera = originalFocus;
+      image.filtersAutoFocus = originalFilterState.autoFocus;
+      image.filtersFocusContext = originalFilterState.focusContext;
+      image.filterCamera?.setOrigin(originalFilterState.originX, originalFilterState.originY);
+      if (image.filterCamera) image.filterCamera.isObjectInversion = originalFilterState.isObjectInversion;
+    }
     if (geometryMask) { image.clearMask(false); geometryMask.destroy(); }
     graphics.destroy();
     if (options.destroyImage !== false) image.destroy();

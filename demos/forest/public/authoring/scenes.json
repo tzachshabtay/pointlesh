@@ -1,176 +1,6 @@
 {
   "schemaVersion": 2,
   "prefabs": {
-    "pointlesh.walkable": {
-      "id": "pointlesh.walkable",
-      "name": "Walkable area",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:walkable",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
-          },
-          "kind": "area"
-        }
-      ],
-      "pointlesh": {
-        "kind": "walkable",
-        "properties": {
-          "enabled": true,
-          "walkable": true
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "pointlesh.walk-behind": {
-      "id": "pointlesh.walk-behind",
-      "name": "Walk-behind area",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:walk-behind",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
-          },
-          "kind": "area"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "walk-behind",
-        "properties": {
-          "enabled": true
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "pointlesh.scale": {
-      "id": "pointlesh.scale",
-      "name": "Scale area",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:scale",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "scale",
-        "properties": {
-          "enabled": true,
-          "axis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "pointlesh.zoom": {
-      "id": "pointlesh.zoom",
-      "name": "Camera zoom area",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:zoom",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "zoom",
-        "properties": {
-          "enabled": true,
-          "axis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
     "pointlesh.hotspot": {
       "id": "pointlesh.hotspot",
       "name": "Hotspot",
@@ -570,6 +400,101 @@
           }
         }
       }
+    },
+    "pointlesh.area": {
+      "id": "pointlesh.area",
+      "name": "Area",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:area",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        },
+        {
+          "id": "minScale",
+          "name": "Scale at start",
+          "number": {
+            "value": 0.65,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "maxScale",
+          "name": "Scale at end",
+          "number": {
+            "value": 1,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "minZoom",
+          "name": "Zoom at start",
+          "number": {
+            "value": 1.2,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "maxZoom",
+          "name": "Zoom at end",
+          "number": {
+            "value": 1,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "smoothing",
+          "name": "Camera response",
+          "number": {
+            "value": 5,
+            "min": 0,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "baseline",
+          "name": "Baseline",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "area",
+        "properties": {
+          "enabled": true,
+          "walkable": false,
+          "scaleEnabled": false,
+          "zoomEnabled": false,
+          "walkBehindEnabled": false,
+          "scaleAxis": "y",
+          "zoomAxis": "y"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
     }
   },
   "scenes": {
@@ -587,8 +512,8 @@
           "prefabs": [
             {
               "id": "village.floor",
-              "prefabId": "pointlesh.walkable",
-              "name": "Walkable ground",
+              "prefabId": "pointlesh.area",
+              "name": "Walkable ground & perspective",
               "visible": true,
               "locked": false,
               "overrides": {
@@ -646,80 +571,12 @@
                     }
                   ],
                   "closed": true
-                }
-              }
-            },
-            {
-              "id": "village.perspective",
-              "prefabId": "pointlesh.scale",
-              "name": "Room perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minScale": {
                   "value": 0.75
                 },
                 "maxScale": {
                   "value": 1.22
-                }
-              }
-            },
-            {
-              "id": "village.zoom",
-              "prefabId": "pointlesh.zoom",
-              "name": "Gentle camera approach",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minZoom": {
                   "value": 1.035
@@ -727,11 +584,18 @@
                 "maxZoom": {
                   "value": 1
                 }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true
+                }
               }
             },
             {
               "id": "village.foreground",
-              "prefabId": "pointlesh.walk-behind",
+              "prefabId": "pointlesh.area",
               "name": "Foreground occlusion",
               "visible": true,
               "locked": false,
@@ -785,6 +649,11 @@
                 },
                 "baseline": {
                   "value": 505
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkBehindEnabled": true
                 }
               }
             },
@@ -1124,8 +993,8 @@
           "prefabs": [
             {
               "id": "pub.floor",
-              "prefabId": "pointlesh.walkable",
-              "name": "Walkable ground",
+              "prefabId": "pointlesh.area",
+              "name": "Walkable ground & perspective",
               "visible": true,
               "locked": false,
               "overrides": {
@@ -1183,80 +1052,12 @@
                     }
                   ],
                   "closed": true
-                }
-              }
-            },
-            {
-              "id": "pub.perspective",
-              "prefabId": "pointlesh.scale",
-              "name": "Room perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minScale": {
                   "value": 0.75
                 },
                 "maxScale": {
                   "value": 1.22
-                }
-              }
-            },
-            {
-              "id": "pub.zoom",
-              "prefabId": "pointlesh.zoom",
-              "name": "Gentle camera approach",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minZoom": {
                   "value": 1.035
@@ -1264,11 +1065,18 @@
                 "maxZoom": {
                   "value": 1
                 }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true
+                }
               }
             },
             {
               "id": "pub.foreground",
-              "prefabId": "pointlesh.walk-behind",
+              "prefabId": "pointlesh.area",
               "name": "Foreground occlusion",
               "visible": true,
               "locked": false,
@@ -1314,6 +1122,11 @@
                 },
                 "baseline": {
                   "value": 505
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkBehindEnabled": true
                 }
               }
             },
@@ -1695,8 +1508,8 @@
           "prefabs": [
             {
               "id": "house.floor",
-              "prefabId": "pointlesh.walkable",
-              "name": "Walkable ground",
+              "prefabId": "pointlesh.area",
+              "name": "Walkable ground & perspective",
               "visible": true,
               "locked": false,
               "overrides": {
@@ -1754,80 +1567,12 @@
                     }
                   ],
                   "closed": true
-                }
-              }
-            },
-            {
-              "id": "house.perspective",
-              "prefabId": "pointlesh.scale",
-              "name": "Room perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minScale": {
                   "value": 0.75
                 },
                 "maxScale": {
                   "value": 1.22
-                }
-              }
-            },
-            {
-              "id": "house.zoom",
-              "prefabId": "pointlesh.zoom",
-              "name": "Gentle camera approach",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minZoom": {
                   "value": 1.035
@@ -1835,11 +1580,18 @@
                 "maxZoom": {
                   "value": 1
                 }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true
+                }
               }
             },
             {
               "id": "house.foreground",
-              "prefabId": "pointlesh.walk-behind",
+              "prefabId": "pointlesh.area",
               "name": "Foreground occlusion",
               "visible": true,
               "locked": false,
@@ -1889,6 +1641,11 @@
                 },
                 "baseline": {
                   "value": 505
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkBehindEnabled": true
                 }
               }
             },
@@ -2134,8 +1891,8 @@
           "prefabs": [
             {
               "id": "forest.floor",
-              "prefabId": "pointlesh.walkable",
-              "name": "Walkable ground",
+              "prefabId": "pointlesh.area",
+              "name": "Walkable ground & perspective",
               "visible": true,
               "locked": false,
               "overrides": {
@@ -2193,80 +1950,12 @@
                     }
                   ],
                   "closed": true
-                }
-              }
-            },
-            {
-              "id": "forest.perspective",
-              "prefabId": "pointlesh.scale",
-              "name": "Room perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minScale": {
                   "value": 0.75
                 },
                 "maxScale": {
                   "value": 1.22
-                }
-              }
-            },
-            {
-              "id": "forest.zoom",
-              "prefabId": "pointlesh.zoom",
-              "name": "Gentle camera approach",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minZoom": {
                   "value": 1.035
@@ -2274,11 +1963,18 @@
                 "maxZoom": {
                   "value": 1
                 }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true
+                }
               }
             },
             {
               "id": "forest.foreground",
-              "prefabId": "pointlesh.walk-behind",
+              "prefabId": "pointlesh.area",
               "name": "Foreground occlusion",
               "visible": true,
               "locked": false,
@@ -2337,6 +2033,11 @@
                 },
                 "baseline": {
                   "value": 505
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkBehindEnabled": true
                 }
               }
             },
@@ -2608,8 +2309,8 @@
           "prefabs": [
             {
               "id": "mine.floor",
-              "prefabId": "pointlesh.walkable",
-              "name": "Walkable ground",
+              "prefabId": "pointlesh.area",
+              "name": "Walkable ground & perspective",
               "visible": true,
               "locked": false,
               "overrides": {
@@ -2667,80 +2368,12 @@
                     }
                   ],
                   "closed": true
-                }
-              }
-            },
-            {
-              "id": "mine.perspective",
-              "prefabId": "pointlesh.scale",
-              "name": "Room perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minScale": {
                   "value": 0.75
                 },
                 "maxScale": {
                   "value": 1.22
-                }
-              }
-            },
-            {
-              "id": "mine.zoom",
-              "prefabId": "pointlesh.zoom",
-              "name": "Gentle camera approach",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minZoom": {
                   "value": 1.035
@@ -2748,11 +2381,18 @@
                 "maxZoom": {
                   "value": 1
                 }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true
+                }
               }
             },
             {
               "id": "mine.foreground",
-              "prefabId": "pointlesh.walk-behind",
+              "prefabId": "pointlesh.area",
               "name": "Foreground occlusion",
               "visible": true,
               "locked": false,
@@ -2807,6 +2447,11 @@
                 },
                 "baseline": {
                   "value": 505
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkBehindEnabled": true
                 }
               }
             },
@@ -3004,8 +2649,8 @@
           "prefabs": [
             {
               "id": "camp.floor",
-              "prefabId": "pointlesh.walkable",
-              "name": "Walkable ground",
+              "prefabId": "pointlesh.area",
+              "name": "Walkable ground & perspective",
               "visible": true,
               "locked": false,
               "overrides": {
@@ -3063,80 +2708,12 @@
                     }
                   ],
                   "closed": true
-                }
-              }
-            },
-            {
-              "id": "camp.perspective",
-              "prefabId": "pointlesh.scale",
-              "name": "Room perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minScale": {
                   "value": 0.75
                 },
                 "maxScale": {
                   "value": 1.22
-                }
-              }
-            },
-            {
-              "id": "camp.zoom",
-              "prefabId": "pointlesh.zoom",
-              "name": "Gentle camera approach",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "area": {
-                  "vertices": [
-                    {
-                      "id": "a",
-                      "x": 0,
-                      "y": 315
-                    },
-                    {
-                      "id": "b",
-                      "x": 960,
-                      "y": 315
-                    },
-                    {
-                      "id": "c",
-                      "x": 960,
-                      "y": 540
-                    },
-                    {
-                      "id": "d",
-                      "x": 0,
-                      "y": 540
-                    }
-                  ],
-                  "closed": true
                 },
                 "minZoom": {
                   "value": 1.035
@@ -3144,11 +2721,18 @@
                 "maxZoom": {
                   "value": 1
                 }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true
+                }
               }
             },
             {
               "id": "camp.foreground",
-              "prefabId": "pointlesh.walk-behind",
+              "prefabId": "pointlesh.area",
               "name": "Foreground occlusion",
               "visible": true,
               "locked": false,
@@ -3193,6 +2777,11 @@
                 },
                 "baseline": {
                   "value": 505
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "walkBehindEnabled": true
                 }
               }
             },

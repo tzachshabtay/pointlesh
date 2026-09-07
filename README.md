@@ -44,13 +44,13 @@ The demo loads its committed documents from `demos/forest/public/authoring/`. Pr
 
 In **Assets**, select **Graphics → Character Borin** and choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. In **Adventure**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
 
-Areas are native Scene Designer vector shapes. Select an area in **Adventure** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo now includes room-specific floor polygons and curved foreground outlines.
+Areas are native Scene Designer vector shapes. Select an area in **Adventure** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo combines walking, character scale and camera zoom on each room’s floor polygon, with a separate curved foreground outline using the same Area prefab.
 
 The [walkthrough](docs/walkthrough.md) contains puzzle solutions and an editor tour. The [art provenance and prompts](docs/art-prompts.md) describe the six generated room backgrounds. Character sprites and ambient music are created locally by the demo; dialogue is text-based unless generated voice assets are supplied.
 
 ## Prefabs that remain extensible
 
-Pointlesh creates actual Scene Designer prefabs for walkable areas, walk-behind areas, scale areas, zoom areas, hotspots, objects and characters. Native attributes handle geometry, transforms and numeric settings. A JSON `pointlesh` extension carries custom properties and behavior IDs.
+Pointlesh creates actual Scene Designer prefabs for areas, hotspots, objects and characters. A single Area has independently enabled walking, character scaling, camera zoom and walk-behind roles; use another instance when boundaries differ. Native attributes handle geometry, transforms and numeric settings. A JSON `pointlesh` extension carries custom properties and behavior IDs.
 
 ```ts
 import {

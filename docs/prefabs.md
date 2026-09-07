@@ -1,18 +1,17 @@
 # Pointlesh prefabs
 
-Pointlesh's seven prefab factories produce actual `ScenePrefabDefinition` values. Register them in a schema-version-2 scene manifest and use Scene Designer's existing Scenes and Prefabs panels to draw polygons, move sprites, change numeric values, and edit reusable defaults.
+Pointlesh's default catalog contains Area, Hotspot, Object and Character prefabs, all actual `ScenePrefabDefinition` values. Register them in a schema-version-2 scene manifest and use Scene Designer's existing Scenes and Prefabs panels to draw polygons, move sprites, change numeric values, and edit reusable defaults.
 
 | Factory | Native attributes | Adventure properties |
 | --- | --- | --- |
-| `createWalkableAreaPrefab` | `area` polygon | `enabled`, `walkable` |
-| `createWalkBehindAreaPrefab` | `area`, `baseline` | `enabled` |
-| `createScaleAreaPrefab` | `area`, `minScale`, `maxScale` | `enabled`, `axis` |
-| `createZoomAreaPrefab` | `area`, `minZoom`, `maxZoom`, `smoothing` | `enabled`, `axis` |
+| `createAreaPrefab` | `area` polygon, scale and zoom endpoints, `smoothing`, `baseline` | `enabled`, `walkable`, `scaleEnabled`, `zoomEnabled`, `walkBehindEnabled`, `scaleAxis`, `zoomAxis` |
 | `createHotspotPrefab` | `area`, `approachX`, `approachY`, `approachRadius` | `enabled`, `label`, `cursor` |
 | `createObjectPrefab` | `object` sprite | `enabled`, `interactive`, `ignoreScaling`, `label` |
 | `createCharacterPrefab` | `object`, `speed`, `walkStep`, `frameDurationMs`, `frameCount` | `movementLinkedToAnimation`, `facing`, `directions`, object properties |
 
-Numeric attributes are read from Scene Designer's resolved defaults and overrides. `minScale`/`minZoom` mean the factor at the area's top edge (or left edge for `axis: "x"`); `maxScale`/`maxZoom` mean the factor at its bottom/right edge. They name interpolation endpoints, so the first value may be larger than the second. Walk-behind baselines use scene Y coordinates. Object positions represent the feet: Scene Designer uses `anchorX: 0.5, anchorY: 0`, corresponding to Phaser origin `(0.5, 1)`.
+One Area can supply any combination of navigation, character scaling, camera zoom and walk-behind scenery. Each role has its own enable switch; global `enabled` disables all roles. The Adventure inspector groups these switches and shows only the relevant settings. Switching a role off preserves its values and geometry. The demo combines walking, scale and zoom on each room's ground polygon; foreground occlusion uses another instance of the same Area prefab because its outline differs.
+
+Numeric attributes are read from Scene Designer's resolved defaults and overrides. `minScale`/`minZoom` mean the factor at the area's top edge (or left edge for an X axis); `maxScale`/`maxZoom` mean the factor at its bottom/right edge. They name interpolation endpoints, so the first value may be larger than the second. `scaleAxis` and `zoomAxis` can be chosen independently. Walk-behind baselines use scene Y coordinates. Object positions represent the feet: Scene Designer uses `anchorX: 0.5, anchorY: 0`, corresponding to Phaser origin `(0.5, 1)`.
 
 ```ts
 import { defineSceneManifest, createLayer } from '@scene-designer/core';
@@ -24,7 +23,8 @@ import {
 const layer = createLayer({ id: 'main', name: 'Main' });
 layer.prefabs = [createPointleshInstance({
   id: 'village-path',
-  prefabId: 'pointlesh.walkable',
+  prefabId: 'pointlesh.area',
+  properties: { walkable: true, scaleEnabled: true, zoomEnabled: true },
   overrides: {
     area: {
       closed: true,
@@ -47,7 +47,11 @@ const room = resolvePointleshScene(manifest, 'village');
 const navigationPolygons = walkablePolygons(room);
 ```
 
-Supply asset IDs from your `@ai-game-assets/core` manifest when you instantiate objects or characters. The default catalog's placeholder asset IDs are convenience defaults, not bundled artwork. Newly created area definitions have empty shapes; draw and close an instance's shape in Scene Designer before it affects navigation. Curved edges are sampled into polygons when resolved.
+Supply asset IDs from your `@ai-game-assets/core` manifest when you instantiate objects or characters. The default catalog's placeholder asset IDs are convenience defaults, not bundled artwork. Newly created Area definitions have empty shapes and all roles disabled; draw and close an instance's shape and enable the desired roles. Curved edges are sampled into polygons when resolved.
+
+`pointleshAreaCapabilities(area)` reads effective roles, including old manifests. `walkablePolygons(room)` returns the union's input polygons for enabled, closed walkable areas; turning off walkability on one overlapping region does not subtract another region's ground. Scale and zoom resolve independently: the last eligible region in manifest order wins for each enabled effect. A later region that only scales characters does not override another region's zoom.
+
+The earlier `createWalkableAreaPrefab`, `createScaleAreaPrefab`, `createZoomAreaPrefab` and `createWalkBehindAreaPrefab` exports remain supported for existing clients and saved manifests. New code should use `createAreaPrefab({ walkable: true, scaleEnabled: true, zoomEnabled: true, ... })`. If existing code builds a catalog and references IDs such as `pointlesh.walkable`, use `pointleshPrefabs({ includeLegacyAreas: true })` during migration. Legacy `axis` is still honored. New default catalogs expose the single Area template.
 
 ## Extending a prefab
 

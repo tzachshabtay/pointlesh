@@ -3,7 +3,7 @@ import test from 'node:test';
 import { cloneSceneManifest, createLayer, defineSceneManifest } from '@scene-designer/core';
 import {
   createCharacterPrefab, createHotspotPrefab, createPointleshInstance,
-  createWalkableAreaPrefab, extendPointleshPrefab, pointleshAreaPolygon,
+  createWalkableAreaPrefab, createAreaPrefab, extendPointleshPrefab, pointleshAreaPolygon, pointleshAreaCapabilities, pointleshPrefabs,
   resolvePointleshScene, walkablePolygons,
 } from '../dist/prefabs.js';
 
@@ -62,4 +62,33 @@ test('quadratic area curves are converted to runtime geometry rather than straig
   assert.equal(polygon.length, 6);
   assert.deepEqual(polygon[2], { x: 50, y: -25 });
   assert.throws(() => pointleshAreaPolygon(square, true, 0), /positive integer/);
+});
+
+test('one native region combines independent roles and inherits later prefab edits', () => {
+  const prefab = createAreaPrefab({ vertices: square, walkable: true, scaleEnabled: true, zoomEnabled: true, minScale: 0.5, properties: { footsteps: 'leaves' } });
+  const instance = createPointleshInstance({ id: 'ground', prefabId: prefab.id, properties: { zoomEnabled: false }, overrides: { maxScale: { value: 1.5 } } });
+  const manifest = manifestFor([prefab], [instance]);
+  const resolve = () => resolvePointleshScene(cloneSceneManifest(JSON.parse(JSON.stringify(manifest))), 'room');
+  const room = resolve();
+  assert.equal(room.areas.length, 1);
+  assert.equal(room.areas[0].kind, 'area');
+  assert.deepEqual(pointleshAreaCapabilities(room.areas[0]), { walkable: true, scale: true, zoom: false, walkBehind: false });
+  assert.equal(walkablePolygons(room).length, 1);
+  assert.equal(room.areas[0].properties.maxScale, 1.5);
+  assert.equal(room.areas[0].properties.footsteps, 'leaves');
+  prefab.pointlesh.properties.walkBehindEnabled = true;
+  prefab.pointlesh.properties.walkable = false;
+  assert.deepEqual(pointleshAreaCapabilities(resolve().areas[0]), { walkable: false, scale: true, zoom: false, walkBehind: true });
+  assert.equal(walkablePolygons(resolve()).length, 0);
+  assert.deepEqual(resolve().areas[0].polygon, room.areas[0].polygon);
+});
+
+test('new area catalog has one region template while legacy factories and manifests remain available', () => {
+  assert.deepEqual(Object.keys(pointleshPrefabs()), ['pointlesh.area', 'pointlesh.hotspot', 'pointlesh.object', 'pointlesh.character']);
+  const legacy = pointleshPrefabs({ includeLegacyAreas: true });
+  for (const [kind, role] of [['walkable', 'walkable'], ['scale', 'scale'], ['zoom', 'zoom'], ['walk-behind', 'walkBehind']]) {
+    const prefab = legacy[`pointlesh.${kind}`];
+    assert.equal(pointleshAreaCapabilities(prefab.pointlesh)[role], true);
+  }
+  assert.deepEqual(pointleshAreaCapabilities(createAreaPrefab().pointlesh), { walkable: false, scale: false, zoom: false, walkBehind: false });
 });

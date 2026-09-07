@@ -36,7 +36,7 @@ The binding ticks on the scene's `update` event by default. If your game manages
 
 The binding places a sprite at the actor's feet, sets depth to foot Y, applies scale areas, and adjusts walking distance to perspective through the controller. Only pass `camera` for the actor that drives camera zoom. `baseScale` is the original sprite scale; scale areas multiply it. `baseScale`, `origin` and `angle` also accept getters for live prefab transforms. `angle` is in degrees and composes with generated frame rotation. `depthOffset` lets your scene reserve lower depths for background art.
 
-An `areas` getter keeps the same binding valid after the designer changes `room`. Scale and zoom interpolate from the minimum to maximum coordinate of the authored axis (`x` or `y`). Later areas of the same kind win when they overlap. Disabled or open areas have no effect. Zoom smoothing is independent of frame rate. `evaluatePointleshAreaEffects()` also exposes these calculations for custom renderers and objects.
+An `areas` getter keeps the same binding valid after the designer changes `room`. Scale and zoom interpolate from the minimum to maximum coordinate of the authored axis (`x` or `y`). One area can supply scale, zoom, walkability and walk-behind roles independently. `scaleAxis` and `zoomAxis` select independent axes. Later enabled areas win per effect when they overlap; a region with zoom disabled does not override another region’s zoom. Disabled or open areas have no effect. Zoom smoothing is independent of frame rate. `evaluatePointleshAreaEffects()` also exposes these calculations for custom renderers and objects.
 
 For directional prefab animations, supply `aiRuntime` and an `animations` getter:
 
@@ -76,7 +76,7 @@ const foreground = createWalkBehindOverlay(scene, tree, duplicateBackground);
 foreground.sync(room.areas.find(area => area.id === 'old-oak')!);
 ```
 
-The overlay masks a duplicate background to the authored polygon and draws it at the area's baseline. It uses Phaser 4's mask filter in WebGL and a geometry mask in Canvas. Actors with smaller foot Y appear behind the masked scenery, and actors with larger foot Y appear in front. Use identical transforms on the base and duplicate backgrounds. Use the same `depthOffset` on actors and overlays. `destroy()` removes the mask, its graphics and the supplied image; pass `destroyImage: false` to retain the image. Scene shutdown cleans up automatically.
+The overlay masks a duplicate background to the authored polygon and draws it at the area's baseline. It uses Phaser 4's mask filter in WebGL and a geometry mask in Canvas. The WebGL filter renders in the current camera's coordinate system, including its origin and transform order, so the foreground and background sample identical pixels during fractional zoom and scrolling. Actors with smaller foot Y appear behind the masked scenery, and actors with larger foot Y appear in front. Use identical transforms on the base and duplicate backgrounds. Use the same `depthOffset` on actors and overlays. `sync()` respects the area's independent walk-behind switch. `destroy()` removes the mask, its graphics and the supplied image; pass `destroyImage: false` to retain the image and restore its filter focus settings. Scene shutdown cleans up automatically.
 
 ## Native scene designer plus adventure inspector
 

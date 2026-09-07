@@ -3,6 +3,7 @@ import {
   isPointleshPrefab,
   assertJSON,
   resolvePointleshScene,
+  pointleshAreaCapabilities,
   mergeCharacterAnimations,
   readCharacterAnimations,
   assertCharacterAnimations,
@@ -85,6 +86,7 @@ const animationDirections: { id: CharacterAnimationDirection; label: string; dia
   { id: 'front-left', label: 'Front left', diagonal: true }, { id: 'front-right', label: 'Front right', diagonal: true },
   { id: 'back-left', label: 'Back left', diagonal: true }, { id: 'back-right', label: 'Back right', diagonal: true },
 ];
+const areaPropertyKeys = new Set(['walkable', 'scaleEnabled', 'zoomEnabled', 'walkBehindEnabled', 'scaleAxis', 'zoomAxis', 'axis', 'minScale', 'maxScale', 'minZoom', 'maxZoom', 'smoothing', 'baseline']);
 
 export function installPointleshInspector(options: PointleshInspectorOptions): PointleshInspector {
   const designer = options.designer;
@@ -312,6 +314,45 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     return [...choices.values()];
   }
 
+  function areaEditor(target: Target, values: PointleshProperties, schemas: Record<string, PointleshPropertySchema>, edit: (key: string, value: PointleshProperty) => void) {
+    const section = element(document, 'section', 'pointlesh-area-capabilities');
+    section.setAttribute('aria-label', 'Area capabilities');
+    section.append(element(document, 'h4', '', 'Area capabilities'));
+    section.append(element(document, 'p', 'pointlesh-inspector-help', 'One shape can control several behaviors. Turn each capability on independently.'));
+    const capabilities = pointleshAreaCapabilities({ kind: target.prefab.pointlesh.kind, properties: values });
+    const numeric = (key: string, label: string, fallback: number, min: number | undefined, step: number) =>
+      propertyField(document, key, values[key] ?? fallback, { label, min, step, ...schemas[key], type: 'number' }, edit, status);
+    const axis = (key: 'scaleAxis' | 'zoomAxis', label: string) => {
+      const field = element(document, 'label', 'pointlesh-inspector-field');
+      field.append(element(document, 'span', '', label));
+      const input = document.createElement('select'); input.setAttribute('aria-label', label);
+      addOption(input, 'y', 'Y · vertical'); addOption(input, 'x', 'X · horizontal');
+      input.value = String(values[key] ?? values.axis ?? 'y');
+      input.addEventListener('change', () => edit(key, input.value));
+      field.append(input); return field;
+    };
+    const toggle = (key: string, label: string, checked: boolean) => propertyField(document, key, checked, { type: 'boolean', label }, edit, status);
+    section.append(toggle('walkable', 'Walkable', capabilities.walkable));
+    section.append(toggle('scaleEnabled', 'Character scale', capabilities.scale));
+    if (capabilities.scale) {
+      const fields = element(document, 'div', 'pointlesh-area-settings');
+      fields.append(axis('scaleAxis', 'Scale axis'), numeric('minScale', 'Scale at start', 0.65, 0.01, 0.05), numeric('maxScale', 'Scale at end', 1, 0.01, 0.05));
+      section.append(fields);
+    }
+    section.append(toggle('zoomEnabled', 'Camera zoom', capabilities.zoom));
+    if (capabilities.zoom) {
+      const fields = element(document, 'div', 'pointlesh-area-settings');
+      fields.append(axis('zoomAxis', 'Zoom axis'), numeric('minZoom', 'Zoom at start', 1.2, 0.01, 0.05), numeric('maxZoom', 'Zoom at end', 1, 0.01, 0.05), numeric('smoothing', 'Camera response', 5, 0, 0.5));
+      section.append(fields);
+    }
+    section.append(toggle('walkBehindEnabled', 'Walk-behind', capabilities.walkBehind));
+    if (capabilities.walkBehind) {
+      const fields = element(document, 'div', 'pointlesh-area-settings');
+      fields.append(numeric('baseline', 'Baseline', 160, undefined, 1)); section.append(fields);
+    }
+    return section;
+  }
+
   function targetFromSelection(manifest: SceneDesignerManifest): Target | undefined {
     if (manualInstanceId) return instanceTarget(manifest, manualInstanceId);
     const selection = designer.getSelection();
@@ -368,7 +409,10 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       : {};
     const hasAnimationAssignments = Object.values(effectiveAnimations).some(slots => !!slots && Object.keys(slots).length > 0);
     if (target.prefab.pointlesh.kind === 'character') body.append(animationEditor(target, values, edit));
+    const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.prefab.pointlesh.kind);
+    if (isArea) body.append(areaEditor(target, values, schemas, edit));
     for (const [key, value] of Object.entries(values)) {
+      if (isArea && areaPropertyKeys.has(key)) continue;
       if (target.prefab.pointlesh.kind === 'character' && (key === 'animations' || key === 'directions' || key === 'facing')) continue;
       if (target.prefab.pointlesh.kind === 'character' && hasAnimationAssignments && (key === 'frameCount' || key === 'frameDurationMs')) continue;
       body.append(propertyField(document, key, value, schemas[key], edit, status));
@@ -497,5 +541,6 @@ function installStyles(document: Document) {
   const style = document.createElement("style"); style.id = "pointlesh-inspector-styles";
   style.textContent = `.pointlesh-inspector{box-sizing:border-box;width:330px;max-height:80vh;overflow:auto;background:#152620;color:#edf5e7;border:1px solid #647757;border-radius:12px;font:13px/1.5 system-ui,sans-serif;z-index:10001;box-shadow:0 10px 45px #0008}.pointlesh-inspector *{box-sizing:border-box}.pointlesh-inspector-title{padding:14px 16px;font-weight:700;color:#f5d58b;border-bottom:1px solid #344c3d}.pointlesh-inspector-body,.pointlesh-inspector-toolbar{padding:12px;display:grid;gap:10px}.pointlesh-inspector-toolbar{grid-template-columns:1fr 1fr 1.4fr;border-bottom:1px solid #344c3d}.pointlesh-inspector h3,.pointlesh-inspector p{margin:0}.pointlesh-inspector input,.pointlesh-inspector textarea,.pointlesh-inspector select,.pointlesh-inspector button{font:inherit;color:#edf5e7;background:#213a2d;border:1px solid #617358;border-radius:5px;padding:7px;width:100%}.pointlesh-inspector button{cursor:pointer}.pointlesh-inspector button:hover{background:#39513b}.pointlesh-inspector button:disabled{opacity:.45;cursor:default}.pointlesh-inspector input:focus,.pointlesh-inspector textarea:focus,.pointlesh-inspector select:focus{outline:2px solid #dbbd70;outline-offset:1px}.pointlesh-inspector-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}.pointlesh-inspector input[type=checkbox]{width:20px;height:20px;justify-self:end}.pointlesh-inspector-help,.pointlesh-inspector-status{color:#b9c8b3;font-size:12px}.pointlesh-inspector-status{padding:0 12px 12px}.pointlesh-inspector-extension>input,.pointlesh-inspector-extension>textarea,.pointlesh-inspector-extension>button{margin-top:8px}.pointlesh-inspector textarea{min-height:64px;resize:vertical}.pointlesh-inspector summary{cursor:pointer;color:#f5d58b}`;
   style.textContent += `.pointlesh-animations{display:grid;gap:10px;border-block:1px solid #42563d;padding-block:12px}.pointlesh-animations h4{margin:0;color:#f5d58b;font-size:13px}.pointlesh-animation-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.pointlesh-animation-tabs [aria-selected=true]{background:#53613c;color:#fff0bd;border-color:#d4b970}.pointlesh-animation-slot{display:grid;gap:7px;margin:0;padding:8px;border:1px solid #425b43;border-radius:6px;min-width:0}.pointlesh-animation-slot legend{padding:0 5px;color:#ead39e;font-size:12px}.pointlesh-animation-slot select{font-size:11px;min-width:0}.pointlesh-animation-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}.pointlesh-animation-flip{display:flex;align-items:center;gap:7px}.pointlesh-animation-flip input[type=checkbox]{margin:0}.pointlesh-animation-footer button{width:auto;font-size:11px;padding:4px 8px}`;
+  style.textContent += `.pointlesh-area-capabilities{display:grid;gap:10px;border-block:1px solid #42563d;padding-block:12px}.pointlesh-area-capabilities h4{margin:0;color:#f5d58b;font-size:13px}.pointlesh-area-settings{display:grid;gap:8px;border-left:2px solid #647757;padding-left:10px;margin:0 0 5px 8px}`;
   document.head.append(style);
 }

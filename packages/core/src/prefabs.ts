@@ -25,7 +25,7 @@ import { assertCharacterAnimations, mergeCharacterAnimations, readCharacterAnima
 /** Only data belongs in a manifest. Register behavior implementations in your game. */
 export type PointleshProperty = string | number | boolean | null | PointleshProperty[] | { [key: string]: PointleshProperty };
 export type PointleshProperties = Record<string, PointleshProperty>;
-export type PointleshPrefabKind = "walkable" | "walk-behind" | "scale" | "zoom" | "hotspot" | "object" | "character";
+export type PointleshPrefabKind = "area" | "walkable" | "walk-behind" | "scale" | "zoom" | "hotspot" | "object" | "character";
 export type PointleshPropertySchema = {
   label?: string;
   type: "string" | "number" | "boolean" | "json";
@@ -63,6 +63,20 @@ export type PointleshPrefabInput = {
 export type PointleshAreaPrefabInput = PointleshPrefabInput & {
   vertices?: Array<PointleshPoint | SceneAreaVertex>;
   closed?: boolean;
+};
+export type PointleshRegionPrefabInput = PointleshAreaPrefabInput & {
+  walkable?: boolean;
+  scaleEnabled?: boolean;
+  zoomEnabled?: boolean;
+  walkBehindEnabled?: boolean;
+  scaleAxis?: "x" | "y";
+  zoomAxis?: "x" | "y";
+  minScale?: number;
+  maxScale?: number;
+  minZoom?: number;
+  maxZoom?: number;
+  smoothing?: number;
+  baseline?: number;
 };
 export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults>;
 
@@ -102,14 +116,36 @@ function areaPrefab(kind: PointleshPrefabKind, name: string, input: PointleshAre
   };
 }
 
+/** One native shape with independently enabled navigation, perspective and foreground roles. */
+export function createAreaPrefab(input: PointleshRegionPrefabInput = {}): PointleshPrefabDefinition {
+  return areaPrefab("area", "Area", input, {
+    walkable: input.walkable ?? false,
+    scaleEnabled: input.scaleEnabled ?? false,
+    zoomEnabled: input.zoomEnabled ?? false,
+    walkBehindEnabled: input.walkBehindEnabled ?? false,
+    scaleAxis: input.scaleAxis ?? "y",
+    zoomAxis: input.zoomAxis ?? "y",
+  }, [
+    number("minScale", "Scale at start", input.minScale ?? 0.65, { min: 0.01, step: 0.05, unit: "multiplier" }),
+    number("maxScale", "Scale at end", input.maxScale ?? 1, { min: 0.01, step: 0.05, unit: "multiplier" }),
+    number("minZoom", "Zoom at start", input.minZoom ?? 1.2, { min: 0.01, step: 0.05, unit: "multiplier" }),
+    number("maxZoom", "Zoom at end", input.maxZoom ?? 1, { min: 0.01, step: 0.05, unit: "multiplier" }),
+    number("smoothing", "Camera response", input.smoothing ?? 5, { min: 0, step: 0.5 }),
+    number("baseline", "Baseline", input.baseline ?? 160, { step: 1 }),
+  ]);
+}
+
+/** @deprecated Use createAreaPrefab({ walkable: true }). Existing manifests remain supported. */
 export function createWalkableAreaPrefab(input: PointleshAreaPrefabInput = {}): PointleshPrefabDefinition {
   return areaPrefab("walkable", "Walkable area", input, { walkable: true });
 }
 
+/** @deprecated Use createAreaPrefab({ walkBehindEnabled: true }). */
 export function createWalkBehindAreaPrefab(input: PointleshAreaPrefabInput & { baseline?: number } = {}): PointleshPrefabDefinition {
   return areaPrefab("walk-behind", "Walk-behind area", input, {}, [number("baseline", "Baseline", input.baseline ?? 160, { step: 1 })]);
 }
 
+/** @deprecated Use createAreaPrefab({ scaleEnabled: true }). */
 export function createScaleAreaPrefab(input: PointleshAreaPrefabInput & { minScale?: number; maxScale?: number; axis?: "x" | "y" } = {}): PointleshPrefabDefinition {
   return areaPrefab("scale", "Scale area", input, { axis: input.axis ?? "y" }, [
     number("minScale", "Scale at start", input.minScale ?? 0.65, { min: 0.01, step: 0.05, unit: "multiplier" }),
@@ -117,6 +153,7 @@ export function createScaleAreaPrefab(input: PointleshAreaPrefabInput & { minSca
   ]);
 }
 
+/** @deprecated Use createAreaPrefab({ zoomEnabled: true }). */
 export function createZoomAreaPrefab(input: PointleshAreaPrefabInput & { minZoom?: number; maxZoom?: number; axis?: "x" | "y"; smoothing?: number } = {}): PointleshPrefabDefinition {
   return areaPrefab("zoom", "Camera zoom area", input, { axis: input.axis ?? "y" }, [
     number("minZoom", "Zoom at start", input.minZoom ?? 1.2, { min: 0.01, step: 0.05, unit: "multiplier" }),
@@ -174,10 +211,11 @@ export function createCharacterPrefab(input: PointleshObjectPrefabInput & { spee
 }
 
 /** Ready-to-register native prefabs. Supply asset ids from your ai-assets manifest. */
-export function pointleshPrefabs(options: { objectAssetId?: string; characterAssetId?: string } = {}): Record<string, PointleshPrefabDefinition> {
+export function pointleshPrefabs(options: { objectAssetId?: string; characterAssetId?: string; includeLegacyAreas?: boolean } = {}): Record<string, PointleshPrefabDefinition> {
   const prefabs = [
-    createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab(), createHotspotPrefab(),
+    createAreaPrefab(), createHotspotPrefab(),
     createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }),
+    ...(options.includeLegacyAreas ? [createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab()] : []),
   ];
   return Object.fromEntries(prefabs.map(prefab => [prefab.id, prefab]));
 }
@@ -209,7 +247,7 @@ export function createPointleshInstance(input: Parameters<typeof createPrefabIns
 
 export function isPointleshPrefab(prefab: ScenePrefabDefinition): prefab is PointleshPrefabDefinition {
   const data = (prefab as Partial<PointleshPrefabDefinition>).pointlesh;
-  return !!data && ["walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character"].includes(data.kind);
+  return !!data && ["area", "walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character"].includes(data.kind);
 }
 
 function mergeProperties(base: PointleshProperties, overrides: PointleshProperties = {}, character = false): PointleshProperties {
@@ -310,5 +348,17 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
 }
 
 export function walkablePolygons(scene: PointleshResolvedScene): PointleshPoint[][] {
-  return scene.areas.filter(area => area.kind === "walkable" && area.enabled && area.closed && area.polygon.length >= 3 && area.properties.walkable !== false).map(area => area.polygon);
+  return scene.areas.filter(area => pointleshAreaCapabilities(area).walkable && area.enabled && area.closed && area.polygon.length >= 3).map(area => area.polygon);
+}
+
+/** Roles compose on a single shape. Legacy kinds supply defaults when their flag is absent. */
+export function pointleshAreaCapabilities(area: Pick<ResolvedPointleshEntity, "kind" | "properties">): { walkable: boolean; scale: boolean; zoom: boolean; walkBehind: boolean } {
+  const flag = (property: string, legacyKind: PointleshPrefabKind) =>
+    typeof area.properties[property] === "boolean" ? area.properties[property] as boolean : area.kind === legacyKind;
+  return {
+    walkable: flag("walkable", "walkable"),
+    scale: flag("scaleEnabled", "scale"),
+    zoom: flag("zoomEnabled", "zoom"),
+    walkBehind: flag("walkBehindEnabled", "walk-behind"),
+  };
 }

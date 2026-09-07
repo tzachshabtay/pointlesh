@@ -3,7 +3,7 @@ import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClien
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
-import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
+import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
 import { PhaserAdventureCharacter, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
@@ -191,7 +191,7 @@ class ForestAdventure extends Phaser.Scene {
     this.resolvedCache = undefined;
     if (this.editing || this.toolsOpen()) { this.epoch++; this.character.stop(); }
     for (const overlay of this.overlays) overlay.destroy(); this.overlays = [];
-    for (const area of this.resolved().areas.filter(area => area.kind === 'walk-behind' && area.enabled)) {
+    for (const area of this.resolved().areas.filter(area => pointleshAreaCapabilities(area).walkBehind && area.enabled)) {
       const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0);
       this.overlays.push(createWalkBehindOverlay(this, area, image, { destroyImage: true }));
     }

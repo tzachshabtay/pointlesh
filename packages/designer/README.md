@@ -28,3 +28,5 @@ Area instances expose **Edit shape**, which selects the original Scene Designer 
 Character instances and prefab definitions expose Idle/Walk/Speak tabs with front/back/left/right slots, optional diagonal slots, asset and animation selectors, and per-slot horizontal Flip. Sparse instance overrides inherit untouched slots; **Use prefab**, undo/redo and JSON export retain that behavior.
 
 Pass `aiAssets` to `installPointleshInspector` (the Phaser wrapper supplies it automatically). Call `inspector.setAiAssets(manifest)` after asset catalog edits so pickers include new native linked animation states. `inspector.editShape(instanceId, attributeId?)` opens native shape tooling programmatically. Assigned clips obtain timing from AI Assets; `walkStep` remains the character's movement-per-frame setting.
+
+Area properties are grouped under **Walkable**, **Character scale**, **Camera zoom** and **Walk-behind** switches. Enable any combination on a shared native shape. Scale and zoom have independent axes/endpoints, and disabled settings remain stored for re-enabling. Instance overrides, undo and JSON export retain each role independently.

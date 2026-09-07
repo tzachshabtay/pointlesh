@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { tsImport } from 'tsx/esm/api';
-import { isWalkable, resolvePointleshScene } from '@pointlesh/core';
+import { isWalkable, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
 const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, targetVisible, hint } = await tsImport('../src/story.ts', import.meta.url);
 
 test('the rescue puzzle has an achievable dependency chain and a recoverable timing failure', () => {
@@ -62,7 +62,7 @@ test('authored scene prefabs provide reachable interactions, editable NPCs, and 
   let npcCount = 0;
   const pickups = [];
   for (const room of rooms) {
-    const floor = room.areas.filter(area => area.kind === 'walkable' && area.enabled).map(area => area.polygon);
+    const floor = walkablePolygons(room);
     for (const target of room.areas.filter(area => area.kind === 'hotspot')) {
       assert.equal(isWalkable({ x: target.properties.approachX, y: target.properties.approachY }, floor), true, `${room.id}/${target.id} must be approachable`);
     }
