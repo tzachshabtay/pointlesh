@@ -613,10 +613,62 @@ function propertyField(document: Document, key: string, value: PointleshProperty
 function installStyles(document: Document) {
   if (document.getElementById("pointlesh-inspector-styles")) return;
   const style = document.createElement("style"); style.id = "pointlesh-inspector-styles";
-  style.textContent = `.pointlesh-inspector{box-sizing:border-box;width:330px;max-height:80vh;overflow:auto;background:#152620;color:#edf5e7;border:1px solid #647757;border-radius:12px;font:13px/1.5 system-ui,sans-serif;z-index:10001;box-shadow:0 10px 45px #0008}.pointlesh-inspector *{box-sizing:border-box}.pointlesh-inspector-title{padding:14px 16px;font-weight:700;color:#f5d58b;border-bottom:1px solid #344c3d}.pointlesh-inspector-body,.pointlesh-inspector-toolbar{padding:12px;display:grid;gap:10px}.pointlesh-inspector-toolbar{grid-template-columns:1fr 1fr 1.4fr;border-bottom:1px solid #344c3d}.pointlesh-inspector h3,.pointlesh-inspector p{margin:0}.pointlesh-inspector input,.pointlesh-inspector textarea,.pointlesh-inspector select,.pointlesh-inspector button{font:inherit;color:#edf5e7;background:#213a2d;border:1px solid #617358;border-radius:5px;padding:7px;width:100%}.pointlesh-inspector button{cursor:pointer}.pointlesh-inspector button:hover{background:#39513b}.pointlesh-inspector button:disabled{opacity:.45;cursor:default}.pointlesh-inspector input:focus,.pointlesh-inspector textarea:focus,.pointlesh-inspector select:focus{outline:2px solid #dbbd70;outline-offset:1px}.pointlesh-inspector-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}.pointlesh-inspector input[type=checkbox]{width:20px;height:20px;justify-self:end}.pointlesh-inspector-help,.pointlesh-inspector-status{color:#b9c8b3;font-size:12px}.pointlesh-inspector-status{padding:0 12px 12px}.pointlesh-inspector-extension>input,.pointlesh-inspector-extension>textarea,.pointlesh-inspector-extension>button{margin-top:8px}.pointlesh-inspector textarea{min-height:64px;resize:vertical}.pointlesh-inspector summary{cursor:pointer;color:#f5d58b}`;
-  style.textContent += `.pointlesh-animations{display:grid;gap:10px;border-block:1px solid #42563d;padding-block:12px}.pointlesh-animations h4{margin:0;color:#f5d58b;font-size:13px}.pointlesh-animation-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.pointlesh-animation-tabs [aria-selected=true]{background:#53613c;color:#fff0bd;border-color:#d4b970}.pointlesh-animation-slot{display:grid;gap:7px;margin:0;padding:8px;border:1px solid #425b43;border-radius:6px;min-width:0}.pointlesh-animation-slot legend{padding:0 5px;color:#ead39e;font-size:12px}.pointlesh-animation-slot select{font-size:11px;min-width:0}.pointlesh-animation-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}.pointlesh-animation-flip{display:flex;align-items:center;gap:7px}.pointlesh-animation-flip input[type=checkbox]{margin:0}.pointlesh-animation-footer button{width:auto;font-size:11px;padding:4px 8px}`;
-  style.textContent += `.pointlesh-area-capabilities{display:grid;gap:10px;border-block:1px solid #42563d;padding-block:12px}.pointlesh-area-capabilities h4{margin:0;color:#f5d58b;font-size:13px}.pointlesh-area-settings{display:grid;gap:8px;border-left:2px solid #647757;padding-left:10px;margin:0 0 5px 8px}`;
+  // Use Scene Designer's theme when embedded, with the same defaults for the standalone inspector.
+  style.textContent = `
+.pointlesh-inspector,.pointlesh-native-area-context{
+  --pointlesh-bg:var(--sd-bg,rgba(20,24,32,.97));
+  --pointlesh-bg-soft:var(--sd-bg-soft,#1b2230);
+  --pointlesh-panel:var(--sd-panel,#273142);
+  --pointlesh-border:var(--sd-border,#303949);
+  --pointlesh-border-strong:var(--sd-border-strong,#58657a);
+  --pointlesh-text:var(--sd-text,#f5f7fb);
+  --pointlesh-muted:var(--sd-muted,#b9c1cf);
+  --pointlesh-accent:var(--sd-accent,#8bb8ff);
+  color:var(--pointlesh-text);
+  font:13px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.pointlesh-inspector{box-sizing:border-box;width:330px;max-height:80vh;overflow:auto;background:var(--pointlesh-bg);border:1px solid var(--pointlesh-border);border-radius:8px;z-index:10001;box-shadow:0 10px 45px #0008}
+.pointlesh-inspector *,.pointlesh-native-area-context *{box-sizing:border-box}
+.pointlesh-inspector-title{padding:14px 16px;font-weight:700;border-bottom:1px solid var(--pointlesh-border)}
+.pointlesh-inspector-body,.pointlesh-inspector-toolbar{padding:12px;display:grid;gap:10px}
+.pointlesh-inspector-toolbar{grid-template-columns:1fr 1fr 1.4fr;border-bottom:1px solid var(--pointlesh-border)}
+.pointlesh-inspector h3,.pointlesh-inspector p{margin:0}
+:is(.pointlesh-inspector,.pointlesh-native-area-context) :is(input,textarea,select,button){font:inherit;color:var(--pointlesh-text);background:#111722;border:1px solid var(--pointlesh-border);border-radius:6px;padding:7px;width:100%;min-width:0}
+:is(.pointlesh-inspector,.pointlesh-native-area-context) button{cursor:pointer;background:var(--pointlesh-panel);border-color:var(--pointlesh-border-strong)}
+:is(.pointlesh-inspector,.pointlesh-native-area-context) button:hover{background:#2d384b;border-color:var(--pointlesh-accent)}
+:is(.pointlesh-inspector,.pointlesh-native-area-context) button:disabled{opacity:.45;cursor:default}
+:is(.pointlesh-inspector,.pointlesh-native-area-context) :is(input,textarea,select,button):focus-visible{outline:2px solid var(--pointlesh-accent);outline-offset:1px}
+.pointlesh-inspector-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}
+:is(.pointlesh-inspector,.pointlesh-native-area-context) input[type=checkbox]{width:20px;height:20px;justify-self:end;accent-color:var(--pointlesh-accent)}
+.pointlesh-inspector-help,.pointlesh-inspector-status{color:var(--pointlesh-muted);font-size:12px}
+.pointlesh-inspector-status{padding:0 12px 12px}
+.pointlesh-inspector-extension>input,.pointlesh-inspector-extension>textarea,.pointlesh-inspector-extension>button{margin-top:8px}
+.pointlesh-inspector textarea{min-height:64px;resize:vertical}
+.pointlesh-inspector summary{cursor:pointer;color:var(--pointlesh-text)}
+.pointlesh-animations{display:grid;gap:10px;border-block:1px solid var(--pointlesh-border);padding-block:12px}
+.pointlesh-animations h4{margin:0;font-size:13px}
+.pointlesh-animation-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pointlesh-animation-tabs [aria-selected=true]{background:#253b5d;color:var(--pointlesh-text);border-color:var(--pointlesh-accent)}
+.pointlesh-animation-slot{display:grid;gap:7px;margin:0;padding:8px;border:1px solid var(--pointlesh-border);border-radius:6px;min-width:0}
+.pointlesh-animation-slot legend{padding:0 5px;color:var(--pointlesh-muted);font-size:12px}
+.pointlesh-animation-slot select{font-size:11px;min-width:0}
+.pointlesh-animation-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pointlesh-animation-flip{display:flex;align-items:center;gap:7px}
+.pointlesh-animation-flip input[type=checkbox]{margin:0}
+.pointlesh-animation-footer button{width:auto;font-size:11px;padding:4px 8px}
+.pointlesh-area-capabilities{display:grid;gap:10px;border-block:1px solid var(--pointlesh-border);padding-block:12px}
+.pointlesh-area-capabilities h4{margin:0;font-size:13px}
+.pointlesh-area-settings{display:grid;gap:8px;border-left:2px solid var(--pointlesh-border-strong);padding-left:10px;margin:0 0 5px 8px}
+`;
   // Dock resize grips scroll through native content at z-index 20. Keep this inset card interactive above them.
-  style.textContent += `.pointlesh-native-area-context{position:relative;z-index:21;margin-bottom:12px;padding:10px;border:1px solid #77846b;border-radius:8px;background:#1a2d25;color:#edf5e7;font:12px/1.45 system-ui,sans-serif}.pointlesh-native-area-context .pointlesh-area-capabilities{border:0;padding:0}.pointlesh-native-area-context h4,.pointlesh-native-area-context p{margin:0}.pointlesh-native-area-context .pointlesh-inspector-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}.pointlesh-native-area-context input,.pointlesh-native-area-context select,.pointlesh-native-area-context button{box-sizing:border-box;width:100%;padding:6px;background:#253c2f;color:#edf5e7;border:1px solid #728068;border-radius:5px;font:inherit}.pointlesh-native-area-context input[type=checkbox]{width:20px;height:20px;justify-self:end}.pointlesh-native-area-context .pointlesh-inspector-help{font-size:11px;color:#bed0b9}.pointlesh-native-area-history{display:flex;gap:6px;margin-top:10px}.pointlesh-native-area-history button:disabled{opacity:.4}.pointlesh-native-area-context+.scene-designer__stack>[hidden]{display:none!important}`;
+  style.textContent += `
+.pointlesh-native-area-context{position:relative;z-index:21;margin-bottom:12px;padding:10px;border:1px solid var(--pointlesh-border);border-radius:7px;background:var(--pointlesh-bg-soft);font-size:12px;line-height:1.45}
+.pointlesh-native-area-context .pointlesh-area-capabilities{border:0;padding:0}
+.pointlesh-native-area-context h4,.pointlesh-native-area-context p{margin:0}
+.pointlesh-native-area-context :is(input,select,button){padding:6px}
+.pointlesh-native-area-context .pointlesh-inspector-help{font-size:11px}
+.pointlesh-native-area-history{display:flex;gap:6px;margin-top:10px}
+.pointlesh-native-area-context+.scene-designer__stack>[hidden]{display:none!important}
+`;
   document.head.append(style);
 }

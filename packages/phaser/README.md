@@ -116,7 +116,9 @@ This reuses scene-designer's native canvas handles, curved polygons, prefab edit
 
 When walk-behind is enabled, a labeled horizontal baseline appears across the scene. Drag the line or its label vertically to change occlusion immediately; one **Undo area edit** restores the starting value. The number field, exported manifest, and runtime share the same baseline. Disabling walk-behind hides the line and turns off the effect.
 
-Vertices outside the visible canvas or behind designer panels have numbered grips at the nearest available edge. Selecting or clicking a grip leaves the shape intact; dragging brings that vertex to the visible grip position. Native curves and vertex IDs are preserved, and the native designer's undo restores the whole drag. Grips account for camera transforms, page scrolling, resizing, and adjacent grips.
+Vertices outside the visible canvas or behind designer panels use the same small vertex handles as Scene Designer, capped to the nearest available edge. Selecting or clicking a handle leaves the shape intact; dragging brings that vertex to the visible handle position. Native curves and vertex IDs are preserved, and the native designer's undo restores the whole drag. Handles account for camera transforms, page scrolling, resizing, and adjacent handles.
+
+Pointlesh's inspector uses Scene Designer's standard palette and theme variables. Designer controls are styled by the library independently of the demo game's UI.
 
 `installPhaserPointleshDesigner` installs both helpers and exposes them as `areaBaseline` and `areaEdgeHandles`. Standalone integrations can use `installPhaserAreaBaseline({ scene, designer, inspector })` and `installPhaserAreaEdgeHandles({ scene, designer })`; both accept an optional camera getter and return `sync()` and `destroy()`. Native selection and manifest changes keep the controls synchronized. Scene shutdown or `editor.destroy()` cleans up the panels, drawings, and input handlers.
 

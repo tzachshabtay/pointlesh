@@ -6,7 +6,7 @@ export type AreaHandlePoint = { x: number; y: number };
 export type AreaHandleBounds = { left: number; top: number; right: number; bottom: number };
 
 /** Find the nearest unobscured handle center, with its entire grip inside the viewport. */
-export function constrainAreaHandle(point: AreaHandlePoint, viewport: AreaHandleBounds, occluders: readonly AreaHandleBounds[] = [], inset = 20): AreaHandlePoint | undefined {
+export function constrainAreaHandle(point: AreaHandlePoint, viewport: AreaHandleBounds, occluders: readonly AreaHandleBounds[] = [], inset = 7): AreaHandlePoint | undefined {
   const bounds = { left: viewport.left + inset, right: viewport.right - inset, top: viewport.top + inset, bottom: viewport.bottom - inset };
   if (![point.x, point.y, ...Object.values(bounds), inset].every(Number.isFinite) || inset < 0 || bounds.left > bounds.right || bounds.top > bounds.bottom) return undefined;
   const clampX = (x: number) => Math.max(bounds.left, Math.min(bounds.right, x));
@@ -77,7 +77,6 @@ export function installPhaserAreaEdgeHandles(options: PhaserAreaEdgeHandlesOptio
   Object.assign(root.style, { position: 'fixed', inset: '0', pointerEvents: 'none', zIndex: '2147483000' });
   document.body.append(root);
   const grips = new Map<string, HTMLButtonElement>();
-  const size = 40, inset = size / 2 + 2;
   type Drag = { key: string; areaId: string; vertexId: string; selectionKey: string; pointerId: number; start: AreaHandlePoint; grip: AreaHandlePoint; current: AreaHandlePoint; historyWritten: boolean };
   let drag: Drag | undefined, destroyed = false;
 
@@ -165,23 +164,32 @@ export function installPhaserAreaEdgeHandles(options: PhaserAreaEdgeHandlesOptio
       if (style.display !== 'none' && style.visibility !== 'hidden' && rect.width && rect.height) occluders.push(rect);
     }
     const occupied: AreaHandleBounds[] = [], needed = new Set<string>();
+    const origin = project({ x: 0, y: 0 }, bounds), right = project({ x: 1, y: 0 }, bounds), down = project({ x: 0, y: 1 }, bounds);
+    const a = right.x - origin.x, b = right.y - origin.y, c = down.x - origin.x, d = down.y - origin.y;
     for (const entry of entries) for (const [index, vertex] of entry.area.vertices.entries()) {
       const key = `${entry.area.id}/${vertex.id}`, point = project(vertex, bounds);
+      const selected = 'vertexId' in entry.selection && entry.selection.vertexId === vertex.id;
+      // Match PhaserSceneDesignerCanvas.drawAreaHandles: radius 5/6, a 1-unit
+      // gold stroke, dark fill until selected. Apply the same camera/CSS matrix
+      // so these dots look like the ordinary vertices even under zoom/rotation.
+      const radius = selected ? 6 : 5, size = radius * 2 + 1;
+      const halfWidth = (radius + .5) * Math.hypot(a, c), halfHeight = (radius + .5) * Math.hypot(b, d);
+      const inset = Math.max(halfWidth, halfHeight) + 1;
       const nearest = constrainAreaHandle(point, viewport, occluders, inset);
       if (!nearest || (nearest.x === point.x && nearest.y === point.y && drag?.key !== key)) continue;
       const position = constrainAreaHandle(point, viewport, [...occluders, ...occupied], inset);
       if (!position) continue;
       needed.add(key);
-      occupied.push({ left: position.x - size / 2, right: position.x + size / 2, top: position.y - size / 2, bottom: position.y + size / 2 });
+      occupied.push({ left: position.x - halfWidth, right: position.x + halfWidth, top: position.y - halfHeight, bottom: position.y + halfHeight });
       let button = grips.get(key);
       if (!button) {
         button = document.createElement('button'); button.type = 'button';
         button.className = 'pointlesh-area-edge-handle';
         button.dataset.areaId = entry.area.id; button.dataset.vertexId = vertex.id;
-        Object.assign(button.style, { position: 'fixed', transform: 'translate(-50%, -50%)', width: `${size}px`, height: `${size}px`, padding: '0', border: '2px solid #10251b', borderRadius: '50%', color: '#10251b', background: '#f4d77d', boxShadow: '0 0 0 1px #fff8', font: 'bold 12px system-ui', touchAction: 'none', pointerEvents: 'auto', cursor: 'grab' });
+        Object.assign(button.style, { position: 'fixed', boxSizing: 'border-box', padding: '0', border: '1px solid #ffe08a', borderRadius: '50%', boxShadow: 'none', appearance: 'none', touchAction: 'none', pointerEvents: 'auto', cursor: 'grab' });
         root.append(button); grips.set(key, button);
       }
-      button.textContent = String(index + 1);
+      Object.assign(button.style, { width: `${size}px`, height: `${size}px`, background: selected ? '#ffe08a' : '#101216', transform: `translate(-50%, -50%) matrix(${a}, ${b}, ${c}, ${d}, 0, 0)` });
       button.setAttribute('aria-label', `Drag offscreen vertex ${index + 1} of ${entry.area.tag || entry.area.id}`);
       button.title = `Vertex ${index + 1} (${Math.round(vertex.x)}, ${Math.round(vertex.y)}). Drag to move; selection preserves its position.`;
       button.onpointerdown = event => start(event, key, entry, vertex.id, position);

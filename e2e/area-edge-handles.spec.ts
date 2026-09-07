@@ -18,19 +18,28 @@ for (const farOutside of [false, true]) test(`${farOutside ? 'Distant' : 'Offscr
   }, farOutside);
   const grip = page.locator('.pointlesh-area-edge-handle[data-area-id="house.foreground::area"][data-vertex-id="foreground-0"]');
   await expect(grip).toBeVisible();
-  const bounds = await grip.boundingBox();
+  await expect(grip).toHaveText('');
+  await expect(grip).toHaveCSS('background-color', 'rgb(16, 18, 22)');
+  await expect(grip).toHaveCSS('border-top-color', 'rgb(255, 224, 138)');
+  await expect(grip).toHaveAccessibleName(/Drag offscreen vertex 1/);
+  let bounds = await grip.boundingBox();
   expect(bounds).not.toBeNull();
-  const center = { x: bounds!.x + bounds!.width / 2, y: bounds!.y + bounds!.height / 2 };
+  expect(bounds!.width).toBeLessThan(20);
+  let center = { x: bounds!.x + bounds!.width / 2, y: bounds!.y + bounds!.height / 2 };
   expect(await page.evaluate(() => JSON.stringify((window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest()))).toBe(before);
   await page.mouse.move(center.x, center.y); await page.mouse.down(); await page.mouse.up();
   expect(await page.evaluate(() => JSON.stringify((window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest()))).toBe(before);
+  await expect(grip).toHaveCSS('background-color', 'rgb(255, 224, 138)');
+  // Like native vertices, selecting enlarges the dot from radius 5 to 6.
+  bounds = await grip.boundingBox();
+  center = { x: bounds!.x + bounds!.width / 2, y: bounds!.y + bounds!.height / 2 };
 
   const original = await page.evaluate(() => (window as any).pointleshDemo.scene.resolved().areas.find((area: any) => area.id === 'house.foreground').polygon);
   // Grab away from the grip center: the vertex must follow the center, retaining
   // this small grab offset but discarding its original distance outside the view.
-  await page.mouse.move(center.x + 5, center.y - 3); await page.mouse.down();
+  await page.mouse.move(center.x + 2, center.y - 1); await page.mouse.down();
   expect(await page.evaluate(() => JSON.stringify((window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest()))).toBe(before);
-  await page.mouse.move(center.x + 50, center.y - 15, { steps: 5 });
+  await page.mouse.move(center.x + 47, center.y - 13, { steps: 5 });
   await page.mouse.up();
   const after = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
