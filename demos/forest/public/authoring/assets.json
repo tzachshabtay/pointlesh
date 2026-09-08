@@ -523,28 +523,100 @@
       "kind": "voice",
       "prompt": "Warm fantasy storytelling voice for Elder Rowan.",
       "activeVersion": "",
-      "versions": {}
+      "versions": {},
+      "linkedAnimationAssets": {
+        "line.elder.greeting": {
+          "label": "Greeting",
+          "assetId": "line.elder.greeting"
+        },
+        "line.elder.king": {
+          "label": "Where did they take the king?",
+          "assetId": "line.elder.king"
+        },
+        "line.elder.advice": {
+          "label": "I could use a little advice.",
+          "assetId": "line.elder.advice"
+        },
+        "line.elder.goodbye": {
+          "label": "I will bring him home.",
+          "assetId": "line.elder.goodbye"
+        }
+      }
     },
     "voice.innkeeper": {
       "id": "voice.innkeeper",
       "kind": "voice",
       "prompt": "Warm fantasy storytelling voice for Mara.",
       "activeVersion": "",
-      "versions": {}
+      "versions": {},
+      "linkedAnimationAssets": {
+        "line.innkeeper.greeting": {
+          "label": "Greeting",
+          "assetId": "line.innkeeper.greeting"
+        },
+        "line.innkeeper.dreamcap": {
+          "label": "How do I get past an orc guard?",
+          "assetId": "line.innkeeper.dreamcap"
+        },
+        "line.innkeeper.buy": {
+          "label": "Do you have any honey stout?",
+          "assetId": "line.innkeeper.buy"
+        },
+        "line.innkeeper.goodbye": {
+          "label": "Keep a seat by the fire for us.",
+          "assetId": "line.innkeeper.goodbye"
+        }
+      }
     },
     "voice.miner": {
       "id": "voice.miner",
       "kind": "voice",
       "prompt": "Warm fantasy storytelling voice for Orrin.",
       "activeVersion": "",
-      "versions": {}
+      "versions": {},
+      "linkedAnimationAssets": {
+        "line.miner.greeting": {
+          "label": "Greeting",
+          "assetId": "line.miner.greeting"
+        },
+        "line.miner.password": {
+          "label": "The king needs us. How do I open the chest?",
+          "assetId": "line.miner.password"
+        },
+        "line.miner.mining": {
+          "label": "Finding much gold these days?",
+          "assetId": "line.miner.mining"
+        },
+        "line.miner.goodbye": {
+          "label": "I will return your pickaxe.",
+          "assetId": "line.miner.goodbye"
+        }
+      }
     },
     "voice.chest": {
       "id": "voice.chest",
       "kind": "voice",
       "prompt": "Warm fantasy storytelling voice for The runed chest.",
       "activeVersion": "",
-      "versions": {}
+      "versions": {},
+      "linkedAnimationAssets": {
+        "line.chest-locked.greeting": {
+          "label": "Chest Locked · Greeting",
+          "assetId": "line.chest-locked.greeting"
+        },
+        "line.chest-locked.guess": {
+          "label": "Chest Locked · …where I left my keys?",
+          "assetId": "line.chest-locked.guess"
+        },
+        "line.chest-open.greeting": {
+          "label": "Chest Open · Greeting",
+          "assetId": "line.chest-open.greeting"
+        },
+        "line.chest-open.open-chest": {
+          "label": "Chest Open · Stone remembers.",
+          "assetId": "line.chest-open.open-chest"
+        }
+      }
     },
     "line.elder.greeting": {
       "id": "line.elder.greeting",

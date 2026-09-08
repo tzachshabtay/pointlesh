@@ -38,11 +38,15 @@ To promote designer edits to project files, run this in a second terminal:
 npm run dev:server
 ```
 
-The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Open [the designer directly](http://127.0.0.1:5186/?designer=1) to enter the village editor immediately. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service. Generating new assets also requires the provider configuration expected by AI Assets.
+The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Open [the designer directly](http://127.0.0.1:5186/?designer=1) to enter the village editor immediately. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
+
+The authoring server loads `demos/forest/.env` and connects AI Assets' OpenAI image and ElevenLabs audio providers. Set `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` there, then restart `npm run dev:server`. Existing shell variables take precedence. `OPENAI_IMAGE_MODEL` and `ELEVENLABS_OUTPUT_FORMAT` optionally override provider defaults. This local `.env` file is ignored by Git and stays outside the public assets; the browser receives no API keys.
 
 The demo loads its committed documents from `demos/forest/public/authoring/`. Promotion writes those JSON files, so edits survive a refresh and are included in the next build. `src/content.ts` defines the initial seed; normal builds never regenerate or overwrite promoted documents. To deliberately reset them, run `node --import tsx demos/forest/scripts/seed-authoring.ts --reset` from the repository root.
 
 In **Assets**, select **Graphics → Character Borin** and choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. In **Adventure**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
+
+Under **Assets → Voices**, select a speaker and use **Line** to switch between the base voice and its dialogue lines. Generate and promote the base voice first, then generate individual lines or use **Regenerate all lines**. The dialogue designer and runtime keep referring to those same line assets.
 
 Areas are native Scene Designer vector shapes. Select an area in **Adventure** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo combines walking, character scale and camera zoom on each room’s floor polygon, with a separate curved foreground outline using the same Area prefab.
 

@@ -75,14 +75,18 @@ for (const [id, label] of Object.entries({ borin: 'Borin', elder: 'Elder Rowan',
 }
 function dialog(id: string, speaker: string, greeting: string, options: { id: string; text: string; reply: string }[]): DialogDefinition {
   const nodes: Record<string, DialogNode> = {};
-  const line = (key: string, text: string) => {
+  const line = (key: string, text: string, label: string) => {
     const assetId = `line.${id}.${key}`;
     definitions[assetId] = { id: assetId, kind: 'voice-line', prompt: text, voiceSettings: { voiceAssetId: `voice.${speaker}`, text }, activeVersion: '', versions: {} };
+    // AI Assets uses these links for the voice's Line selector and regeneration.
+    const voice = definitions[`voice.${speaker}`]!;
+    const dialogLabel = id.split('-').map(part => part[0]!.toUpperCase() + part.slice(1)).join(' ');
+    (voice.linkedAnimationAssets ??= {})[assetId] = { label: id === speaker ? label : `${dialogLabel} · ${label}`, assetId };
     return { id: key, enabled: true, voiceAssetId: `voice.${speaker}`, lineAssetId: assetId };
   };
-  nodes.opening = { id: 'opening', type: 'block', name: 'Greeting', enabled: true, lines: [line('greeting', greeting)], nextNodeId: 'topics' };
+  nodes.opening = { id: 'opening', type: 'block', name: 'Greeting', enabled: true, lines: [line('greeting', greeting, 'Greeting')], nextNodeId: 'topics' };
   nodes.topics = { id: 'topics', type: 'decision', name: 'Topics', prompt: 'What will you say?', enabled: true, options: options.map(option => ({ id: option.id, text: option.text, enabled: true, nextNodeId: `answer-${option.id}` })) };
-  for (const option of options) nodes[`answer-${option.id}`] = { id: `answer-${option.id}`, type: 'block', name: option.text, enabled: true, lines: [line(option.id, option.reply)] };
+  for (const option of options) nodes[`answer-${option.id}`] = { id: `answer-${option.id}`, type: 'block', name: option.text, enabled: true, lines: [line(option.id, option.reply, option.text)] };
   return { id, name: roomNames[id as keyof typeof roomNames] ?? id, enabled: true, entryNodeId: 'opening', nodes };
 }
 export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {

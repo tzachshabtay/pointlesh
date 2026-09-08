@@ -7,6 +7,7 @@ import { createDialogDesignerDevServer, type DialogDesignerDevServerOptions } fr
 import { createAiAssetDevServer, type AiAssetDevServerOptions } from '@ai-game-assets/dev';
 
 export { createSceneDesignerDevServer, createDialogDesignerDevServer, createAiAssetDevServer };
+export { createOpenAiImageProvider, createElevenLabsAudioProvider } from '@ai-game-assets/dev';
 export { buildSceneManifestModule } from '@scene-designer/dev';
 export { buildDialogManifestModule } from '@dialog-designer/dev';
 

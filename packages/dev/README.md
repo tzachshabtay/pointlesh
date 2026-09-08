@@ -17,12 +17,14 @@ For the included demo, use `npm run dev:server` at repository root. Start `npm r
 ## Programmatic lifecycle
 
 ```ts
-import { createPointleshDevServer } from '@pointlesh/dev';
+import { createPointleshDevServer, createOpenAiImageProvider, createElevenLabsAudioProvider } from '@pointlesh/dev';
 
 const tools = createPointleshDevServer({
   assets: {
     manifestPath: './authoring/assets.json',
     assetsDir: './public/art', port: 4287,
+    provider: createOpenAiImageProvider(),
+    audioProvider: createElevenLabsAudioProvider(),
   },
   scenes: { manifestPath: './authoring/scenes.json', port: 4288 },
   dialogs: {
@@ -36,6 +38,8 @@ await tools.close();
 ```
 
 Options are the upstream `AiAssetDevServerOptions`, `SceneDesignerDevServerOptions` and `DialogDesignerDevServerOptions`. The returned `services` array exposes those individual services. Startup is sequential; if a later service fails, already-started services are closed. Errors such as occupied ports propagate to the caller.
+
+The provider factories read `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` from the server's environment, or accept an explicit `apiKey` option. Load your local environment before creating the services. The forest demo's entrypoint loads its optional `demos/forest/.env` automatically; shell variables take precedence.
 
 Individual `createAiAssetDevServer`, `createSceneDesignerDevServer`, `createDialogDesignerDevServer`, `buildSceneManifestModule` and `buildDialogManifestModule` helpers are also re-exported. Provider configuration, asset generation, upstream promotion endpoints and manifest-module behavior follow those libraries.
 
