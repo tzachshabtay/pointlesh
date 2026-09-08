@@ -64,6 +64,29 @@ Existing clients can still supply `aiRuntime`, `assetId` and `animation: state =
 
 Destroying the scene or sprite detaches the binding and generated texture/animation bindings. Calling `view.destroy()` detaches it without destroying your sprite or controller.
 
+## Scrolling rooms
+
+```ts
+import { PhaserRoomCamera } from '@pointlesh/phaser';
+
+const roomCamera = new PhaserRoomCamera(scene.cameras.main, {
+  room: { width: 1620, height: 540 },
+  target: () => actor.state.position,
+  smoothing: 8,
+});
+// In your update, after view.update(deltaMs) has applied the player's area zoom:
+roomCamera.update(deltaMs);
+// After changing rooms or restoring the actor:
+roomCamera.setRoom(nextRoom);
+roomCamera.snap();
+```
+
+The helper follows horizontally with frame-independent smoothing and clamps the visible view to the room at the current zoom. It controls scroll on an unrotated camera; it leaves zoom and Phaser's native follow/bounds settings to the caller. Do not also call `camera.startFollow()`. Rooms no wider than the unzoomed viewport keep their original horizontal framing, including fractional area zoom. Vertical scrolling is available with `axes: 'vertical'` or `'both'`; axes that do not scroll return to the room origin. `smoothing: 0` follows immediately.
+
+Use `roomCamera.setEnabled(false)` while an editor controls the camera. The character binding's `camera` option also accepts a getter, such as `camera: () => designerOpen ? undefined : scene.cameras.main`, to suspend area zoom during editor pan/zoom and live property edits. When editing ends, call `view.sync()` and `roomCamera.snap()` to return to the player. `snap()` is an explicit reframe and works while following is disabled. The helper registers no event listeners.
+
+The forest demo uses a dedicated 1620×540 room image, with the other rooms remaining 960×540. Its native Scene Designer minimap can pan anywhere in the authored room, zoom, or fit the whole scene; gameplay follow pauses while it is open. Returning from the mine or camp places Borin at that room's forest entrance. Saving and loading restores his world position and reframes the camera.
+
 ## Sprite interactions
 
 ```ts

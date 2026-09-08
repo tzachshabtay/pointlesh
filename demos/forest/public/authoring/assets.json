@@ -3187,6 +3187,40 @@
         "speak",
         "left"
       ]
+    },
+    "background.forest-wide": {
+      "id": "background.forest-wide",
+      "kind": "image",
+      "prompt": "A continuous 3:1 pixel-art panorama of the Whispering Wood. Ancient mossy trees frame a broad walkable forest path, with violet dreamcaps at the left roots, a timbered gold mine in the left quarter, an old oak and unlettered signpost in the middle, and an orc palisade gate at the far right. Match the Bramblehollow style reference. No characters, UI or lettering. See docs/art-prompts.md for the full production prompt.",
+      "dimensions": {
+        "width": 2172,
+        "height": 724
+      },
+      "activeVersion": "original",
+      "tags": [
+        "forest",
+        "background",
+        "panorama"
+      ],
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/forest-wide.png",
+          "prompt": "Horizontally extended Whispering Wood panorama; full prompt in docs/art-prompts.md.",
+          "createdAt": "2026-09-07T00:00:00.000Z",
+          "model": "imagegen"
+        }
+      }
     }
+  },
+  "styleGuide": {
+    "prompt": "Match the Bramblehollow reference: richly detailed, blocky pixel art for a classic point-and-click fantasy adventure. Use crisp, visible pixel clusters; deep blue-green forest shadows, mossy greens, warm earthy stone and timber, and amber lantern and window light. Weathered dwarf cottages nestle among ancient trees, roots, moss and mushrooms. Maintain the reference's coherent lighting, textured materials, readable silhouettes and layered woodland depth. Adapt these qualities to each requested room, character or object while keeping its required framing and transparency.",
+    "images": [
+      {
+        "name": "Bramblehollow",
+        "file": "art/bramblehollow-reference.png",
+        "mimeType": "image/png"
+      }
+    ]
   }
 }

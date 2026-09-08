@@ -98,3 +98,13 @@ test('removing assignments restores legacy frame callbacks and detaches texture 
   f.runtime.designerCallbacks().onPreview('parent', 'removed-preview', f.manifest.assets.parent);
   assert.notEqual(f.sprite.textureKey, 'removed-preview'); f.view.update(1000); assert.equal(f.controller.state.position.x, before);
 });
+
+test('a live camera getter leaves editor zoom untouched during animation and designer synchronization', () => {
+  const camera = { zoom: 2, setZoom(value) { this.zoom = value; } };
+  let editing = true;
+  const f = fixture({ camera: () => editing ? undefined : camera });
+  f.view.update(100); f.view.sync(); assert.equal(camera.zoom, 2);
+  editing = false; f.view.sync(); assert.equal(camera.zoom, 1);
+  editing = true; camera.zoom = .6; f.view.refreshAnimation(); assert.equal(camera.zoom, .6);
+  f.view.destroy();
+});

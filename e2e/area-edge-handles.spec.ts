@@ -12,7 +12,12 @@ for (const farOutside of [false, true]) test(`${farOutside ? 'Distant' : 'Offscr
     const designer = scene.sceneDesigner.designer;
     designer.open();
     designer.select({ type: 'area', sceneId: 'house', layerId: 'house.adventure', areaId: 'house.foreground::area' });
-    if (farOutside) designer.updateAreaVertex('house.foreground::area', 'foreground-0', { x: -2000, curve: { cx: -1970, cy: 368 } });
+    // Build the offscreen/curve fixture in memory without relying on the user's room edits.
+    designer.updateAreaVertex('house.foreground::area', 'foreground-0', {
+      x: farOutside ? -2000 : 0, y: 357,
+      curve: farOutside ? { cx: -1970, cy: 368 } : undefined,
+    }, { history: false });
+    designer.updateAreaVertex('house.foreground::area', 'foreground-1', { curve: { cx: 84, cy: 387 } }, { history: false });
     scene.cameras.main.setZoom(1.035);
     return JSON.stringify(designer.getManifest());
   }, farOutside);

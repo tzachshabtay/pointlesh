@@ -10,8 +10,8 @@ const registeredDefinitions = new WeakMap<object, string>();
 export type PhaserAdventureCharacterOptions = {
   /** Read fresh resolved areas here to reflect designer edits without rebuilding the binding. */
   areas?: () => readonly ResolvedPointleshArea[];
-  /** Only the player usually controls the camera; omit for NPCs. */
-  camera?: Phaser.Cameras.Scene2D.Camera;
+  /** Only the player usually controls the camera; a getter can suspend area zoom while editing. */
+  camera?: Phaser.Cameras.Scene2D.Camera | (() => Phaser.Cameras.Scene2D.Camera | undefined);
   baseScale?: number | Point | (() => number | Point);
   defaultScale?: number;
   defaultZoom?: number;
@@ -138,8 +138,8 @@ export class PhaserAdventureCharacter {
       this.sprite.setRotation((angle + (this.playback?.animation?.frameTimings?.[slot]?.rotation ?? 0)) * Math.PI / 180);
     }
     else if (this.options.frame) this.sprite.setFrame(this.options.frame(state));
-    if (this.options.camera) {
-      const camera = this.options.camera;
+    const camera = typeof this.options.camera === 'function' ? this.options.camera() : this.options.camera;
+    if (camera) {
       const amount = deltaMs === undefined || effects.zoomSmoothing === 0 ? 1 : 1 - Math.exp(-effects.zoomSmoothing * deltaMs / 1000);
       camera.setZoom(camera.zoom + (effects.zoom - camera.zoom) * amount);
     }

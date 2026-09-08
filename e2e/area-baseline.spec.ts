@@ -115,6 +115,8 @@ test('inline area undo restores the entire offscreen vertex drag', async ({ page
     const scene = (window as any).pointleshDemo.scene;
     scene.changeRoom('house');
     scene.sceneDesigner.designer.select({ type: 'area', sceneId: 'house', layerId: 'house.adventure', areaId: 'house.foreground::area' });
+    // Authored cottage geometry can change; this regression needs a vertex beyond the viewport.
+    scene.sceneDesigner.designer.updateAreaVertex('house.foreground::area', 'foreground-0', { x: 0, y: 357 }, { history: false });
     scene.cameras.main.setZoom(1.035);
     return scene.sceneDesigner.designer.getManifest();
   });

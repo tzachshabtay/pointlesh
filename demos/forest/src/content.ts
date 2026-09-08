@@ -4,10 +4,13 @@ import { createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from
 import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
 import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
+import { bramblehollowStyleGuide } from './art-style';
+
+export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
 export const atlasRooms = {
   village: { asset: 'background.village-pub', row: 0 }, pub: { asset: 'background.village-pub', row: 1 },
-  house: { asset: 'background.house-forest', row: 0 }, forest: { asset: 'background.house-forest', row: 1 },
+  house: { asset: 'background.house-forest', row: 0 }, forest: { asset: 'background.forest-wide', row: null },
   mine: { asset: 'background.mine-camp', row: 0 }, camp: { asset: 'background.mine-camp', row: 1 }
 } as const;
 const definitions: Record<string, AiAssetDefinition> = {};
@@ -19,6 +22,12 @@ for (const id of ['village-pub', 'house-forest', 'mine-camp']) {
     versions: { original: { name: 'original', file: `art/atlas-${id}.png`, prompt: `Pixel-art ${id} room atlas`, createdAt: '2026-09-07T00:00:00.000Z', model: 'imagegen' } }
   };
 }
+definitions['background.forest-wide'] = {
+  id: 'background.forest-wide', kind: 'image',
+  prompt: 'A continuous 3:1 pixel-art panorama of the Whispering Wood. Ancient mossy trees frame a broad walkable forest path, with violet dreamcaps at the left roots, a timbered gold mine in the left quarter, an old oak and unlettered signpost in the middle, and an orc palisade gate at the far right. Match the Bramblehollow style reference. No characters, UI or lettering. See docs/art-prompts.md for the full production prompt.',
+  dimensions: { width: 2172, height: 724 }, activeVersion: 'original', tags: ['forest', 'background', 'panorama'],
+  versions: { original: { name: 'original', file: 'art/forest-wide.png', prompt: 'Horizontally extended Whispering Wood panorama; full prompt in docs/art-prompts.md.', createdAt: '2026-09-07T00:00:00.000Z', model: 'imagegen' } },
+};
 /** Real AI Assets animation children keep the same pixels available in the designer and game. */
 export const characterAssetDefinitions: Record<string, AiAssetDefinition> = {};
 for (const id of CHARACTER_IDS) {
@@ -99,7 +108,7 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
     { id: 'open-chest', text: 'Stone remembers.', reply: 'The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.' }
   ])
 } });
-export const assets = defineAiAssets(definitions);
+export const assets = { ...defineAiAssets(definitions), styleGuide: bramblehollowStyleGuide };
 
 const base = pointleshPrefabs({ characterAssetId: 'character.borin', objectAssetId: 'object.coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');
@@ -112,6 +121,7 @@ const rectangle = (x: number, y: number, width: number, height: number) => [
 ];
 /** Room-specific floor outlines retain the broad corridor used by all approach points. */
 export function roomFloorVertices(room: typeof roomIds[number]) {
+  if (room === 'forest') return [[35, 443], [190, 448], [274, 371], [360, 398], [450, 435], [680, 445], [920, 438], [1170, 419], [1365, 365], [1450, 389], [1585, 443], [1585, 515], [35, 515]].map(([x, y], index) => ({ id: `floor-${index}`, x, y }));
   const shoulders = { village: [124, 371, 835, 381], pub: [85, 380, 876, 373], house: [158, 365, 819, 390], forest: [167, 387, 832, 378], mine: [142, 374, 865, 390], camp: [116, 392, 848, 366] }[room];
   return [[35, 403], [shoulders[0], shoulders[1]], [360, 355], [710, 355], [shoulders[2], shoulders[3]], [925, 403], [925, 494], [850, 515], [110, 515], [35, 494]].map(([x, y], index) => ({ id: `floor-${index}`, x, y }));
 }
@@ -181,6 +191,6 @@ export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, sce
     ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id) && !(roomPickups[roomId] ?? []).some(pickup => pickup.pickupId === target.id)).map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
   ];
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure prefabs' }), prefabs: instances };
-  const scene = { ...createScene({ id: roomId, name: roomNames[roomId], width: 960, height: 540 }), layers: [layer] };
+  const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
 })) });
