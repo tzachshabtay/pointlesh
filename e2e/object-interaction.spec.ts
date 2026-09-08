@@ -116,12 +116,12 @@ test('a generic object can render an AI Assets image and dispatch a client behav
     scene.behaviors.register('client.inspect', { handle: () => { (window as any).customObjectInteractions++; } });
     manifest.scenes.mine.layers[0].prefabs.push({
       id: 'mine.client-object', prefabId: 'pointlesh.object', name: 'Client object', visible: true, locked: false,
-      overrides: { object: { assetId: 'character.elder', x: 500, y: 400, scaleX: 3, scaleY: 3, rotation: 20 } },
+      overrides: { object: { assetId: 'elder', x: 500, y: 400, scaleX: 3, scaleY: 3, rotation: 20 } },
       pointlesh: { properties: { targetId: 'client-object', approachOffsetX: 0, approachOffsetY: 30 }, behaviors: ['client.inspect'] },
     });
     api.setManifest(manifest);
   });
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('mine.client-object').texture.key)).toContain('character.elder');
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('mine.client-object').texture.key)).toContain('elder');
   const object = await spritePoint(page, 'mine.client-object');
   await page.mouse.move(object.x, object.y);
   await expect(page.locator('#hover-label')).toHaveText('Client object');
@@ -130,8 +130,8 @@ test('a generic object can render an AI Assets image and dispatch a client behav
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toMatchObject({ x: 500, y: 430 });
   const previewTexture = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    const texture = scene.aiRuntime.key('character.borin');
-    scene.aiRuntime.designerCallbacks().onPreview('character.elder', texture, scene.aiRuntime.manifest.assets['character.elder']);
+    const texture = scene.aiRuntime.key('borin');
+    scene.aiRuntime.designerCallbacks().onPreview('elder', texture, scene.aiRuntime.manifest.assets['elder']);
     scene.syncEntities();
     return { expected: texture, actual: scene.entitySprites.get('mine.client-object').texture.key };
   });

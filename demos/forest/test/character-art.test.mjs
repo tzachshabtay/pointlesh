@@ -2,22 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
-import { assertManifest } from '@ai-game-assets/core';
+import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
 import { readCharacterAnimations, resolvePointleshScene } from '@pointlesh/core';
 
 const { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, characterFramePixels } = await tsImport('../src/sprites.ts', import.meta.url);
+const { assets: seedAssets, scenes: seedScenes } = await tsImport('../src/content.ts', import.meta.url);
 const publicDirectory = new URL('../public/', import.meta.url);
 const authoredAssets = JSON.parse(await readFile(new URL('authoring/assets.json', publicDirectory), 'utf8'));
 const authoredScenes = JSON.parse(await readFile(new URL('authoring/scenes.json', publicDirectory), 'utf8'));
 
-test('all six authored characters expose nine playable native AI Assets animations backed by PNGs', async () => {
+test('all six authored character images expose nine playable native AI Assets animations backed by PNGs', async () => {
   assertManifest(authoredAssets);
   const animationKeys = new Set();
   let files = 0;
   for (const id of CHARACTER_IDS) {
-    const parent = authoredAssets.assets[`character.${id}`];
-    assert.equal(parent.kind, 'spritesheet');
-    assert.equal(parent.frameGrid.frameCount, 24);
+    const parent = authoredAssets.assets[id];
+    assert.equal(parent.kind, 'image');
+    assert.equal(parent.frameGrid, undefined);
+    assert.equal(parent.animations, undefined);
+    assert.deepEqual(parent.dimensions, { width: 24, height: 32 });
+    assert.equal(parent.versions[parent.activeVersion].file, `art/characters/${id}/base.png`);
     const family = [parent];
     for (const activity of ['idle', 'walk', 'speak']) for (const facing of CHARACTER_VIEWS) {
       const link = parent.linkedAnimationAssets[`${activity}-${facing}`];
@@ -39,15 +43,46 @@ test('all six authored characters expose nine playable native AI Assets animatio
       assert.deepEqual(bytes.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
       assert.equal(bytes.readUInt32BE(16), asset.dimensions.width, `${file} width matches native metadata`);
       assert.equal(bytes.readUInt32BE(20), asset.dimensions.height, `${file} height matches native metadata`);
-      assert.equal(asset.frameGrid.frameWidth, 24);
-      assert.equal(asset.frameGrid.frameHeight, 32);
-      assert.equal(asset.frameGrid.columns * 24, asset.dimensions.width);
-      assert.equal(asset.frameGrid.rows * 32, asset.dimensions.height);
+      if (asset.kind === 'animation') {
+        assert.equal(asset.frameGrid.frameWidth, 24);
+        assert.equal(asset.frameGrid.frameHeight, 32);
+        assert.equal(asset.frameGrid.columns * 24, asset.dimensions.width);
+        assert.equal(asset.frameGrid.rows * 32, asset.dimensions.height);
+      }
       files++;
     }
   }
   assert.equal(animationKeys.size, 54);
   assert.equal(files, 60);
+});
+
+test('seed and authored catalogs group short asset names and resolve every scene reference', () => {
+  for (const [assets, scenes] of [[seedAssets, seedScenes], [authoredAssets, authoredScenes]]) {
+    assertManifest(assets);
+    const topLevel = new Set(topLevelAiAssetIds(assets));
+    for (const id of CHARACTER_IDS) {
+      assert.ok(topLevel.has(id));
+      assert.equal(assets.assets[id].kind, 'image');
+      assert.equal(assets.assets[id].frameGrid, undefined);
+      assert.deepEqual(assets.assetPaths[id], ['Graphics', 'Characters']);
+      for (const link of Object.values(assets.assets[id].linkedAnimationAssets)) {
+        assert.equal(topLevel.has(link.assetId), false, 'Animations stay inside the parent selector');
+        assert.ok(assets.assets[link.assetId]);
+      }
+    }
+    for (const id of ['coin', 'rope', 'mushroom']) {
+      assert.ok(topLevel.has(id));
+      assert.deepEqual(assets.assetPaths[id], ['Graphics', 'Objects']);
+    }
+    assert.equal(Object.keys(assets.assets).some(id => /^(character|object)\./.test(id)), false);
+    for (const roomId of Object.keys(scenes.scenes)) for (const object of resolvePointleshScene(scenes, roomId).objects) {
+      assert.ok(assets.assets[object.assetId], `Scene object ${object.id} has a valid asset reference`);
+      for (const slots of Object.values(readCharacterAnimations(object.properties) ?? {})) for (const assignment of Object.values(slots)) {
+        const parent = assets.assets[assignment.assetId];
+        assert.ok(parent?.linkedAnimationAssets[assignment.key], `Scene object ${object.id} has a valid animation reference`);
+      }
+    }
+  }
 });
 
 test('characters have distinct front/back/profile art and changing walk, idle, and speech poses', () => {
@@ -71,7 +106,7 @@ test('authored player and NPC prefab slots resolve their own native assets and m
     for (const activity of ['idle', 'walk', 'speak']) {
       for (const slot of ['front', 'back', 'left', 'right']) {
         const assignment = mapping[activity][slot];
-        assert.equal(assignment.assetId, `character.${actorName}`);
+        assert.equal(assignment.assetId, actorName);
         assert.ok(authoredAssets.assets[assignment.assetId].linkedAnimationAssets[assignment.key]);
       }
       assert.equal(mapping[activity].right.key, mapping[activity].left.key);

@@ -66,7 +66,7 @@
           "name": "Sprite",
           "object": {
             "tag": "pointlesh:object",
-            "assetId": "object.coin",
+            "assetId": "coin",
             "x": 0,
             "y": 0,
             "scaleX": 1,
@@ -101,7 +101,7 @@
           "name": "Sprite",
           "object": {
             "tag": "pointlesh:character",
-            "assetId": "character.borin",
+            "assetId": "borin",
             "x": 0,
             "y": 0,
             "scaleX": 1,
@@ -169,66 +169,66 @@
           "animations": {
             "idle": {
               "front": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-front",
                 "flipX": false
               },
               "back": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-back",
                 "flipX": false
               },
               "left": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-left",
                 "flipX": false
               },
               "right": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-left",
                 "flipX": true
               }
             },
             "walk": {
               "front": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-front",
                 "flipX": false
               },
               "back": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-back",
                 "flipX": false
               },
               "left": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-left",
                 "flipX": false
               },
               "right": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-left",
                 "flipX": true
               }
             },
             "speak": {
               "front": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-front",
                 "flipX": false
               },
               "back": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-back",
                 "flipX": false
               },
               "left": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-left",
                 "flipX": false
               },
               "right": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-left",
                 "flipX": true
               }
@@ -248,7 +248,7 @@
           "name": "Sprite",
           "object": {
             "tag": "pointlesh:character",
-            "assetId": "character.borin",
+            "assetId": "borin",
             "x": 0,
             "y": 0,
             "scaleX": 1,
@@ -318,66 +318,66 @@
           "animations": {
             "idle": {
               "front": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-front",
                 "flipX": false
               },
               "back": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-back",
                 "flipX": false
               },
               "left": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-left",
                 "flipX": false
               },
               "right": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "idle-left",
                 "flipX": true
               }
             },
             "walk": {
               "front": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-front",
                 "flipX": false
               },
               "back": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-back",
                 "flipX": false
               },
               "left": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-left",
                 "flipX": false
               },
               "right": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "walk-left",
                 "flipX": true
               }
             },
             "speak": {
               "front": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-front",
                 "flipX": false
               },
               "back": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-back",
                 "flipX": false
               },
               "left": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-left",
                 "flipX": false
               },
               "right": {
-                "assetId": "character.borin",
+                "assetId": "borin",
                 "key": "speak-left",
                 "flipX": true
               }
@@ -689,7 +689,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "character.elder",
+                  "assetId": "elder",
                   "x": 387,
                   "y": 418,
                   "scaleX": 2.1,
@@ -704,66 +704,66 @@
                   "animations": {
                     "idle": {
                       "front": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "idle-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "idle-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "idle-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "idle-left",
                         "flipX": true
                       }
                     },
                     "walk": {
                       "front": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "walk-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "walk-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "walk-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "walk-left",
                         "flipX": true
                       }
                     },
                     "speak": {
                       "front": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "speak-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "speak-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "speak-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.elder",
+                        "assetId": "elder",
                         "key": "speak-left",
                         "flipX": true
                       }
@@ -1118,7 +1118,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "character.innkeeper",
+                  "assetId": "innkeeper",
                   "x": 526,
                   "y": 348,
                   "scaleX": 2.1,
@@ -1133,66 +1133,66 @@
                   "animations": {
                     "idle": {
                       "front": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "idle-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "idle-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "idle-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "idle-left",
                         "flipX": true
                       }
                     },
                     "walk": {
                       "front": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "walk-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "walk-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "walk-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "walk-left",
                         "flipX": true
                       }
                     },
                     "speak": {
                       "front": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "speak-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "speak-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "speak-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.innkeeper",
+                        "assetId": "innkeeper",
                         "key": "speak-left",
                         "flipX": true
                       }
@@ -1216,7 +1216,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "character.miner",
+                  "assetId": "miner",
                   "x": 245,
                   "y": 420,
                   "scaleX": 2.1,
@@ -1231,66 +1231,66 @@
                   "animations": {
                     "idle": {
                       "front": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "idle-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "idle-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "idle-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "idle-left",
                         "flipX": true
                       }
                     },
                     "walk": {
                       "front": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "walk-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "walk-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "walk-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "walk-left",
                         "flipX": true
                       }
                     },
                     "speak": {
                       "front": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "speak-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "speak-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "speak-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.miner",
+                        "assetId": "miner",
                         "key": "speak-left",
                         "flipX": true
                       }
@@ -1549,7 +1549,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "object.coin",
+                  "assetId": "coin",
                   "x": 516,
                   "y": 297,
                   "scaleX": 2,
@@ -1579,7 +1579,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "object.rope",
+                  "assetId": "rope",
                   "x": 127,
                   "y": 375,
                   "scaleX": 2,
@@ -1868,7 +1868,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "object.mushroom",
+                  "assetId": "mushroom",
                   "x": 111,
                   "y": 409,
                   "scaleX": 2,
@@ -2568,7 +2568,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "character.guard",
+                  "assetId": "guard",
                   "x": 568,
                   "y": 412,
                   "scaleX": 3.1,
@@ -2583,66 +2583,66 @@
                   "animations": {
                     "idle": {
                       "front": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "idle-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "idle-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "idle-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "idle-left",
                         "flipX": true
                       }
                     },
                     "walk": {
                       "front": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "walk-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "walk-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "walk-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "walk-left",
                         "flipX": true
                       }
                     },
                     "speak": {
                       "front": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "speak-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "speak-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "speak-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.guard",
+                        "assetId": "guard",
                         "key": "speak-left",
                         "flipX": true
                       }
@@ -2666,7 +2666,7 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "character.king",
+                  "assetId": "king",
                   "x": 777,
                   "y": 344,
                   "scaleX": 2.1,
@@ -2681,66 +2681,66 @@
                   "animations": {
                     "idle": {
                       "front": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "idle-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "idle-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "idle-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "idle-left",
                         "flipX": true
                       }
                     },
                     "walk": {
                       "front": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "walk-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "walk-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "walk-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "walk-left",
                         "flipX": true
                       }
                     },
                     "speak": {
                       "front": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "speak-front",
                         "flipX": false
                       },
                       "back": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "speak-back",
                         "flipX": false
                       },
                       "left": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "speak-left",
                         "flipX": false
                       },
                       "right": {
-                        "assetId": "character.king",
+                        "assetId": "king",
                         "key": "speak-left",
                         "flipX": true
                       }

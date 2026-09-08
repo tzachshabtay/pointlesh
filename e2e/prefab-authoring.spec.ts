@@ -131,7 +131,7 @@ test('direction animation pickers preserve sparse inheritance, flip overrides, u
   const download = await downloadPromise;
   const manifest = JSON.parse(await readFile((await download.path())!, 'utf8'));
   const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.borin');
-  expect(instance.pointlesh.properties.animations).toEqual({ walk: { left: { assetId: 'character.borin', key: 'walk-back', flipX: true } } });
+  expect(instance.pointlesh.properties.animations).toEqual({ walk: { left: { assetId: 'borin', key: 'walk-back', flipX: true } } });
   const resolved = await page.evaluate(() => (window as any).pointleshDemo.scene.resolved().objects.find((object: any) => object.id === 'village.borin').properties.animations);
   expect(resolved.idle.front.key).toBe('idle-front');
   expect(resolved.walk.right.key).toBe('walk-left');

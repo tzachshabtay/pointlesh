@@ -2,8 +2,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { deflateSync } from 'node:zlib';
 import { assertManifest, type AiAssetManifest } from '@ai-game-assets/core';
 import { assertSceneManifest } from '@scene-designer/core';
-import { characterAssetDefinitions, characterAnimations, roomFloorVertices, roomForegroundVertices } from '../src/content.js';
-import { CHARACTER_IDS, CHARACTER_VIEWS, characterAnimationPixels, characterSheetPixels, type ForestPixelImage, type ForestCharacterId } from '../src/sprites.js';
+import { assets as seedAssets, characterAssetDefinitions, characterAnimations, roomFloorVertices, roomForegroundVertices } from '../src/content.js';
+import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, characterFramePixels, characterAnimationPixels, characterSheetPixels, type ForestPixelImage, type ForestCharacterId } from '../src/sprites.js';
 import { roomIds } from '../src/story.js';
 
 // A minimal lossless RGBA PNG writer keeps this reproducible tool dependency-free.
@@ -30,12 +30,13 @@ const publicDirectory = new URL('../public/', import.meta.url);
 for (const id of CHARACTER_IDS) {
   const directory = new URL(`art/characters/${id}/`, publicDirectory);
   await mkdir(directory, { recursive: true });
+  await writeFile(new URL('base.png', directory), png(characterFramePixels(id, 'front', CHARACTER_ACTIVITY_FRAMES.idle[0])));
   await writeFile(new URL('sheet.png', directory), png(characterSheetPixels(id)));
   for (const activity of ['idle', 'walk', 'speak'] as const) for (const view of CHARACTER_VIEWS) {
     await writeFile(new URL(`${activity}-${view}.png`, directory), png(characterAnimationPixels(id, activity, view)));
   }
 }
-console.log('Wrote six 24-frame character sheets and 54 native animation strips.');
+console.log('Wrote six base character images, six 24-frame character sheets, and 54 native animation strips.');
 
 // Explicit promotion changes only character metadata and untouched legacy area seeds.
 // Existing unrelated designer work, custom animation slots, and custom area shapes survive.
@@ -44,7 +45,20 @@ if (process.argv.includes('--promote')) {
   const assetManifest = JSON.parse(await readFile(assetFile, 'utf8')) as AiAssetManifest;
   for (const [id, definition] of Object.entries(characterAssetDefinitions)) {
     const previous = assetManifest.assets[id];
-    assetManifest.assets[id] = { ...previous, ...definition, versions: { ...definition.versions, ...previous?.versions }, activeVersion: previous?.activeVersion || definition.activeVersion };
+    const promoted = { ...previous, ...definition, versions: { ...definition.versions, ...previous?.versions }, activeVersion: previous?.activeVersion || definition.activeVersion };
+    if (definition.kind === 'image' && CHARACTER_IDS.some(characterId => id === characterId)) {
+      delete promoted.frameGrid;
+      delete promoted.animations;
+      // Migrate the generated default only; keep authored versions and their selection.
+      const legacySheet = `art/characters/${id}/sheet.png`;
+      for (const [versionId, version] of Object.entries(definition.versions)) {
+        const existing = previous?.versions[versionId];
+        if (existing?.file === legacySheet) promoted.versions[versionId] = { ...existing, file: version.file };
+      }
+    }
+    assetManifest.assets[id] = promoted;
+    const seedPath = (seedAssets as AiAssetManifest).assetPaths?.[id];
+    if (seedPath) (assetManifest.assetPaths ??= {})[id] ??= [...seedPath];
   }
   assertManifest(assetManifest);
   await writeFile(assetFile, JSON.stringify(assetManifest, null, 2) + '\n');

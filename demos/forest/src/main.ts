@@ -80,7 +80,7 @@ class ForestAdventure extends Phaser.Scene {
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
-      autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'character.borin',
+      autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'borin',
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,

@@ -58,68 +58,61 @@
         }
       }
     },
-    "character.borin": {
-      "id": "character.borin",
-      "kind": "spritesheet",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
+    "borin": {
+      "id": "borin",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 192,
-        "height": 96
+        "width": 24,
+        "height": 32
       },
       "activeVersion": "original",
       "versions": {
         "original": {
           "name": "original",
-          "file": "art/characters/borin/sheet.png",
+          "file": "art/characters/borin/base.png",
           "prompt": "A small pixel-art dwarf named borin, full body, transparent background.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
         }
       },
-      "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 8,
-        "rows": 3,
-        "frameCount": 24
-      },
       "linkedAnimationAssets": {
         "idle-front": {
           "label": "Idle · front",
-          "assetId": "character.borin.idle-front"
+          "assetId": "borin.idle-front"
         },
         "idle-back": {
           "label": "Idle · back",
-          "assetId": "character.borin.idle-back"
+          "assetId": "borin.idle-back"
         },
         "idle-left": {
           "label": "Idle · left",
-          "assetId": "character.borin.idle-left"
+          "assetId": "borin.idle-left"
         },
         "walk-front": {
           "label": "Walk · front",
-          "assetId": "character.borin.walk-front"
+          "assetId": "borin.walk-front"
         },
         "walk-back": {
           "label": "Walk · back",
-          "assetId": "character.borin.walk-back"
+          "assetId": "borin.walk-back"
         },
         "walk-left": {
           "label": "Walk · left",
-          "assetId": "character.borin.walk-left"
+          "assetId": "borin.walk-left"
         },
         "speak-front": {
           "label": "Speak · front",
-          "assetId": "character.borin.speak-front"
+          "assetId": "borin.speak-front"
         },
         "speak-back": {
           "label": "Speak · back",
-          "assetId": "character.borin.speak-back"
+          "assetId": "borin.speak-back"
         },
         "speak-left": {
           "label": "Speak · left",
-          "assetId": "character.borin.speak-left"
+          "assetId": "borin.speak-left"
         }
       },
       "tags": [
@@ -128,68 +121,61 @@
         "borin"
       ]
     },
-    "character.elder": {
-      "id": "character.elder",
-      "kind": "spritesheet",
-      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
+    "elder": {
+      "id": "elder",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 192,
-        "height": 96
+        "width": 24,
+        "height": 32
       },
       "activeVersion": "original",
       "versions": {
         "original": {
           "name": "original",
-          "file": "art/characters/elder/sheet.png",
+          "file": "art/characters/elder/base.png",
           "prompt": "A small pixel-art dwarf named elder, full body, transparent background.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
         }
       },
-      "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 8,
-        "rows": 3,
-        "frameCount": 24
-      },
       "linkedAnimationAssets": {
         "idle-front": {
           "label": "Idle · front",
-          "assetId": "character.elder.idle-front"
+          "assetId": "elder.idle-front"
         },
         "idle-back": {
           "label": "Idle · back",
-          "assetId": "character.elder.idle-back"
+          "assetId": "elder.idle-back"
         },
         "idle-left": {
           "label": "Idle · left",
-          "assetId": "character.elder.idle-left"
+          "assetId": "elder.idle-left"
         },
         "walk-front": {
           "label": "Walk · front",
-          "assetId": "character.elder.walk-front"
+          "assetId": "elder.walk-front"
         },
         "walk-back": {
           "label": "Walk · back",
-          "assetId": "character.elder.walk-back"
+          "assetId": "elder.walk-back"
         },
         "walk-left": {
           "label": "Walk · left",
-          "assetId": "character.elder.walk-left"
+          "assetId": "elder.walk-left"
         },
         "speak-front": {
           "label": "Speak · front",
-          "assetId": "character.elder.speak-front"
+          "assetId": "elder.speak-front"
         },
         "speak-back": {
           "label": "Speak · back",
-          "assetId": "character.elder.speak-back"
+          "assetId": "elder.speak-back"
         },
         "speak-left": {
           "label": "Speak · left",
-          "assetId": "character.elder.speak-left"
+          "assetId": "elder.speak-left"
         }
       },
       "tags": [
@@ -198,68 +184,61 @@
         "elder"
       ]
     },
-    "character.innkeeper": {
-      "id": "character.innkeeper",
-      "kind": "spritesheet",
-      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
+    "innkeeper": {
+      "id": "innkeeper",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 192,
-        "height": 96
+        "width": 24,
+        "height": 32
       },
       "activeVersion": "original",
       "versions": {
         "original": {
           "name": "original",
-          "file": "art/characters/innkeeper/sheet.png",
+          "file": "art/characters/innkeeper/base.png",
           "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
         }
       },
-      "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 8,
-        "rows": 3,
-        "frameCount": 24
-      },
       "linkedAnimationAssets": {
         "idle-front": {
           "label": "Idle · front",
-          "assetId": "character.innkeeper.idle-front"
+          "assetId": "innkeeper.idle-front"
         },
         "idle-back": {
           "label": "Idle · back",
-          "assetId": "character.innkeeper.idle-back"
+          "assetId": "innkeeper.idle-back"
         },
         "idle-left": {
           "label": "Idle · left",
-          "assetId": "character.innkeeper.idle-left"
+          "assetId": "innkeeper.idle-left"
         },
         "walk-front": {
           "label": "Walk · front",
-          "assetId": "character.innkeeper.walk-front"
+          "assetId": "innkeeper.walk-front"
         },
         "walk-back": {
           "label": "Walk · back",
-          "assetId": "character.innkeeper.walk-back"
+          "assetId": "innkeeper.walk-back"
         },
         "walk-left": {
           "label": "Walk · left",
-          "assetId": "character.innkeeper.walk-left"
+          "assetId": "innkeeper.walk-left"
         },
         "speak-front": {
           "label": "Speak · front",
-          "assetId": "character.innkeeper.speak-front"
+          "assetId": "innkeeper.speak-front"
         },
         "speak-back": {
           "label": "Speak · back",
-          "assetId": "character.innkeeper.speak-back"
+          "assetId": "innkeeper.speak-back"
         },
         "speak-left": {
           "label": "Speak · left",
-          "assetId": "character.innkeeper.speak-left"
+          "assetId": "innkeeper.speak-left"
         }
       },
       "tags": [
@@ -268,68 +247,61 @@
         "innkeeper"
       ]
     },
-    "character.miner": {
-      "id": "character.miner",
-      "kind": "spritesheet",
-      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
+    "miner": {
+      "id": "miner",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 192,
-        "height": 96
+        "width": 24,
+        "height": 32
       },
       "activeVersion": "original",
       "versions": {
         "original": {
           "name": "original",
-          "file": "art/characters/miner/sheet.png",
+          "file": "art/characters/miner/base.png",
           "prompt": "A small pixel-art dwarf named miner, full body, transparent background.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
         }
       },
-      "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 8,
-        "rows": 3,
-        "frameCount": 24
-      },
       "linkedAnimationAssets": {
         "idle-front": {
           "label": "Idle · front",
-          "assetId": "character.miner.idle-front"
+          "assetId": "miner.idle-front"
         },
         "idle-back": {
           "label": "Idle · back",
-          "assetId": "character.miner.idle-back"
+          "assetId": "miner.idle-back"
         },
         "idle-left": {
           "label": "Idle · left",
-          "assetId": "character.miner.idle-left"
+          "assetId": "miner.idle-left"
         },
         "walk-front": {
           "label": "Walk · front",
-          "assetId": "character.miner.walk-front"
+          "assetId": "miner.walk-front"
         },
         "walk-back": {
           "label": "Walk · back",
-          "assetId": "character.miner.walk-back"
+          "assetId": "miner.walk-back"
         },
         "walk-left": {
           "label": "Walk · left",
-          "assetId": "character.miner.walk-left"
+          "assetId": "miner.walk-left"
         },
         "speak-front": {
           "label": "Speak · front",
-          "assetId": "character.miner.speak-front"
+          "assetId": "miner.speak-front"
         },
         "speak-back": {
           "label": "Speak · back",
-          "assetId": "character.miner.speak-back"
+          "assetId": "miner.speak-back"
         },
         "speak-left": {
           "label": "Speak · left",
-          "assetId": "character.miner.speak-left"
+          "assetId": "miner.speak-left"
         }
       },
       "tags": [
@@ -338,68 +310,61 @@
         "miner"
       ]
     },
-    "character.guard": {
-      "id": "character.guard",
-      "kind": "spritesheet",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
+    "guard": {
+      "id": "guard",
+      "kind": "image",
+      "prompt": "A small pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 192,
-        "height": 96
+        "width": 24,
+        "height": 32
       },
       "activeVersion": "original",
       "versions": {
         "original": {
           "name": "original",
-          "file": "art/characters/guard/sheet.png",
+          "file": "art/characters/guard/base.png",
           "prompt": "A small pixel-art orc guard, full body, transparent background.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
         }
       },
-      "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 8,
-        "rows": 3,
-        "frameCount": 24
-      },
       "linkedAnimationAssets": {
         "idle-front": {
           "label": "Idle · front",
-          "assetId": "character.guard.idle-front"
+          "assetId": "guard.idle-front"
         },
         "idle-back": {
           "label": "Idle · back",
-          "assetId": "character.guard.idle-back"
+          "assetId": "guard.idle-back"
         },
         "idle-left": {
           "label": "Idle · left",
-          "assetId": "character.guard.idle-left"
+          "assetId": "guard.idle-left"
         },
         "walk-front": {
           "label": "Walk · front",
-          "assetId": "character.guard.walk-front"
+          "assetId": "guard.walk-front"
         },
         "walk-back": {
           "label": "Walk · back",
-          "assetId": "character.guard.walk-back"
+          "assetId": "guard.walk-back"
         },
         "walk-left": {
           "label": "Walk · left",
-          "assetId": "character.guard.walk-left"
+          "assetId": "guard.walk-left"
         },
         "speak-front": {
           "label": "Speak · front",
-          "assetId": "character.guard.speak-front"
+          "assetId": "guard.speak-front"
         },
         "speak-back": {
           "label": "Speak · back",
-          "assetId": "character.guard.speak-back"
+          "assetId": "guard.speak-back"
         },
         "speak-left": {
           "label": "Speak · left",
-          "assetId": "character.guard.speak-left"
+          "assetId": "guard.speak-left"
         }
       },
       "tags": [
@@ -408,68 +373,61 @@
         "guard"
       ]
     },
-    "character.king": {
-      "id": "character.king",
-      "kind": "spritesheet",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background. Front, back, and left-profile rows; right facing mirrors the left profile.",
+    "king": {
+      "id": "king",
+      "kind": "image",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 192,
-        "height": 96
+        "width": 24,
+        "height": 32
       },
       "activeVersion": "original",
       "versions": {
         "original": {
           "name": "original",
-          "file": "art/characters/king/sheet.png",
+          "file": "art/characters/king/base.png",
           "prompt": "A small pixel-art dwarf named king, full body, transparent background.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
         }
       },
-      "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 8,
-        "rows": 3,
-        "frameCount": 24
-      },
       "linkedAnimationAssets": {
         "idle-front": {
           "label": "Idle · front",
-          "assetId": "character.king.idle-front"
+          "assetId": "king.idle-front"
         },
         "idle-back": {
           "label": "Idle · back",
-          "assetId": "character.king.idle-back"
+          "assetId": "king.idle-back"
         },
         "idle-left": {
           "label": "Idle · left",
-          "assetId": "character.king.idle-left"
+          "assetId": "king.idle-left"
         },
         "walk-front": {
           "label": "Walk · front",
-          "assetId": "character.king.walk-front"
+          "assetId": "king.walk-front"
         },
         "walk-back": {
           "label": "Walk · back",
-          "assetId": "character.king.walk-back"
+          "assetId": "king.walk-back"
         },
         "walk-left": {
           "label": "Walk · left",
-          "assetId": "character.king.walk-left"
+          "assetId": "king.walk-left"
         },
         "speak-front": {
           "label": "Speak · front",
-          "assetId": "character.king.speak-front"
+          "assetId": "king.speak-front"
         },
         "speak-back": {
           "label": "Speak · back",
-          "assetId": "character.king.speak-back"
+          "assetId": "king.speak-back"
         },
         "speak-left": {
           "label": "Speak · left",
-          "assetId": "character.king.speak-left"
+          "assetId": "king.speak-left"
         }
       },
       "tags": [
@@ -478,8 +436,8 @@
         "king"
       ]
     },
-    "object.coin": {
-      "id": "object.coin",
+    "coin": {
+      "id": "coin",
       "kind": "image",
       "prompt": "A small gleaming copper coin, pixel art, transparent background.",
       "dimensions": {
@@ -489,8 +447,8 @@
       "activeVersion": "",
       "versions": {}
     },
-    "object.rope": {
-      "id": "object.rope",
+    "rope": {
+      "id": "rope",
       "kind": "image",
       "prompt": "A coil of sturdy dwarven climbing rope, pixel art, transparent background.",
       "dimensions": {
@@ -500,8 +458,8 @@
       "activeVersion": "",
       "versions": {}
     },
-    "object.mushroom": {
-      "id": "object.mushroom",
+    "mushroom": {
+      "id": "mushroom",
       "kind": "image",
       "prompt": "A purple dreamcap mushroom with silver spots, pixel art, transparent background.",
       "dimensions": {
@@ -794,8 +752,8 @@
       "activeVersion": "",
       "versions": {}
     },
-    "character.borin.idle-front": {
-      "id": "character.borin.idle-front",
+    "borin.idle-front": {
+      "id": "borin.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -811,7 +769,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.idle-front",
+          "key": "borin.idle-front",
           "frames": [
             0,
             1
@@ -839,8 +797,8 @@
         "front"
       ]
     },
-    "character.borin.idle-back": {
-      "id": "character.borin.idle-back",
+    "borin.idle-back": {
+      "id": "borin.idle-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -856,7 +814,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.idle-back",
+          "key": "borin.idle-back",
           "frames": [
             0,
             1
@@ -884,8 +842,8 @@
         "back"
       ]
     },
-    "character.borin.idle-left": {
-      "id": "character.borin.idle-left",
+    "borin.idle-left": {
+      "id": "borin.idle-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -901,7 +859,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.idle-left",
+          "key": "borin.idle-left",
           "frames": [
             0,
             1
@@ -929,8 +887,8 @@
         "left"
       ]
     },
-    "character.borin.walk-front": {
-      "id": "character.borin.walk-front",
+    "borin.walk-front": {
+      "id": "borin.walk-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
       "dimensions": {
@@ -946,7 +904,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.walk-front",
+          "key": "borin.walk-front",
           "frames": [
             0,
             1,
@@ -976,8 +934,8 @@
         "front"
       ]
     },
-    "character.borin.walk-back": {
-      "id": "character.borin.walk-back",
+    "borin.walk-back": {
+      "id": "borin.walk-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
       "dimensions": {
@@ -993,7 +951,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.walk-back",
+          "key": "borin.walk-back",
           "frames": [
             0,
             1,
@@ -1023,8 +981,8 @@
         "back"
       ]
     },
-    "character.borin.walk-left": {
-      "id": "character.borin.walk-left",
+    "borin.walk-left": {
+      "id": "borin.walk-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
       "dimensions": {
@@ -1040,7 +998,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.walk-left",
+          "key": "borin.walk-left",
           "frames": [
             0,
             1,
@@ -1070,8 +1028,8 @@
         "left"
       ]
     },
-    "character.borin.speak-front": {
-      "id": "character.borin.speak-front",
+    "borin.speak-front": {
+      "id": "borin.speak-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -1087,7 +1045,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.speak-front",
+          "key": "borin.speak-front",
           "frames": [
             0,
             1
@@ -1115,8 +1073,8 @@
         "front"
       ]
     },
-    "character.borin.speak-back": {
-      "id": "character.borin.speak-back",
+    "borin.speak-back": {
+      "id": "borin.speak-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -1132,7 +1090,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.speak-back",
+          "key": "borin.speak-back",
           "frames": [
             0,
             1
@@ -1160,8 +1118,8 @@
         "back"
       ]
     },
-    "character.borin.speak-left": {
-      "id": "character.borin.speak-left",
+    "borin.speak-left": {
+      "id": "borin.speak-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -1177,7 +1135,7 @@
       },
       "animations": [
         {
-          "key": "character.borin.speak-left",
+          "key": "borin.speak-left",
           "frames": [
             0,
             1
@@ -1205,8 +1163,8 @@
         "left"
       ]
     },
-    "character.elder.idle-front": {
-      "id": "character.elder.idle-front",
+    "elder.idle-front": {
+      "id": "elder.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -1222,7 +1180,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.idle-front",
+          "key": "elder.idle-front",
           "frames": [
             0,
             1
@@ -1250,8 +1208,8 @@
         "front"
       ]
     },
-    "character.elder.idle-back": {
-      "id": "character.elder.idle-back",
+    "elder.idle-back": {
+      "id": "elder.idle-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -1267,7 +1225,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.idle-back",
+          "key": "elder.idle-back",
           "frames": [
             0,
             1
@@ -1295,8 +1253,8 @@
         "back"
       ]
     },
-    "character.elder.idle-left": {
-      "id": "character.elder.idle-left",
+    "elder.idle-left": {
+      "id": "elder.idle-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -1312,7 +1270,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.idle-left",
+          "key": "elder.idle-left",
           "frames": [
             0,
             1
@@ -1340,8 +1298,8 @@
         "left"
       ]
     },
-    "character.elder.walk-front": {
-      "id": "character.elder.walk-front",
+    "elder.walk-front": {
+      "id": "elder.walk-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
       "dimensions": {
@@ -1357,7 +1315,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.walk-front",
+          "key": "elder.walk-front",
           "frames": [
             0,
             1,
@@ -1387,8 +1345,8 @@
         "front"
       ]
     },
-    "character.elder.walk-back": {
-      "id": "character.elder.walk-back",
+    "elder.walk-back": {
+      "id": "elder.walk-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
       "dimensions": {
@@ -1404,7 +1362,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.walk-back",
+          "key": "elder.walk-back",
           "frames": [
             0,
             1,
@@ -1434,8 +1392,8 @@
         "back"
       ]
     },
-    "character.elder.walk-left": {
-      "id": "character.elder.walk-left",
+    "elder.walk-left": {
+      "id": "elder.walk-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
       "dimensions": {
@@ -1451,7 +1409,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.walk-left",
+          "key": "elder.walk-left",
           "frames": [
             0,
             1,
@@ -1481,8 +1439,8 @@
         "left"
       ]
     },
-    "character.elder.speak-front": {
-      "id": "character.elder.speak-front",
+    "elder.speak-front": {
+      "id": "elder.speak-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -1498,7 +1456,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.speak-front",
+          "key": "elder.speak-front",
           "frames": [
             0,
             1
@@ -1526,8 +1484,8 @@
         "front"
       ]
     },
-    "character.elder.speak-back": {
-      "id": "character.elder.speak-back",
+    "elder.speak-back": {
+      "id": "elder.speak-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -1543,7 +1501,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.speak-back",
+          "key": "elder.speak-back",
           "frames": [
             0,
             1
@@ -1571,8 +1529,8 @@
         "back"
       ]
     },
-    "character.elder.speak-left": {
-      "id": "character.elder.speak-left",
+    "elder.speak-left": {
+      "id": "elder.speak-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -1588,7 +1546,7 @@
       },
       "animations": [
         {
-          "key": "character.elder.speak-left",
+          "key": "elder.speak-left",
           "frames": [
             0,
             1
@@ -1616,8 +1574,8 @@
         "left"
       ]
     },
-    "character.innkeeper.idle-front": {
-      "id": "character.innkeeper.idle-front",
+    "innkeeper.idle-front": {
+      "id": "innkeeper.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -1633,7 +1591,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.idle-front",
+          "key": "innkeeper.idle-front",
           "frames": [
             0,
             1
@@ -1661,8 +1619,8 @@
         "front"
       ]
     },
-    "character.innkeeper.idle-back": {
-      "id": "character.innkeeper.idle-back",
+    "innkeeper.idle-back": {
+      "id": "innkeeper.idle-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -1678,7 +1636,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.idle-back",
+          "key": "innkeeper.idle-back",
           "frames": [
             0,
             1
@@ -1706,8 +1664,8 @@
         "back"
       ]
     },
-    "character.innkeeper.idle-left": {
-      "id": "character.innkeeper.idle-left",
+    "innkeeper.idle-left": {
+      "id": "innkeeper.idle-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -1723,7 +1681,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.idle-left",
+          "key": "innkeeper.idle-left",
           "frames": [
             0,
             1
@@ -1751,8 +1709,8 @@
         "left"
       ]
     },
-    "character.innkeeper.walk-front": {
-      "id": "character.innkeeper.walk-front",
+    "innkeeper.walk-front": {
+      "id": "innkeeper.walk-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
       "dimensions": {
@@ -1768,7 +1726,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.walk-front",
+          "key": "innkeeper.walk-front",
           "frames": [
             0,
             1,
@@ -1798,8 +1756,8 @@
         "front"
       ]
     },
-    "character.innkeeper.walk-back": {
-      "id": "character.innkeeper.walk-back",
+    "innkeeper.walk-back": {
+      "id": "innkeeper.walk-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
       "dimensions": {
@@ -1815,7 +1773,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.walk-back",
+          "key": "innkeeper.walk-back",
           "frames": [
             0,
             1,
@@ -1845,8 +1803,8 @@
         "back"
       ]
     },
-    "character.innkeeper.walk-left": {
-      "id": "character.innkeeper.walk-left",
+    "innkeeper.walk-left": {
+      "id": "innkeeper.walk-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
       "dimensions": {
@@ -1862,7 +1820,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.walk-left",
+          "key": "innkeeper.walk-left",
           "frames": [
             0,
             1,
@@ -1892,8 +1850,8 @@
         "left"
       ]
     },
-    "character.innkeeper.speak-front": {
-      "id": "character.innkeeper.speak-front",
+    "innkeeper.speak-front": {
+      "id": "innkeeper.speak-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -1909,7 +1867,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.speak-front",
+          "key": "innkeeper.speak-front",
           "frames": [
             0,
             1
@@ -1937,8 +1895,8 @@
         "front"
       ]
     },
-    "character.innkeeper.speak-back": {
-      "id": "character.innkeeper.speak-back",
+    "innkeeper.speak-back": {
+      "id": "innkeeper.speak-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -1954,7 +1912,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.speak-back",
+          "key": "innkeeper.speak-back",
           "frames": [
             0,
             1
@@ -1982,8 +1940,8 @@
         "back"
       ]
     },
-    "character.innkeeper.speak-left": {
-      "id": "character.innkeeper.speak-left",
+    "innkeeper.speak-left": {
+      "id": "innkeeper.speak-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -1999,7 +1957,7 @@
       },
       "animations": [
         {
-          "key": "character.innkeeper.speak-left",
+          "key": "innkeeper.speak-left",
           "frames": [
             0,
             1
@@ -2027,8 +1985,8 @@
         "left"
       ]
     },
-    "character.miner.idle-front": {
-      "id": "character.miner.idle-front",
+    "miner.idle-front": {
+      "id": "miner.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -2044,7 +2002,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.idle-front",
+          "key": "miner.idle-front",
           "frames": [
             0,
             1
@@ -2072,8 +2030,8 @@
         "front"
       ]
     },
-    "character.miner.idle-back": {
-      "id": "character.miner.idle-back",
+    "miner.idle-back": {
+      "id": "miner.idle-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -2089,7 +2047,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.idle-back",
+          "key": "miner.idle-back",
           "frames": [
             0,
             1
@@ -2117,8 +2075,8 @@
         "back"
       ]
     },
-    "character.miner.idle-left": {
-      "id": "character.miner.idle-left",
+    "miner.idle-left": {
+      "id": "miner.idle-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -2134,7 +2092,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.idle-left",
+          "key": "miner.idle-left",
           "frames": [
             0,
             1
@@ -2162,8 +2120,8 @@
         "left"
       ]
     },
-    "character.miner.walk-front": {
-      "id": "character.miner.walk-front",
+    "miner.walk-front": {
+      "id": "miner.walk-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
       "dimensions": {
@@ -2179,7 +2137,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.walk-front",
+          "key": "miner.walk-front",
           "frames": [
             0,
             1,
@@ -2209,8 +2167,8 @@
         "front"
       ]
     },
-    "character.miner.walk-back": {
-      "id": "character.miner.walk-back",
+    "miner.walk-back": {
+      "id": "miner.walk-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
       "dimensions": {
@@ -2226,7 +2184,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.walk-back",
+          "key": "miner.walk-back",
           "frames": [
             0,
             1,
@@ -2256,8 +2214,8 @@
         "back"
       ]
     },
-    "character.miner.walk-left": {
-      "id": "character.miner.walk-left",
+    "miner.walk-left": {
+      "id": "miner.walk-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
       "dimensions": {
@@ -2273,7 +2231,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.walk-left",
+          "key": "miner.walk-left",
           "frames": [
             0,
             1,
@@ -2303,8 +2261,8 @@
         "left"
       ]
     },
-    "character.miner.speak-front": {
-      "id": "character.miner.speak-front",
+    "miner.speak-front": {
+      "id": "miner.speak-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -2320,7 +2278,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.speak-front",
+          "key": "miner.speak-front",
           "frames": [
             0,
             1
@@ -2348,8 +2306,8 @@
         "front"
       ]
     },
-    "character.miner.speak-back": {
-      "id": "character.miner.speak-back",
+    "miner.speak-back": {
+      "id": "miner.speak-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -2365,7 +2323,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.speak-back",
+          "key": "miner.speak-back",
           "frames": [
             0,
             1
@@ -2393,8 +2351,8 @@
         "back"
       ]
     },
-    "character.miner.speak-left": {
-      "id": "character.miner.speak-left",
+    "miner.speak-left": {
+      "id": "miner.speak-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -2410,7 +2368,7 @@
       },
       "animations": [
         {
-          "key": "character.miner.speak-left",
+          "key": "miner.speak-left",
           "frames": [
             0,
             1
@@ -2438,8 +2396,8 @@
         "left"
       ]
     },
-    "character.guard.idle-front": {
-      "id": "character.guard.idle-front",
+    "guard.idle-front": {
+      "id": "guard.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -2455,7 +2413,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.idle-front",
+          "key": "guard.idle-front",
           "frames": [
             0,
             1
@@ -2483,8 +2441,8 @@
         "front"
       ]
     },
-    "character.guard.idle-back": {
-      "id": "character.guard.idle-back",
+    "guard.idle-back": {
+      "id": "guard.idle-back",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -2500,7 +2458,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.idle-back",
+          "key": "guard.idle-back",
           "frames": [
             0,
             1
@@ -2528,8 +2486,8 @@
         "back"
       ]
     },
-    "character.guard.idle-left": {
-      "id": "character.guard.idle-left",
+    "guard.idle-left": {
+      "id": "guard.idle-left",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -2545,7 +2503,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.idle-left",
+          "key": "guard.idle-left",
           "frames": [
             0,
             1
@@ -2573,8 +2531,8 @@
         "left"
       ]
     },
-    "character.guard.walk-front": {
-      "id": "character.guard.walk-front",
+    "guard.walk-front": {
+      "id": "guard.walk-front",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
       "dimensions": {
@@ -2590,7 +2548,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.walk-front",
+          "key": "guard.walk-front",
           "frames": [
             0,
             1,
@@ -2620,8 +2578,8 @@
         "front"
       ]
     },
-    "character.guard.walk-back": {
-      "id": "character.guard.walk-back",
+    "guard.walk-back": {
+      "id": "guard.walk-back",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
       "dimensions": {
@@ -2637,7 +2595,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.walk-back",
+          "key": "guard.walk-back",
           "frames": [
             0,
             1,
@@ -2667,8 +2625,8 @@
         "back"
       ]
     },
-    "character.guard.walk-left": {
-      "id": "character.guard.walk-left",
+    "guard.walk-left": {
+      "id": "guard.walk-left",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
       "dimensions": {
@@ -2684,7 +2642,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.walk-left",
+          "key": "guard.walk-left",
           "frames": [
             0,
             1,
@@ -2714,8 +2672,8 @@
         "left"
       ]
     },
-    "character.guard.speak-front": {
-      "id": "character.guard.speak-front",
+    "guard.speak-front": {
+      "id": "guard.speak-front",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -2731,7 +2689,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.speak-front",
+          "key": "guard.speak-front",
           "frames": [
             0,
             1
@@ -2759,8 +2717,8 @@
         "front"
       ]
     },
-    "character.guard.speak-back": {
-      "id": "character.guard.speak-back",
+    "guard.speak-back": {
+      "id": "guard.speak-back",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -2776,7 +2734,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.speak-back",
+          "key": "guard.speak-back",
           "frames": [
             0,
             1
@@ -2804,8 +2762,8 @@
         "back"
       ]
     },
-    "character.guard.speak-left": {
-      "id": "character.guard.speak-left",
+    "guard.speak-left": {
+      "id": "guard.speak-left",
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -2821,7 +2779,7 @@
       },
       "animations": [
         {
-          "key": "character.guard.speak-left",
+          "key": "guard.speak-left",
           "frames": [
             0,
             1
@@ -2849,8 +2807,8 @@
         "left"
       ]
     },
-    "character.king.idle-front": {
-      "id": "character.king.idle-front",
+    "king.idle-front": {
+      "id": "king.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -2866,7 +2824,7 @@
       },
       "animations": [
         {
-          "key": "character.king.idle-front",
+          "key": "king.idle-front",
           "frames": [
             0,
             1
@@ -2894,8 +2852,8 @@
         "front"
       ]
     },
-    "character.king.idle-back": {
-      "id": "character.king.idle-back",
+    "king.idle-back": {
+      "id": "king.idle-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -2911,7 +2869,7 @@
       },
       "animations": [
         {
-          "key": "character.king.idle-back",
+          "key": "king.idle-back",
           "frames": [
             0,
             1
@@ -2939,8 +2897,8 @@
         "back"
       ]
     },
-    "character.king.idle-left": {
-      "id": "character.king.idle-left",
+    "king.idle-left": {
+      "id": "king.idle-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -2956,7 +2914,7 @@
       },
       "animations": [
         {
-          "key": "character.king.idle-left",
+          "key": "king.idle-left",
           "frames": [
             0,
             1
@@ -2984,8 +2942,8 @@
         "left"
       ]
     },
-    "character.king.walk-front": {
-      "id": "character.king.walk-front",
+    "king.walk-front": {
+      "id": "king.walk-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
       "dimensions": {
@@ -3001,7 +2959,7 @@
       },
       "animations": [
         {
-          "key": "character.king.walk-front",
+          "key": "king.walk-front",
           "frames": [
             0,
             1,
@@ -3031,8 +2989,8 @@
         "front"
       ]
     },
-    "character.king.walk-back": {
-      "id": "character.king.walk-back",
+    "king.walk-back": {
+      "id": "king.walk-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
       "dimensions": {
@@ -3048,7 +3006,7 @@
       },
       "animations": [
         {
-          "key": "character.king.walk-back",
+          "key": "king.walk-back",
           "frames": [
             0,
             1,
@@ -3078,8 +3036,8 @@
         "back"
       ]
     },
-    "character.king.walk-left": {
-      "id": "character.king.walk-left",
+    "king.walk-left": {
+      "id": "king.walk-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
       "dimensions": {
@@ -3095,7 +3053,7 @@
       },
       "animations": [
         {
-          "key": "character.king.walk-left",
+          "key": "king.walk-left",
           "frames": [
             0,
             1,
@@ -3125,8 +3083,8 @@
         "left"
       ]
     },
-    "character.king.speak-front": {
-      "id": "character.king.speak-front",
+    "king.speak-front": {
+      "id": "king.speak-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
       "dimensions": {
@@ -3142,7 +3100,7 @@
       },
       "animations": [
         {
-          "key": "character.king.speak-front",
+          "key": "king.speak-front",
           "frames": [
             0,
             1
@@ -3170,8 +3128,8 @@
         "front"
       ]
     },
-    "character.king.speak-back": {
-      "id": "character.king.speak-back",
+    "king.speak-back": {
+      "id": "king.speak-back",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
       "dimensions": {
@@ -3187,7 +3145,7 @@
       },
       "animations": [
         {
-          "key": "character.king.speak-back",
+          "key": "king.speak-back",
           "frames": [
             0,
             1
@@ -3215,8 +3173,8 @@
         "back"
       ]
     },
-    "character.king.speak-left": {
-      "id": "character.king.speak-left",
+    "king.speak-left": {
+      "id": "king.speak-left",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named king, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
       "dimensions": {
@@ -3232,7 +3190,7 @@
       },
       "animations": [
         {
-          "key": "character.king.speak-left",
+          "key": "king.speak-left",
           "frames": [
             0,
             1
@@ -3293,6 +3251,260 @@
         "file": "art/bramblehollow-reference.png",
         "mimeType": "image/png"
       }
+    ]
+  },
+  "assetPaths": {
+    "borin.idle-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.idle-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.idle-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.walk-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.walk-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.walk-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.speak-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.speak-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.idle-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.idle-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.idle-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.walk-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.walk-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.walk-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.speak-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder.speak-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "elder": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.idle-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.idle-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.idle-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.walk-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.walk-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.walk-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.speak-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper.speak-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "innkeeper": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.idle-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.idle-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.idle-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.walk-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.walk-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.walk-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.speak-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner.speak-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "miner": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.idle-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.idle-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.idle-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.walk-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.walk-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.walk-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.speak-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.speak-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.idle-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.idle-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.idle-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.walk-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.walk-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.walk-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.speak-front": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.speak-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "king": [
+      "Graphics",
+      "Characters"
+    ],
+    "coin": [
+      "Graphics",
+      "Objects"
+    ],
+    "rope": [
+      "Graphics",
+      "Objects"
+    ],
+    "mushroom": [
+      "Graphics",
+      "Objects"
     ]
   }
 }

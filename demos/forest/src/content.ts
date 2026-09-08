@@ -31,7 +31,7 @@ definitions['background.forest-wide'] = {
 /** Real AI Assets animation children keep the same pixels available in the designer and game. */
 export const characterAssetDefinitions: Record<string, AiAssetDefinition> = {};
 for (const id of CHARACTER_IDS) {
-  const assetId = `character.${id}`;
+  const assetId = id;
   const prompt = `A small pixel-art ${id === 'guard' ? 'orc guard' : 'dwarf named ' + id}, full body, transparent background.`;
   const version = (file: string, description: string) => ({ name: 'original', file, prompt: description, createdAt: '2026-09-07T00:00:00.000Z', model: 'pointlesh-pixel-art', notes: 'Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts.' });
   const linkedAnimationAssets: NonNullable<AiAssetDefinition['linkedAnimationAssets']> = {};
@@ -49,9 +49,9 @@ for (const id of CHARACTER_IDS) {
     };
   }
   characterAssetDefinitions[assetId] = {
-    id: assetId, kind: 'spritesheet', prompt: `${prompt} Front, back, and left-profile rows; right facing mirrors the left profile.`,
-    dimensions: { width: 192, height: 96 }, frameGrid: { frameWidth: 24, frameHeight: 32, columns: 8, rows: 3, frameCount: 24 },
-    linkedAnimationAssets, activeVersion: 'original', versions: { original: version(`art/characters/${id}/sheet.png`, prompt) },
+    id: assetId, kind: 'image', prompt: `${prompt} One standing, front-facing idle pose.`,
+    dimensions: { width: 24, height: 32 },
+    linkedAnimationAssets, activeVersion: 'original', versions: { original: version(`art/characters/${id}/base.png`, prompt) },
     tags: ['forest', 'character', id]
   };
 }
@@ -60,15 +60,15 @@ Object.assign(definitions, characterAssetDefinitions);
 /** Facing slots use parent asset states so linked animation replacement stays editable. */
 export function characterAnimations(id: ForestCharacterId) {
   const activity = (state: 'idle' | 'walk' | 'speak') => ({
-    front: { assetId: `character.${id}`, key: `${state}-front`, flipX: false },
-    back: { assetId: `character.${id}`, key: `${state}-back`, flipX: false },
-    left: { assetId: `character.${id}`, key: `${state}-left`, flipX: false },
-    right: { assetId: `character.${id}`, key: `${state}-left`, flipX: true }
+    front: { assetId: id, key: `${state}-front`, flipX: false },
+    back: { assetId: id, key: `${state}-back`, flipX: false },
+    left: { assetId: id, key: `${state}-left`, flipX: false },
+    right: { assetId: id, key: `${state}-left`, flipX: true }
   });
   return { idle: activity('idle'), walk: activity('walk'), speak: activity('speak') };
 }
 for (const [id, description] of Object.entries({ coin: 'A small gleaming copper coin', rope: 'A coil of sturdy dwarven climbing rope', mushroom: 'A purple dreamcap mushroom with silver spots' })) {
-  definitions[`object.${id}`] = { id: `object.${id}`, kind: 'image', prompt: `${description}, pixel art, transparent background.`, dimensions: { width: 16, height: 16 }, activeVersion: '', versions: {} };
+  definitions[id] = { id, kind: 'image', prompt: `${description}, pixel art, transparent background.`, dimensions: { width: 16, height: 16 }, activeVersion: '', versions: {} };
 }
 for (const [id, label] of Object.entries({ borin: 'Borin', elder: 'Elder Rowan', innkeeper: 'Mara', miner: 'Orrin', chest: 'The runed chest' })) {
   definitions[`voice.${id}`] = { id: `voice.${id}`, kind: 'voice', prompt: `Warm fantasy storytelling voice for ${label}.`, activeVersion: '', versions: {} };
@@ -112,9 +112,15 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
     { id: 'open-chest', text: 'Stone remembers.', reply: 'The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.' }
   ])
 } });
-export const assets = { ...defineAiAssets(definitions), styleGuide: bramblehollowStyleGuide };
+export const assets = {
+  ...defineAiAssets(definitions), styleGuide: bramblehollowStyleGuide,
+  assetPaths: {
+    ...Object.fromEntries(Object.keys(characterAssetDefinitions).map(id => [id, ['Graphics', 'Characters']])),
+    ...Object.fromEntries(['coin', 'rope', 'mushroom'].map(id => [id, ['Graphics', 'Objects']])),
+  },
+};
 
-const base = pointleshPrefabs({ characterAssetId: 'character.borin', objectAssetId: 'object.coin' });
+const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');
 base['forest.rescue-character'] = extendPointleshPrefab(base['pointlesh.character'], {
   id: 'forest.rescue-character', name: 'Rescue character', properties: { role: 'player', courage: 10 }, behaviors: ['forest.rescue'],
@@ -176,7 +182,7 @@ export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, sce
           displayedScale: npc.displayedScale, animations: characterAnimations(npc.actorName),
         },
         behaviors: ['forest.interact'],
-        overrides: { object: { assetId: `character.${npc.actorName}`, x: npc.x, y: npc.y, scaleX: npc.displayedScale, scaleY: npc.displayedScale } },
+        overrides: { object: { assetId: npc.actorName, x: npc.x, y: npc.y, scaleX: npc.displayedScale, scaleY: npc.displayedScale } },
       });
     }),
     ...(roomPickups[roomId] ?? []).map(pickup => {
@@ -189,7 +195,7 @@ export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, sce
           approachOffsetY: (target.walkY ?? Math.max(403, Math.min(494, target.y + 25))) - pickup.y,
         },
         behaviors: ['forest.interact'],
-        overrides: { object: { assetId: `object.${pickup.pickupId}`, x: pickup.x, y: pickup.y, scaleX: 2, scaleY: 2 } },
+        overrides: { object: { assetId: pickup.pickupId, x: pickup.x, y: pickup.y, scaleX: 2, scaleY: 2 } },
       });
     }),
     ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id) && !(roomPickups[roomId] ?? []).some(pickup => pickup.pickupId === target.id)).map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
