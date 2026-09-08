@@ -32,7 +32,7 @@
   "dependencies": {},
   "peerDependencies": {
     "@scene-designer/core": "^0.2.0",
-    "@ai-game-assets/core": "^0.8.4",
+    "@ai-game-assets/core": "^0.9.0",
     "@dialog-designer/core": "^0.1.1"
   }
 }

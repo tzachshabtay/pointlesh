@@ -24,7 +24,12 @@ async function authoringFingerprint() {
   return hashes;
 }
 
-test('the real forest authoring entrypoint wires image and voice providers without external requests or writes', { timeout: 15000 }, async t => {
+for (const [label, model, expectedModel] of [
+  ['default Flare', undefined, 'gpt-image-2.5-flare'],
+  ['Sunburst override', 'gpt-image-2.5-sunburst', 'gpt-image-2.5-sunburst'],
+  ['legacy model override', 'gpt-image-1.5', 'gpt-image-1.5'],
+]) {
+test(`the forest authoring entrypoint wires ${label} and voice providers without external requests or writes`, { timeout: 15000 }, async t => {
   const directory = await mkdtemp(join(tmpdir(), 'pointlesh-provider-wiring-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
   const preload = join(directory, 'offline.mjs');
@@ -59,7 +64,7 @@ test('the real forest authoring entrypoint wires image and voice providers witho
   const child = fork(join(demo, 'dev-server.mjs'), [], {
     execArgv: ['--import', preload],
     // Deliberately do not inherit the parent environment or any real credentials.
-    env: { OPENAI_API_KEY: 'pointlesh-dummy-openai', ELEVENLABS_API_KEY: 'pointlesh-dummy-elevenlabs', OPENAI_IMAGE_MODEL: 'gpt-image-1.5', ELEVENLABS_OUTPUT_FORMAT: 'mp3_22050_32' },
+    env: { OPENAI_API_KEY: 'pointlesh-dummy-openai', ELEVENLABS_API_KEY: 'pointlesh-dummy-elevenlabs', ...(model ? { OPENAI_IMAGE_MODEL: model } : {}), ELEVENLABS_OUTPUT_FORMAT: 'mp3_22050_32' },
     stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
   });
   child.stdout.resume(); child.stderr.resume();
@@ -104,7 +109,7 @@ test('the real forest authoring entrypoint wires image and voice providers witho
   const image = await messageWhere(message => message.type === 'provider' && message.url === 'https://api.openai.com/v1/images/generations');
   assert.equal(image.method, 'POST');
   assert.equal(image.headers.authorization, 'Bearer pointlesh-dummy-openai');
-  assert.equal(image.body.model, 'gpt-image-1.5');
+  assert.equal(image.body.model, expectedModel);
   const voice = await messageWhere(message => message.type === 'provider' && message.url.startsWith('https://api.elevenlabs.io/v1/text-to-voice/design'));
   assert.equal(voice.method, 'POST');
   assert.equal(voice.headers['xi-api-key'], 'pointlesh-dummy-elevenlabs');
@@ -114,3 +119,4 @@ test('the real forest authoring entrypoint wires image and voice providers witho
   assert.equal(messages.some(message => message.type === 'unexpected-network'), false);
   assert.deepEqual(await authoringFingerprint(), before);
 });
+}

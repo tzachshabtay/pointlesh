@@ -10,7 +10,7 @@ const authoring = resolve(root, 'public/authoring');
 const server = createPointleshDevServer({
   assets: {
     manifestPath: resolve(authoring, 'assets.json'), assetsDir: resolve(root, 'public/art'), publicPathPrefix: 'art', port: 4287,
-    provider: createOpenAiImageProvider({ model: process.env.OPENAI_IMAGE_MODEL ?? 'gpt-image-2' }),
+    provider: createOpenAiImageProvider({ model: process.env.OPENAI_IMAGE_MODEL }),
     audioProvider: createElevenLabsAudioProvider({ outputFormat: process.env.ELEVENLABS_OUTPUT_FORMAT }),
   },
   scenes: { manifestPath: resolve(authoring, 'scenes.json'), port: 4288 },
