@@ -40,7 +40,7 @@ npm run dev:server
 
 The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Open [the designer directly](http://127.0.0.1:5186/?designer=1) to enter the village editor immediately. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
 
-The authoring server loads `demos/forest/.env` and connects AI Assets' OpenAI image and ElevenLabs audio providers. Image generation defaults to GPT Image 2.5 Flare; the asset designer also offers GPT Image 2.5 Sunburst. Set `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` there, then restart `npm run dev:server`. Existing shell variables take precedence. `OPENAI_IMAGE_MODEL` and `ELEVENLABS_OUTPUT_FORMAT` optionally override provider defaults; an image model selected in the designer takes precedence over the server default. This local `.env` file is ignored by Git and stays outside the public assets; the browser receives no API keys.
+The authoring server loads `demos/forest/.env` and connects AI Assets' OpenAI image and ElevenLabs audio providers. Image generation defaults to GPT Image 2.5 Sunburst; the asset designer also offers GPT Image 2.5 Flare. Set `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` there, then restart `npm run dev:server`. Existing shell variables take precedence. `OPENAI_IMAGE_MODEL` and `ELEVENLABS_OUTPUT_FORMAT` optionally override provider defaults; an image model selected in the designer takes precedence over the server default. This local `.env` file is ignored by Git and stays outside the public assets; the browser receives no API keys.
 
 The demo loads its committed documents from `demos/forest/public/authoring/`. Promotion writes those JSON files, so edits survive a refresh and are included in the next build. `src/content.ts` defines the initial seed; normal builds never regenerate or overwrite promoted documents. To deliberately reset them, run `node --import tsx demos/forest/scripts/seed-authoring.ts --reset` from the repository root.
 
@@ -123,26 +123,26 @@ npm pack --workspace @pointlesh/core --workspace @pointlesh/designer \
   --workspace @pointlesh/dev --workspace @pointlesh/phaser
 ```
 
-The current integration uses Scene Designer `^0.2.0`, AI Assets `^0.9.0`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.9.0 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
+The current integration uses Scene Designer `^0.2.0`, AI Assets `^0.10.0`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.10.0 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
 
 ```json
 {
   "overrides": {
-    "@scene-designer/core": { "@ai-game-assets/core": "^0.9.0" },
-    "@scene-designer/designer": { "@ai-game-assets/core": "^0.9.0" },
+    "@scene-designer/core": { "@ai-game-assets/core": "^0.10.0" },
+    "@scene-designer/designer": { "@ai-game-assets/core": "^0.10.0" },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.9.0",
-      "@ai-game-assets/phaser": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0",
+      "@ai-game-assets/phaser": "^0.10.0"
     },
-    "@dialog-designer/core": { "@ai-game-assets/core": "^0.9.0" },
-    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.9.0" },
+    "@dialog-designer/core": { "@ai-game-assets/core": "^0.10.0" },
+    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.10.0" },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.9.0",
-      "@ai-game-assets/dev": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0",
+      "@ai-game-assets/dev": "^0.10.0"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.9.0",
-      "@ai-game-assets/phaser": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0",
+      "@ai-game-assets/phaser": "^0.10.0"
     }
   }
 }

@@ -25,8 +25,8 @@ async function authoringFingerprint() {
 }
 
 for (const [label, model, expectedModel] of [
-  ['default Flare', undefined, 'gpt-image-2.5-flare'],
-  ['Sunburst override', 'gpt-image-2.5-sunburst', 'gpt-image-2.5-sunburst'],
+  ['default Sunburst', undefined, 'gpt-image-2.5-sunburst'],
+  ['Flare override', 'gpt-image-2.5-flare', 'gpt-image-2.5-flare'],
   ['legacy model override', 'gpt-image-1.5', 'gpt-image-1.5'],
 ]) {
 test(`the forest authoring entrypoint wires ${label} and voice providers without external requests or writes`, { timeout: 15000 }, async t => {

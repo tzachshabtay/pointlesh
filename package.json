@@ -27,28 +27,28 @@
   },
   "overrides": {
     "@scene-designer/core": {
-      "@ai-game-assets/core": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0"
     },
     "@scene-designer/designer": {
-      "@ai-game-assets/core": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0"
     },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.9.0",
-      "@ai-game-assets/phaser": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0",
+      "@ai-game-assets/phaser": "^0.10.0"
     },
     "@dialog-designer/core": {
-      "@ai-game-assets/core": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0"
     },
     "@dialog-designer/designer": {
-      "@ai-game-assets/core": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0"
     },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.9.0",
-      "@ai-game-assets/dev": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0",
+      "@ai-game-assets/dev": "^0.10.0"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.9.0",
-      "@ai-game-assets/phaser": "^0.9.0"
+      "@ai-game-assets/core": "^0.10.0",
+      "@ai-game-assets/phaser": "^0.10.0"
     }
   }
 }

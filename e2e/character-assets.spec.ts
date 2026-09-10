@@ -92,11 +92,11 @@ test('native Assets groups short names and exposes a static base image plus edit
   await expect(current.locator('.ai-game-assets-designer__animation-stage')).toBeHidden();
   await expect(current.getByRole('button', { name: 'Touch up...', exact: true })).toBeVisible();
   const imageModel = page.getByRole('combobox', { name: 'Image model', exact: true });
-  await expect(imageModel).toHaveValue('gpt-image-2.5-flare');
-  await expect(imageModel.locator('option')).toHaveText(['GPT Image 2.5 Flare', 'GPT Image 2.5 Sunburst']);
-  await imageModel.selectOption('gpt-image-2.5-sunburst');
   await expect(imageModel).toHaveValue('gpt-image-2.5-sunburst');
+  await expect(imageModel.locator('option')).toHaveText(['GPT Image 2.5 Sunburst', 'GPT Image 2.5 Flare']);
   await imageModel.selectOption('gpt-image-2.5-flare');
+  await expect(imageModel).toHaveValue('gpt-image-2.5-flare');
+  await imageModel.selectOption('gpt-image-2.5-sunburst');
   for (const activity of ['idle', 'walk', 'speak']) {
     for (const direction of ['front', 'back', 'left']) {
       await expect(animation.locator(`option[value="borin.${activity}-${direction}"]`)).toHaveCount(1);
