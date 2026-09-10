@@ -85,7 +85,7 @@ class ForestAdventure extends Phaser.Scene {
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
       animations: () => readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
-      areas: () => this.resolved().areas, camera: () => this.editing || this.toolsOpen() ? undefined : this.cameras.main,
+      areas: () => this.resolved().areas, camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.markers = this.add.graphics().setDepth(2000);
@@ -150,8 +150,9 @@ class ForestAdventure extends Phaser.Scene {
   }
   playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
   walkables() { return walkablePolygons(this.resolved()); }
-  toolsOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"], [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return this.toolsOpen() || this.editing || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  // Asset authoring previews changes in the running game; only world editors suspend play.
+  worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
+  blocked() { return this.worldEditorOpen() || this.editing || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -220,7 +221,7 @@ class ForestAdventure extends Phaser.Scene {
     for (const star of this.stars) star.image.destroy(); this.stars = [];
     const size = this.roomSize(room);
     if (['forest', 'village', 'camp'].includes(room)) for (let i = 0; i < Math.round(17 * size.width / 960); i++) this.stars.push({ image: this.add.circle(70 + (i * 137) % (size.width - 125), 65 + (i * 61) % (size.height - 170), i % 3 === 0 ? 1.8 : 1, 0xebd98a, 0.45).setDepth(1000), speed: .5 + i % 4 * .13, start: i * 27 });
-    if (this.editing || this.toolsOpen()) this.cameras.main.setZoom(1);
+    if (this.editing || this.worldEditorOpen()) this.cameras.main.setZoom(1);
     this.refreshDesign(); this.render();
     this.roomCamera.snap();
     if (this.sceneDesigner && this.sceneDesigner.designer.getSceneId() !== room) this.sceneDesigner.designer.select({ type: 'scene', sceneId: room });
@@ -234,7 +235,7 @@ class ForestAdventure extends Phaser.Scene {
       this.drawRoomTexture(this.story.roomId);
       this.background.setTexture(`room.${this.story.roomId}`);
     }
-    if (this.editing || this.toolsOpen()) { this.epoch++; this.character.stop(); }
+    if (this.editing || this.worldEditorOpen()) { this.epoch++; this.character.stop(); }
     for (const overlay of this.overlays) overlay.destroy(); this.overlays = [];
     for (const area of this.resolved().areas.filter(area => pointleshAreaCapabilities(area).walkBehind && area.enabled)) {
       const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0);
@@ -246,7 +247,7 @@ class ForestAdventure extends Phaser.Scene {
       this.character.config.movementLinkedToAnimation = actor.properties.movementLinkedToAnimation !== false;
       this.character.config.directions = actor.properties.directions === 8 ? 8 : 4;
       if (this.editing) this.character.place(actor.position, this.authoredFacing(actor));
-      else if (this.toolsOpen()) this.character.face(this.authoredFacing(actor));
+      else if (this.worldEditorOpen()) this.character.face(this.authoredFacing(actor));
       this.actor.setVisible(actor.enabled);
     }
     this.syncEntities(); this.binding.sync(); this.renderNearby();
@@ -491,13 +492,13 @@ class ForestAdventure extends Phaser.Scene {
   }
   update(_time: number, delta: number) {
     if (!this.binding) return;
-    const cameraEditing = this.toolsOpen() || this.editing;
+    const cameraEditing = this.worldEditorOpen() || this.editing;
     this.roomCamera.setEnabled(!cameraEditing);
     if (this.cameraWasEditing && !cameraEditing) { this.binding.sync(); this.roomCamera.snap(); }
     this.cameraWasEditing = cameraEditing;
     if (this.blocked() && this.movementKeys.size) this.clearMovementKeys();
     if (this.cinematic) {
-      const designerOpen = this.toolsOpen() || this.editing;
+      const designerOpen = this.worldEditorOpen() || this.editing;
       this.cinematic.setVisible(!designerOpen);
       el('cutscene').hidden = designerOpen;
       if (!modalOpen && !designerOpen) {
@@ -511,7 +512,7 @@ class ForestAdventure extends Phaser.Scene {
         else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
       }
     }
-    const paused = modalOpen || this.toolsOpen() || this.editing || this.story.introStep < intro.length || this.story.endingStep >= 0;
+    const paused = modalOpen || this.worldEditorOpen() || this.editing || this.story.introStep < intro.length || this.story.endingStep >= 0;
     if (!paused) {
       this.binding.update(Math.min(delta, 100));
       this.roomCamera.update(Math.min(delta, 100));
