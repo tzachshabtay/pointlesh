@@ -117,7 +117,23 @@ foreground.sync(room.areas.find(area => area.id === 'old-oak')!);
 
 The overlay masks a duplicate background to the authored polygon and draws it at the area's baseline. It uses Phaser 4's mask filter in WebGL and a geometry mask in Canvas. The WebGL filter renders in the current camera's coordinate system, including its origin and transform order, so the foreground and background sample identical pixels during fractional zoom and scrolling. Actors with smaller foot Y appear behind the masked scenery, and actors with larger foot Y appear in front. Use identical transforms on the base and duplicate backgrounds. Use the same `depthOffset` on actors and overlays. `sync()` respects the area's independent walk-behind switch. `destroy()` removes the mask, its graphics and the supplied image; pass `destroyImage: false` to retain the image and restore its filter focus settings. Scene shutdown cleans up automatically.
 
-For continuous pixel-art zoom, use `antialias: true`, `antialiasGL: false`, and `roundPixels: false` in the Phaser game config, then call `backgroundTexture.setSmoothPixelArt(true)`. This smooths texel boundaries without making rows and columns jump during fractional zoom. Keep canvas CSS `image-rendering: auto` when the page resizes it. Avoid the global `smoothPixelArt` flag for masked duplicate backgrounds: it also forces multisampled canvas edges, while Phaser's filter framebuffers are not multisampled, which can make the room's outer edge composite differently.
+Games choose their filtering with `installPhaserTextureScaling` in `create()`:
+
+```ts
+installPhaserTextureScaling(scene, {
+  default: "nearest",
+  canvas: "pixelated",
+  resolve: texture => texture.key.startsWith("room.") ? "smooth-pixel-art" : undefined,
+});
+```
+
+`nearest` preserves source colors and hard pixel edges; `linear` blends adjacent texels and suits painted/high-resolution art. `smooth-pixel-art` preserves texel interiors while smoothing boundaries during fractional zoom. The setting covers existing textures and future loads, including AI previews, promoted images, animation sheets, objects, and cutscenes. Texture settings are shared by every sprite/scene using that texture. `setTextureScaling(texture, mode)` also supports individual changes. The installation removes its load listener on scene shutdown or `destroy()`; texture choices remain applied.
+
+Browser canvas scaling is independent: choose `canvas: "pixelated"` (pixel-art appearance), `"crisp-edges"` (avoid blending), or `"auto"` (browser smoothing). Omit it to keep the game's CSS. Nearest sampling cannot remove blur already present in source art; noninteger scaling can produce uneven pixel widths. Integer display scaling is the strictest pixel-perfect option, but is a different choice from this demo's continuous perspective zoom.
+
+The forest demo uses nearest sampling for sprites and smooth pixel-art sampling for room textures. Keep `antialias: true`, `antialiasGL: false`, and `roundPixels: false` for its continuous camera zoom and aligned walk-behind overlays. Avoid the global `smoothPixelArt` flag for masked duplicate backgrounds: it also forces multisampled canvas edges, while Phaser's filter framebuffers are not multisampled, which can make the room's outer edge composite differently.
+
+References: [Phaser texture filters](https://docs.phaser.io/api-documentation/4.0.0/namespace/textures-filtermode), [Phaser 4 rendering](https://phaser.io/tutorials/phaser-4-rendering-concepts), and [MDN canvas image rendering](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/image-rendering).
 
 ## Native scene designer plus adventure inspector
 

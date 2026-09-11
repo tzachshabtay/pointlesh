@@ -3,6 +3,7 @@ export * from "./room-camera.js";
 export * from "./effects.js";
 export * from "./designer.js";
 export * from "./assets.js";
+export * from "./texture-scaling.js";
 export * from "./dialog.js";
 export * from "./interaction.js";
 export * from "./area-baseline.js";

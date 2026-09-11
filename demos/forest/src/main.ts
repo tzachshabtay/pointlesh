@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureCharacter, PhaserRoomCamera, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureCharacter, PhaserRoomCamera, installPhaserTextureScaling, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest } from '@ai-game-assets/core';
@@ -76,6 +76,11 @@ class ForestAdventure extends Phaser.Scene {
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
     for (const room of roomIds) this.drawRoomTexture(room);
     createPixelActors(this);
+    installPhaserTextureScaling(this, {
+      default: 'nearest', canvas: 'pixelated',
+      // Continuous room zoom needs smooth texel boundaries; actors retain crisp pixels.
+      resolve: texture => texture.key.startsWith('room.') ? 'smooth-pixel-art' : undefined,
+    });
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);

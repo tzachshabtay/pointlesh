@@ -36,8 +36,8 @@ test('small camera zoom steps move the background smoothly without high-contrast
     // A <0.1-pixel motion used to switch thousands of pixels by up to 247/255.
     expect(change.abruptPixels).toBe(0);
   }
-  // The responsive page must not introduce a second nearest-neighbor resample.
-  await expect(page.locator('#game canvas')).toHaveCSS('image-rendering', 'auto');
+  // The demo deliberately preserves pixel edges when the browser resizes its canvas.
+  await expect(page.locator('#game canvas')).toHaveCSS('image-rendering', 'pixelated');
 });
 
 test('masked room foreground matches the background exactly through fractional camera transforms', async ({ page }) => {
