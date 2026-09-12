@@ -155,7 +155,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
   walkables() { return walkablePolygons(this.resolved()); }
-  // Asset authoring previews changes in the running game; only world editors suspend play.
+  // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
   blocked() { return this.worldEditorOpen() || this.editing || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
@@ -334,9 +334,8 @@ class ForestAdventure extends Phaser.Scene {
     this.sceneDesigner = installPhaserPointleshDesigner({
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200,
-      gameOverlays: Array.from(document.querySelectorAll<HTMLElement>('.stage-wrap > :not(#game), #modal-backdrop, #toast')),
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),
-      onOpenChange: open => { this.editing = open; this.clearMovementKeys(); this.character.stop(); this.epoch++; },
+      onOpenChange: open => { this.editing = open; },
       onSceneChange: sceneId => { if (roomIds.includes(sceneId as RoomId) && this.story.roomId !== sceneId) this.changeRoom(sceneId as RoomId); },
       onManifestChange: manifest => { authoredScenes = manifest; this.refreshDesign(); }
     });
@@ -504,10 +503,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cameraWasEditing = cameraEditing;
     if (this.blocked() && this.movementKeys.size) this.clearMovementKeys();
     if (this.cinematic) {
-      const designerOpen = this.worldEditorOpen() || this.editing;
-      this.cinematic.setVisible(!designerOpen);
-      el('cutscene').hidden = designerOpen;
-      if (!modalOpen && !designerOpen) {
+      if (!modalOpen) {
         const isEnding = this.story.endingStep >= 0;
         const runner = isEnding ? this.endingRunner : this.introRunner;
         const previousStep = runner.snapshot().stepIndex;
@@ -518,7 +514,7 @@ class ForestAdventure extends Phaser.Scene {
         else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
       }
     }
-    const paused = modalOpen || this.worldEditorOpen() || this.editing || this.story.introStep < intro.length || this.story.endingStep >= 0;
+    const paused = modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0;
     if (!paused) {
       this.binding.update(Math.min(delta, 100));
       this.roomCamera.update(Math.min(delta, 100));

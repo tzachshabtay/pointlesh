@@ -153,9 +153,10 @@ editor.inspector.open();
 
 This reuses scene-designer's native canvas handles, curved polygons, prefab editing and minimap. The adventure inspector adds Pointlesh properties, custom JSON properties, behavior IDs, undo/redo and manifest export. Selecting an area instance or definition in the native Scenes or Prefabs panel also shows its **Area capabilities**, including the **Walk-behind** switch, without opening another panel.
 
-Pass game-only HTML HUD, dialog, cutscene and modal elements in `gameOverlays`. The adapter hides them and makes them inert while Scenes or Prefabs is open, keeping them from covering canvas areas, vertices and baselines or intercepting editor input. Their layout, visibility styles and previous inert state are restored on close or destruction. Asset editing keeps gameplay overlays available. Do not include the canvas or designer panels in these roots.
 
 When walk-behind is enabled, a labeled horizontal baseline appears across the scene. Drag the line or its label vertically to change occlusion immediately; one **Undo area edit** restores the starting value. The number field, exported manifest, and runtime share the same baseline. Disabling walk-behind hides the line and turns off the effect.
+
+The adapter renders area shapes, selection boxes, vertices and baselines in a transparent HTML canvas above game UI and below floating designer panels. Game controls stay visible; transparent pixels pass through clicks, while painted editor pixels retain editing priority. This layer shares the game camera and runs no simulation. Installing or opening the editor never pauses the game. The host can reserve canvas gestures and camera navigation for editing while continuing character animations and other simulation.
 
 Vertices outside the visible canvas or behind designer panels use the same small vertex handles as Scene Designer, capped to the nearest available edge. Selecting or clicking a handle leaves the shape intact; dragging brings that vertex to the visible handle position. Native curves and vertex IDs are preserved, and the native designer's undo restores the whole drag. Handles account for camera transforms, page scrolling, resizing, and adjacent handles.
 

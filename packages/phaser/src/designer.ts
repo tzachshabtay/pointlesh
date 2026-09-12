@@ -3,54 +3,27 @@ import type { PointleshResolvedScene } from "@pointlesh/core";
 import { installPhaserSceneDesigner, type PhaserSceneDesignerOptions, type InstalledPhaserSceneDesigner } from "@scene-designer/phaser";
 import { installPhaserAreaBaseline } from "./area-baseline.js";
 import { installPhaserAreaEdgeHandles } from "./area-edge-handles.js";
+import Phaser from 'phaser';
+import { installPhaserDesignerLayer } from './designer-layer.js';
 
 export type PhaserPointleshDesignerOptions = PhaserSceneDesignerOptions & {
   inspectorMount?: HTMLElement;
   onPreview?: (scene: PointleshResolvedScene) => void;
-  /** Game-only HTML overlays to hide and make inert during scene/prefab canvas editing. */
-  gameOverlays?: readonly HTMLElement[];
 };
 export type InstalledPhaserPointleshDesigner = InstalledPhaserSceneDesigner & {
   inspector: PointleshInspector;
   areaBaseline: ReturnType<typeof installPhaserAreaBaseline>;
   areaEdgeHandles: ReturnType<typeof installPhaserAreaEdgeHandles>;
+  layer: ReturnType<typeof installPhaserDesignerLayer>;
 };
 
 /** Native draggable vertices, prefab editing and minimap, plus adventure properties. */
 export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerOptions): InstalledPhaserPointleshDesigner {
   let inspector: PointleshInspector | undefined;
   let nativeEditHistory = true;
-  // Canvas handles cannot paint above HTML siblings, regardless of Phaser depth.
-  // Suspend the host's game overlays while editing, preserving their layout and
-  // hidden state so gameplay can resume exactly where it left off.
-  const suspendedOverlays = new Map<HTMLElement, { visibility: string; priority: string; inert: boolean }>();
-  const syncGameOverlays = (open: boolean) => {
-    if (open) {
-      for (const element of options.gameOverlays ?? []) {
-        if (suspendedOverlays.has(element)) continue;
-        suspendedOverlays.set(element, {
-          visibility: element.style.getPropertyValue('visibility'),
-          priority: element.style.getPropertyPriority('visibility'),
-          inert: element.inert,
-        });
-        element.style.setProperty('visibility', 'hidden', 'important');
-        element.inert = true;
-      }
-    } else {
-      for (const [element, previous] of suspendedOverlays) {
-        if (previous.visibility) element.style.setProperty('visibility', previous.visibility, previous.priority);
-        else element.style.removeProperty('visibility');
-        element.inert = previous.inert;
-      }
-      suspendedOverlays.clear();
-    }
-  };
+  const previousObjects = new Set(options.scene.children.list);
   const native = installPhaserSceneDesigner({
     ...options,
-    onOpenChange(open) {
-      syncGameOverlays(open);
-      options.onOpenChange?.(open);
-    },
     onManifestChange(manifest) {
       options.onManifestChange?.(manifest);
       inspector?.sync({ history: nativeEditHistory });
@@ -60,7 +33,6 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
       inspector?.sync();
     },
   });
-  syncGameOverlays(native.designer.isOpen());
   inspector = installPointleshInspector({
     designer: native.designer,
     aiAssets: options.aiAssets,
@@ -82,6 +54,9 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   native.designer.updateAreaVertex = groupedVertex;
   const areaBaseline = installPhaserAreaBaseline({ scene: options.scene, designer: native.designer, inspector, depth: (options.areaDepth ?? 10_000) + 1 });
   const areaEdgeHandles = installPhaserAreaEdgeHandles({ scene: options.scene, designer: native.designer });
+  const drawings = options.scene.children.list.filter(object => !previousObjects.has(object)
+    && (object instanceof Phaser.GameObjects.Graphics || object.name === 'pointlesh-area-baseline-label'));
+  const layer = installPhaserDesignerLayer(options.scene, drawings, () => native.designer.isOpen());
   // The upstream Phaser adapter owns its selection callback. Observe only its tiny
   // selection value, and leave its canvas handles and input lifecycle intact.
   let selection = JSON.stringify(native.designer.getSelection());
@@ -95,15 +70,15 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
     destroyed = true;
     options.scene.events.off("update", syncSelection);
     options.scene.events.off("shutdown", destroy);
+    layer.destroy();
     areaBaseline.destroy();
     areaEdgeHandles.destroy();
     if (native.designer.updateArea === groupedArea) native.designer.updateArea = updateArea;
     if (native.designer.updateAreaVertex === groupedVertex) native.designer.updateAreaVertex = updateAreaVertex;
     inspector?.destroy();
     native.destroy();
-    syncGameOverlays(false);
   };
   options.scene.events.on("update", syncSelection);
   options.scene.events.once("shutdown", destroy);
-  return { ...native, inspector, areaBaseline, areaEdgeHandles, destroy };
+  return { ...native, inspector, areaBaseline, areaEdgeHandles, layer, destroy };
 }
