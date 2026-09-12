@@ -1,4 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+const catalog = JSON.parse(readFileSync(new URL('../demos/forest/public/authoring/assets.json', import.meta.url), 'utf8'));
+const currentFile = (id: string) => { const asset = catalog.assets[id]; return asset.versions[asset.activeVersion].file; };
 
 async function actor(page: Page) {
   return page.evaluate(() => {
@@ -85,14 +89,14 @@ test('native Assets groups short names and exposes a static base image plus edit
   await expect(animation.locator('option:checked')).toHaveText('Base image');
   const current = page.locator('.ai-game-assets-designer__current');
   const currentImage = current.locator('.ai-game-assets-designer__current-image');
-  await expect(currentImage).toHaveAttribute('src', /characters\/borin\/base\.png$/);
-  await expect.poll(() => currentImage.evaluate(image => ({ width: (image as HTMLImageElement).naturalWidth, height: (image as HTMLImageElement).naturalHeight }))).toEqual({ width: 24, height: 32 });
+  await expect(currentImage).toHaveAttribute('src', new URL(currentFile('borin'), page.url()).href);
+  await expect.poll(() => currentImage.evaluate(image => ({ width: (image as HTMLImageElement).naturalWidth, height: (image as HTMLImageElement).naturalHeight }))).toEqual(catalog.assets.borin.dimensions);
   await expect(page.locator('.ai-game-assets-designer__panel').getByLabel('Frames', { exact: true })).toBeHidden();
   await expect(current.getByRole('button', { name: 'Edit...', exact: true })).toBeHidden();
   await expect(current.locator('.ai-game-assets-designer__animation-stage')).toBeHidden();
   await expect(current.getByRole('button', { name: 'Touch up...', exact: true })).toBeVisible();
   const imageModel = page.getByRole('combobox', { name: 'Image model', exact: true });
-  await expect(imageModel).toHaveValue('gpt-image-2.5-sunburst');
+  await expect(imageModel).toHaveValue(catalog.assets.borin.settings?.model ?? 'gpt-image-2.5-sunburst');
   await expect(imageModel.locator('option')).toHaveText(['GPT Image 2.5 Sunburst', 'GPT Image 2.5 Flare']);
   await imageModel.selectOption('gpt-image-2.5-flare');
   await expect(imageModel).toHaveValue('gpt-image-2.5-flare');
@@ -106,9 +110,9 @@ test('native Assets groups short names and exposes a static base image plus edit
   const modal = page.getByRole('dialog', { name: /Edit Borin .* animation/ });
   const frames = modal.locator('.ai-game-assets-designer__frame-strip button');
   await animation.selectOption('borin.walk-back');
-  await expect(currentImage).toHaveAttribute('src', /characters\/borin\/walk-back\.png$/);
+  await expect(currentImage).toHaveAttribute('src', new URL(currentFile('borin.walk-back'), page.url()).href);
   await edit.click();
-  await expect(frames).toHaveCount(4);
+  await expect(frames).toHaveCount(catalog.assets['borin.walk-back'].animations[0].frames.length);
   await expect(modal.getByLabel('Delay ms', { exact: true })).toHaveValue('100');
   const previewFrame = modal.locator('.ai-game-assets-designer__modal-stage > .ai-game-assets-designer__frame-image');
   const firstFrame = await previewFrame.evaluate(element => (element as HTMLElement).style.backgroundPosition);
@@ -117,7 +121,7 @@ test('native Assets groups short names and exposes a static base image plus edit
   await modal.getByRole('button', { name: 'Cancel', exact: true }).click();
   await animation.selectOption('borin.speak-front');
   await edit.click();
-  await expect(frames).toHaveCount(2);
+  await expect(frames).toHaveCount(catalog.assets['borin.speak-front'].animations[0].frames.length);
   await expect(modal.getByLabel('Delay ms', { exact: true })).toHaveValue('167');
   await modal.getByRole('button', { name: 'Cancel', exact: true }).click();
   await animation.selectOption('borin.idle-front');

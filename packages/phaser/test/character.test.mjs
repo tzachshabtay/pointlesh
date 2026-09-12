@@ -108,3 +108,35 @@ test('a live camera getter leaves editor zoom untouched during animation and des
   editing = true; camera.zoom = .6; f.view.refreshAnimation(); assert.equal(camera.zoom, .6);
   f.view.destroy();
 });
+
+test('different animation pixel resolutions preserve base-image size and authored frame transforms', () => {
+  const f = fixture({ baseScale: { x: 2, y: 3 } });
+  delete f.manifest.assets.parent.frameGrid;
+  f.manifest.assets.parent.dimensions = { width: 48, height: 64 };
+  // A high-resolution idle frame, followed by an older low-resolution speech clip.
+  f.sprite.width = 48; f.sprite.height = 64; f.view.sync();
+  const idleSize = [f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY];
+  f.sprite.width = 24; f.sprite.height = 32;
+  f.controller.say('Still the same character', 1000); f.view.sync();
+  assert.deepEqual([f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY], idleSize);
+  assert.deepEqual(idleSize, [96, 192]);
+
+  f.manifest.assets.speak.animations[0].frameTimings = [{ scaleX: .5, scaleY: .75, offsetX: 6, offsetY: -8 }];
+  f.view.refreshAnimation();
+  assert.deepEqual([f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY], [48, 144]);
+  assert.equal(f.sprite.originX, .5 - 6 / 96);
+  assert.equal(f.sprite.originY, 1 + 8 / 192);
+  // Promoting a differently sized base image updates the logical size on sync.
+  f.manifest.assets.parent.dimensions = { width: 60, height: 80 }; f.view.sync();
+  assert.deepEqual([f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY], [60, 180]);
+  f.view.destroy();
+});
+
+test('an explicit logical size overrides asset resolution and remains live', () => {
+  let size = { width: 20, height: 30 };
+  const f = fixture({ baseSize: () => size, baseScale: 2 });
+  assert.deepEqual([f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY], [40, 60]);
+  size = { width: 40, height: 50 }; f.view.sync();
+  assert.deepEqual([f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY], [80, 100]);
+  f.view.destroy();
+});

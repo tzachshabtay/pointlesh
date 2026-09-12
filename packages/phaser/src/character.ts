@@ -1,6 +1,7 @@
 import { applyAiAnimationFrameTransform, createAiAnimations, type AiAssetRuntime, type AiAssetAnimationPlayback, type AiAssetTextureBinding } from "@ai-game-assets/phaser";
 import { resolveCharacterAnimation, type CharacterAnimations, type CharacterAnimationAssignment, type CharacterController, type CharacterSnapshot, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
 import type Phaser from "phaser";
+import { resolveTargetAssetId } from '@ai-game-assets/core';
 import { evaluatePointleshAreaEffects, type PointleshAreaEffects } from "./effects.js";
 
 // Multiple actors may share an authored clip. Rebuild a changed clip only once,
@@ -13,6 +14,8 @@ export type PhaserAdventureCharacterOptions = {
   /** Only the player usually controls the camera; a getter can suspend area zoom while editing. */
   camera?: Phaser.Cameras.Scene2D.Camera | (() => Phaser.Cameras.Scene2D.Camera | undefined);
   baseScale?: number | Point | (() => number | Point);
+  /** Logical frame size before scale/perspective. Defaults to the base asset's dimensions. */
+  baseSize?: { width: number; height: number } | (() => { width: number; height: number });
   defaultScale?: number;
   defaultZoom?: number;
   depthOffset?: number;
@@ -115,6 +118,8 @@ export class PhaserAdventureCharacter {
     this.prepareAnimation();
     const state = this.controller.state;
     const baseScale = this.scale();
+    const baseSize = this.size();
+    const displaySize = { width: baseSize.width * baseScale.x * effects.scale, height: baseSize.height * baseScale.y * effects.scale };
     const origin = this.origin();
     const angle = (typeof this.options.angle === 'function' ? this.options.angle() : this.options.angle) ?? this.initialAngle;
     this.controller.setScale(effects.scale);
@@ -133,11 +138,14 @@ export class PhaserAdventureCharacter {
       // Compose generated offsets/scales with live perspective. A free-running
       // animation listener would otherwise overwrite the area's visual scale.
       applyAiAnimationFrameTransform(this.sprite, this.playback?.animation, slot,
-        { width: this.sprite.width * baseScale.x * effects.scale, height: this.sprite.height * baseScale.y * effects.scale },
+        displaySize,
         { originX: origin.x, originY: origin.y });
       this.sprite.setRotation((angle + (this.playback?.animation?.frameTimings?.[slot]?.rotation ?? 0)) * Math.PI / 180);
     }
-    else if (this.options.frame) this.sprite.setFrame(this.options.frame(state));
+    else {
+      if (this.options.frame) this.sprite.setFrame(this.options.frame(state));
+      this.sprite.setDisplaySize(displaySize.width, displaySize.height);
+    }
     const camera = typeof this.options.camera === 'function' ? this.options.camera() : this.options.camera;
     if (camera) {
       const amount = deltaMs === undefined || effects.zoomSmoothing === 0 ? 1 : 1 - Math.exp(-effects.zoomSmoothing * deltaMs / 1000);
@@ -149,6 +157,20 @@ export class PhaserAdventureCharacter {
   private scale(): Point {
     const value = typeof this.options.baseScale === 'function' ? this.options.baseScale() : this.options.baseScale;
     return typeof value === 'number' ? { x: value, y: value } : value ?? this.initialScale;
+  }
+
+  private size(): { width: number; height: number } {
+    const explicit = typeof this.options.baseSize === 'function' ? this.options.baseSize() : this.options.baseSize;
+    if (explicit) return explicit;
+    const runtime = this.options.aiRuntime;
+    const assetId = this.options.assetId ?? this.selectedAssignment?.assetId;
+    const asset = runtime && assetId ? runtime.manifest.assets[resolveTargetAssetId(runtime.manifest, assetId, runtime.targetId)] : undefined;
+    // Match Scene Designer's object bounds. Linked clips and live previews may
+    // have different pixel resolutions, but share this authored logical size.
+    return {
+      width: asset?.frameGrid?.frameWidth ?? asset?.dimensions?.width ?? this.sprite.width,
+      height: asset?.frameGrid?.frameHeight ?? asset?.dimensions?.height ?? this.sprite.height,
+    };
   }
 
   private origin(): Point { return (typeof this.options.origin === 'function' ? this.options.origin() : this.options.origin) ?? { x: 0.5, y: 1 }; }

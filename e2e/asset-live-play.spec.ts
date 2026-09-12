@@ -1,4 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+const catalog = JSON.parse(readFileSync(new URL('../demos/forest/public/authoring/assets.json', import.meta.url), 'utf8'));
+const currentFile = (id: string) => { const asset = catalog.assets[id]; return asset.versions[asset.activeVersion].file; };
 
 async function openAssets(page: Page) {
   // Authoring services are optional for viewing existing files and playing.
@@ -24,7 +28,7 @@ test('Current loads character images and animation sheets from the game server w
   for (const name of ['Elder', 'Borin', 'Guard']) {
     await page.getByRole('button', { name, exact: true }).click();
     await expect(current).toBeVisible();
-    await expect(current).toHaveAttribute('src', new RegExp(`/characters/${name.toLowerCase()}/base\\.png$`));
+    await expect(current).toHaveAttribute('src', new URL(currentFile(name.toLowerCase()), page.url()).href);
     await expect.poll(() => current.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
   }
   await page.getByRole('combobox', { name: 'Animation', exact: true }).selectOption('guard.walk-front');

@@ -45,7 +45,7 @@ import { readCharacterAnimations } from '@pointlesh/core';
 
 const view = new PhaserAdventureCharacter(scene, actor, sprite, {
   aiRuntime,
-  assetId: 'character.dwarf', // Optional fallback texture when no assignment resolves.
+  assetId: 'character.dwarf', // Base image defines logical size and fallback texture.
   animations: () => readCharacterAnimations(currentCharacter().properties),
   baseScale: () => ({ x: currentCharacter().scaleX, y: currentCharacter().scaleY }),
   origin: () => ({ x: currentCharacter().anchorX, y: 1 - currentCharacter().anchorY }),
@@ -57,6 +57,8 @@ const view = new PhaserAdventureCharacter(scene, actor, sprite, {
 The getter returns `CharacterAnimations`: `idle`, `walk` and `speak` maps whose front/back/left/right and optional diagonal slots hold `{ assetId, key, flipX? }`. The native ai-assets runtime resolves animation keys and linked animation states, including child assets. Explicit `flipX` is applied independently per slot. Missing diagonals use front/back; missing walking/speaking art uses the matching idle view.
 
 The selected animation supplies its actual frame count, frame rate and optional per-frame delays to the core clock. Idle animates, walking advances planted-foot distance at authored frame boundaries, and timed speech switches back to idle without losing leftover elapsed time. Directional cycles repeat while their activity remains active. No free-running Phaser animation is allowed to drift from movement. Generated frame offsets/scales/rotations compose with the current prefab transform and perspective.
+
+Animation resolution does not define character size. With `assetId`, every linked clip is fitted to the base asset's frame dimensions before applying `baseScale`, perspective, and authored frame transforms. A 48×64 idle clip and a 24×32 speaking clip therefore occupy the same logical bounds; promoting either clip cannot double or halve the actor. Base image dimension edits remain live and match Scene Designer's bounds. Pass `baseSize: { width: 48, height: 64 }` (or a getter) to choose logical dimensions independently of image resolution, including when assigning clips without a base asset. Frame padding and authored frame scales still affect the visible silhouette.
 
 Assignments, linked state changes, frame metadata changes and registered preview replacements update on `sync()` or the next `update()`. Texture bindings follow the resolved animation child, so ai-assets previews/promotions remain live. `refreshAnimation()` explicitly invalidates and synchronizes playback for external authoring integrations. Restoring a saved walk while currently showing idle preserves the saved frame and elapsed time; call `view.sync()` after `actor.restore()`.
 
@@ -132,6 +134,8 @@ installPhaserTextureScaling(scene, {
 Browser canvas scaling is independent: choose `canvas: "pixelated"` (pixel-art appearance), `"crisp-edges"` (avoid blending), or `"auto"` (browser smoothing). Omit it to keep the game's CSS. Nearest sampling cannot remove blur already present in source art; noninteger scaling can produce uneven pixel widths. Integer display scaling is the strictest pixel-perfect option, but is a different choice from this demo's continuous perspective zoom.
 
 The forest demo uses nearest sampling for sprites and smooth pixel-art sampling for room textures. Keep `antialias: true`, `antialiasGL: false`, and `roundPixels: false` for its continuous camera zoom and aligned walk-behind overlays. Avoid the global `smoothPixelArt` flag for masked duplicate backgrounds: it also forces multisampled canvas edges, while Phaser's filter framebuffers are not multisampled, which can make the room's outer edge composite differently.
+
+For pixel-art assets, inspect the source PNG at native resolution as well as the final canvas. Nearest-neighbor preserves softened colors already generated into the image. At fractional scales, individual source pixels can cover different numbers of screen pixels; changing to `smooth-pixel-art` trades that unevenness for softer boundaries. Keep animation frames on a consistent source grid and palette when crisp, consistent pixel shapes matter. See the [Phaser 4 Pixel Art Guide](https://github.com/phaserjs/phaser/blob/master/docs/Phaser%204%20Pixel%20Art%20Guide/Phaser%204%20Pixel%20Art%20Guide.md).
 
 References: [Phaser texture filters](https://docs.phaser.io/api-documentation/4.0.0/namespace/textures-filtermode), [Phaser 4 rendering](https://phaser.io/tutorials/phaser-4-rendering-concepts), and [MDN canvas image rendering](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/image-rendering).
 

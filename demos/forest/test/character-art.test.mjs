@@ -20,8 +20,8 @@ test('all six authored character images expose nine playable native AI Assets an
     assert.equal(parent.kind, 'image');
     assert.equal(parent.frameGrid, undefined);
     assert.equal(parent.animations, undefined);
-    assert.deepEqual(parent.dimensions, { width: 24, height: 32 });
-    assert.equal(parent.versions[parent.activeVersion].file, `art/characters/${id}/base.png`);
+    assert.ok(parent.dimensions.width > 0 && parent.dimensions.height > 0);
+    assert.ok(parent.versions[parent.activeVersion]?.file, `${id} has a promoted or original image`);
     const family = [parent];
     for (const activity of ['idle', 'walk', 'speak']) for (const facing of CHARACTER_VIEWS) {
       const link = parent.linkedAnimationAssets[`${activity}-${facing}`];
@@ -31,7 +31,7 @@ test('all six authored character images expose nine playable native AI Assets an
       const animation = child.animations[0];
       assert.ok(!animationKeys.has(animation.key), 'Native Phaser animation keys must be globally unique');
       animationKeys.add(animation.key);
-      assert.equal(animation.frames.length, CHARACTER_ACTIVITY_FRAMES[activity].length);
+      assert.ok(animation.frames.length > 1, `${child.id} has multiple animation frames`);
       assert.ok(animation.frameRate > 0);
       assert.equal(animation.repeat, -1);
       assert.ok(animation.frames.every(frame => frame >= 0 && frame < child.frameGrid.frameCount));
@@ -44,10 +44,11 @@ test('all six authored character images expose nine playable native AI Assets an
       assert.equal(bytes.readUInt32BE(16), asset.dimensions.width, `${file} width matches native metadata`);
       assert.equal(bytes.readUInt32BE(20), asset.dimensions.height, `${file} height matches native metadata`);
       if (asset.kind === 'animation') {
-        assert.equal(asset.frameGrid.frameWidth, 24);
-        assert.equal(asset.frameGrid.frameHeight, 32);
-        assert.equal(asset.frameGrid.columns * 24, asset.dimensions.width);
-        assert.equal(asset.frameGrid.rows * 32, asset.dimensions.height);
+        const grid = asset.frameGrid;
+        assert.ok(grid.frameWidth > 0 && grid.frameHeight > 0);
+        assert.equal(grid.columns * grid.frameWidth, asset.dimensions.width);
+        assert.equal(grid.rows * grid.frameHeight, asset.dimensions.height);
+        assert.ok(grid.frameCount <= grid.columns * grid.rows);
       }
       files++;
     }
