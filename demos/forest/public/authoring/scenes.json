@@ -1285,7 +1285,7 @@
                   "targetId": "innkeeper",
                   "description": "A brewer, a storyteller, and a formidable keeper of tabs.",
                   "approachOffsetX": 0,
-                  "approachOffsetY": 73
+                  "approachOffsetY": 90
                 },
                 "behaviors": [
                   "forest.interact"
@@ -1435,10 +1435,10 @@
                   "id": "pub-exit::area"
                 },
                 "approachX": {
-                  "value": 863
+                  "value": 710
                 },
                 "approachY": {
-                  "value": 473
+                  "value": 440
                 }
               },
               "pointlesh": {

@@ -62,12 +62,13 @@ test('Mara can be dragged from inside her prefab rectangle after selection in th
       y: rect.top + ((y - camera.scrollY - camera.height / 2) * camera.zoom + camera.height / 2) * rect.height / camera.height,
     });
     const y = object.y + (object.anchorY - .5) * size.height;
-    return { start: screen(object.x, y), end: screen(object.x - 55, y + 25) };
+    return { start: screen(object.x, y), end: screen(object.x - 55, y + 25), pixel: camera.width / (rect.width * camera.zoom) };
   });
   await page.mouse.move(points.start.x, points.start.y); await page.mouse.down();
   await page.mouse.move(points.end.x, points.end.y, { steps: 8 }); await page.mouse.up();
-  await expect.poll(async () => (await position()).x).toBeCloseTo(before.x - 55, 0);
-  await expect.poll(async () => (await position()).y).toBeCloseTo(before.y + 25, 0);
+  // Native mouse events quantize fractional CSS coordinates to screen pixels.
+  await expect.poll(async () => Math.abs((await position()).x - (before.x - 55))).toBeLessThan(points.pixel + .001);
+  await expect.poll(async () => Math.abs((await position()).y - (before.y + 25))).toBeLessThan(points.pixel + .001);
   await page.keyboard.press('ControlOrMeta+z');
   await expect.poll(position).toEqual(before);
 });

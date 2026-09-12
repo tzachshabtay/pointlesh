@@ -70,7 +70,11 @@ test('NPC sprite pixels are clickable and follow native authored movement, scale
     const sprite = (window as any).pointleshDemo.scene.entitySprites.get('village.npc.elder');
     return { x: sprite.x, flip: sprite.flipX };
   })).toMatchObject({ x: 650, flip: true });
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('village.npc.elder').scaleX)).toBeCloseTo(2.8, 5);
+  // Raw texture scale differs when a clip has fewer pixels than its base image.
+  await expect.poll(() => page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    return scene.entitySprites.get('village.npc.elder').displayWidth / scene.aiRuntime.manifest.assets.elder.dimensions.width;
+  })).toBeCloseTo(2.8, 5);
 
   await page.mouse.move(before.x, before.y);
   await expect(page.locator('#hover-label')).not.toHaveText('Elder Rowan');

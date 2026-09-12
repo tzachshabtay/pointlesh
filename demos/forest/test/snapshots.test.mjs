@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { tsImport } from 'tsx/esm/api';
 import { AdventureDialog, CharacterController, SaveStore, MemorySaveStorage, resolvePointleshScene, walkablePolygons, findPath } from '@pointlesh/core';
@@ -70,9 +71,10 @@ test('combined item, conversation reply, guard timer and pending walk restore in
   assert.equal(freshHero.state.activity, 'idle');
 });
 
-test('every authored hotspot and interactive sprite approach point is reachable from its room spawn', () => {
+for (const [catalog, sceneManifest] of [['seed', scenes], ['promoted', JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'))]])
+test(`every ${catalog} hotspot and interactive sprite approach point is reachable from its room spawn`, () => {
   for (const roomId of story.roomIds) {
-    const scene = resolvePointleshScene(scenes, roomId), floors = walkablePolygons(scene);
+    const scene = resolvePointleshScene(sceneManifest, roomId), floors = walkablePolygons(scene);
     for (const area of scene.areas.filter(area => area.kind === 'hotspot')) {
       assert.ok(findPath({ x: 471, y: 462 }, { x: area.properties.approachX, y: area.properties.approachY }, floors), `${roomId}/${area.id} must be reachable`);
     }
@@ -83,5 +85,5 @@ test('every authored hotspot and interactive sprite approach point is reachable 
       if (object.properties.actorName !== 'king') assert.equal(scene.areas.some(area => area.id === object.properties.targetId), false, `${object.id} must not have a duplicate hotspot`);
     }
   }
-  assert.ok(resolvePointleshScene(scenes, 'camp').areas.some(area => area.id === 'cage'), 'The cage remains an environmental puzzle target');
+  assert.ok(resolvePointleshScene(sceneManifest, 'camp').areas.some(area => area.id === 'cage'), 'The cage remains an environmental puzzle target');
 });
