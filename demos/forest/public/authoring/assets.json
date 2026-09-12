@@ -63,10 +63,10 @@
       "kind": "image",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 48,
+        "height": 64
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1788920961726",
       "versions": {
         "original": {
           "name": "original",
@@ -75,6 +75,40 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788920660742": {
+          "name": "promoted-1788920660742",
+          "file": "art/borin.promoted-1788920660742.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-09T02:24:20.770Z",
+          "model": "gpt-image-2.5-flare",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-flare",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1788920961726": {
+          "name": "promoted-1788920961726",
+          "file": "art/borin.promoted-1788920961726.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-09T02:29:21.757Z",
+          "model": "gpt-image-2.5-flare",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-flare",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788920660742",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -119,17 +153,25 @@
         "forest",
         "character",
         "borin"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-flare",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "elder": {
       "id": "elder",
       "kind": "image",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 48,
+        "height": 64
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789163947172",
       "versions": {
         "original": {
           "name": "original",
@@ -138,6 +180,23 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1789163947172": {
+          "name": "promoted-1789163947172",
+          "file": "art/elder.promoted-1789163947172.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-11T21:59:07.269Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -182,17 +241,25 @@
         "forest",
         "character",
         "elder"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "innkeeper": {
       "id": "innkeeper",
       "kind": "image",
-      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. One standing, front-facing idle pose.",
+      "prompt": "A small pixel-art girl dwarf named innkeeper, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 48,
+        "height": 64
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789164458842",
       "versions": {
         "original": {
           "name": "original",
@@ -201,6 +268,23 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1789164458842": {
+          "name": "promoted-1789164458842",
+          "file": "art/innkeeper.promoted-1789164458842.png",
+          "prompt": "A small pixel-art girl dwarf named innkeeper, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-11T22:07:38.922Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -245,17 +329,25 @@
         "forest",
         "character",
         "innkeeper"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "miner": {
       "id": "miner",
       "kind": "image",
-      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. One standing, front-facing idle pose.",
+      "prompt": "A small pixel-art dwarf miner, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 48,
+        "height": 64
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789164733318",
       "versions": {
         "original": {
           "name": "original",
@@ -264,6 +356,23 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1789164733318": {
+          "name": "promoted-1789164733318",
+          "file": "art/miner.promoted-1789164733318.png",
+          "prompt": "A small pixel-art dwarf miner, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-11T22:12:13.432Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -308,7 +417,15 @@
         "forest",
         "character",
         "miner"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard": {
       "id": "guard",
@@ -755,30 +872,102 @@
     "borin.idle-front": {
       "id": "borin.idle-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "prompt": "idle animation of our dwarf, front facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.idle-front",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
           ],
-          "frameRate": 2,
-          "repeat": -1
+          "frameTimings": [
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 500,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            }
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789163812890",
       "versions": {
         "original": {
           "name": "original",
@@ -787,6 +976,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788921130681": {
+          "name": "promoted-1788921130681",
+          "file": "art/borin.idle-front.promoted-1788921130681.png",
+          "prompt": "idle animation of our dwarf, front facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-09T02:32:10.733Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789163812890": {
+          "name": "promoted-1789163812890",
+          "file": "art/borin.idle-front.promoted-1789163812890.png",
+          "prompt": "idle animation of our dwarf, front facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-11T21:56:53.154Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921130681",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -795,35 +1020,50 @@
         "borin",
         "idle",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.idle-back": {
       "id": "borin.idle-back",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.idle-back",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 2,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789163750111",
       "versions": {
         "original": {
           "name": "original",
@@ -832,6 +1072,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788921262685": {
+          "name": "promoted-1788921262685",
+          "file": "art/borin.idle-back.promoted-1788921262685.png",
+          "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-09T02:34:22.714Z",
+          "model": "gpt-image-2.5-flare",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-flare",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789163750111": {
+          "name": "promoted-1789163750111",
+          "file": "art/borin.idle-back.promoted-1789163750111.png",
+          "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-11T21:55:50.193Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921262685",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -840,35 +1116,50 @@
         "borin",
         "idle",
         "back"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.idle-left": {
       "id": "borin.idle-left",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. idle animation, facing left; 2 horizontal frames.",
+      "prompt": "idle animation of our dwarf, left facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.idle-left",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 2,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1788921949417",
       "versions": {
         "original": {
           "name": "original",
@@ -877,6 +1168,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788921358155": {
+          "name": "promoted-1788921358155",
+          "file": "art/borin.idle-left.promoted-1788921358155.png",
+          "prompt": "idle animation of our dwarf, left facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-09T02:35:58.181Z",
+          "model": "gpt-image-2.5-flare",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-flare",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1788921949417": {
+          "name": "promoted-1788921949417",
+          "file": "art/borin.idle-left.promoted-1788921949417.png",
+          "prompt": "idle animation of our dwarf, left facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-09T02:45:49.458Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921358155",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -885,37 +1212,116 @@
         "borin",
         "idle",
         "left"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.walk-front": {
       "id": "borin.walk-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "prompt": "Walking down/front animation for our dwarf.",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.walk-front",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
+            3,
+            4,
+            5,
+            6,
+            7
           ],
-          "frameRate": 10,
-          "repeat": -1
+          "frameTimings": [
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            },
+            {
+              "delayMs": 100,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 0.95,
+              "scaleY": 0.95,
+              "rotation": 0
+            }
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789163851662",
       "versions": {
         "original": {
           "name": "original",
@@ -924,6 +1330,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788921476620": {
+          "name": "promoted-1788921476620",
+          "file": "art/borin.walk-front.promoted-1788921476620.png",
+          "prompt": "Walking down/front animation for our dwarf.",
+          "createdAt": "2026-09-09T02:37:56.640Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789163851662": {
+          "name": "promoted-1789163851662",
+          "file": "art/borin.walk-front.promoted-1789163851662.png",
+          "prompt": "Walking down/front animation for our dwarf.",
+          "createdAt": "2026-09-11T21:57:32.082Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921476620",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -932,37 +1374,50 @@
         "borin",
         "walk",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.walk-back": {
       "id": "borin.walk-back",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "prompt": "Walking up/back animation for our dwarf.",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.walk-back",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1788921701953",
       "versions": {
         "original": {
           "name": "original",
@@ -971,6 +1426,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788921701953": {
+          "name": "promoted-1788921701953",
+          "file": "art/borin.walk-back.promoted-1788921701953.png",
+          "prompt": "Walking up/back animation for our dwarf.",
+          "createdAt": "2026-09-09T02:41:41.991Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -979,37 +1452,50 @@
         "borin",
         "walk",
         "back"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.walk-left": {
       "id": "borin.walk-left",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "prompt": "Walking left animation for our dwarf.",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.walk-left",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789163510860",
       "versions": {
         "original": {
           "name": "original",
@@ -1018,6 +1504,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1788921782745": {
+          "name": "promoted-1788921782745",
+          "file": "art/borin.walk-left.promoted-1788921782745.png",
+          "prompt": "Walking left animation for our dwarf.",
+          "createdAt": "2026-09-09T02:43:02.778Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789163510860": {
+          "name": "promoted-1789163510860",
+          "file": "art/borin.walk-left.promoted-1789163510860.png",
+          "prompt": "Walking left animation for our dwarf.",
+          "createdAt": "2026-09-11T21:51:51.043Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921782745",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1026,7 +1548,16 @@
         "borin",
         "walk",
         "left"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.speak-front": {
       "id": "borin.speak-front",
@@ -1166,30 +1697,36 @@
     "elder.idle-front": {
       "id": "elder.idle-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front;",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 144,
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "elder.idle-front",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 2,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789164049819",
       "versions": {
         "original": {
           "name": "original",
@@ -1198,6 +1735,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1789164049819": {
+          "name": "promoted-1789164049819",
+          "file": "art/elder.idle-front.promoted-1789164049819.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front;",
+          "createdAt": "2026-09-11T22:00:49.897Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1206,7 +1761,16 @@
         "elder",
         "idle",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "elder.idle-back": {
       "id": "elder.idle-back",
@@ -1577,30 +2141,44 @@
     "innkeeper.idle-front": {
       "id": "innkeeper.idle-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "prompt": "idle animation for the inn keeper dwarf girl, facing front",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 192,
+        "height": 256
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 4,
+        "rows": 4,
+        "frameCount": 16
       },
       "animations": [
         {
           "key": "innkeeper.idle-front",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 2,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789164641239",
       "versions": {
         "original": {
           "name": "original",
@@ -1609,6 +2187,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1789164641239": {
+          "name": "promoted-1789164641239",
+          "file": "art/innkeeper.idle-front.promoted-1789164641239.png",
+          "prompt": "idle animation for the inn keeper dwarf girl, facing front",
+          "createdAt": "2026-09-11T22:10:41.373Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1617,7 +2213,16 @@
         "innkeeper",
         "idle",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "innkeeper.idle-back": {
       "id": "innkeeper.idle-back",
@@ -1990,28 +2595,172 @@
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 192,
+        "height": 256
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 48,
+        "frameHeight": 64,
+        "columns": 4,
+        "rows": 4,
+        "frameCount": 16
       },
       "animations": [
         {
           "key": "miner.idle-front",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
           ],
-          "frameRate": 2,
-          "repeat": -1
+          "frameTimings": [
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 200,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            }
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789164917770",
       "versions": {
         "original": {
           "name": "original",
@@ -2020,6 +2769,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1789164847121": {
+          "name": "promoted-1789164847121",
+          "file": "art/miner.idle-front.promoted-1789164847121.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+          "createdAt": "2026-09-11T22:14:07.202Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789164917770": {
+          "name": "promoted-1789164917770",
+          "file": "art/miner.idle-front.promoted-1789164917770.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+          "createdAt": "2026-09-11T22:15:17.826Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789164847121",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -2028,7 +2813,16 @@
         "miner",
         "idle",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "miner.idle-back": {
       "id": "miner.idle-back",
