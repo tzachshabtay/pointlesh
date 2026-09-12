@@ -334,6 +334,7 @@ class ForestAdventure extends Phaser.Scene {
     this.sceneDesigner = installPhaserPointleshDesigner({
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200,
+      gameOverlays: Array.from(document.querySelectorAll<HTMLElement>('.stage-wrap > :not(#game), #modal-backdrop, #toast')),
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),
       onOpenChange: open => { this.editing = open; this.clearMovementKeys(); this.character.stop(); this.epoch++; },
       onSceneChange: sceneId => { if (roomIds.includes(sceneId as RoomId) && this.story.roomId !== sceneId) this.changeRoom(sceneId as RoomId); },
