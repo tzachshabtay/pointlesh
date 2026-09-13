@@ -27,6 +27,12 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     expect(form.get('model')).toBe('gpt-image-2.5-sunburst');
     imageRequests.push(String(form.get('prompt')));
     const source = Buffer.from(await (form.get('image') as Blob).arrayBuffer());
+    if (String(form.get('prompt')).includes('ONE animation spritesheet')) {
+      const grid = catalog.assets['borin.idle-front'].frameGrid;
+      // The PNG attachment must contain the entire packed sheet, not one frame.
+      expect(source.readUInt32BE(16)).toBe(grid.frameWidth * grid.columns);
+      expect(source.readUInt32BE(20)).toBe(grid.frameHeight * grid.rows);
+    }
     return Response.json({ data: [{ b64_json: source.toString('base64') }] });
   } });
   const server = createAiAssetDevServer({ manifestPath, assetsDir, publicPathPrefix: 'art', port: 0, upscaleProvider });
@@ -133,6 +139,11 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     const beforeAnimation = await readFile(manifestPath, 'utf8');
     await dialog.getByRole('button', { name: 'Generate', exact: true }).click();
     await chooseCandidate(beforeAnimation, true);
+    expect(imageRequests).toHaveLength(9);
+    for (const prompt of imageRequests.slice(6)) {
+      expect(prompt).toContain('ONE animation spritesheet');
+      expect(prompt).toContain('SAME character or object');
+    }
     await expect(dialog.getByRole('button', { name: 'Animate', exact: true })).toBeVisible();
     await expect(dialog.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
     await expectSavedPreview();

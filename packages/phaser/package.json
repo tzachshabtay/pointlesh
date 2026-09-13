@@ -36,7 +36,7 @@
   "peerDependencies": {
     "phaser": "^4.2.0",
     "@scene-designer/phaser": "^0.2.1",
-    "@ai-game-assets/phaser": "^0.11.3",
+    "@ai-game-assets/phaser": "^0.11.5",
     "@dialog-designer/phaser": "^0.1.1"
   }
 }

@@ -20,7 +20,7 @@
     "test:e2e": "playwright test"
   },
   "devDependencies": {
-    "@ai-game-assets/dev": "^0.11.3",
+    "@ai-game-assets/dev": "^0.11.5",
     "@playwright/test": "^1.55.0",
     "@types/node": "^22.0.0",
     "tsx": "^4.20.0",
@@ -28,28 +28,28 @@
   },
   "overrides": {
     "@scene-designer/core": {
-      "@ai-game-assets/core": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5"
     },
     "@scene-designer/designer": {
-      "@ai-game-assets/core": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5"
     },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.3",
-      "@ai-game-assets/phaser": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5",
+      "@ai-game-assets/phaser": "^0.11.5"
     },
     "@dialog-designer/core": {
-      "@ai-game-assets/core": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5"
     },
     "@dialog-designer/designer": {
-      "@ai-game-assets/core": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5"
     },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.11.3",
-      "@ai-game-assets/dev": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5",
+      "@ai-game-assets/dev": "^0.11.5"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.3",
-      "@ai-game-assets/phaser": "^0.11.3"
+      "@ai-game-assets/core": "^0.11.5",
+      "@ai-game-assets/phaser": "^0.11.5"
     }
   }
 }
