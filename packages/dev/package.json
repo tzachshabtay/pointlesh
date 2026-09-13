@@ -33,7 +33,7 @@
     "@pointlesh/core": "0.1.0",
     "@scene-designer/dev": "^0.2.1",
     "@dialog-designer/dev": "^0.1.1",
-    "@ai-game-assets/dev": "^0.11.5"
+    "@ai-game-assets/dev": "^0.11.6"
   },
   "peerDependencies": {},
   "bin": {

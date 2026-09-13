@@ -127,26 +127,26 @@ npm pack --workspace @pointlesh/core --workspace @pointlesh/designer \
   --workspace @pointlesh/dev --workspace @pointlesh/phaser
 ```
 
-The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.5`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.5 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
+The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.6`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.6 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
 
 ```json
 {
   "overrides": {
-    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.5" },
-    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.5" },
+    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.6" },
+    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.6" },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.5",
-      "@ai-game-assets/phaser": "^0.11.5"
+      "@ai-game-assets/core": "^0.11.6",
+      "@ai-game-assets/phaser": "^0.11.6"
     },
-    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.5" },
-    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.5" },
+    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.6" },
+    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.6" },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.11.5",
-      "@ai-game-assets/dev": "^0.11.5"
+      "@ai-game-assets/core": "^0.11.6",
+      "@ai-game-assets/dev": "^0.11.6"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.5",
-      "@ai-game-assets/phaser": "^0.11.5"
+      "@ai-game-assets/core": "^0.11.6",
+      "@ai-game-assets/phaser": "^0.11.6"
     }
   }
 }

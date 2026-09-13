@@ -39,11 +39,21 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
   await server.listen();
   const address = server.server.address() as { port: number };
   const base = `http://127.0.0.1:${address.port}`;
+  let rejectNextSelection = false;
+  let releaseSelection: (() => void) | undefined;
+  let holdSelection: Promise<void> | undefined;
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   try {
     await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, async route => {
       const url = new URL(route.request().url());
       if (url.port !== '4287') return route.abort();
+      if (url.pathname === '/__ai-assets/scaled-variant' && route.request().postDataJSON()?.action === 'select') {
+        if (rejectNextSelection) {
+          rejectNextSelection = false;
+          return route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Test save unavailable' }) });
+        }
+        if (holdSelection) await holdSelection;
+      }
       const response = await route.fetch({ url: base + url.pathname + url.search });
       await route.fulfill({ response });
     });
@@ -65,12 +75,12 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     const dialog = page.getByRole('dialog', { name: 'Scaled variants', exact: true });
     const expectSavedPreview = async () => {
       const preview = dialog.locator('img');
-      await expect(preview).toHaveAttribute('src', /^data:image\/png;base64,/);
+      await expect(preview).toHaveAttribute('src', /^(data:image\/png;base64,|.*art\/scaled-)/);
       await expect.poll(() => preview.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     };
     await expect(dialog.getByText('No scaled variants yet.')).toBeVisible();
     const candidates = dialog.getByRole('region', { name: 'Generated candidates' });
-    const chooseCandidate = async (before: string, animate = false) => {
+    const chooseCandidate = async (before: string, animate = false, saveOnClose = false) => {
       await expect(candidates.locator('.ai-game-assets-designer__option')).toHaveCount(3);
       expect(await readFile(manifestPath, 'utf8')).toBe(before);
       await expect(candidates.getByRole('button', { name: 'Promote', exact: true })).toBeDisabled();
@@ -86,9 +96,35 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
         await expect(first.locator('img')).toBeVisible();
         await page.screenshot({ path: testInfo.outputPath('animation-candidates.png') });
       } else await expect(candidates.getByRole('button', { name: 'Animate', exact: true })).toHaveCount(0);
+      const originalCandidates = await candidates.locator('img').evaluateAll(images => images.map(image => (image as HTMLImageElement).src));
+      const callsBeforeReopen = imageRequests.length;
+      await dialog.getByRole('button', { name: 'Close', exact: true }).click();
+      await expect(dialog).toBeHidden();
+      await page.getByRole('button', { name: 'Scaled variants...', exact: true }).click();
+      await expect(candidates.locator('.ai-game-assets-designer__option')).toHaveCount(3);
+      expect(await candidates.locator('img').evaluateAll(images => images.map(image => (image as HTMLImageElement).src))).toEqual(originalCandidates);
+      expect(imageRequests).toHaveLength(callsBeforeReopen);
       await candidates.getByRole('img', { name: 'Option 2', exact: true }).click();
       await expect(candidates.getByRole('button', { name: 'Select option 2', exact: true })).toHaveAttribute('aria-pressed', 'true');
-      await candidates.getByRole('button', { name: 'Promote', exact: true }).click();
+      if (saveOnClose) {
+        rejectNextSelection = true;
+        await dialog.getByRole('button', { name: 'Save and close', exact: true }).click();
+        await expect(dialog.getByRole('status')).toContainText('Test save unavailable');
+        await expect(dialog).toBeVisible();
+        expect(await readFile(manifestPath, 'utf8')).toBe(before);
+        await expect(candidates.getByRole('button', { name: 'Select option 2', exact: true })).toHaveAttribute('aria-pressed', 'true');
+        holdSelection = new Promise(resolve => { releaseSelection = resolve; });
+        await dialog.getByRole('button', { name: 'Save and close', exact: true }).click();
+        await expect(dialog.getByRole('button', { name: 'Save and close', exact: true })).toBeDisabled();
+        await page.keyboard.press('Escape');
+        await expect(dialog).toBeVisible();
+        releaseSelection!();
+        holdSelection = undefined;
+        await expect(dialog).toBeHidden();
+        await page.getByRole('button', { name: 'Scaled variants...', exact: true }).click();
+        await expect(dialog.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
+        expect(imageRequests).toHaveLength(callsBeforeReopen);
+      } else await candidates.getByRole('button', { name: 'Promote', exact: true }).click();
       await expect(candidates).toBeHidden();
     };
     await expect(dialog.getByLabel('Scaling method')).toHaveValue('ai-upscale');
@@ -106,7 +142,7 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await dialog.getByLabel('Height', { exact: true }).fill('96');
     const beforeRegenerate = await readFile(manifestPath, 'utf8');
     await dialog.getByRole('button', { name: 'Regenerate', exact: true }).click();
-    await chooseCandidate(beforeRegenerate);
+    await chooseCandidate(beforeRegenerate, false, true);
     await expect(dialog.locator('strong')).toHaveText('72 × 96');
     await expectSavedPreview();
     expect(imageRequests).toHaveLength(6);
@@ -138,7 +174,7 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await dialog.getByLabel('Frame height', { exact: true }).fill(String(Math.round(original.height)));
     const beforeAnimation = await readFile(manifestPath, 'utf8');
     await dialog.getByRole('button', { name: 'Generate', exact: true }).click();
-    await chooseCandidate(beforeAnimation, true);
+    await chooseCandidate(beforeAnimation, true, true);
     expect(imageRequests).toHaveLength(9);
     for (const prompt of imageRequests.slice(6)) {
       expect(prompt).toContain('ONE animation spritesheet');
@@ -151,6 +187,16 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await expect.poll(async () => (await actor()).texture).toContain('::scaled::');
     const frame = (await actor()).frame;
     await expect.poll(async () => (await actor()).frame).not.toBe(frame);
+    expect((await actor()).width).toBeCloseTo(original.width, 3);
+    const previousTexture = (await actor()).texture;
+    await dialog.getByRole('button', { name: 'Edit', exact: true }).click();
+    const beforeAnimationReplacement = await readFile(manifestPath, 'utf8');
+    await dialog.getByRole('button', { name: 'Regenerate', exact: true }).click();
+    await chooseCandidate(beforeAnimationReplacement, true, true);
+    const replaced = JSON.parse(await readFile(manifestPath, 'utf8')).assets['borin.idle-front'];
+    const replacementFile = (Object.values(replaced.versions[replaced.activeVersion].scaledVariants)[0] as any).file;
+    await expect.poll(async () => (await actor()).texture).toContain(replacementFile);
+    expect((await actor()).texture).not.toBe(previousTexture);
     expect((await actor()).width).toBeCloseTo(original.width, 3);
     await openBorin();
     await expect.poll(async () => (await actor()).texture).toContain('::scaled::');
