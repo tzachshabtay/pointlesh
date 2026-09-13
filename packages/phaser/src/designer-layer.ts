@@ -17,7 +17,7 @@ export function installPhaserDesignerLayer(scene: Phaser.Scene, drawings: Phaser
     scene: { customViewports: true },
   } as unknown as Phaser.Game);
   const renderScene = { sys: { context } } as unknown as Phaser.Scene;
-  const camera = new Phaser.Cameras.Scene2D.Camera(0, 0, source.width, source.height);
+  const camera = new Phaser.Cameras.Scene2D.Camera(0, 0, scene.scale.gameSize.width, scene.scale.gameSize.height);
   const filters = new Map(drawings.map(object => [object, object.cameraFilter]));
   let destroyed = false;
   function render() {
@@ -30,8 +30,11 @@ export function installPhaserDesignerLayer(scene: Phaser.Scene, drawings: Phaser
       width = source.width * scale; height = source.height * scale;
     }
     Object.assign(canvas.style, { left: `${left}px`, top: `${top}px`, width: `${width}px`, height: `${height}px` });
-    if (canvas.width !== source.width) canvas.width = source.width;
-    if (canvas.height !== source.height) canvas.height = source.height;
+    // Drawing commands and camera geometry use logical game coordinates; the
+    // game framebuffer may independently render at a higher device resolution.
+    const logical = scene.scale.gameSize;
+    if (canvas.width !== logical.width) canvas.width = logical.width;
+    if (canvas.height !== logical.height) canvas.height = logical.height;
     context.clearRect(0, 0, canvas.width, canvas.height);
     canvas.hidden = !isOpen();
     if (canvas.hidden) return;

@@ -8,7 +8,7 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
   const previous = globalThis.ResizeObserver;
   globalThis.ResizeObserver = class { constructor(callback) { observerCallback = callback; } observe() {} disconnect() { disconnected = true; } };
   try {
-    const view = { devicePixelRatio: 2 }, rect = { width: 590, height: 331.875 };
+    const view = { devicePixelRatio: 2, getComputedStyle: () => ({ objectFit: "fill" }) }, rect = { width: 590, height: 331.875 };
     const canvas = { width: 960, height: 540, style: { imageRendering: 'pixelated' }, ownerDocument: { defaultView: view }, getBoundingClientRect: () => rect };
     const framebuffer = {}, calls = [];
     const wrapper = { state: {}, update(...args) { calls.push(args); } };
@@ -36,6 +36,9 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     // Scale-manager resizes must not leave the backing canvas at logical resolution.
     canvas.width = 960; canvas.height = 540; renderer.emit('prerenderclear');
     assert.deepEqual([canvas.width, canvas.height], [400, 225]);
+    view.getComputedStyle = () => ({ objectFit: 'contain' });
+    rect.height = 400; observerCallback(); renderer.emit('prerenderclear');
+    assert.deepEqual([canvas.width, canvas.height], [400, 225], 'letterboxing keeps the logical aspect ratio');
     game.events.emit('destroy'); handle.destroy();
     assert.equal(wrapper.update, original);
     assert.deepEqual([canvas.width, canvas.height], [960, 540]);

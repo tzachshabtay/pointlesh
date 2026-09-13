@@ -28,6 +28,8 @@ test('high-DPI rendering keeps sprite detail, room framing, walking and designer
   await expect.poll(() => page.evaluate(target => Math.hypot((window as any).pointleshDemo.scene.character.state.position.x - target.x, (window as any).pointleshDemo.scene.character.state.position.y - target.y), target)).toBeLessThan(3);
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   expect(await resolution()).toMatchObject({ logical: [960, 540], camera: [960, 540] });
+  await expect(page.locator('.pointlesh-designer-layer')).toHaveJSProperty('width', 960);
+  await expect(page.locator('.pointlesh-designer-layer')).toHaveJSProperty('height', 540);
   await page.screenshot({ path: testInfo.outputPath('high-dpi-designer.png') });
   expect(errors).toEqual([]);
 });

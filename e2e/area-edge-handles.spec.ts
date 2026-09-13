@@ -59,7 +59,7 @@ for (const farOutside of [false, true]) test(`${farOutside ? 'Distant' : 'Offscr
     const vertex = scene.sceneDesigner.designer.getManifest().scenes.house.layers[0].prefabs.find((instance: any) => instance.id === 'house.foreground').overrides.area.vertices[0];
     const point = scene.cameras.main.matrixCombined.transformPoint(vertex.x, vertex.y);
     const canvas = scene.game.canvas, rect = canvas.getBoundingClientRect();
-    return { x: rect.left + point.x * rect.width / canvas.width, y: rect.top + point.y * rect.height / canvas.height };
+    return { x: rect.left + point.x * rect.width / scene.scale.gameSize.width, y: rect.top + point.y * rect.height / scene.scale.gameSize.height };
   });
   expect(projected.x).toBeCloseTo(center.x + 45, 1);
   expect(projected.y).toBeCloseTo(center.y - 12, 1);

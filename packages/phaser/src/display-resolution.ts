@@ -55,8 +55,10 @@ export function installPhaserDisplayResolution(game: Phaser.Game, options: Phase
     if (dirty || ratio !== lastRatio) {
       const rect = canvas.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return;
-      width = Math.max(1, Math.min(maximum[0]!, Math.round(rect.width * ratio)));
-      height = Math.max(1, Math.min(maximum[1]!, Math.round(rect.height * ratio)));
+      const contain = view.getComputedStyle(canvas).objectFit === "contain";
+      const fit = Math.min(rect.width / renderer.width, rect.height / renderer.height);
+      width = Math.max(1, Math.min(maximum[0]!, Math.round((contain ? renderer.width * fit : rect.width) * ratio)));
+      height = Math.max(1, Math.min(maximum[1]!, Math.round((contain ? renderer.height * fit : rect.height) * ratio)));
       lastRatio = ratio;
       dirty = false;
     }

@@ -99,9 +99,9 @@ export function installPhaserAreaEdgeHandles(options: PhaserAreaEdgeHandlesOptio
     const cam = camera(), origin = cam.getWorldPoint(0, 0), right = cam.getWorldPoint(1, 0), down = cam.getWorldPoint(0, 1);
     const a = right.x - origin.x, b = right.y - origin.y, c = down.x - origin.x, d = down.y - origin.y;
     const determinant = a * d - b * c, x = point.x - origin.x, y = point.y - origin.y;
-    return { x: bounds.left + (d * x - c * y) / determinant * (bounds.right - bounds.left) / canvas.width, y: bounds.top + (a * y - b * x) / determinant * (bounds.bottom - bounds.top) / canvas.height };
+    return { x: bounds.left + (d * x - c * y) / determinant * (bounds.right - bounds.left) / scene.scale.gameSize.width, y: bounds.top + (a * y - b * x) / determinant * (bounds.bottom - bounds.top) / scene.scale.gameSize.height };
   };
-  const unproject = (point: AreaHandlePoint, bounds: AreaHandleBounds): AreaHandlePoint => camera().getWorldPoint((point.x - bounds.left) * canvas.width / (bounds.right - bounds.left), (point.y - bounds.top) * canvas.height / (bounds.bottom - bounds.top));
+  const unproject = (point: AreaHandlePoint, bounds: AreaHandleBounds): AreaHandlePoint => camera().getWorldPoint((point.x - bounds.left) * scene.scale.gameSize.width / (bounds.right - bounds.left), (point.y - bounds.top) * scene.scale.gameSize.height / (bounds.bottom - bounds.top));
   const finishDrag = () => { drag = undefined; };
   const consume = (event: Event) => { event.preventDefault(); event.stopImmediatePropagation(); };
   const move = (event: PointerEvent) => {
@@ -156,7 +156,7 @@ export function installPhaserAreaEdgeHandles(options: PhaserAreaEdgeHandlesOptio
       return;
     }
     if (drag && (!entries.some(entry => entry.area.id === drag!.areaId && entry.area.vertices.some(vertex => vertex.id === drag!.vertexId)) || JSON.stringify(designer.getSelection()) !== drag.selectionKey)) finishDrag();
-    const bounds = canvasBounds(), cam = camera(), sx = (bounds.right - bounds.left) / canvas.width, sy = (bounds.bottom - bounds.top) / canvas.height;
+    const bounds = canvasBounds(), cam = camera(), sx = (bounds.right - bounds.left) / scene.scale.gameSize.width, sy = (bounds.bottom - bounds.top) / scene.scale.gameSize.height;
     const viewport = { left: Math.max(0, bounds.left, bounds.left + cam.x * sx), top: Math.max(0, bounds.top, bounds.top + cam.y * sy), right: Math.min(window.innerWidth, bounds.right, bounds.left + (cam.x + cam.width) * sx), bottom: Math.min(window.innerHeight, bounds.bottom, bounds.top + (cam.y + cam.height) * sy) };
     const occluders: AreaHandleBounds[] = [];
     for (const element of new Set([...document.querySelectorAll<HTMLElement>('.scene-designer__panel, .pointlesh-inspector'), ...(options.occluders?.() ?? [])])) {
