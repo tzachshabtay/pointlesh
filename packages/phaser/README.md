@@ -139,6 +139,12 @@ For pixel-art assets, inspect the source PNG at native resolution as well as the
 
 References: [Phaser texture filters](https://docs.phaser.io/api-documentation/4.0.0/namespace/textures-filtermode), [Phaser 4 rendering](https://phaser.io/tutorials/phaser-4-rendering-concepts), and [MDN canvas image rendering](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/image-rendering).
 
+## Scaled variants
+
+AI Assets owns scaled variants in its source-version metadata and designer. The standard loader preloads them; `AiAssetRuntime` automatically selects the closest available resolution for bound objects and animations, accounting for camera zoom, parent transforms, canvas size and device pixel ratio. `PhaserAdventureCharacter` continues to use its logical base size and animation timing. No prefab or controller dimensions change when a texture switches.
+
+For custom rendering, use AI Assets' `selectScaledVariant` and `aiScaledVariantTextureKey`, or `runtime.applyScaledVariant(sprite, assetId, { width, height })` with explicit screen-pixel dimensions. The forest demo uses the selector before baking legacy room atlases, retains the chosen variant's native resolution, and applies the same world-space dimensions to the background and every walk-behind copy.
+
 ## Native scene designer plus adventure inspector
 
 ```ts

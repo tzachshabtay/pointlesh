@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey } from '@ai-game-assets/phaser';
+import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
@@ -7,7 +7,7 @@ import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner,
 import { PhaserAdventureCharacter, PhaserRoomCamera, installPhaserTextureScaling, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
-import { assertManifest } from '@ai-game-assets/core';
+import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
 import { applyDialogChoice, combineItems, ending, guardLookingAway, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
@@ -46,6 +46,7 @@ class ForestAdventure extends Phaser.Scene {
   roomCamera!: PhaserRoomCamera;
   private cameraWasEditing = false;
   background!: Phaser.GameObjects.Image;
+  private roomTextureSources = new Map<RoomId, string>();
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
   objectTextureBindings = new Map<string, { assetId: string; binding: ReturnType<AiAssetRuntime['bindTexture']> }>();
@@ -81,7 +82,7 @@ class ForestAdventure extends Phaser.Scene {
       // Continuous room zoom needs smooth texel boundaries; actors retain crisp pixels.
       resolve: texture => texture.key.startsWith('room.') ? 'smooth-pixel-art' : undefined,
     });
-    this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000);
+    this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000).setDisplaySize(this.roomSize('village').width, this.roomSize('village').height);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
@@ -136,22 +137,42 @@ class ForestAdventure extends Phaser.Scene {
     const definition = authoredScenes.scenes[room];
     return definition ? { width: definition.width, height: definition.height } : roomDimensions[room];
   }
-  drawRoomTexture(room: RoomId, textureKey = this.aiRuntime.key(atlasRooms[room].asset)) {
-    const spec = atlasRooms[room];
-    const source = this.textures.get(textureKey).getSourceImage() as HTMLImageElement | HTMLCanvasElement;
-    const size = this.roomSize(room);
-    const key = `room.${room}`;
-    const texture = (this.textures.exists(key) ? this.textures.get(key) : this.textures.createCanvas(key, size.width, size.height)) as Phaser.Textures.CanvasTexture;
-    if (texture.width !== size.width || texture.height !== size.height) texture.setSize(size.width, size.height);
-    texture.setSmoothPixelArt(true);
-    texture.context.imageSmoothingEnabled = false;
-    texture.context.clearRect(0, 0, size.width, size.height);
+  drawRoomTexture(room: RoomId, textureKey?: string) {
+    const spec = atlasRooms[room], size = this.roomSize(room);
+    const baseKey = this.aiRuntime.key(spec.asset);
+    let key = textureKey ?? baseKey;
+    if (!textureKey && baseKey === aiTextureKey(spec.asset)) {
+      const asset = assets.assets[spec.asset], version = asset?.versions[asset.activeVersion];
+      if (version?.scaledVariants && Object.keys(version.scaledVariants).length) {
+        const density = Math.max(Number.EPSILON, this.cameras.main.zoom * (devicePixelRatio || 1) * this.game.canvas.getBoundingClientRect().width / this.scale.gameSize.width);
+        const source = selectScaledVariant(asset, { width: size.width * density, height: size.height * density * (spec.row === null ? 1 : 2) }, {
+          version, available: candidate => this.textures.exists(aiScaledVariantTextureKey(baseKey, candidate)),
+        });
+        if (source) key = aiScaledVariantTextureKey(baseKey, source);
+      }
+    }
+    const signature = `${key}:${size.width}:${size.height}`;
+    if (!textureKey && this.roomTextureSources.get(room) === signature) return;
+    const source = this.textures.get(key).getSourceImage() as HTMLImageElement | HTMLCanvasElement;
     // Legacy two-room sheets have a two-pixel divider in their 1330-pixel source.
-    // A null row is a dedicated room image, including wide scrolling backgrounds.
     const divider = spec.row === null ? 0 : source.height * 2 / 1330;
     const frameHeight = spec.row === null ? source.height : (source.height - divider) / 2;
-    texture.context.drawImage(source, 0, spec.row === null ? 0 : spec.row * (frameHeight + divider), source.width, frameHeight, 0, 0, size.width, size.height);
+    // Retain a variant's native resolution until final rendering. Room dimensions,
+    // masks and actor coordinates remain in authored world units.
+    const pixels = key.includes('::scaled::') ? { width: source.width, height: Math.round(frameHeight) } : size;
+    const roomKey = `room.${room}`;
+    const texture = (this.textures.exists(roomKey) ? this.textures.get(roomKey) : this.textures.createCanvas(roomKey, pixels.width, pixels.height)) as Phaser.Textures.CanvasTexture;
+    if (texture.width !== pixels.width || texture.height !== pixels.height) texture.setSize(pixels.width, pixels.height);
+    texture.setSmoothPixelArt(true);
+    texture.context.imageSmoothingEnabled = false;
+    texture.context.clearRect(0, 0, pixels.width, pixels.height);
+    texture.context.drawImage(source, 0, spec.row === null ? 0 : spec.row * (frameHeight + divider), source.width, frameHeight, 0, 0, pixels.width, pixels.height);
     texture.refresh();
+    this.roomTextureSources.set(room, signature);
+    if (this.background && this.story.roomId === room) {
+      this.background.setTexture(roomKey).setDisplaySize(size.width, size.height);
+      for (const overlay of this.overlays) overlay.image.setTexture(roomKey).setDisplaySize(size.width, size.height);
+    }
   }
   playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
   walkables() { return walkablePolygons(this.resolved()); }
@@ -235,15 +256,12 @@ class ForestAdventure extends Phaser.Scene {
     this.resolvedCache = undefined;
     const size = this.roomSize(this.story.roomId);
     this.roomCamera.setRoom(size);
-    const texture = this.textures.get(`room.${this.story.roomId}`) as Phaser.Textures.CanvasTexture;
-    if (texture.width !== size.width || texture.height !== size.height) {
-      this.drawRoomTexture(this.story.roomId);
-      this.background.setTexture(`room.${this.story.roomId}`);
-    }
+    this.drawRoomTexture(this.story.roomId);
+    this.background.setDisplaySize(size.width, size.height);
     if (this.editing || this.worldEditorOpen()) { this.epoch++; this.character.stop(); }
     for (const overlay of this.overlays) overlay.destroy(); this.overlays = [];
     for (const area of this.resolved().areas.filter(area => pointleshAreaCapabilities(area).walkBehind && area.enabled)) {
-      const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0);
+      const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0).setDisplaySize(size.width, size.height);
       this.overlays.push(createWalkBehindOverlay(this, area, image, { destroyImage: true }));
     }
     const actor = this.playerDefinition();
@@ -531,6 +549,7 @@ class ForestAdventure extends Phaser.Scene {
       if (!paused) npc.binding.update(Math.min(delta, 100));
       if (npc.actorName === 'guard' && this.story.flags.guardAsleep) npc.sprite.setAngle(80);
     }
+    this.drawRoomTexture(this.story.roomId);
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
     el('guard-status').hidden = this.story.roomId !== 'camp' || this.story.introStep < intro.length;
     const away = guardLookingAway(this.story); el('guard-status').classList.toggle('away', away || this.story.flags.guardAsleep);

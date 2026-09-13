@@ -48,6 +48,8 @@ The demo loads its committed documents from `demos/forest/public/authoring/`. Pr
 
 In **Assets**, select **Graphics → Characters → Borin**. **Base image** is a single still portrait; choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. Pickup graphics are under **Graphics → Objects**. In **Adventure**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
 
+**Scaled variants...** in the Current panel manages alternate resolutions of an image or animation. Enter width and height (per frame for animations), then Generate. Edit a saved variant to regenerate it, use Touch up, or delete it. Strict nearest-neighbor resizing is the default for this pixel-art workflow and uses no API. The optional dedicated AI upscaler requires `REPLICATE_API_TOKEN` in `demos/forest/.env` and a server restart; AI super-resolution may infer fine details. The runtime picks the closest available resolution for the displayed size, including zoom, while retaining authored object sizes and animation timing. Room backgrounds and walk-behind overlays switch together.
+
 Under **Assets → Voices**, select a speaker and use **Line** to switch between the base voice and its dialogue lines. Generate and promote the base voice first, then generate individual lines or use **Regenerate all lines**. The dialogue designer and runtime keep referring to those same line assets.
 
 Areas are native Scene Designer vector shapes. Select an area in **Adventure** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo combines walking, character scale and camera zoom on each room’s floor polygon, with a separate curved foreground outline using the same Area prefab.
@@ -125,26 +127,26 @@ npm pack --workspace @pointlesh/core --workspace @pointlesh/designer \
   --workspace @pointlesh/dev --workspace @pointlesh/phaser
 ```
 
-The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.10.1`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.10.1 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
+The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.0`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.0 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
 
 ```json
 {
   "overrides": {
-    "@scene-designer/core": { "@ai-game-assets/core": "^0.10.1" },
-    "@scene-designer/designer": { "@ai-game-assets/core": "^0.10.1" },
+    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.0" },
+    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.0" },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.10.1",
-      "@ai-game-assets/phaser": "^0.10.1"
+      "@ai-game-assets/core": "^0.11.0",
+      "@ai-game-assets/phaser": "^0.11.0"
     },
-    "@dialog-designer/core": { "@ai-game-assets/core": "^0.10.1" },
-    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.10.1" },
+    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.0" },
+    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.0" },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.10.1",
-      "@ai-game-assets/dev": "^0.10.1"
+      "@ai-game-assets/core": "^0.11.0",
+      "@ai-game-assets/dev": "^0.11.0"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.10.1",
-      "@ai-game-assets/phaser": "^0.10.1"
+      "@ai-game-assets/core": "^0.11.0",
+      "@ai-game-assets/phaser": "^0.11.0"
     }
   }
 }
