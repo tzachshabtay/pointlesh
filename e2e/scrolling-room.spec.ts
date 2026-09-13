@@ -42,7 +42,7 @@ test('wide forest follows walking, restores saves, and uses camera coordinates f
     const center = gate.polygon.reduce((sum: any, point: any) => ({ x: sum.x + point.x / gate.polygon.length, y: sum.y + point.y / gate.polygon.length }), { x: 0, y: 0 });
     const screen = scene.cameras.main.matrixCombined.transformPoint(center.x, center.y);
     const canvas = scene.game.canvas, rect = canvas.getBoundingClientRect();
-    return { x: rect.left + screen.x * rect.width / canvas.width, y: rect.top + screen.y * rect.height / canvas.height };
+    return { x: rect.left + screen.x * rect.width / scene.scale.gameSize.width, y: rect.top + screen.y * rect.height / scene.scale.gameSize.height };
   });
   await page.mouse.move(point.x, point.y);
   await expect(page.locator('#hover-label')).toHaveText('Orc encampment');
