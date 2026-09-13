@@ -34,7 +34,7 @@ test('pixel-art textures preserve colors when enlarged, including textures loade
   expect(result.linear).toBeGreaterThan(1000);
   expect(result.actorFilter).toBe(1);
   expect(result.backgroundSmooth).toBe(true);
-  await expect(page.locator('#game canvas')).toHaveCSS('image-rendering', 'pixelated');
+  await expect(page.locator('#game canvas')).toHaveCSS('image-rendering', 'auto');
 });
 
 test('Mara can be dragged from inside her prefab rectangle after selection in the scene tree', async ({ page }) => {

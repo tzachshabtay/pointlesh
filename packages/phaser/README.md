@@ -117,7 +117,7 @@ const foreground = createWalkBehindOverlay(scene, tree, duplicateBackground);
 foreground.sync(room.areas.find(area => area.id === 'old-oak')!);
 ```
 
-The overlay masks a duplicate background to the authored polygon and draws it at the area's baseline. It uses Phaser 4's mask filter in WebGL and a geometry mask in Canvas. The WebGL filter renders in the current camera's coordinate system, including its origin and transform order, so the foreground and background sample identical pixels during fractional zoom and scrolling. Actors with smaller foot Y appear behind the masked scenery, and actors with larger foot Y appear in front. Use identical transforms on the base and duplicate backgrounds. Use the same `depthOffset` on actors and overlays. `sync()` respects the area's independent walk-behind switch. `destroy()` removes the mask, its graphics and the supplied image; pass `destroyImage: false` to retain the image and restore its filter focus settings. Scene shutdown cleans up automatically.
+The overlay clips a duplicate background to the authored polygon and draws it at the area's baseline. WebGL uses a stencil polygon to sample the original texture directly, including on high-DPI canvases; Canvas uses a geometry mask. The WebGL adapter reserves stencil bit `0x80` during its draw and clears it afterward. Actors with smaller foot Y appear behind the scenery, and actors with larger foot Y appear in front. Use identical transforms on the base and duplicate backgrounds, and the same `depthOffset` on actors and overlays. `sync()` respects the area's independent walk-behind switch. `destroy()` removes the mask, its graphics and the supplied image; pass `destroyImage: false` to retain the image and restore its render node. Scene shutdown cleans up automatically.
 
 Games choose their filtering with `installPhaserTextureScaling` in `create()`:
 
@@ -133,7 +133,16 @@ installPhaserTextureScaling(scene, {
 
 Browser canvas scaling is independent: choose `canvas: "pixelated"` (pixel-art appearance), `"crisp-edges"` (avoid blending), or `"auto"` (browser smoothing). Omit it to keep the game's CSS. Nearest sampling cannot remove blur already present in source art; noninteger scaling can produce uneven pixel widths. Integer display scaling is the strictest pixel-perfect option, but is a different choice from this demo's continuous perspective zoom.
 
-The forest demo uses nearest sampling for sprites and smooth pixel-art sampling for room textures. Keep `antialias: true`, `antialiasGL: false`, and `roundPixels: false` for its continuous camera zoom and aligned walk-behind overlays. Avoid the global `smoothPixelArt` flag for masked duplicate backgrounds: it also forces multisampled canvas edges, while Phaser's filter framebuffers are not multisampled, which can make the room's outer edge composite differently.
+The forest demo uses nearest sampling for sprites and smooth pixel-art sampling for room textures. Keep `antialias: true`, `antialiasGL: false`, and `roundPixels: false` for continuous camera zoom. It also renders the canvas at its displayed physical resolution:
+
+```ts
+import { installPhaserDisplayResolution } from '@pointlesh/phaser';
+
+// Install in create(), after setting texture scaling.
+installPhaserDisplayResolution(scene.game, { maxPixelRatio: 2 });
+```
+
+This avoids scaling a detailed variant into a fixed 960 × 540 canvas and then rescaling that canvas in the browser. The backing resolution follows CSS size and device pixel ratio; game dimensions, cameras, hit testing and designer coordinates remain unchanged. The default pixel-ratio cap is 2 to limit GPU cost. This Phaser 4 WebGL adapter maps the canvas framebuffer's viewport and scissor to physical pixels; offscreen render targets retain their explicit resolution. Canvas-renderer games retain their configured resolution. It selects CSS `image-rendering: auto`, handles resize and device-pixel-ratio changes, and cleans up on game destruction (or `destroy()`). Install only once per game; repeated calls return the same installation.
 
 For pixel-art assets, inspect the source PNG at native resolution as well as the final canvas. Nearest-neighbor preserves softened colors already generated into the image. At fractional scales, individual source pixels can cover different numbers of screen pixels; changing to `smooth-pixel-art` trades that unevenness for softer boundaries. Keep animation frames on a consistent source grid and palette when crisp, consistent pixel shapes matter. See the [Phaser 4 Pixel Art Guide](https://github.com/phaserjs/phaser/blob/master/docs/Phaser%204%20Pixel%20Art%20Guide/Phaser%204%20Pixel%20Art%20Guide.md).
 

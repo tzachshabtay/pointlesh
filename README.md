@@ -48,7 +48,7 @@ The demo loads its committed documents from `demos/forest/public/authoring/`. Pr
 
 In **Assets**, select **Graphics → Characters → Borin**. **Base image** is a single still portrait; choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. Pickup graphics are under **Graphics → Objects**. In **Adventure**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
 
-**Scaled variants...** in the Current panel manages alternate resolutions of an image or animation. Enter width and height (per frame for animations), then Generate. Edit a saved variant to regenerate it, use Touch up, or delete it. Strict nearest-neighbor resizing is the default for this pixel-art workflow and uses no API. The optional dedicated AI upscaler requires `REPLICATE_API_TOKEN` in `demos/forest/.env` and a server restart; AI super-resolution may infer fine details. The runtime picks the closest available resolution for the displayed size, including zoom, while retaining authored object sizes and animation timing. Room backgrounds and walk-behind overlays switch together.
+**Scaled variants...** in the Current panel manages alternate resolutions of an image or animation. Enter width and height (per frame for animations), then generate three candidates, animate them if applicable, and select one to Promote or Save and close. Edit a saved size to regenerate it, use Touch up, or delete it. OpenAI upscaling uses the existing `OPENAI_API_KEY`; strict nearest-neighbor and smooth resizing need no API. Animation upscaling sends the whole sheet and shares normal generation's row/column alignment, respecting the asset's alignment setting. The runtime selects the closest available resolution for the displayed physical size, including zoom, while retaining authored object sizes and timing. The demo renders at display resolution to avoid a second pixelated scaling pass, and room backgrounds and walk-behind overlays switch together.
 
 Under **Assets → Voices**, select a speaker and use **Line** to switch between the base voice and its dialogue lines. Generate and promote the base voice first, then generate individual lines or use **Regenerate all lines**. The dialogue designer and runtime keep referring to those same line assets.
 
@@ -127,26 +127,26 @@ npm pack --workspace @pointlesh/core --workspace @pointlesh/designer \
   --workspace @pointlesh/dev --workspace @pointlesh/phaser
 ```
 
-The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.7`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.7 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
+The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.8`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.8 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
 
 ```json
 {
   "overrides": {
-    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.7" },
-    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.7" },
+    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.8" },
+    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.8" },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.7",
-      "@ai-game-assets/phaser": "^0.11.7"
+      "@ai-game-assets/core": "^0.11.8",
+      "@ai-game-assets/phaser": "^0.11.8"
     },
-    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.7" },
-    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.7" },
+    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.8" },
+    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.8" },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.11.7",
-      "@ai-game-assets/dev": "^0.11.7"
+      "@ai-game-assets/core": "^0.11.8",
+      "@ai-game-assets/dev": "^0.11.8"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.7",
-      "@ai-game-assets/phaser": "^0.11.7"
+      "@ai-game-assets/core": "^0.11.8",
+      "@ai-game-assets/phaser": "^0.11.8"
     }
   }
 }

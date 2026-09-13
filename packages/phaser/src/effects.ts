@@ -66,32 +66,41 @@ export function createWalkBehindOverlay(
   image: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite,
   options: { depthOffset?: number; destroyImage?: boolean } = {},
 ): PointleshWalkBehindOverlay {
-  // Phaser 4 moved WebGL masks to filter lists. GeometryMask/setMask now work
-  // only in Canvas, where WebGL would otherwise draw the entire duplicate room.
   const graphics = scene.add.graphics();
   scene.children.remove(graphics);
   const webgl = "gl" in scene.renderer && Boolean(scene.renderer.gl);
-  const filter = webgl ? image.enableFilters().filters!.external.addMask(graphics) : undefined;
-  const originalFocus = image.focusFiltersOnCamera;
-  const originalFilterState = filter ? {
-    autoFocus: image.filtersAutoFocus, focusContext: image.filtersFocusContext,
-    originX: image.filterCamera!.originX, originY: image.filterCamera!.originY,
-    isObjectInversion: image.filterCamera!.isObjectInversion,
-  } : undefined;
-  if (filter) {
-    // Render the duplicate in the same camera coordinates as the base image.
-    // Object-focused filters first capture at image resolution, then round the
-    // transformed intermediate quad; fractional zoom/scroll exposes seams.
-    image.filtersAutoFocus = true;
-    image.filtersFocusContext = true;
-    image.focusFiltersOnCamera = function (camera) {
-      const result = originalFocus.call(this, camera);
-      // Phaser 4's context focus copies scroll/zoom/rotation but omits origin.
-      // Its object-inversion matrix also rotates and scales in a different order.
-      this.filterCamera!.setOrigin(camera.originX, camera.originY);
-      this.filterCamera!.isObjectInversion = false;
-      return result;
+  type Submitter = Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad;
+  const customNodes = image.customRenderNodes as { Submitter?: Submitter };
+  const defaultNodes = image.defaultRenderNodes as { Submitter: Submitter };
+  const originalSubmitter = customNodes.Submitter;
+  if (webgl) {
+    // Draw the original room texture directly through a stencil polygon. A mask
+    // filter captures a lower-resolution intermediate image, which disagrees
+    // with the background on high-DPI canvases and exposes seams while zooming.
+    const submitter = originalSubmitter ?? defaultNodes.Submitter;
+    const masked = Object.create(submitter) as typeof submitter;
+    masked.run = function (context, ...args) {
+      const renderer = context.renderer, gl = renderer.gl;
+      renderer.renderNodes.finishBatch();
+      const mask = context.getClone();
+      mask.setColorWritemask(false, false, false, false);
+      // Reserve the high stencil bit for this draw; preserve the other bits.
+      mask.setStencil(true, gl.ALWAYS, 0x80, 0x80, gl.KEEP, gl.KEEP, gl.REPLACE, 0, 0x80);
+      mask.clear(gl.STENCIL_BUFFER_BIT);
+      const compositor = renderer.renderNodes.getNode("ListCompositor") as Phaser.Renderer.WebGL.RenderNodes.ListCompositor;
+      compositor.run(mask, [graphics]);
+      renderer.renderNodes.finishBatch();
+      const clipped = context.getClone();
+      clipped.setStencil(true, gl.EQUAL, 0x80, 0x80);
+      try {
+        submitter.run(clipped, ...args);
+        renderer.renderNodes.finishBatch();
+      } finally {
+        mask.clear(gl.STENCIL_BUFFER_BIT);
+        context.beginDraw();
+      }
     };
+    customNodes.Submitter = masked;
   }
   const geometryMask = webgl ? undefined : graphics.createGeometryMask();
   if (geometryMask) image.setMask(geometryMask);
@@ -112,13 +121,9 @@ export function createWalkBehindOverlay(
     if (destroyed) return;
     destroyed = true;
     scene.events.off("shutdown", destroy);
-    if (filter) image.filters?.external.remove(filter);
-    if (originalFilterState) {
-      image.focusFiltersOnCamera = originalFocus;
-      image.filtersAutoFocus = originalFilterState.autoFocus;
-      image.filtersFocusContext = originalFilterState.focusContext;
-      image.filterCamera?.setOrigin(originalFilterState.originX, originalFilterState.originY);
-      if (image.filterCamera) image.filterCamera.isObjectInversion = originalFilterState.isObjectInversion;
+    if (webgl) {
+      if (originalSubmitter) customNodes.Submitter = originalSubmitter;
+      else delete customNodes.Submitter;
     }
     if (geometryMask) { image.clearMask(false); geometryMask.destroy(); }
     graphics.destroy();

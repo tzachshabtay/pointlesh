@@ -1011,7 +1011,42 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "promoted-1788921130681",
-          "notes": "Promoted from the AI asset designer."
+          "notes": "Promoted from the AI asset designer.",
+          "scaledVariantSource": {
+            "dimensions": {
+              "width": 144,
+              "height": 192
+            },
+            "frameGrid": {
+              "frameWidth": 48,
+              "frameHeight": 64,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 8
+            }
+          },
+          "scaledVariants": {
+            "a2ca38ca-9c1b-40e5-870b-e49bfb6ab9f3": {
+              "id": "a2ca38ca-9c1b-40e5-870b-e49bfb6ab9f3",
+              "dimensions": {
+                "width": 288,
+                "height": 384
+              },
+              "frameGrid": {
+                "frameWidth": 96,
+                "frameHeight": 128,
+                "columns": 3,
+                "rows": 3,
+                "frameCount": 8,
+                "margin": 0,
+                "spacing": 0
+              },
+              "method": "ai-upscale",
+              "file": "art/scaled-a2ca38ca-9c1b-40e5-870b-e49bfb6ab9f3-658f57db-548e-4953-bb61-c4d61ef4548a.png",
+              "sourceFile": "art/borin.idle-front.promoted-1789163812890.png",
+              "createdAt": "2026-09-13T22:30:03.643Z"
+            }
+          }
         }
       },
       "tags": [

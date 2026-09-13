@@ -39,6 +39,8 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
   await server.listen();
   const address = server.server.address() as { port: number };
   const base = `http://127.0.0.1:${address.port}`;
+  let releaseGeneration: (() => void) | undefined;
+  let holdGeneration: Promise<void> | undefined;
   let rejectNextSelection = false;
   let releaseSelection: (() => void) | undefined;
   let holdSelection: Promise<void> | undefined;
@@ -47,6 +49,7 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, async route => {
       const url = new URL(route.request().url());
       if (url.port !== '4287') return route.abort();
+      if (url.pathname === '/__ai-assets/scaled-variant-options' && holdGeneration) await holdGeneration;
       if (url.pathname === '/__ai-assets/scaled-variant' && route.request().postDataJSON()?.action === 'select') {
         if (rejectNextSelection) {
           rejectNextSelection = false;
@@ -133,7 +136,14 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await dialog.getByLabel('Width', { exact: true }).fill('96');
     await dialog.getByLabel('Height', { exact: true }).fill('128');
     const beforeFirst = await readFile(manifestPath, 'utf8');
+    holdGeneration = new Promise<void>(resolve => { releaseGeneration = resolve; });
     await dialog.getByRole('button', { name: 'Generate', exact: true }).click();
+    const highlight = dialog.locator('.ai-game-assets-designer__status-highlight');
+    await expect(highlight).toBeVisible();
+    const initialHighlight = await highlight.textContent();
+    await expect.poll(() => highlight.textContent()).not.toBe(initialHighlight);
+    releaseGeneration!(); holdGeneration = undefined;
+    await expect(highlight).toHaveCount(0);
     await chooseCandidate(beforeFirst);
     await expect(dialog.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
     await expectSavedPreview();
