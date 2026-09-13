@@ -12,6 +12,9 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
   await mkdir(assetsDir);
   for (const id of ['borin', 'borin.idle-front', 'background.village-pub']) {
     const asset = catalog.assets[id], version = asset.versions[asset.activeVersion];
+    // User-authored variants stay in the real catalog; this fixture starts fresh.
+    delete version.scaledVariants;
+    delete version.scaledVariantSource;
     const target = path.join(root, version.file);
     await mkdir(path.dirname(target), { recursive: true });
     await copyFile(path.join(publicDir, version.file), target);
@@ -54,6 +57,11 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await openBorin();
     await page.getByRole('button', { name: 'Scaled variants...', exact: true }).click();
     const dialog = page.getByRole('dialog', { name: 'Scaled variants', exact: true });
+    const expectSavedPreview = async () => {
+      const preview = dialog.locator('img');
+      await expect(preview).toHaveAttribute('src', /^data:image\/png;base64,/);
+      await expect.poll(() => preview.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    };
     await expect(dialog.getByText('No scaled variants yet.')).toBeVisible();
     await expect(dialog.getByLabel('Scaling method')).toHaveValue('nearest');
     await dialog.getByLabel('Scaling method').selectOption({ label: 'OpenAI image upscale' });
@@ -62,11 +70,13 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await dialog.getByLabel('Height', { exact: true }).fill('128');
     await dialog.getByRole('button', { name: 'Generate', exact: true }).click();
     await expect(dialog.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
+    await expectSavedPreview();
     await dialog.getByRole('button', { name: 'Edit', exact: true }).click();
     await dialog.getByLabel('Width', { exact: true }).fill('72');
     await dialog.getByLabel('Height', { exact: true }).fill('96');
     await dialog.getByRole('button', { name: 'Regenerate', exact: true }).click();
     await expect(dialog.locator('strong')).toHaveText('72 × 96');
+    await expectSavedPreview();
     expect(imageRequests).toHaveLength(2);
     expect(imageRequests[0]).toContain('96 by 128');
     expect(imageRequests[1]).toContain('72 by 96');
@@ -78,6 +88,7 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await expect(touchup).toBeVisible();
     await touchup.getByRole('button', { name: 'Save', exact: true }).click();
     await expect(touchup).toBeHidden();
+    await expectSavedPreview();
     const saved = JSON.parse(await readFile(manifestPath, 'utf8'));
     expect(Object.values(saved.assets.borin.versions[saved.assets.borin.activeVersion].scaledVariants).map((v: any) => v.method)).toEqual(['touch-up']);
     await dialog.getByRole('button', { name: 'Delete', exact: true }).click();
@@ -95,6 +106,8 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await dialog.getByLabel('Frame height', { exact: true }).fill(String(Math.round(original.height)));
     await dialog.getByRole('button', { name: 'Generate', exact: true }).click();
     await expect(dialog.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
+    await expectSavedPreview();
+    await expect(page.getByRole('combobox', { name: 'Animation', exact: true })).toHaveValue('borin.idle-front');
     await expect.poll(async () => (await actor()).texture).toContain('::scaled::');
     const frame = (await actor()).frame;
     await expect.poll(async () => (await actor()).frame).not.toBe(frame);
