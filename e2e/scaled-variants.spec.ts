@@ -137,6 +137,16 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await chooseCandidate(beforeFirst);
     await expect(dialog.getByRole('button', { name: 'Edit', exact: true })).toBeVisible();
     await expectSavedPreview();
+    // The default 2x size already exists after promotion; reopening should
+    // offer regeneration and exclude that variant from its own source choice.
+    await dialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await page.getByRole('button', { name: 'Scaled variants...', exact: true }).click();
+    await expect(dialog.getByRole('button', { name: 'Regenerate', exact: true })).toBeVisible();
+    await expect(dialog.getByText(/Closest source: 48 × 64 original/)).toBeVisible();
+    await dialog.getByLabel('Width', { exact: true }).fill('73');
+    await expect(dialog.getByRole('button', { name: 'Generate', exact: true })).toBeVisible();
+    await dialog.getByLabel('Width', { exact: true }).fill('96');
+    await expect(dialog.getByRole('button', { name: 'Regenerate', exact: true })).toBeVisible();
     await dialog.getByRole('button', { name: 'Edit', exact: true }).click();
     await dialog.getByLabel('Width', { exact: true }).fill('72');
     await dialog.getByLabel('Height', { exact: true }).fill('96');
@@ -189,12 +199,18 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await expect.poll(async () => (await actor()).frame).not.toBe(frame);
     expect((await actor()).width).toBeCloseTo(original.width, 3);
     const previousTexture = (await actor()).texture;
-    await dialog.getByRole('button', { name: 'Edit', exact: true }).click();
+    // Entering an existing size without Edit regenerates that same variant.
+    await dialog.getByLabel('Frame width', { exact: true }).fill(String(Math.round(original.width)));
+    await dialog.getByLabel('Frame height', { exact: true }).fill(String(Math.round(original.height)));
     const beforeAnimationReplacement = await readFile(manifestPath, 'utf8');
     await dialog.getByRole('button', { name: 'Regenerate', exact: true }).click();
     await chooseCandidate(beforeAnimationReplacement, true, true);
     const replaced = JSON.parse(await readFile(manifestPath, 'utf8')).assets['borin.idle-front'];
-    const replacementFile = (Object.values(replaced.versions[replaced.activeVersion].scaledVariants)[0] as any).file;
+    const replacements = Object.values(replaced.versions[replaced.activeVersion].scaledVariants) as any[];
+    const previousVariants = JSON.parse(beforeAnimationReplacement).assets['borin.idle-front'].versions[replaced.activeVersion].scaledVariants;
+    expect(replacements).toHaveLength(1);
+    expect(replacements[0].id).toBe(Object.keys(previousVariants)[0]);
+    const replacementFile = replacements[0].file;
     await expect.poll(async () => (await actor()).texture).toContain(replacementFile);
     expect((await actor()).texture).not.toBe(previousTexture);
     expect((await actor()).width).toBeCloseTo(original.width, 3);
