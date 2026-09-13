@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { mkdtemp, readFile, writeFile, mkdir, copyFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { createAiAssetDevServer } from '@ai-game-assets/dev';
+import { createAiAssetDevServer, createOpenAiUpscaleProvider } from '@ai-game-assets/dev';
 
 test('scaled variants CRUD uses the real server and keeps animated actors at their authored size', async ({ page }, testInfo) => {
   const root = await mkdtemp(path.join(tmpdir(), 'pointlesh-scaled-e2e-'));
@@ -17,7 +17,16 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await copyFile(path.join(publicDir, version.file), target);
   }
   await writeFile(manifestPath, JSON.stringify(catalog));
-  const server = createAiAssetDevServer({ manifestPath, assetsDir, publicPathPrefix: 'art', port: 0 });
+  const imageRequests: string[] = [];
+  const upscaleProvider = createOpenAiUpscaleProvider({ apiKey: 'test-openai-key', fetch: async (url, options) => {
+    expect(String(url)).toBe('https://api.openai.com/v1/images/edits');
+    const form = options!.body as FormData;
+    expect(form.get('model')).toBe('gpt-image-2.5-sunburst');
+    imageRequests.push(String(form.get('prompt')));
+    const source = Buffer.from(await (form.get('image') as Blob).arrayBuffer());
+    return Response.json({ data: [{ b64_json: source.toString('base64') }] });
+  } });
+  const server = createAiAssetDevServer({ manifestPath, assetsDir, publicPathPrefix: 'art', port: 0, upscaleProvider });
   await server.listen();
   const address = server.server.address() as { port: number };
   const base = `http://127.0.0.1:${address.port}`;
@@ -47,6 +56,8 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     const dialog = page.getByRole('dialog', { name: 'Scaled variants', exact: true });
     await expect(dialog.getByText('No scaled variants yet.')).toBeVisible();
     await expect(dialog.getByLabel('Scaling method')).toHaveValue('nearest');
+    await dialog.getByLabel('Scaling method').selectOption({ label: 'OpenAI image upscale' });
+    await expect(dialog.getByText(/Enlargement uses OpenAI/)).toBeVisible();
     await dialog.getByLabel('Width', { exact: true }).fill('96');
     await dialog.getByLabel('Height', { exact: true }).fill('128');
     await dialog.getByRole('button', { name: 'Generate', exact: true }).click();
@@ -56,6 +67,11 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
     await dialog.getByLabel('Height', { exact: true }).fill('96');
     await dialog.getByRole('button', { name: 'Regenerate', exact: true }).click();
     await expect(dialog.locator('strong')).toHaveText('72 × 96');
+    expect(imageRequests).toHaveLength(2);
+    expect(imageRequests[0]).toContain('96 by 128');
+    expect(imageRequests[1]).toContain('72 by 96');
+    const aiSaved = JSON.parse(await readFile(manifestPath, 'utf8'));
+    expect(Object.values(aiSaved.assets.borin.versions[aiSaved.assets.borin.activeVersion].scaledVariants).map((v: any) => v.method)).toEqual(['ai-upscale']);
     await page.screenshot({ path: testInfo.outputPath('scaled-variants.png') });
     await dialog.getByRole('button', { name: 'Touch up…', exact: true }).click();
     const touchup = page.getByRole('dialog', { name: /^Touch up borin/ });
