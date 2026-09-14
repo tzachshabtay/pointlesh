@@ -384,7 +384,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     const target = targetFromNativeSelection(last);
     const view = designer.getOpenView();
     const editor = view && designer.root.querySelector<HTMLElement>(`.scene-designer__panel[data-panel="${view}"] .scene-designer__editor`);
-    if (!editor || !target || !['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.prefab.pointlesh.kind)) {
+    if (!editor || !target || !['area', 'walkable', 'walk-behind', 'scale', 'zoom', 'character', 'object'].includes(target.prefab.pointlesh.kind)) {
       nativeContext?.remove(); nativeContext = undefined; nativeContextKey = ''; restoreNativeFields(); return;
     }
     const key = `${view}:${JSON.stringify(designer.getSelection())}:${lastJson}:${past.length}:${future.length}`;
@@ -392,7 +392,8 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     nativeContext?.remove();
     restoreNativeFields();
     nativeContext = element(document, 'section', 'pointlesh-native-area-context');
-    nativeContext.setAttribute('aria-label', 'Selected area adventure properties');
+    const isBody = target.prefab.pointlesh.kind === 'character' || target.prefab.pointlesh.kind === 'object';
+    nativeContext.setAttribute('aria-label', isBody ? 'Selected object navigation properties' : 'Selected area adventure properties');
     const values: PointleshProperties = { ...target.prefab.pointlesh.properties, ...target.instance?.pointlesh?.properties };
     const schemas = { ...target.prefab.pointlesh.propertySchema };
     for (const attribute of target.prefab.attributes) if (attribute.kind === 'number') {
@@ -404,10 +405,13 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       const current = target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.prefab.id);
       if (current) setTargetProperties(next, current, { [property]: value });
     };
-    nativeContext.append(areaEditor(target, values, schemas, edit));
+    if (isBody) {
+      nativeContext.append(element(document, 'h4', '', 'Navigation'));
+      nativeContext.append(walkThroughField(values, edit));
+    } else nativeContext.append(areaEditor(target, values, schemas, edit));
     const history = element(document, 'div', 'pointlesh-native-area-history');
-    const undo = button(document, 'Undo area edit', () => api.undo()); undo.disabled = !past.length;
-    const redo = button(document, 'Redo area edit', () => api.redo()); redo.disabled = !future.length;
+    const undo = button(document, isBody ? 'Undo navigation edit' : 'Undo area edit', () => api.undo()); undo.disabled = !past.length;
+    const redo = button(document, isBody ? 'Redo navigation edit' : 'Redo area edit', () => api.redo()); redo.disabled = !future.length;
     history.append(undo, redo); nativeContext.append(history);
     nativeContextKey = key;
     editor.prepend(nativeContext);
@@ -422,6 +426,13 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
         }
       });
     }
+  }
+
+  function walkThroughField(values: PointleshProperties, edit: (key: string, value: PointleshProperty) => void) {
+    return propertyField(document, 'walkThrough', values.walkThrough === true, {
+      type: 'boolean', label: 'WalkThrough',
+      description: 'Allow characters to pass through this entity. When off, characters navigate around its ground footprint.',
+    }, edit, status);
   }
 
   function restoreNativeFields() {
@@ -476,9 +487,12 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       : {};
     const hasAnimationAssignments = Object.values(effectiveAnimations).some(slots => !!slots && Object.keys(slots).length > 0);
     if (target.prefab.pointlesh.kind === 'character') body.append(animationEditor(target, values, edit));
+    const isBody = target.prefab.pointlesh.kind === 'character' || target.prefab.pointlesh.kind === 'object';
+    if (isBody) body.append(walkThroughField(values, edit));
     const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.prefab.pointlesh.kind);
     if (isArea) body.append(areaEditor(target, values, schemas, edit));
     for (const [key, value] of Object.entries(values)) {
+      if (isBody && key === 'walkThrough') continue;
       if (isArea && areaPropertyKeys.has(key)) continue;
       if (target.prefab.pointlesh.kind === 'character' && (key === 'animations' || key === 'directions' || key === 'facing')) continue;
       if (target.prefab.pointlesh.kind === 'character' && hasAnimationAssignments && (key === 'frameCount' || key === 'frameDurationMs')) continue;

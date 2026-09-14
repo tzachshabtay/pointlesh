@@ -54,6 +54,8 @@ Under **Assets → Voices**, select a speaker and use **Line** to switch between
 
 Areas are native Scene Designer vector shapes. Select an area in **Adventure** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo combines walking, character scale and camera zoom on each room’s floor polygon, with a separate curved foreground outline using the same Area prefab.
 
+Characters and objects are solid by default. Select one in Scenes or Prefabs and use **Navigation → WalkThrough** to let other characters pass through it. Click walks detour around occupied ground; arrow movement stops at it. Footprints follow moving entities and live edits, and disappear when an entity is hidden or collected. The same setting is available in Adventure.
+
 The [walkthrough](docs/walkthrough.md) contains puzzle solutions and an editor tour. The [art provenance and prompts](docs/art-prompts.md) describe the six generated room backgrounds. Character sprites and ambient music are created locally by the demo; dialogue is text-based unless generated voice assets are supplied.
 
 ## Prefabs that remain extensible
@@ -168,7 +170,7 @@ CI uses Node 22.14 and checks packages, tests, types, the demo build and browser
 
 ## Initial scope
 
-Pointlesh is a small toolkit, not an entire game framework. It does not provide a physics engine, crowd navigation, a script language, native platform backends, multiplayer, cloud save synchronization or a generic UI toolkit. Navigation uses point-sized actors and room-scale polygons; route geometry is captured when walking starts, so games must cancel/replan paths after relevant geometry changes.
+Pointlesh is a small toolkit, not an entire game framework. It does not provide a physics engine, crowd navigation, a script language, native platform backends, multiplayer, cloud save synchronization or a generic UI toolkit. Navigation uses room-scale polygons; the Phaser navigation adapter expands entity footprints for body clearance and checks live geometry before advancing paths. Games with custom renderers can bind their own live navigation source.
 
 Save data does not serialize functions, engine objects, promises or a JavaScript call stack. The checksum detects accidental corruption rather than malicious modification. Browser saves belong to that browser/origin. Behavior IDs connect to explicit game dispatch; adding an ID does not execute arbitrary code. Object properties such as custom verbs, inventory rules and entity-specific area restrictions are integration data for clients to implement.
 

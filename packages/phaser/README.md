@@ -66,6 +66,34 @@ Existing clients can still supply `aiRuntime`, `assetId` and `animation: state =
 
 Destroying the scene or sprite detaches the binding and generated texture/animation bindings. Calling `view.destroy()` detaches it without destroying your sprite or controller.
 
+## Solid characters and objects
+
+Character and object prefabs expose **WalkThrough**, stored as `properties.walkThrough`, with a default of `false` even in older documents. Register rendered entities with a shared navigation world to connect this setting to walking:
+
+```ts
+import { PhaserAdventureNavigation } from '@pointlesh/phaser';
+
+const navigation = new PhaserAdventureNavigation(scene, () => walkablePolygons(room));
+navigation.register(sprite, {
+  kind: 'character', controller: actor,
+  properties: () => currentCharacter().properties,
+  footprint: { width: 40, height: 12 },
+});
+navigation.register(crateSprite, {
+  kind: 'object', properties: () => currentCrate().properties,
+  footprint: { width: 50, height: 20 },
+});
+await actor.walkTo({ x: 500, y: 370 });
+// Arrow/joystick input and approach use the same registered geometry.
+actor.setMovementDirection({ x: 1, y: 0 });
+```
+
+Footprints describe occupied ground in world pixels, centered on each sprite's position/foot anchor. They can be getters for live size edits. The default is 60% of display width and 10% of display height for characters, or full display width and 20% of height for objects. Choose explicit logical footprints when animation frame transforms or perspective change visual bounds; the demo derives stable ground sizes from base image dimensions and authored scale, independent of scaled variants. Tall artwork does not block the ground behind its head.
+
+The world expands each obstacle by the mover's footprint so the whole body clears it, excludes the mover itself, and reads positions, visibility and `walkThrough` on each movement step. Hidden, inactive, disabled or destroyed entities do not block. `walkThrough: true` makes that entity passable to others; it does not make its own controller ignore other solid entities. Background click walks detour; directional input stops at the first obstacle. Pending and restored walks replan if their remaining route becomes blocked. This is local pathfinding, without crowd coordination or physics pushing.
+
+Registration binds a controller's live navigation source. Explicit walkable arguments override the bound floor, and explicit obstacle arguments add to registered blockers. Destroying the sprite, the scene or the returned registration removes the body and binding; `navigation.destroy()` detaches the whole world. Re-registering a sprite replaces its previous registration.
+
 ## Scrolling rooms
 
 ```ts

@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureCharacter, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
@@ -43,6 +43,7 @@ class ForestAdventure extends Phaser.Scene {
   character!: CharacterController;
   actor!: Phaser.GameObjects.Sprite;
   binding!: PhaserAdventureCharacter;
+  navigation!: PhaserAdventureNavigation;
   roomCamera!: PhaserRoomCamera;
   private cameraWasEditing = false;
   background!: Phaser.GameObjects.Image;
@@ -94,6 +95,12 @@ class ForestAdventure extends Phaser.Scene {
       animations: () => readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
       areas: () => this.resolved().areas, camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
+    this.navigation = new PhaserAdventureNavigation(this, () => this.walkables());
+    this.navigation.register(this.actor, {
+      kind: 'character', controller: this.character,
+      properties: () => this.playerDefinition()?.properties ?? {},
+      footprint: () => this.navigationFootprint(this.playerDefinition()),
+    });
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.markers = this.add.graphics().setDepth(2000);
     this.behaviors.register('forest.interact', { handle: context => this.applyInteraction(context.targetId, context.item) });
@@ -113,7 +120,7 @@ class ForestAdventure extends Phaser.Scene {
       if (target) void this.act(target.id);
       else if (!this.selected) {
         this.epoch++;
-        try { void this.character.walkTo(point, this.walkables()); }
+        try { void this.character.walkTo(point); }
         catch (error) { toast(error instanceof Error ? error.message : String(error)); }
       }
     });
@@ -177,6 +184,16 @@ class ForestAdventure extends Phaser.Scene {
   }
   playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
   walkables() { return walkablePolygons(this.resolved()); }
+  navigationFootprint(object?: ResolvedPointleshObject) {
+    const asset = assets.assets[object?.assetId ?? 'borin'];
+    // Ground dimensions use authored world scale, independently of animation
+    // resolution, frame transforms, and the area's visual perspective effect.
+    return defaultNavigationFootprint(
+      (asset?.frameGrid?.frameWidth ?? asset?.dimensions?.width ?? 48) * (object?.scaleX ?? 2.4),
+      (asset?.frameGrid?.frameHeight ?? asset?.dimensions?.height ?? 64) * (object?.scaleY ?? 2.4),
+      object?.kind === 'object' ? 'object' : 'character',
+    );
+  }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
   blocked() { return this.worldEditorOpen() || this.editing || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
@@ -187,7 +204,7 @@ class ForestAdventure extends Phaser.Scene {
   updateMovementKeys() {
     if (this.blocked()) { this.clearMovementKeys(); return; }
     const direction = [...this.movementKeys].reduce((sum, key) => ({ x: sum.x + arrowDirections[key].x, y: sum.y + arrowDirections[key].y }), { x: 0, y: 0 });
-    try { this.character.setMovementDirection(direction.x || direction.y ? direction : null, this.walkables()); }
+    try { this.character.setMovementDirection(direction.x || direction.y ? direction : null); }
     catch (error) { this.clearMovementKeys(); toast(error instanceof Error ? error.message : String(error)); }
   }
   hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
@@ -216,7 +233,7 @@ class ForestAdventure extends Phaser.Scene {
       ? { x: center.x + Number(entity.properties.approachOffsetX ?? 0), y: center.y + Number(entity.properties.approachOffsetY ?? 25) }
       : { x: Number(entity.properties.approachX), y: Number(entity.properties.approachY) };
     let arrived: boolean;
-    try { arrived = await this.character.approach({ position: center, walkPoint }, 'walk', this.walkables()); }
+    try { arrived = await this.character.approach({ position: center, walkPoint }, 'walk'); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); return; }
     const current = this.interactionEntity(targetId, instanceId);
     if (operation !== this.epoch || !current) return;
@@ -299,6 +316,11 @@ class ForestAdventure extends Phaser.Scene {
       if (!sprite) {
         sprite = this.add.sprite(object.position.x, object.position.y, texture, hasAssetTexture ? asset.frameGrid ? 0 : undefined : object.kind === 'character' ? 4 : undefined);
         this.entitySprites.set(object.id, sprite);
+        this.navigation.register(sprite, {
+          kind: object.kind === 'character' ? 'character' : 'object',
+          properties: () => current().properties,
+          footprint: () => this.navigationFootprint(current()),
+        });
         bindAdventureSpriteInteraction(sprite, {
           enabled: () => !this.blocked() && current().enabled && current().properties.interactive !== false && typeof current().properties.targetId === 'string' && targetVisible(this.story, String(current().properties.targetId)),
           onHover: hovered => this.hover(hovered ? String(current().properties.targetId) : undefined),
@@ -332,6 +354,11 @@ class ForestAdventure extends Phaser.Scene {
             angle: () => current().rotation,
           });
           npc = { controller, binding, sprite, actorName }; this.npcActors.set(object.id, npc);
+          this.navigation.register(sprite, {
+            kind: 'character', controller,
+            properties: () => current().properties,
+            footprint: () => this.navigationFootprint(current()),
+          });
         }
         npc.actorName = actorName;
         npc.controller.state.position = { ...object.position };

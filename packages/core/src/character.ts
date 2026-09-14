@@ -1,4 +1,4 @@
-import { clipMovementToWalkable, distance, findClosestReachablePath, findPath } from './navigation.js';
+import { clipMovementToWalkable, distance, findClosestReachablePath, findPath, isSegmentWalkable, isWalkable } from './navigation.js';
 import { cloneJSON, isPoint, type ApproachMode, type CharacterSnapshot, type Direction, type Point, type Polygon } from './types.js';
 
 export interface CharacterConfig {
@@ -18,6 +18,7 @@ export interface CharacterConfig {
 
 export interface ApproachTarget { position: Point; walkPoint?: Point; facing?: Direction }
 export interface WalkToOptions { /** Snap an unreachable click to the nearest reachable point. Defaults to true. */ snap?: boolean }
+export interface CharacterNavigation { walkables: readonly Polygon[]; obstacles?: readonly Polygon[] }
 const DIRECTIONS: Direction[] = ['right', 'down-right', 'down', 'down-left', 'left', 'up-left', 'up', 'up-right'];
 const positive = (value: number, name: string): number => {
   if (!Number.isFinite(value) || value <= 0) throw new Error(`${name} must be finite and positive`);
@@ -37,7 +38,11 @@ export class CharacterController {
   readonly state: CharacterSnapshot;
   private walkCompletion: ((completed: boolean) => void) | undefined;
   private speechCompletion: (() => void) | undefined;
-  private directionalMovement?: { direction: Point; walkables: readonly Polygon[]; obstacles: readonly Polygon[] };
+  private directionalMovement?: { direction: Point; navigation: () => CharacterNavigation };
+  private navigationSource?: () => CharacterNavigation;
+  private walkNavigation?: () => CharacterNavigation;
+  private walkTarget?: Point;
+  private snapWalk = true;
   private animationDurations?: number[];
   private operation = 0;
 
@@ -61,6 +66,18 @@ export class CharacterController {
 
   get isWalking(): boolean { return this.state.activity === 'walking'; }
   get destination(): Point | null { const destination = this.state.path.at(-1); return destination ? { ...destination } : null; }
+
+  /** Live room geometry is also used after restoring a saved walk. Call the returned cleanup when unbinding. */
+  setNavigationSource(source: () => CharacterNavigation): () => void {
+    const previous = this.navigationSource;
+    this.navigationSource = source;
+    return () => { if (this.navigationSource === source) this.navigationSource = previous; };
+  }
+
+  private navigation(walkables?: readonly Polygon[], obstacles: readonly Polygon[] = []): CharacterNavigation {
+    const current = this.navigationSource?.();
+    return { walkables: walkables ?? current?.walkables ?? [], obstacles: [...(current?.obstacles ?? []), ...obstacles] };
+  }
 
   face(target: Point | Direction): void {
     if (typeof target === 'string') {
@@ -87,15 +104,20 @@ export class CharacterController {
   }
 
   /** A new click walk interrupts the old activity. Completion means the resolved destination was reached. */
-  walkTo(destination: Point, walkables: readonly Polygon[], obstacles: readonly Polygon[] = [], options: WalkToOptions = {}): Promise<boolean> {
+  walkTo(destination: Point, walkables?: readonly Polygon[], obstacles: readonly Polygon[] = [], options: WalkToOptions = {}): Promise<boolean> {
     // Validate/compute before cancelling an existing valid action.
+    const navigation = () => this.navigation(walkables, obstacles);
+    const geometry = navigation();
     const path = options.snap === false
-      ? findPath(this.state.position, destination, walkables, obstacles)
-      : findClosestReachablePath(this.state.position, destination, walkables, obstacles);
+      ? findPath(this.state.position, destination, geometry.walkables, geometry.obstacles)
+      : findClosestReachablePath(this.state.position, destination, geometry.walkables, geometry.obstacles);
     this.stop();
     if (!path) return Promise.resolve(false);
     this.state.path = path.slice(1);
     if (!this.state.path.length) return Promise.resolve(true);
+    this.walkNavigation = navigation;
+    this.walkTarget = { ...destination };
+    this.snapWalk = options.snap !== false;
     this.state.activity = 'walking';
     this.state.animationFrame = 0;
     this.state.animationElapsedMs = 0;
@@ -107,7 +129,7 @@ export class CharacterController {
    * Set held-key/joystick intent. Repeated nonzero updates preserve animation/frame timing.
    * Passing null or a zero vector releases only directional movement, not a pending click walk.
    */
-  setMovementDirection(direction: Point | null, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): void {
+  setMovementDirection(direction: Point | null, walkables?: readonly Polygon[], obstacles: readonly Polygon[] = []): void {
     if (direction === null || (isPoint(direction) && direction.x === 0 && direction.y === 0)) {
       if (this.directionalMovement) this.stop();
       return;
@@ -116,9 +138,11 @@ export class CharacterController {
     const length = Math.hypot(direction.x, direction.y);
     if (!Number.isFinite(length) || length === 0) throw new Error('Movement direction must have finite nonzero magnitude');
     // Validate supplied geometry before interrupting an existing valid activity.
-    findPath(this.state.position, this.state.position, walkables, obstacles);
+    const navigation = () => this.navigation(walkables, obstacles);
+    const geometry = navigation();
+    findPath(this.state.position, this.state.position, geometry.walkables, geometry.obstacles);
     if (!this.directionalMovement) this.stop();
-    this.directionalMovement = { direction: { x: direction.x / length, y: direction.y / length }, walkables, obstacles };
+    this.directionalMovement = { direction: { x: direction.x / length, y: direction.y / length }, navigation };
     this.state.activity = 'walking';
     this.face({ x: this.state.position.x + direction.x, y: this.state.position.y + direction.y });
   }
@@ -138,6 +162,8 @@ export class CharacterController {
     this.walkCompletion = undefined;
     this.speechCompletion = undefined;
     this.directionalMovement = undefined;
+    this.walkNavigation = undefined;
+    this.walkTarget = undefined;
     this.state.path = [];
     this.state.speech = null;
     this.idle();
@@ -145,12 +171,16 @@ export class CharacterController {
     speechCompletion?.();
   }
 
-  async approach(target: ApproachTarget, mode: ApproachMode, walkables: readonly Polygon[], obstacles: readonly Polygon[] = []): Promise<boolean> {
+  async approach(target: ApproachTarget, mode: ApproachMode, walkables?: readonly Polygon[], obstacles: readonly Polygon[] = []): Promise<boolean> {
     if (!isPoint(target.position) || (target.walkPoint !== undefined && !isPoint(target.walkPoint))) throw new Error('Invalid approach target');
     if (mode === 'none') return true;
     if (!['face', 'walk-if-point', 'walk'].includes(mode)) throw new Error('Unknown approach mode');
     if (mode === 'walk' || (mode === 'walk-if-point' && target.walkPoint)) {
-      const completion = this.walkTo(target.walkPoint ?? target.position, walkables, obstacles, { snap: false });
+      const geometry = this.navigation(walkables, obstacles);
+      // An implicit approach to a solid entity ends alongside its footprint.
+      // Explicit authored approach points and locations outside the floor stay exact.
+      const snap = !target.walkPoint && isWalkable(target.position, geometry.walkables) && !isWalkable(target.position, geometry.walkables, geometry.obstacles);
+      const completion = this.walkTo(target.walkPoint ?? target.position, walkables, obstacles, { snap });
       const operation = this.operation;
       if (!await completion || operation !== this.operation) return false;
     }
@@ -241,9 +271,27 @@ export class CharacterController {
     // frame count/delays may differ from the animation that was active on load.
     this.stop();
     Object.assign(this.state, candidate);
+    this.snapWalk = false;
   }
 
   private advance(amount: number): void {
+    const geometry = this.walkNavigation?.() ?? this.navigationSource?.();
+    if (geometry && this.state.path.length) {
+      let previous = this.state.position;
+      const blocked = this.state.path.some(point => {
+        const clear = isSegmentWalkable(previous, point, geometry.walkables, geometry.obstacles);
+        previous = point;
+        return !clear;
+      });
+      if (blocked) {
+        const target = this.walkTarget ?? this.state.path.at(-1)!;
+        const route = this.snapWalk
+          ? findClosestReachablePath(this.state.position, target, geometry.walkables, geometry.obstacles)
+          : findPath(this.state.position, target, geometry.walkables, geometry.obstacles);
+        if (!route) { this.stop(); return; }
+        this.state.path = route.slice(1);
+      }
+    }
     while (this.state.path.length && amount > 0) {
       const destination = this.state.path[0]!;
       const remaining = distance(this.state.position, destination);
@@ -270,7 +318,8 @@ export class CharacterController {
 
   private advanceDirection(amount: number): void {
     if (!this.directionalMovement || amount <= 0) return;
-    const { direction, walkables, obstacles } = this.directionalMovement;
+    const { direction, navigation } = this.directionalMovement;
+    const { walkables, obstacles } = navigation();
     const desired = { x: this.state.position.x + direction.x * amount, y: this.state.position.y + direction.y * amount };
     const position = clipMovementToWalkable(this.state.position, desired, walkables, obstacles);
     const moved = distance(this.state.position, position) > 1e-7;

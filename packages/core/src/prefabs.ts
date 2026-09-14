@@ -78,7 +78,7 @@ export type PointleshRegionPrefabInput = PointleshAreaPrefabInput & {
   smoothing?: number;
   baseline?: number;
 };
-export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults>;
+export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults> & { walkThrough?: boolean };
 
 function number(id: string, label: string, value: number, options: Omit<ScenePrefabNumberDefaults, "value"> = {}): ScenePrefabAttribute {
   return createPrefabNumberAttribute({ id, name: label, number: { value, ...options } });
@@ -186,7 +186,7 @@ function objectPrefab(kind: "object" | "character", input: PointleshObjectPrefab
       name: input.name ?? (kind === "character" ? "Character" : "Object"),
       attributes: mergeAttributes([createPrefabObjectAttribute({ id: "object", name: "Sprite", object }), ...numeric], input.attributes),
     }),
-    pointlesh: metadata(kind, input, { label: input.name ?? kind, ...properties }),
+    pointlesh: metadata(kind, input, { label: input.name ?? kind, walkThrough: input.walkThrough ?? false, ...properties }),
   };
 }
 
@@ -323,6 +323,8 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
       const prefab = manifest.prefabs?.[instance.prefabId];
       if (!prefab || !isPointleshPrefab(prefab)) continue;
       const properties = mergeProperties(prefab.pointlesh.properties, instance.pointlesh?.properties, prefab.pointlesh.kind === 'character');
+      // Older authored prefabs inherit the same default as newly created ones.
+      if ((prefab.pointlesh.kind === 'character' || prefab.pointlesh.kind === 'object') && properties.walkThrough === undefined) properties.walkThrough = false;
       for (const attribute of prefab.attributes) {
         if (attribute.kind === "number") properties[attribute.id] = resolvePrefabNumber(manifest, prefab.id, attribute.id, instance);
       }

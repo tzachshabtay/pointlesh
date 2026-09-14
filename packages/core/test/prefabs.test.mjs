@@ -2,12 +2,27 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cloneSceneManifest, createLayer, defineSceneManifest } from '@scene-designer/core';
 import {
-  createCharacterPrefab, createHotspotPrefab, createPointleshInstance,
+  createCharacterPrefab, createObjectPrefab, createHotspotPrefab, createPointleshInstance,
   createWalkableAreaPrefab, createAreaPrefab, extendPointleshPrefab, pointleshAreaPolygon, pointleshAreaCapabilities, pointleshPrefabs,
   resolvePointleshScene, walkablePolygons,
 } from '../dist/prefabs.js';
 
 const square = [{ id: 'a', x: 0, y: 0 }, { id: 'b', x: 100, y: 0 }, { id: 'c', x: 100, y: 100 }, { id: 'd', x: 0, y: 100 }];
+test('WalkThrough defaults to false, including legacy prefabs, and inherits instance overrides', () => {
+  for (const create of [createObjectPrefab, createCharacterPrefab]) {
+    const prefab = create();
+    assert.equal(prefab.pointlesh.properties.walkThrough, false);
+    assert.equal(create({ walkThrough: true }).pointlesh.properties.walkThrough, true);
+    delete prefab.pointlesh.properties.walkThrough;
+    const instance = createPointleshInstance({ id: 'body', prefabId: prefab.id });
+    const manifest = manifestFor([prefab], [instance]);
+    assert.equal(resolvePointleshScene(manifest, 'room').objects[0].properties.walkThrough, false);
+    prefab.pointlesh.properties.walkThrough = true;
+    assert.equal(resolvePointleshScene(manifest, 'room').objects[0].properties.walkThrough, true);
+    instance.pointlesh = { properties: { walkThrough: false } };
+    assert.equal(resolvePointleshScene(manifest, 'room').objects[0].properties.walkThrough, false);
+  }
+});
 function manifestFor(prefabs, instances) {
   const layer = createLayer({ id: 'main' });
   layer.prefabs = instances;
