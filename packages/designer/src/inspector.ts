@@ -1,4 +1,4 @@
-import { registerInGameDesignerPanel, type AiAssetManifest } from "@ai-game-assets/core";
+import { type AiAssetManifest } from "@ai-game-assets/core";
 import {
   isPointleshPrefab,
   assertJSON,
@@ -33,6 +33,7 @@ export type PointleshInspector = {
   root: HTMLElement;
   /** Call from native changes, preserving history:false for later updates in a drag. */
   sync(options?: PointleshInspectorEditOptions): void;
+  /** Open/close the native inspector; no separate Adventure panel is created. */
   open(): void;
   close(): void;
   /** Refresh animation choices after an AI asset edit or generated preview. Does not add history. */
@@ -94,37 +95,30 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   const designer = options.designer;
   const document = (options.mount ?? designer.root).ownerDocument;
   installStyles(document);
-  const root = element(document, "section", "pointlesh-inspector");
-  root.setAttribute("aria-label", "Pointlesh adventure properties");
-  const title = element(document, "header", "pointlesh-inspector-title", "Adventure properties");
-  const body = element(document, "div", "pointlesh-inspector-body");
-  const toolbar = element(document, "div", "pointlesh-inspector-toolbar");
-  const status = element(document, "p", "pointlesh-inspector-status");
-  status.setAttribute("role", "status");
-  root.append(title, toolbar, body, status);
-  (options.mount ?? document.body).append(root);
+  const root = element(document, 'section', 'pointlesh-native-area-context');
+  const body = element(document, 'section', 'pointlesh-inspector-body');
+  body.setAttribute('aria-label', 'Pointlesh properties');
+  const status = element(document, 'p', 'pointlesh-inspector-status');
+  status.setAttribute('role', 'status');
   const past: SceneDesignerManifest[] = [], future: SceneDesignerManifest[] = [];
   let last = designer.getManifest();
   let lastJson = JSON.stringify(last);
   let restoring = false;
   let destroyed = false;
-  let manualInstanceId: string | undefined;
-  let selectionKey = "";
   let aiAssets = structuredClone(options.aiAssets ?? { schemaVersion: 1, assets: {} } as AiAssetManifest);
   let activeAnimationActivity: CharacterAnimationActivity = 'idle';
-  let nativeContext: HTMLElement | undefined;
   let nativeContextKey = '';
-  const dock = registerInGameDesignerPanel({ id: "pointlesh.properties", label: "Adventure", panel: root, dragHandle: title, order: 40, onOpenChange(open) { if (open) sync(); } });
-  const undoButton = button(document, "Undo", () => undo());
-  const redoButton = button(document, "Redo", () => redo());
-  const exportButton = button(document, "Export JSON", () => {
-    const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: "application/json" }));
-    const link = document.createElement("a");
-    link.href = url; link.download = "pointlesh-scenes.json"; link.click();
+  let assetsRevision = 0;
+  const expanded = new Map<string, boolean>();
+  const nativeUndo = designer.undo, nativeRedo = designer.redo;
+
+  function exportJSON() {
+    const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url; link.download = 'pointlesh-scenes.json'; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 0);
-    status.textContent = "Scene manifest exported, including custom properties and behaviors.";
-  });
-  toolbar.append(undoButton, redoButton, exportButton);
+    status.textContent = 'Scene manifest exported, including custom properties and behaviors.';
+  }
 
   function notify() {
     options.onManifestChange?.(designer.getManifest());
@@ -164,8 +158,6 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       }
       last = next; lastJson = json;
     }
-    const nextSelectionKey = JSON.stringify(designer.getSelection());
-    if (selectionKey !== nextSelectionKey) { manualInstanceId = undefined; selectionKey = nextSelectionKey; }
     render(); preview();
   }
   function setTargetProperties(next: SceneDesignerManifest, target: Target, properties: PointleshProperties, editOptions: PointleshInspectorEditOptions = {}) {
@@ -191,7 +183,6 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   function editNativeShape(target: Target, attributeId: string) {
     const attribute = target.prefab.attributes.find(attribute => attribute.id === attributeId && (attribute.kind === 'area' || attribute.kind === 'platform'));
     if (!attribute || (attribute.kind !== 'area' && attribute.kind !== 'platform')) throw new Error(`Unknown area attribute "${attributeId}".`);
-    dock.close();
     if (target.instance && target.sceneId && target.layerId) {
       const areaId = prefabAttributeId(target.instance.id, attribute.id);
       const area = resolveSceneArea(designer.getManifest(), target.sceneId, areaId).area;
@@ -233,7 +224,6 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   function animationEditor(target: Target, values: PointleshProperties, edit: (key: string, value: PointleshProperty) => void) {
     const section = element(document, 'section', 'pointlesh-animations');
     section.setAttribute('aria-label', 'Character animations');
-    section.append(element(document, 'h4', '', 'Directional animations'));
     section.append(element(document, 'p', 'pointlesh-inspector-help', 'Assign animations from Assets. Flip mirrors only this direction. Unset diagonals use the front or back animation.'));
     section.append(element(document, 'p', 'pointlesh-inspector-help', 'Edit animation frames and timing in Assets. Walking distance per frame stays in the character properties below.'));
     const directionLabel = element(document, 'label', 'pointlesh-inspector-field');
@@ -241,7 +231,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     const directionCount = document.createElement('select'); directionCount.setAttribute('aria-label', 'Character directions');
     addOption(directionCount, '4', '4 directions'); addOption(directionCount, '8', '8 directions'); directionCount.value = String(values.directions ?? 4);
     directionCount.addEventListener('change', () => edit('directions', Number(directionCount.value)));
-    directionLabel.append(directionCount); section.append(directionLabel);
+    directionLabel.append(directionCount); section.append(inheritedField(target, 'directions', directionLabel));
     const facingLabel = element(document, 'label', 'pointlesh-inspector-field');
     facingLabel.append(element(document, 'span', '', 'Facing'));
     const facing = document.createElement('select'); facing.setAttribute('aria-label', 'Facing');
@@ -255,7 +245,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     }
     facing.value = currentFacing;
     facing.addEventListener('change', () => edit('facing', facing.value));
-    facingLabel.append(facing); section.append(facingLabel);
+    facingLabel.append(facing); section.append(inheritedField(target, 'facing', facingLabel));
     const tabs = element(document, 'div', 'pointlesh-animation-tabs'); tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Animation activity');
     for (const activity of animationActivities) {
       const tab = button(document, activity.label, () => { activeAnimationActivity = activity.id; render(); });
@@ -329,7 +319,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     section.append(element(document, 'p', 'pointlesh-inspector-help', 'One shape can control several behaviors. Turn each capability on independently.'));
     const capabilities = pointleshAreaCapabilities({ kind: target.prefab.pointlesh.kind, properties: values });
     const numeric = (key: string, label: string, fallback: number, min: number | undefined, step: number) =>
-      propertyField(document, key, values[key] ?? fallback, { label, min, step, ...schemas[key], type: 'number' }, edit, status);
+      inheritedField(target, key, propertyField(document, key, values[key] ?? fallback, { label, min, step, ...schemas[key], type: 'number' }, edit, status));
     const axis = (key: 'scaleAxis' | 'zoomAxis', label: string) => {
       const field = element(document, 'label', 'pointlesh-inspector-field');
       field.append(element(document, 'span', '', label));
@@ -337,9 +327,9 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       addOption(input, 'y', 'Y · vertical'); addOption(input, 'x', 'X · horizontal');
       input.value = String(values[key] ?? values.axis ?? 'y');
       input.addEventListener('change', () => edit(key, input.value));
-      field.append(input); return field;
+      field.append(input); return inheritedField(target, key, field);
     };
-    const toggle = (key: string, label: string, checked: boolean) => propertyField(document, key, checked, { type: 'boolean', label }, edit, status);
+    const toggle = (key: string, label: string, checked: boolean) => inheritedField(target, key, propertyField(document, key, checked, { type: 'boolean', label }, edit, status));
     section.append(toggle('walkable', 'Walkable', capabilities.walkable));
     section.append(toggle('scaleEnabled', 'Character scale', capabilities.scale));
     if (capabilities.scale) {
@@ -363,69 +353,79 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     return section;
   }
 
-  function targetFromSelection(manifest: SceneDesignerManifest): Target | undefined {
-    if (manualInstanceId) return instanceTarget(manifest, manualInstanceId);
-    return targetFromNativeSelection(manifest);
-  }
-
   function targetFromNativeSelection(manifest: SceneDesignerManifest): Target | undefined {
+    // Prefabs can display a definition before a particular attribute is selected.
+    if (designer.getOpenView() === 'prefabs') return prefabTarget(manifest, designer.getSelectedPrefabId());
     const selection = designer.getSelection();
     if (!selection) return;
-    if ("prefabId" in selection) {
-      const prefab = manifest.prefabs?.[selection.prefabId];
-      return prefab && isPointleshPrefab(prefab) ? { prefab } : undefined;
-    }
+    if ('prefabId' in selection) return prefabTarget(manifest, selection.prefabId);
     const id = instanceIdFromSelection(selection);
     return id ? instanceTarget(manifest, id) : undefined;
   }
 
   function syncNativeContext() {
-    if (destroyed) return;
+    if (destroyed || restoring) return;
     const target = targetFromNativeSelection(last);
     const view = designer.getOpenView();
     const editor = view && designer.root.querySelector<HTMLElement>(`.scene-designer__panel[data-panel="${view}"] .scene-designer__editor`);
-    if (!editor || !target || !['area', 'walkable', 'walk-behind', 'scale', 'zoom', 'character', 'object'].includes(target.prefab.pointlesh.kind)) {
-      nativeContext?.remove(); nativeContext = undefined; nativeContextKey = ''; restoreNativeFields(); return;
+    if (!editor || !target) {
+      root.remove(); nativeContextKey = ''; restoreNativeFields(); return;
     }
-    const key = `${view}:${JSON.stringify(designer.getSelection())}:${lastJson}:${past.length}:${future.length}`;
-    if (nativeContext?.parentElement === editor && nativeContextKey === key) return;
-    nativeContext?.remove();
+    const key = `${view}:${target.prefab.id}:${JSON.stringify(designer.getSelection())}:${lastJson}:${past.length}:${future.length}:${activeAnimationActivity}:${assetsRevision}`;
+    if (root.parentElement === editor && nativeContextKey === key) return;
     restoreNativeFields();
-    nativeContext = element(document, 'section', 'pointlesh-native-area-context');
-    const isBody = target.prefab.pointlesh.kind === 'character' || target.prefab.pointlesh.kind === 'object';
-    nativeContext.setAttribute('aria-label', isBody ? 'Selected object navigation properties' : 'Selected area adventure properties');
-    const values: PointleshProperties = { ...target.prefab.pointlesh.properties, ...target.instance?.pointlesh?.properties };
-    const schemas = { ...target.prefab.pointlesh.propertySchema };
-    for (const attribute of target.prefab.attributes) if (attribute.kind === 'number') {
-      values[attribute.id] = resolvePrefabNumber(last, target.prefab.id, attribute.id, target.instance);
-      schemas[attribute.id] = { type: 'number', label: attribute.name, min: attribute.number.min, max: attribute.number.max, step: attribute.number.step };
-    }
-    const edit = (property: string, value: PointleshProperty) => {
-      const next = designer.getManifest();
-      const current = target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.prefab.id);
-      if (current) setTargetProperties(next, current, { [property]: value });
-    };
-    if (isBody) {
-      nativeContext.append(element(document, 'h4', '', 'Navigation'));
-      nativeContext.append(walkThroughField(values, edit));
-    } else nativeContext.append(areaEditor(target, values, schemas, edit));
-    const history = element(document, 'div', 'pointlesh-native-area-history');
-    const undo = button(document, isBody ? 'Undo navigation edit' : 'Undo area edit', () => api.undo()); undo.disabled = !past.length;
-    const redo = button(document, isBody ? 'Redo navigation edit' : 'Redo area edit', () => api.redo()); redo.disabled = !future.length;
-    history.append(undo, redo); nativeContext.append(history);
     nativeContextKey = key;
-    editor.prepend(nativeContext);
-    // Native number attributes remain part of the manifest. Present their controls
-    // once, grouped under the capability that uses them, instead of twice in this panel.
-    if (designer.getSelection()?.type === 'prefab' || view === 'prefabs') {
-      const sections = editor.querySelectorAll<HTMLElement>(':scope > .scene-designer__stack > .scene-designer__attribute');
-      target.prefab.attributes.forEach((attribute, index) => {
-        const section = sections[index];
-        if (attribute.kind === 'number' && areaPropertyKeys.has(attribute.id) && section && !section.hidden) {
-          section.hidden = true; section.dataset.pointleshHiddenField = 'true';
-        }
-      });
+    const isBody = target.prefab.pointlesh.kind === 'character' || target.prefab.pointlesh.kind === 'object';
+    root.setAttribute('aria-label', isBody ? 'Selected object navigation properties' : 'Selected area adventure properties');
+    renderProperties(target);
+    const history = element(document, 'div', 'pointlesh-native-area-history');
+    const undoButton = button(document, 'Undo', undo); undoButton.disabled = !past.length;
+    const redoButton = button(document, 'Redo', redo); redoButton.disabled = !future.length;
+    history.append(undoButton, redoButton, button(document, 'Export JSON', exportJSON));
+    body.append(history, status);
+    root.replaceChildren(body);
+    editor.prepend(root);
+    for (const control of editor.querySelectorAll<HTMLButtonElement>('button')) {
+      if (!root.contains(control) && control.textContent === 'Edit shape') {
+        control.hidden = true; control.dataset.pointleshHiddenField = 'true';
+      }
     }
+    // Numeric attributes are still native data. Render them once with the related
+    // Pointlesh properties, including inheritance/reset, instead of duplicating them.
+    const sections = editor.querySelectorAll<HTMLElement>(':scope > .scene-designer__stack > .scene-designer__attribute');
+    target.prefab.attributes.forEach((attribute, index) => {
+      const section = sections[index];
+      if (attribute.kind === 'number' && section && !section.hidden) {
+        section.hidden = true; section.dataset.pointleshHiddenField = 'true';
+      }
+    });
+  }
+
+  function inheritedField(target: Target, key: string, field: HTMLElement): HTMLElement {
+    if (!target.instance) return field;
+    const numeric = target.prefab.attributes.some(attribute => attribute.id === key && attribute.kind === 'number');
+    const own = Object.hasOwn(numeric ? target.instance.overrides ?? {} : target.instance.pointlesh?.properties ?? {}, key);
+    const wrapper = element(document, 'div', 'pointlesh-property');
+    const label = field.querySelector('input,select,textarea')?.getAttribute('aria-label') ?? key;
+    const footer = element(document, 'div', 'pointlesh-property-inheritance');
+    footer.append(element(document, 'small', '', own ? 'Instance override' : 'Inherited from prefab'));
+    const reset = button(document, 'Reset to prefab', () => {
+      const next = designer.getManifest(), current = instanceTarget(next, target.instance!.id);
+      if (!current?.instance) return;
+      if (numeric) delete current.instance.overrides?.[key];
+      else delete current.instance.pointlesh?.properties?.[key];
+      apply(next);
+    });
+    reset.setAttribute('aria-label', `Reset ${label} to prefab`); reset.disabled = !own;
+    footer.append(reset); wrapper.append(field, footer); return wrapper;
+  }
+
+  function section(title: string, content: HTMLElement, initiallyOpen = false): HTMLElement {
+    const details = element(document, 'details', 'pointlesh-property-section');
+    details.open = expanded.get(title) ?? initiallyOpen;
+    details.append(element(document, 'summary', '', title), content);
+    details.addEventListener('toggle', () => { if (details.isConnected) expanded.set(title, details.open); });
+    return details;
   }
 
   function walkThroughField(values: PointleshProperties, edit: (key: string, value: PointleshProperty) => void) {
@@ -441,39 +441,29 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     }
   }
 
-  function render() {
-    if (destroyed) return;
-    syncNativeContext();
-    body.replaceChildren(); undoButton.disabled = !past.length; redoButton.disabled = !future.length;
-    const manifest = last, scene = manifest.scenes[designer.getSceneId()];
-    const select = document.createElement("select");
-    select.setAttribute("aria-label", "Adventure entity");
-    const empty = document.createElement("option"); empty.value = ""; empty.textContent = "Select an adventure entity…"; select.append(empty);
-    for (const layer of scene?.layers ?? []) for (const instance of layer.prefabs ?? []) {
-      const prefab = manifest.prefabs?.[instance.prefabId];
-      if (!prefab || !isPointleshPrefab(prefab)) continue;
-      const option = document.createElement("option"); option.value = instance.id; option.textContent = `${instance.name ?? prefab.name} · ${prefab.pointlesh.kind}`; select.append(option);
+  function render() { syncNativeContext(); }
+
+  function renderProperties(target: Target) {
+    body.replaceChildren();
+    if (target.instance) {
+      const identity = element(document, 'div', 'pointlesh-prefab-link');
+      identity.append(element(document, 'span', '', `Prefab: ${target.prefab.name}`));
+      identity.append(button(document, 'Edit prefab', () => {
+        const toggle = document.querySelector<HTMLButtonElement>('button[aria-label="Toggle prefab designer"]');
+        if (toggle?.getAttribute('aria-expanded') !== 'true') toggle?.click();
+        designer.select({ type: 'prefab-definition', prefabId: target.prefab.id });
+      }));
+      body.append(identity);
     }
-    const target = targetFromSelection(manifest);
-    if (target?.instance) select.value = target.instance.id;
-    select.addEventListener("change", () => { manualInstanceId = select.value || undefined; render(); });
-    body.append(select);
-    if (!target) {
-      body.append(element(document, "p", "pointlesh-inspector-help", "Select a Pointlesh prefab instance or a prefab definition. Draw shapes and move sprites in Scenes; edit adventure behavior here. Changes immediately update the running preview."));
-      return;
-    }
-    body.append(element(document, "h3", "", target.instance?.name ?? target.prefab.name));
-    body.append(element(document, "p", "pointlesh-inspector-help", target.instance ? `${target.prefab.pointlesh.kind} · instance ${target.instance.id}` : `${target.prefab.pointlesh.kind} · prefab defaults`));
     const shapes = target.prefab.attributes.filter(attribute => attribute.kind === 'area' || attribute.kind === 'platform');
     for (const shape of shapes) body.append(button(document, shapes.length === 1 ? 'Edit shape' : `Edit ${shape.name} shape`, () => {
       try { editNativeShape(target, shape.id); }
       catch (error) { status.textContent = error instanceof Error ? error.message : String(error); }
     }));
-    if (shapes.length) body.append(element(document, 'p', 'pointlesh-inspector-help', 'Native vector tools: drag a vertex to reshape; drag an edge to curve it; double-click an edge to add a vertex. Select a vertex and press Delete to remove it.'));
     const values: PointleshProperties = { ...target.prefab.pointlesh.properties, ...target.instance?.pointlesh?.properties };
     const schemas = { ...target.prefab.pointlesh.propertySchema };
     for (const attribute of target.prefab.attributes) if (attribute.kind === "number") {
-      values[attribute.id] = resolvePrefabNumber(manifest, target.prefab.id, attribute.id, target.instance);
+      values[attribute.id] = resolvePrefabNumber(last, target.prefab.id, attribute.id, target.instance);
       schemas[attribute.id] = { label: attribute.name, type: "number", min: attribute.number.min, max: attribute.number.max, step: attribute.number.step };
     }
     const edit = (key: string, value: PointleshProperty) => {
@@ -486,18 +476,31 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       ? mergeCharacterAnimations(readCharacterAnimations(target.prefab.pointlesh.properties), readCharacterAnimations(target.instance?.pointlesh?.properties ?? {}))
       : {};
     const hasAnimationAssignments = Object.values(effectiveAnimations).some(slots => !!slots && Object.keys(slots).length > 0);
-    if (target.prefab.pointlesh.kind === 'character') body.append(animationEditor(target, values, edit));
-    const isBody = target.prefab.pointlesh.kind === 'character' || target.prefab.pointlesh.kind === 'object';
-    if (isBody) body.append(walkThroughField(values, edit));
+    const isCharacter = target.prefab.pointlesh.kind === 'character';
+    const isBody = isCharacter || target.prefab.pointlesh.kind === 'object';
+    if (isBody) {
+      const navigation = element(document, 'section', 'pointlesh-property-group');
+      navigation.append(element(document, 'h4', '', 'Navigation'), inheritedField(target, 'walkThrough', walkThroughField(values, edit)));
+      body.append(navigation);
+    }
+    if (isCharacter) body.append(section('Directional animations', animationEditor(target, values, edit)));
     const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.prefab.pointlesh.kind);
     if (isArea) body.append(areaEditor(target, values, schemas, edit));
+    const movement = element(document, 'div', 'pointlesh-property-group');
+    const properties = element(document, 'div', 'pointlesh-property-group');
+    const movementKeys = new Set(['speed', 'walkStep', 'frameCount', 'frameDurationMs', 'movementLinkedToAnimation', 'adjustSpeedToScale']);
     for (const [key, value] of Object.entries(values)) {
       if (isBody && key === 'walkThrough') continue;
       if (isArea && areaPropertyKeys.has(key)) continue;
-      if (target.prefab.pointlesh.kind === 'character' && (key === 'animations' || key === 'directions' || key === 'facing')) continue;
-      if (target.prefab.pointlesh.kind === 'character' && hasAnimationAssignments && (key === 'frameCount' || key === 'frameDurationMs')) continue;
-      body.append(propertyField(document, key, value, schemas[key], edit, status));
+      if (isCharacter && ['animations', 'directions', 'facing'].includes(key)) continue;
+      if (isCharacter && hasAnimationAssignments && ['frameCount', 'frameDurationMs'].includes(key)) continue;
+      const schema = { ...schemas[key], label: schemas[key]?.label ?? propertyLabel(key) };
+      const field = inheritedField(target, key, propertyField(document, key, value, schema as PointleshPropertySchema, edit, status));
+      (isCharacter && movementKeys.has(key) ? movement : properties).append(field);
     }
+    if (movement.childElementCount) body.append(section('Movement', movement));
+    if (properties.childElementCount) body.append(section('Properties', properties));
+    const extensions = element(document, 'div', 'pointlesh-property-group');
     const behaviorLabel = element(document, "label", "pointlesh-inspector-field");
     behaviorLabel.append(element(document, "span", "", target.instance ? "Extra behavior IDs" : "Default behavior IDs"));
     const behaviorInput = document.createElement("input");
@@ -514,8 +517,10 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
         apply(next); status.textContent = "Behavior IDs updated.";
       } catch (error) { status.textContent = error instanceof Error ? error.message : String(error); }
     });
-    behaviorLabel.append(behaviorInput); body.append(behaviorLabel);
-    body.append(element(document, "p", "pointlesh-inspector-help", "Behavior IDs connect to code registered by your game. Save data stays JSON; behavior functions stay in source."));
+    behaviorInput.setAttribute('aria-label', target.instance ? 'Extra behavior IDs' : 'Default behavior IDs');
+    behaviorLabel.append(behaviorInput); extensions.append(behaviorLabel);
+    if (target.instance) extensions.append(element(document, 'p', 'pointlesh-inspector-help', `Inherited behaviors: ${target.prefab.pointlesh.behaviors.join(', ') || 'None'}`));
+    extensions.append(element(document, "p", "pointlesh-inspector-help", "Behavior IDs connect to code registered by your game. Save data stays JSON; behavior functions stay in source."));
     const extension = element(document, "details", "pointlesh-inspector-extension");
     extension.append(element(document, "summary", "", "Add custom property"));
     const name = document.createElement("input"); name.placeholder = "Property name"; name.setAttribute("aria-label", "Custom property name");
@@ -526,11 +531,12 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
         edit(key, JSON.parse(json.value) as PointleshProperty); status.textContent = `Updated ${key}.`;
       } catch (error) { status.textContent = error instanceof Error ? error.message : String(error); }
     }));
-    body.append(extension);
+    extensions.append(extension);
+    body.append(section('Custom properties & behaviors', extensions));
   }
   const api: PointleshInspector = {
-    root, sync, open() { sync(); dock.open(); }, close() { dock.close(); },
-    setAiAssets(manifest) { aiAssets = structuredClone(manifest); render(); },
+    root, sync, open() { designer.open(); sync(); }, close() { designer.close(); },
+    setAiAssets(manifest) { aiAssets = structuredClone(manifest); assetsRevision++; render(); },
     editShape(instanceId, attributeId = 'area') {
       const target = instanceTarget(designer.getManifest(), instanceId);
       if (!target) throw new Error(`Unknown Pointlesh instance "${instanceId}".`);
@@ -555,13 +561,17 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     undo, redo, exportManifest() { return JSON.stringify(designer.getManifest(), null, 2) + "\n"; },
     destroy() {
       if (destroyed) return;
-      destroyed = true; nativeObserver.disconnect(); nativeContext?.remove(); restoreNativeFields(); dock.destroy(); root.remove();
+      destroyed = true; nativeObserver.disconnect(); restoreNativeFields(); root.remove();
+      if (designer.undo === undo) designer.undo = nativeUndo;
+      if (designer.redo === redo) designer.redo = nativeRedo;
     },
   };
   // Upstream renders its native inspector after some open/mode events. Reattach
   // this contextual card without changing native selection, geometry, or history.
   const nativeObserver = new document.defaultView!.MutationObserver(syncNativeContext);
   nativeObserver.observe(designer.root, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-open'] });
+  // Native keyboard shortcuts and contextual buttons share one complete history.
+  designer.undo = undo; designer.redo = redo;
   sync();
   return api;
 }
@@ -601,6 +611,10 @@ function button(document: Document, text: string, action: () => void): HTMLButto
 function addOption(select: HTMLSelectElement, value: string, text: string) {
   const option = select.ownerDocument.createElement('option'); option.value = value; option.textContent = text; select.append(option);
 }
+function propertyLabel(key: string): string {
+  const words = key.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
 function propertyField(document: Document, key: string, value: PointleshProperty, schema: PointleshPropertySchema | undefined, edit: (key: string, value: PointleshProperty) => void, status: HTMLElement): HTMLElement {
   const label = element(document, "label", "pointlesh-inspector-field");
   label.append(element(document, "span", "", schema?.label ?? key));
@@ -627,62 +641,46 @@ function propertyField(document: Document, key: string, value: PointleshProperty
 function installStyles(document: Document) {
   if (document.getElementById("pointlesh-inspector-styles")) return;
   const style = document.createElement("style"); style.id = "pointlesh-inspector-styles";
-  // Use Scene Designer's theme when embedded, with the same defaults for the standalone inspector.
+  // Use the native designer theme for all embedded property sections.
   style.textContent = `
-.pointlesh-inspector,.pointlesh-native-area-context{
-  --pointlesh-bg:var(--sd-bg,rgba(20,24,32,.97));
-  --pointlesh-bg-soft:var(--sd-bg-soft,#1b2230);
-  --pointlesh-panel:var(--sd-panel,#273142);
-  --pointlesh-border:var(--sd-border,#303949);
-  --pointlesh-border-strong:var(--sd-border-strong,#58657a);
-  --pointlesh-text:var(--sd-text,#f5f7fb);
-  --pointlesh-muted:var(--sd-muted,#b9c1cf);
-  --pointlesh-accent:var(--sd-accent,#8bb8ff);
-  color:var(--pointlesh-text);
-  font:13px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.pointlesh-native-area-context{
+  --pointlesh-bg-soft:var(--sd-bg-soft,#1b2230);--pointlesh-panel:var(--sd-panel,#273142);
+  --pointlesh-border:var(--sd-border,#303949);--pointlesh-border-strong:var(--sd-border-strong,#58657a);
+  --pointlesh-text:var(--sd-text,#f5f7fb);--pointlesh-muted:var(--sd-muted,#b9c1cf);--pointlesh-accent:var(--sd-accent,#8bb8ff);
+  color:var(--pointlesh-text);font:12px/1.45 Inter,ui-sans-serif,system-ui,sans-serif;
+  position:relative;z-index:21;margin-bottom:12px;padding:10px;border:1px solid var(--pointlesh-border);border-radius:7px;background:var(--pointlesh-bg-soft);
 }
-.pointlesh-inspector{box-sizing:border-box;width:330px;max-height:80vh;overflow:auto;background:var(--pointlesh-bg);border:1px solid var(--pointlesh-border);border-radius:8px;z-index:10001;box-shadow:0 10px 45px #0008}
-.pointlesh-inspector *,.pointlesh-native-area-context *{box-sizing:border-box}
-.pointlesh-inspector-title{padding:14px 16px;font-weight:700;border-bottom:1px solid var(--pointlesh-border)}
-.pointlesh-inspector-body,.pointlesh-inspector-toolbar{padding:12px;display:grid;gap:10px}
-.pointlesh-inspector-toolbar{grid-template-columns:1fr 1fr 1.4fr;border-bottom:1px solid var(--pointlesh-border)}
-.pointlesh-inspector h3,.pointlesh-inspector p{margin:0}
-:is(.pointlesh-inspector,.pointlesh-native-area-context) :is(input,textarea,select,button){font:inherit;color:var(--pointlesh-text);background:#111722;border:1px solid var(--pointlesh-border);border-radius:6px;padding:7px;width:100%;min-width:0}
-:is(.pointlesh-inspector,.pointlesh-native-area-context) button{cursor:pointer;background:var(--pointlesh-panel);border-color:var(--pointlesh-border-strong)}
-:is(.pointlesh-inspector,.pointlesh-native-area-context) button:hover{background:#2d384b;border-color:var(--pointlesh-accent)}
-:is(.pointlesh-inspector,.pointlesh-native-area-context) button:disabled{opacity:.45;cursor:default}
-:is(.pointlesh-inspector,.pointlesh-native-area-context) :is(input,textarea,select,button):focus-visible{outline:2px solid var(--pointlesh-accent);outline-offset:1px}
+.pointlesh-native-area-context *{box-sizing:border-box}
+.pointlesh-native-area-context :is(input,textarea,select,button){font:inherit;color:var(--pointlesh-text);background:#111722;border:1px solid var(--pointlesh-border);border-radius:6px;padding:6px;width:100%;min-width:0}
+.pointlesh-native-area-context button{cursor:pointer;background:var(--pointlesh-panel);border-color:var(--pointlesh-border-strong)}
+.pointlesh-native-area-context button:hover{background:#2d384b;border-color:var(--pointlesh-accent)}
+.pointlesh-native-area-context button:disabled{opacity:.45;cursor:default}
+.pointlesh-native-area-context :is(input,textarea,select,button):focus-visible{outline:2px solid var(--pointlesh-accent);outline-offset:1px}
+.pointlesh-native-area-context input[type=checkbox]{width:18px;height:18px;justify-self:end;accent-color:var(--pointlesh-accent)}
+.pointlesh-native-area-context :is(h4,p){margin:0}
+.pointlesh-native-area-context textarea{min-height:64px;resize:vertical}
+.pointlesh-inspector-body,.pointlesh-property-group,.pointlesh-animations,.pointlesh-area-capabilities{display:grid;gap:10px}
+.pointlesh-inspector-help,.pointlesh-inspector-status,.pointlesh-property-inheritance{color:var(--pointlesh-muted);font-size:11px}
+.pointlesh-inspector-status:not(:empty){margin-top:8px}
 .pointlesh-inspector-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}
-:is(.pointlesh-inspector,.pointlesh-native-area-context) input[type=checkbox]{width:20px;height:20px;justify-self:end;accent-color:var(--pointlesh-accent)}
-.pointlesh-inspector-help,.pointlesh-inspector-status{color:var(--pointlesh-muted);font-size:12px}
-.pointlesh-inspector-status{padding:0 12px 12px}
+.pointlesh-property-inheritance,.pointlesh-prefab-link{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.pointlesh-native-area-context .pointlesh-property-inheritance button{width:auto;font-size:10px;padding:3px 6px}
+.pointlesh-native-area-context .pointlesh-prefab-link button{width:auto}
+.pointlesh-property-section{border-top:1px solid var(--pointlesh-border);padding-top:8px}
+.pointlesh-property-section>summary{cursor:pointer;font-weight:600;padding-block:3px}
+.pointlesh-property-section[open]>summary{margin-bottom:10px}
 .pointlesh-inspector-extension>input,.pointlesh-inspector-extension>textarea,.pointlesh-inspector-extension>button{margin-top:8px}
-.pointlesh-inspector textarea{min-height:64px;resize:vertical}
-.pointlesh-inspector summary{cursor:pointer;color:var(--pointlesh-text)}
-.pointlesh-animations{display:grid;gap:10px;border-block:1px solid var(--pointlesh-border);padding-block:12px}
-.pointlesh-animations h4{margin:0;font-size:13px}
+.pointlesh-inspector-extension>summary{cursor:pointer}
 .pointlesh-animation-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.pointlesh-animation-tabs [aria-selected=true]{background:#253b5d;color:var(--pointlesh-text);border-color:var(--pointlesh-accent)}
+.pointlesh-animation-tabs [aria-selected=true]{background:#253b5d;border-color:var(--pointlesh-accent)}
 .pointlesh-animation-slot{display:grid;gap:7px;margin:0;padding:8px;border:1px solid var(--pointlesh-border);border-radius:6px;min-width:0}
 .pointlesh-animation-slot legend{padding:0 5px;color:var(--pointlesh-muted);font-size:12px}
-.pointlesh-animation-slot select{font-size:11px;min-width:0}
-.pointlesh-animation-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.pointlesh-animation-flip{display:flex;align-items:center;gap:7px}
+.pointlesh-animation-footer,.pointlesh-animation-flip{display:flex;justify-content:space-between;align-items:center;gap:7px}
 .pointlesh-animation-flip input[type=checkbox]{margin:0}
 .pointlesh-animation-footer button{width:auto;font-size:11px;padding:4px 8px}
-.pointlesh-area-capabilities{display:grid;gap:10px;border-block:1px solid var(--pointlesh-border);padding-block:12px}
-.pointlesh-area-capabilities h4{margin:0;font-size:13px}
 .pointlesh-area-settings{display:grid;gap:8px;border-left:2px solid var(--pointlesh-border-strong);padding-left:10px;margin:0 0 5px 8px}
-`;
-  // Dock resize grips scroll through native content at z-index 20. Keep this inset card interactive above them.
-  style.textContent += `
-.pointlesh-native-area-context{position:relative;z-index:21;margin-bottom:12px;padding:10px;border:1px solid var(--pointlesh-border);border-radius:7px;background:var(--pointlesh-bg-soft);font-size:12px;line-height:1.45}
-.pointlesh-native-area-context .pointlesh-area-capabilities{border:0;padding:0}
-.pointlesh-native-area-context h4,.pointlesh-native-area-context p{margin:0}
-.pointlesh-native-area-context :is(input,select,button){padding:6px}
-.pointlesh-native-area-context .pointlesh-inspector-help{font-size:11px}
 .pointlesh-native-area-history{display:flex;gap:6px;margin-top:10px}
-.pointlesh-native-area-context+.scene-designer__stack>[hidden]{display:none!important}
+.scene-designer__panel [data-pointlesh-hidden-field]{display:none!important}
 `;
   document.head.append(style);
 }

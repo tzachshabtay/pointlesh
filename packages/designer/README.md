@@ -15,11 +15,15 @@ const tools = installPointleshDesigner({
 tools.destroy();
 ```
 
-Use `installPointleshInspector({ designer, onPreview })` to attach the Adventure panel to an existing native designer. Forward native manifest, scene, and selection changes to `inspector.sync()`. For Phaser, use `@pointlesh/phaser`'s combined installer.
+Use `installPointleshInspector({ designer, onPreview })` to embed Pointlesh property sections in an existing native designer’s Scenes and Prefabs panels. Forward native manifest, scene, and selection changes to `inspector.sync()`. For Phaser, use `@pointlesh/phaser`'s combined installer.
 
-The inspector provides `setProperties(instanceId, patch)`, `setPrefabProperties(prefabId, patch)`, `setBehaviors(instanceId, ids)`, `undo()`, `redo()`, `exportManifest()`, and lifecycle methods. Numeric property edits go to native attribute overrides; other JSON properties stay in the Pointlesh sidecar. All edits propagate through the native designer's manifest change callback.
+The inspector provides `setProperties(instanceId, patch)`, `setPrefabProperties(prefabId, patch)`, `setBehaviors(instanceId, ids)`, `undo()`, `redo()`, `exportManifest()`, and lifecycle methods. Numeric property edits go to native attribute overrides; other JSON properties stay in the Pointlesh sidecar. All edits propagate through the native designer's manifest change callback. The native undo/redo methods and keyboard shortcuts use the inspector's combined history, including grouped canvas drags. Destroying the inspector restores the native methods. `open()` and `close()` target the native scene panel; no standalone Adventure tab is registered.
 
 See the repository's [prefab documentation](https://github.com/tzachshabtay/pointlesh/blob/main/docs/prefabs.md) for schema and extension examples.
+
+The same controls edit prefab defaults or scene-instance overrides according to the native selection. **Edit prefab** jumps from an instance to its definition. Standard properties display **Inherited from prefab** or **Instance override** and a **Reset to prefab** action. Directional animations retain per-slot **Use prefab** actions. Numeric controls appear once alongside their related properties, while their data remains in native numeric attributes.
+
+Collapsible **Directional animations**, **Movement**, **Properties** and **Custom properties & behaviors** sections keep the inspector manageable. Client-defined `propertySchema` fields and JSON extensions use the same controls in both views; behavior IDs remain source-registered game logic. **Undo**, **Redo** and **Export JSON** are at the end of the embedded inspector.
 
 ## Native shapes and directional characters
 

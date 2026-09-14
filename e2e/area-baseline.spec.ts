@@ -37,7 +37,7 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   await expect.poll(() => baselineVisible(page)).toBe(false);
   await expect(baseline).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.overlays.length)).toBe(0);
-  await context.getByRole('button', { name: 'Undo area edit', exact: true }).click();
+  await context.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(enabled).toBeChecked();
   await expect.poll(() => baselineVisible(page)).toBe(true);
 
@@ -49,9 +49,9 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   await page.mouse.up();
   const changed = Number(await baseline.inputValue());
   expect(changed).toBeCloseTo(original - 70, 0);
-  await context.getByRole('button', { name: 'Undo area edit', exact: true }).click();
+  await context.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(baseline).toHaveValue(String(original));
-  await context.getByRole('button', { name: 'Redo area edit', exact: true }).click();
+  await context.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(baseline).toHaveValue(String(changed));
   const exported = await page.evaluate(() => JSON.parse((window as any).pointleshDemo.scene.sceneDesigner.inspector.exportManifest()));
   const instance = exported.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
@@ -99,7 +99,7 @@ test('prefab defaults expose the same Walk-behind controls and baseline without 
   const manifest = await page.evaluate(() => (window as any).pointleshDemo.manifest);
   expect(manifest.prefabs['pointlesh.area'].attributes.find((attribute: any) => attribute.id === 'baseline').number.value).toBe(initial + 40);
   expect(manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground').overrides.baseline.value).not.toBe(initial + 40);
-  await context.getByRole('button', { name: 'Undo area edit', exact: true }).click();
+  await context.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(baseline).toHaveValue(String(initial));
   await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.areaBaseline.destroy());
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.children.getByName('pointlesh-area-baseline'))).toBeNull();
@@ -129,9 +129,9 @@ test('inline area undo restores the entire offscreen vertex drag', async ({ page
   const after = await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest());
   expect(after).not.toEqual(before);
   const context = page.getByRole('region', { name: 'Selected area adventure properties' });
-  await context.getByRole('button', { name: 'Undo area edit', exact: true }).click();
+  await context.getByRole('button', { name: 'Undo', exact: true }).click();
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest())).toEqual(before);
-  await context.getByRole('button', { name: 'Redo area edit', exact: true }).click();
+  await context.getByRole('button', { name: 'Redo', exact: true }).click();
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest())).toEqual(after);
 });
 
@@ -144,7 +144,7 @@ test('inline area controls remain clickable where a scrolled dock resize grip cr
   const context = native.getByRole('region', { name: 'Selected area adventure properties' });
   const enabled = context.getByRole('checkbox', { name: 'Walk-behind', exact: true });
   await enabled.uncheck();
-  const undo = context.getByRole('button', { name: 'Undo area edit', exact: true });
+  const undo = context.getByRole('button', { name: 'Undo', exact: true });
   await undo.scrollIntoViewIfNeeded();
   // The upstream dock mounts its absolute resize grips inside the scrolling panel.
   // Choose a window height that puts its south grip across the Undo button, then

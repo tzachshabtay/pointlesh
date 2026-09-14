@@ -5,6 +5,7 @@ import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance
 import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
 import { bramblehollowStyleGuide } from './art-style';
+import { specializeForestEntities } from './entity-prefabs';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -165,7 +166,7 @@ const roomPickups: Partial<Record<typeof roomIds[number], { pickupId: string; na
   ],
   forest: [{ pickupId: 'mushroom', name: 'Dreamcap mushroom', x: 111, y: 409 }],
 };
-export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
+export const scenes = specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
   const instances: ScenePrefabInstance[] = [
     createPointleshInstance({ id: `${roomId}.floor`, prefabId: 'pointlesh.area', name: 'Walkable ground & perspective', properties: { walkable: true, scaleEnabled: true, zoomEnabled: true }, overrides: { area: { vertices: roomFloorVertices(roomId), closed: true }, minScale: { value: 0.75 }, maxScale: { value: 1.22 }, minZoom: { value: 1.035 }, maxZoom: { value: 1 } } }),
     createPointleshInstance({ id: `${roomId}.foreground`, prefabId: 'pointlesh.area', name: 'Foreground occlusion', properties: { walkBehindEnabled: true }, overrides: { area: { vertices: roomForegroundVertices(roomId), closed: true }, baseline: { value: 505 } } }),
@@ -203,4 +204,4 @@ export const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: base, sce
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure prefabs' }), prefabs: instances };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
-})) });
+})) }));

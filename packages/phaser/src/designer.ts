@@ -43,6 +43,8 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   // that grouping in the contextual inspector's undo stack as well.
   const updateArea = native.designer.updateArea;
   const updateAreaVertex = native.designer.updateAreaVertex;
+  const updateObject = native.designer.updateObject;
+  const updateObjects = native.designer.updateObjects;
   const withNativeHistory = (history: boolean | undefined, update: () => void) => {
     const previous = nativeEditHistory;
     nativeEditHistory = history !== false;
@@ -52,6 +54,10 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   const groupedVertex: typeof updateAreaVertex = (id, vertexId, patch, editOptions) => withNativeHistory(editOptions?.history, () => updateAreaVertex.call(native.designer, id, vertexId, patch, editOptions));
   native.designer.updateArea = groupedArea;
   native.designer.updateAreaVertex = groupedVertex;
+  const groupedObject: typeof updateObject = (id, patch, editOptions) => withNativeHistory(editOptions?.history, () => updateObject.call(native.designer, id, patch, editOptions));
+  const groupedObjects: typeof updateObjects = (updates, editOptions) => withNativeHistory(editOptions?.history, () => updateObjects.call(native.designer, updates, editOptions));
+  native.designer.updateObject = groupedObject;
+  native.designer.updateObjects = groupedObjects;
   const areaBaseline = installPhaserAreaBaseline({ scene: options.scene, designer: native.designer, inspector, depth: (options.areaDepth ?? 10_000) + 1 });
   const areaEdgeHandles = installPhaserAreaEdgeHandles({ scene: options.scene, designer: native.designer });
   const drawings = options.scene.children.list.filter(object => !previousObjects.has(object)
@@ -75,6 +81,8 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
     areaEdgeHandles.destroy();
     if (native.designer.updateArea === groupedArea) native.designer.updateArea = updateArea;
     if (native.designer.updateAreaVertex === groupedVertex) native.designer.updateAreaVertex = updateAreaVertex;
+    if (native.designer.updateObject === groupedObject) native.designer.updateObject = updateObject;
+    if (native.designer.updateObjects === groupedObjects) native.designer.updateObjects = updateObjects;
     inspector?.destroy();
     native.destroy();
   };

@@ -1,10 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 
 async function placePlayer(page: Page) {
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
     const scene = (window as any).pointleshDemo.scene;
     scene.character.place({ x: 350, y: 450 });
     scene.binding.sync();
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
   });
 }
 
@@ -43,11 +44,11 @@ for (const [room, entity] of [['village', 'village.npc.elder'], ['house', 'house
     await toggle.check();
     await placePlayer(page);
     expect(await startWalk(page)).toEqual([{ x: 620, y: 450 }]);
-    await controls.getByRole('button', { name: 'Undo navigation edit' }).click();
+    await controls.getByRole('button', { name: 'Undo' }).click();
     await expect(toggle).not.toBeChecked();
     await placePlayer(page);
     expect((await startWalk(page)).length).toBeGreaterThanOrEqual(3);
-    await controls.getByRole('button', { name: 'Redo navigation edit' }).click();
+    await controls.getByRole('button', { name: 'Redo' }).click();
     await expect(toggle).toBeChecked();
     const persisted = await page.evaluate(({ room, entity }) => {
       const api = (window as any).pointleshDemo;

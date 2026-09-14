@@ -239,9 +239,104 @@
         "propertySchema": {}
       }
     },
-    "forest.rescue-character": {
-      "id": "forest.rescue-character",
-      "name": "Rescue character",
+    "pointlesh.area": {
+      "id": "pointlesh.area",
+      "name": "Area",
+      "attributes": [
+        {
+          "id": "area",
+          "name": "Shape",
+          "area": {
+            "tag": "pointlesh:area",
+            "visible": true,
+            "locked": false,
+            "closed": true,
+            "vertices": []
+          },
+          "kind": "area"
+        },
+        {
+          "id": "minScale",
+          "name": "Scale at start",
+          "number": {
+            "value": 0.65,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "maxScale",
+          "name": "Scale at end",
+          "number": {
+            "value": 1,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "minZoom",
+          "name": "Zoom at start",
+          "number": {
+            "value": 1.2,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "maxZoom",
+          "name": "Zoom at end",
+          "number": {
+            "value": 1,
+            "min": 0.01,
+            "step": 0.05,
+            "unit": "multiplier"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "smoothing",
+          "name": "Camera response",
+          "number": {
+            "value": 5,
+            "min": 0,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "baseline",
+          "name": "Baseline",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "area",
+        "properties": {
+          "enabled": true,
+          "walkable": false,
+          "scaleEnabled": false,
+          "zoomEnabled": false,
+          "walkBehindEnabled": false,
+          "scaleAxis": "y",
+          "zoomAxis": "y"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.character.borin": {
+      "id": "forest.character.borin",
+      "name": "Borin",
       "attributes": [
         {
           "id": "object",
@@ -251,8 +346,8 @@
             "assetId": "borin",
             "x": 0,
             "y": 0,
-            "scaleX": 1,
-            "scaleY": 1,
+            "scaleX": 2.4,
+            "scaleY": 2.4,
             "rotation": 0,
             "anchorX": 0.5,
             "anchorY": 0,
@@ -265,7 +360,7 @@
           "id": "speed",
           "name": "Walking speed",
           "number": {
-            "value": 70,
+            "value": 165,
             "min": 1,
             "step": 1,
             "unit": "pixels-per-second"
@@ -276,7 +371,7 @@
           "id": "walkStep",
           "name": "Pixels per animation frame",
           "number": {
-            "value": 7,
+            "value": 16,
             "min": 0.1,
             "step": 0.5
           },
@@ -401,98 +496,899 @@
         }
       }
     },
-    "pointlesh.area": {
-      "id": "pointlesh.area",
-      "name": "Area",
+    "forest.character.elder": {
+      "id": "forest.character.elder",
+      "name": "Elder Rowan",
       "attributes": [
         {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "elder",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2.1,
+            "scaleY": 2.1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
             "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
+            "locked": false
           },
-          "kind": "area"
+          "kind": "object"
         },
         {
-          "id": "minScale",
-          "name": "Scale at start",
+          "id": "speed",
+          "name": "Walking speed",
           "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
           },
           "kind": "number"
         },
         {
-          "id": "maxScale",
-          "name": "Scale at end",
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
           "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
+            "value": 7,
+            "min": 0.1,
             "step": 0.5
           },
           "kind": "number"
         },
         {
-          "id": "baseline",
-          "name": "Baseline",
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
           "number": {
-            "value": 160,
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
             "step": 1
           },
           "kind": "number"
         }
       ],
       "pointlesh": {
-        "kind": "area",
+        "kind": "character",
         "properties": {
           "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "elder",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "elder",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "elder",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "elder",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "elder",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "elder",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "elder",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "elder",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "elder",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "elder",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "elder",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "elder",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          },
+          "role": "npc",
+          "actorName": "elder",
+          "displayedScale": 2.1,
+          "targetId": "elder",
+          "description": "The oldest beard in Bramblehollow. He knows every story."
         },
-        "behaviors": [],
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.character.innkeeper": {
+      "id": "forest.character.innkeeper",
+      "name": "Mara the innkeeper",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "innkeeper",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2.1,
+            "scaleY": 2.1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        },
+        {
+          "id": "speed",
+          "name": "Walking speed",
+          "number": {
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
+          "number": {
+            "value": 7,
+            "min": 0.1,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
+          "number": {
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "character",
+        "properties": {
+          "enabled": true,
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "innkeeper",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "innkeeper",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "innkeeper",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "innkeeper",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "innkeeper",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "innkeeper",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "innkeeper",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "innkeeper",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "innkeeper",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "innkeeper",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "innkeeper",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "innkeeper",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          },
+          "role": "npc",
+          "actorName": "innkeeper",
+          "displayedScale": 2.1,
+          "targetId": "innkeeper",
+          "description": "A brewer, a storyteller, and a formidable keeper of tabs."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.character.miner": {
+      "id": "forest.character.miner",
+      "name": "Orrin the miner",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "miner",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2.1,
+            "scaleY": 2.1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        },
+        {
+          "id": "speed",
+          "name": "Walking speed",
+          "number": {
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
+          "number": {
+            "value": 7,
+            "min": 0.1,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
+          "number": {
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "character",
+        "properties": {
+          "enabled": true,
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "miner",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "miner",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "miner",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "miner",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "miner",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "miner",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "miner",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "miner",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "miner",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "miner",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "miner",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "miner",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          },
+          "role": "npc",
+          "actorName": "miner",
+          "displayedScale": 2.1,
+          "targetId": "miner",
+          "description": "Orrin warms his boots and guards the mine’s secrets."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.coin": {
+      "id": "forest.object.coin",
+      "name": "Copper coin",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "coin",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2,
+            "scaleY": 2,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "properties": {
+          "enabled": true,
+          "label": "object",
+          "interactive": true,
+          "ignoreScaling": false,
+          "role": "pickup",
+          "pickupId": "coin",
+          "displayedScale": 2,
+          "targetId": "coin",
+          "description": "My emergency breakfast fund."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.rope": {
+      "id": "forest.object.rope",
+      "name": "Climbing rope",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "rope",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2,
+            "scaleY": 2,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "properties": {
+          "enabled": true,
+          "label": "object",
+          "interactive": true,
+          "ignoreScaling": false,
+          "role": "pickup",
+          "pickupId": "rope",
+          "displayedScale": 2,
+          "targetId": "rope",
+          "description": "A coil of good dwarven climbing rope on the old chest."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.mushroom": {
+      "id": "forest.object.mushroom",
+      "name": "Dreamcap mushroom",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "mushroom",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2,
+            "scaleY": 2,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "properties": {
+          "enabled": true,
+          "label": "object",
+          "interactive": true,
+          "ignoreScaling": false,
+          "role": "pickup",
+          "pickupId": "mushroom",
+          "displayedScale": 2,
+          "targetId": "mushroom",
+          "description": "Violet caps with silver spots. Mara will know what they do."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.character.guard": {
+      "id": "forest.character.guard",
+      "name": "Grub the guard",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "guard",
+            "x": 0,
+            "y": 0,
+            "scaleX": 3.1,
+            "scaleY": 3.1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        },
+        {
+          "id": "speed",
+          "name": "Walking speed",
+          "number": {
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
+          "number": {
+            "value": 7,
+            "min": 0.1,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
+          "number": {
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "character",
+        "properties": {
+          "enabled": true,
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "guard",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "guard",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "guard",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "guard",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "guard",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "guard",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "guard",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "guard",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "guard",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "guard",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "guard",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "guard",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          },
+          "role": "npc",
+          "actorName": "guard",
+          "displayedScale": 3.1,
+          "targetId": "guard",
+          "description": "An enormous orc. He turns away to inspect the stew every few seconds."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.character.king": {
+      "id": "forest.character.king",
+      "name": "King Aldric",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:character",
+            "assetId": "king",
+            "x": 0,
+            "y": 0,
+            "scaleX": 2.1,
+            "scaleY": 2.1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        },
+        {
+          "id": "speed",
+          "name": "Walking speed",
+          "number": {
+            "value": 70,
+            "min": 1,
+            "step": 1,
+            "unit": "pixels-per-second"
+          },
+          "kind": "number"
+        },
+        {
+          "id": "walkStep",
+          "name": "Pixels per animation frame",
+          "number": {
+            "value": 7,
+            "min": 0.1,
+            "step": 0.5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameDurationMs",
+          "name": "Frame duration (ms)",
+          "number": {
+            "value": 100,
+            "min": 1,
+            "step": 5
+          },
+          "kind": "number"
+        },
+        {
+          "id": "frameCount",
+          "name": "Walk animation frames",
+          "number": {
+            "value": 4,
+            "min": 1,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "character",
+        "properties": {
+          "enabled": true,
+          "label": "character",
+          "interactive": true,
+          "ignoreScaling": false,
+          "movementLinkedToAnimation": true,
+          "facing": "down",
+          "directions": 4,
+          "animations": {
+            "idle": {
+              "front": {
+                "assetId": "king",
+                "key": "idle-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "king",
+                "key": "idle-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "king",
+                "key": "idle-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "king",
+                "key": "idle-left",
+                "flipX": true
+              }
+            },
+            "walk": {
+              "front": {
+                "assetId": "king",
+                "key": "walk-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "king",
+                "key": "walk-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "king",
+                "key": "walk-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "king",
+                "key": "walk-left",
+                "flipX": true
+              }
+            },
+            "speak": {
+              "front": {
+                "assetId": "king",
+                "key": "speak-front",
+                "flipX": false
+              },
+              "back": {
+                "assetId": "king",
+                "key": "speak-back",
+                "flipX": false
+              },
+              "left": {
+                "assetId": "king",
+                "key": "speak-left",
+                "flipX": false
+              },
+              "right": {
+                "assetId": "king",
+                "key": "speak-left",
+                "flipX": true
+              }
+            }
+          },
+          "role": "npc",
+          "actorName": "king",
+          "displayedScale": 2.1,
+          "targetId": "cage",
+          "description": "The king is imprisoned above a steep ledge. I need a safe way down."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
         "propertySchema": {}
       }
     }
@@ -659,124 +1555,39 @@
             },
             {
               "id": "village.borin",
-              "prefabId": "forest.rescue-character",
+              "prefabId": "forest.character.borin",
               "name": "Borin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462,
-                  "scaleX": 2.4,
-                  "scaleY": 2.4
-                },
-                "speed": {
-                  "value": 165
-                },
-                "walkStep": {
-                  "value": 16
-                },
-                "frameDurationMs": {
-                  "value": 100
+                  "y": 462
                 }
+              },
+              "pointlesh": {
+                "properties": {},
+                "behaviors": []
               }
             },
             {
               "id": "village.npc.elder",
-              "prefabId": "pointlesh.character",
+              "prefabId": "forest.character.elder",
               "name": "Elder Rowan",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "elder",
                   "x": 387,
-                  "y": 418,
-                  "scaleX": 2.1,
-                  "scaleY": 2.1
+                  "y": 418
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "npc",
-                  "actorName": "elder",
-                  "displayedScale": 2.1,
-                  "animations": {
-                    "idle": {
-                      "front": {
-                        "assetId": "elder",
-                        "key": "idle-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "elder",
-                        "key": "idle-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "elder",
-                        "key": "idle-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "elder",
-                        "key": "idle-left",
-                        "flipX": true
-                      }
-                    },
-                    "walk": {
-                      "front": {
-                        "assetId": "elder",
-                        "key": "walk-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "elder",
-                        "key": "walk-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "elder",
-                        "key": "walk-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "elder",
-                        "key": "walk-left",
-                        "flipX": true
-                      }
-                    },
-                    "speak": {
-                      "front": {
-                        "assetId": "elder",
-                        "key": "speak-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "elder",
-                        "key": "speak-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "elder",
-                        "key": "speak-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "elder",
-                        "key": "speak-left",
-                        "flipX": true
-                      }
-                    }
-                  },
-                  "targetId": "elder",
-                  "description": "The oldest beard in Bramblehollow. He knows every story.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 25
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
@@ -1172,222 +1983,59 @@
             },
             {
               "id": "pub.borin",
-              "prefabId": "forest.rescue-character",
+              "prefabId": "forest.character.borin",
               "name": "Borin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462,
-                  "scaleX": 2.4,
-                  "scaleY": 2.4
-                },
-                "speed": {
-                  "value": 165
-                },
-                "walkStep": {
-                  "value": 16
-                },
-                "frameDurationMs": {
-                  "value": 100
+                  "y": 462
                 }
+              },
+              "pointlesh": {
+                "properties": {},
+                "behaviors": []
               }
             },
             {
               "id": "pub.npc.innkeeper",
-              "prefabId": "pointlesh.character",
+              "prefabId": "forest.character.innkeeper",
               "name": "Mara the innkeeper",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "innkeeper",
                   "x": 215.76127786040843,
-                  "y": 291.2076656192551,
-                  "scaleX": 2.1,
-                  "scaleY": 2.1
+                  "y": 291.2076656192551
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "npc",
-                  "actorName": "innkeeper",
-                  "displayedScale": 2.1,
-                  "animations": {
-                    "idle": {
-                      "front": {
-                        "assetId": "innkeeper",
-                        "key": "idle-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "innkeeper",
-                        "key": "idle-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "innkeeper",
-                        "key": "idle-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "innkeeper",
-                        "key": "idle-left",
-                        "flipX": true
-                      }
-                    },
-                    "walk": {
-                      "front": {
-                        "assetId": "innkeeper",
-                        "key": "walk-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "innkeeper",
-                        "key": "walk-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "innkeeper",
-                        "key": "walk-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "innkeeper",
-                        "key": "walk-left",
-                        "flipX": true
-                      }
-                    },
-                    "speak": {
-                      "front": {
-                        "assetId": "innkeeper",
-                        "key": "speak-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "innkeeper",
-                        "key": "speak-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "innkeeper",
-                        "key": "speak-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "innkeeper",
-                        "key": "speak-left",
-                        "flipX": true
-                      }
-                    }
-                  },
-                  "targetId": "innkeeper",
-                  "description": "A brewer, a storyteller, and a formidable keeper of tabs.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 90
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
               "id": "pub.npc.miner",
-              "prefabId": "pointlesh.character",
+              "prefabId": "forest.character.miner",
               "name": "Orrin the miner",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "miner",
                   "x": 245,
-                  "y": 420,
-                  "scaleX": 2.1,
-                  "scaleY": 2.1
+                  "y": 420
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "npc",
-                  "actorName": "miner",
-                  "displayedScale": 2.1,
-                  "animations": {
-                    "idle": {
-                      "front": {
-                        "assetId": "miner",
-                        "key": "idle-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "miner",
-                        "key": "idle-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "miner",
-                        "key": "idle-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "miner",
-                        "key": "idle-left",
-                        "flipX": true
-                      }
-                    },
-                    "walk": {
-                      "front": {
-                        "assetId": "miner",
-                        "key": "walk-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "miner",
-                        "key": "walk-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "miner",
-                        "key": "walk-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "miner",
-                        "key": "walk-left",
-                        "flipX": true
-                      }
-                    },
-                    "speak": {
-                      "front": {
-                        "assetId": "miner",
-                        "key": "speak-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "miner",
-                        "key": "speak-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "miner",
-                        "key": "speak-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "miner",
-                        "key": "speak-left",
-                        "flipX": true
-                      }
-                    }
-                  },
-                  "targetId": "miner",
-                  "description": "Orrin warms his boots and guards the mine’s secrets.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 25
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
@@ -1700,86 +2348,59 @@
             },
             {
               "id": "house.borin",
-              "prefabId": "forest.rescue-character",
+              "prefabId": "forest.character.borin",
               "name": "Borin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462,
-                  "scaleX": 2.4,
-                  "scaleY": 2.4
-                },
-                "speed": {
-                  "value": 165
-                },
-                "walkStep": {
-                  "value": 16
-                },
-                "frameDurationMs": {
-                  "value": 100
+                  "y": 462
                 }
+              },
+              "pointlesh": {
+                "properties": {},
+                "behaviors": []
               }
             },
             {
               "id": "house.pickup.coin",
-              "prefabId": "pointlesh.object",
+              "prefabId": "forest.object.coin",
               "name": "Copper coin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "coin",
                   "x": 516,
-                  "y": 297,
-                  "scaleX": 2,
-                  "scaleY": 2
+                  "y": 297
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "pickup",
-                  "pickupId": "coin",
-                  "displayedScale": 2,
-                  "targetId": "coin",
-                  "description": "My emergency breakfast fund.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 124
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
               "id": "house.pickup.rope",
-              "prefabId": "pointlesh.object",
+              "prefabId": "forest.object.rope",
               "name": "Climbing rope",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "rope",
                   "x": 127,
-                  "y": 375,
-                  "scaleX": 2,
-                  "scaleY": 2
+                  "y": 375
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "pickup",
-                  "pickupId": "rope",
-                  "displayedScale": 2,
-                  "targetId": "rope",
-                  "description": "A coil of good dwarven climbing rope on the old chest.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 68
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
@@ -2019,56 +2640,39 @@
             },
             {
               "id": "forest.borin",
-              "prefabId": "forest.rescue-character",
+              "prefabId": "forest.character.borin",
               "name": "Borin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462,
-                  "scaleX": 2.4,
-                  "scaleY": 2.4
-                },
-                "speed": {
-                  "value": 165
-                },
-                "walkStep": {
-                  "value": 16
-                },
-                "frameDurationMs": {
-                  "value": 100
+                  "y": 462
                 }
+              },
+              "pointlesh": {
+                "properties": {},
+                "behaviors": []
               }
             },
             {
               "id": "forest.pickup.mushroom",
-              "prefabId": "pointlesh.object",
+              "prefabId": "forest.object.mushroom",
               "name": "Dreamcap mushroom",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "mushroom",
                   "x": 111,
-                  "y": 409,
-                  "scaleX": 2,
-                  "scaleY": 2
+                  "y": 409
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "pickup",
-                  "pickupId": "mushroom",
-                  "displayedScale": 2,
-                  "targetId": "mushroom",
-                  "description": "Violet caps with silver spots. Mara will know what they do.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 39
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
@@ -2389,26 +2993,19 @@
             },
             {
               "id": "mine.borin",
-              "prefabId": "forest.rescue-character",
+              "prefabId": "forest.character.borin",
               "name": "Borin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462,
-                  "scaleX": 2.4,
-                  "scaleY": 2.4
-                },
-                "speed": {
-                  "value": 165
-                },
-                "walkStep": {
-                  "value": 16
-                },
-                "frameDurationMs": {
-                  "value": 100
+                  "y": 462
                 }
+              },
+              "pointlesh": {
+                "properties": {},
+                "behaviors": []
               }
             },
             {
@@ -2719,222 +3316,59 @@
             },
             {
               "id": "camp.borin",
-              "prefabId": "forest.rescue-character",
+              "prefabId": "forest.character.borin",
               "name": "Borin",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462,
-                  "scaleX": 2.4,
-                  "scaleY": 2.4
-                },
-                "speed": {
-                  "value": 165
-                },
-                "walkStep": {
-                  "value": 16
-                },
-                "frameDurationMs": {
-                  "value": 100
+                  "y": 462
                 }
+              },
+              "pointlesh": {
+                "properties": {},
+                "behaviors": []
               }
             },
             {
               "id": "camp.npc.guard",
-              "prefabId": "pointlesh.character",
+              "prefabId": "forest.character.guard",
               "name": "Grub the guard",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "guard",
                   "x": 568,
-                  "y": 412,
-                  "scaleX": 3.1,
-                  "scaleY": 3.1
+                  "y": 412
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "npc",
-                  "actorName": "guard",
-                  "displayedScale": 3.1,
-                  "animations": {
-                    "idle": {
-                      "front": {
-                        "assetId": "guard",
-                        "key": "idle-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "guard",
-                        "key": "idle-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "guard",
-                        "key": "idle-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "guard",
-                        "key": "idle-left",
-                        "flipX": true
-                      }
-                    },
-                    "walk": {
-                      "front": {
-                        "assetId": "guard",
-                        "key": "walk-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "guard",
-                        "key": "walk-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "guard",
-                        "key": "walk-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "guard",
-                        "key": "walk-left",
-                        "flipX": true
-                      }
-                    },
-                    "speak": {
-                      "front": {
-                        "assetId": "guard",
-                        "key": "speak-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "guard",
-                        "key": "speak-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "guard",
-                        "key": "speak-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "guard",
-                        "key": "speak-left",
-                        "flipX": true
-                      }
-                    }
-                  },
-                  "targetId": "guard",
-                  "description": "An enormous orc. He turns away to inspect the stew every few seconds.",
                   "approachOffsetX": 0,
                   "approachOffsetY": 25
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {
               "id": "camp.npc.king",
-              "prefabId": "pointlesh.character",
+              "prefabId": "forest.character.king",
               "name": "King Aldric",
               "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
-                  "assetId": "king",
                   "x": 777,
-                  "y": 344,
-                  "scaleX": 2.1,
-                  "scaleY": 2.1
+                  "y": 344
                 }
               },
               "pointlesh": {
                 "properties": {
-                  "role": "npc",
-                  "actorName": "king",
-                  "displayedScale": 2.1,
-                  "animations": {
-                    "idle": {
-                      "front": {
-                        "assetId": "king",
-                        "key": "idle-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "king",
-                        "key": "idle-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "king",
-                        "key": "idle-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "king",
-                        "key": "idle-left",
-                        "flipX": true
-                      }
-                    },
-                    "walk": {
-                      "front": {
-                        "assetId": "king",
-                        "key": "walk-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "king",
-                        "key": "walk-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "king",
-                        "key": "walk-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "king",
-                        "key": "walk-left",
-                        "flipX": true
-                      }
-                    },
-                    "speak": {
-                      "front": {
-                        "assetId": "king",
-                        "key": "speak-front",
-                        "flipX": false
-                      },
-                      "back": {
-                        "assetId": "king",
-                        "key": "speak-back",
-                        "flipX": false
-                      },
-                      "left": {
-                        "assetId": "king",
-                        "key": "speak-left",
-                        "flipX": false
-                      },
-                      "right": {
-                        "assetId": "king",
-                        "key": "speak-left",
-                        "flipX": true
-                      }
-                    }
-                  },
-                  "targetId": "cage",
-                  "description": "The king is imprisoned above a steep ledge. I need a safe way down.",
                   "approachOffsetX": -56,
                   "approachOffsetY": 106
                 },
-                "behaviors": [
-                  "forest.interact"
-                ]
+                "behaviors": []
               }
             },
             {

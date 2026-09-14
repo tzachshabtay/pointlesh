@@ -1,3 +1,4 @@
+import { selectInstance, expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { expectCastMotion, expectCinematicCleanup } from './cinematic-helpers';
@@ -199,8 +200,9 @@ test('live prefab property edits reach the character controller and support undo
   await expect(page.locator('#cutscene')).toBeHidden();
   await expect(page.locator('body')).toHaveClass(/tools-visible/);
   await expectCinematicCleanup(page);
-  await page.getByRole('button', { name: 'Toggle Adventure', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Adventure entity', exact: true }).selectOption('village.borin');
+  await selectInstance(page, 'village.borin');
+  await expandProperties(page, 'Movement');
+  await expandProperties(page, 'Properties');
   const step = page.getByRole('spinbutton', { name: 'Pixels per animation frame', exact: true });
   await expect(step).toHaveValue('16');
   await step.fill('9'); await step.press('Tab');
@@ -208,7 +210,7 @@ test('live prefab property edits reach the character controller and support undo
   const courage = page.getByRole('spinbutton', { name: 'Courage', exact: true });
   await courage.fill('42'); await courage.press('Tab');
   await expect(courage).toHaveValue('42');
-  const inspector = page.getByRole('region', { name: 'Pointlesh adventure properties', exact: true });
+  const inspector = page.getByRole('region', { name: 'Pointlesh properties', exact: true });
   const pendingDownload = page.waitForEvent('download');
   await inspector.getByRole('button', { name: 'Export JSON', exact: true }).click();
   const download = await pendingDownload;
@@ -216,7 +218,7 @@ test('live prefab property edits reach the character controller and support undo
   const player = manifest.scenes.village.layers.flatMap((layer: { prefabs: { id: string }[] }) => layer.prefabs).find((instance: { id: string }) => instance.id === 'village.borin');
   expect(player.pointlesh.properties.courage).toBe(42);
   expect(player.overrides.walkStep.value).toBe(9);
-  expect(manifest.prefabs['forest.rescue-character'].pointlesh.behaviors).toContain('forest.rescue');
+  expect(manifest.prefabs['forest.character.borin'].pointlesh.behaviors).toContain('forest.rescue');
   await inspector.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(courage).toHaveValue('10');
   await inspector.getByRole('button', { name: 'Undo', exact: true }).click();

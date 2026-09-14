@@ -1,12 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
+import { selectInstance, expandProperties } from './designer-helpers';
 import { readFile } from 'node:fs/promises';
 
 type Vertex = { id: string; x: number; y: number; curve?: { cx: number; cy: number } };
 
-async function openAdventure(page: Page, instanceId: string) {
-  await page.getByRole('button', { name: 'Toggle Adventure', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Adventure entity', exact: true }).selectOption(instanceId);
-}
 
 async function nativeArea(page: Page) {
   return page.evaluate(() => {
@@ -36,8 +33,8 @@ async function dragPoint(page: Page, from: { x: number; y: number }, to: { x: nu
 test('Pointlesh area shape action opens native vertex, insertion, deletion, and curve tools', async ({ page }, testInfo) => {
   await page.goto('/?designer=1');
   await expect(page.locator('#loading')).toBeHidden();
-  await openAdventure(page, 'village.floor');
-  await page.getByRole('region', { name: 'Pointlesh adventure properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
+  await selectInstance(page, 'village.floor');
+  await page.getByRole('region', { name: 'Pointlesh properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getSelection())).toMatchObject({ type: 'area', areaId: 'village.floor::area' });
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getMode())).toBe('select');
   const initial = await nativeArea(page);
@@ -47,8 +44,8 @@ test('Pointlesh area shape action opens native vertex, insertion, deletion, and 
   const moved = await nativeArea(page);
   expect(moved.vertices[0].y).toBeLessThan(first.y - 15);
 
-  await openAdventure(page, 'village.floor');
-  await page.getByRole('region', { name: 'Pointlesh adventure properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
+  await selectInstance(page, 'village.floor');
+  await page.getByRole('region', { name: 'Pointlesh properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
   const last = moved.vertices.at(-1)!;
   const middle = { x: (last.x + moved.vertices[0].x) / 2, y: (last.y + moved.vertices[0].y) / 2 };
   const addAt = await screenPoint(page, middle);
@@ -61,8 +58,8 @@ test('Pointlesh area shape action opens native vertex, insertion, deletion, and 
   await page.keyboard.press('Delete');
   await expect.poll(async () => (await nativeArea(page)).vertices.length).toBe(initial.vertices.length);
 
-  await openAdventure(page, 'village.floor');
-  await page.getByRole('region', { name: 'Pointlesh adventure properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
+  await selectInstance(page, 'village.floor');
+  await page.getByRole('region', { name: 'Pointlesh properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
   const shape = await nativeArea(page);
   const edge = { x: (shape.vertices[0].x + shape.vertices[1].x) / 2, y: (shape.vertices[0].y + shape.vertices[1].y) / 2 };
   await dragPoint(page, edge, { x: edge.x, y: edge.y + 55 });
@@ -74,8 +71,8 @@ test('Pointlesh area shape action opens native vertex, insertion, deletion, and 
 test('one area keeps independent walk, scale, zoom, and walk-behind capabilities through undo and export', async ({ page }, testInfo) => {
   await page.goto('/?designer=1');
   await expect(page.locator('#loading')).toBeHidden();
-  await openAdventure(page, 'village.floor');
-  const inspector = page.getByRole('region', { name: 'Pointlesh adventure properties' });
+  await selectInstance(page, 'village.floor');
+  const inspector = page.getByRole('region', { name: 'Pointlesh properties' });
   const capabilities = inspector.getByRole('region', { name: 'Area capabilities' });
   const walkable = capabilities.getByRole('checkbox', { name: 'Walkable', exact: true });
   const scale = capabilities.getByRole('checkbox', { name: 'Character scale', exact: true });
@@ -117,7 +114,8 @@ test('one area keeps independent walk, scale, zoom, and walk-behind capabilities
 test('direction animation pickers preserve sparse inheritance, flip overrides, undo, and JSON export', async ({ page }, testInfo) => {
   await page.goto('/?designer=1');
   await expect(page.locator('#loading')).toBeHidden();
-  await openAdventure(page, 'village.borin');
+  await selectInstance(page, 'village.borin');
+  await expandProperties(page, 'Directional animations');
   await page.getByRole('tab', { name: 'Walk', exact: true }).click();
   const left = page.getByRole('combobox', { name: 'Walk Left animation', exact: true });
   await expect(left).toHaveValue('walk-left');
@@ -125,7 +123,7 @@ test('direction animation pickers preserve sparse inheritance, flip overrides, u
   const flip = page.getByRole('checkbox', { name: 'Walk Left Flip', exact: true });
   await flip.check();
   await expect(flip).toBeChecked();
-  const inspector = page.getByRole('region', { name: 'Pointlesh adventure properties' });
+  const inspector = page.getByRole('region', { name: 'Pointlesh properties' });
   const downloadPromise = page.waitForEvent('download');
   await inspector.getByRole('button', { name: 'Export JSON', exact: true }).click();
   const download = await downloadPromise;
@@ -154,4 +152,57 @@ test('direction animation pickers preserve sparse inheritance, flip overrides, u
   }))).toMatchObject({ facing: 'up', animation: expect.stringContaining('idle-back') });
   await expect(page.getByRole('spinbutton', { name: 'Frame duration (ms)', exact: true })).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('directional-animation-pickers.png'), fullPage: true });
+});
+
+test('named character prefab edits reach every instance and share history with native placement edits', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/?designer=1');
+  await expect(page.locator('#loading')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Toggle Adventure', exact: true })).toHaveCount(0);
+  await page.evaluate(() => {
+    const api = (window as any).pointleshDemo, manifest = api.manifest;
+    const original = manifest.scenes.pub.layers[0].prefabs.find((instance: any) => instance.id === 'pub.npc.innkeeper');
+    const copy = structuredClone(original); copy.id = 'pub.second-mara'; copy.name = 'Second Mara';
+    copy.overrides.object.x = 700; copy.overrides.object.y = 450;
+    manifest.scenes.pub.layers[0].prefabs.push(copy);
+    api.scene.sceneDesigner.designer.setManifest(manifest); api.scene.changeRoom('pub');
+  });
+  await selectInstance(page, 'pub.npc.innkeeper');
+  const inspector = page.getByRole('region', { name: 'Pointlesh properties', exact: true });
+  await inspector.getByRole('button', { name: 'Edit prefab', exact: true }).click();
+  const prefabPanel = page.locator('.scene-designer__panel[data-panel="prefabs"]');
+  await expect(prefabPanel.locator(':scope > .scene-designer__section select')).toHaveValue('forest.character.innkeeper');
+  await expandProperties(page, 'Directional animations');
+  const front = page.getByRole('combobox', { name: 'Idle Front animation', exact: true });
+  await expect(page.getByRole('combobox', { name: 'Idle Front asset', exact: true })).toHaveValue('innkeeper');
+  await front.selectOption('idle-back');
+  const animations = () => page.evaluate(() => (window as any).pointleshDemo.scene.resolved().objects.filter((object: any) => object.prefabId === 'forest.character.innkeeper').map((object: any) => object.properties.animations.idle.front.key));
+  await expect.poll(animations).toEqual(['idle-back', 'idle-back']);
+
+  await selectInstance(page, 'pub.npc.innkeeper');
+  await expandProperties(page, 'Directional animations');
+  await expect(front).toHaveValue('idle-back');
+  await expect(page.getByRole('button', { name: 'Idle Front Use prefab', exact: true })).toBeDisabled();
+  await front.selectOption('idle-front');
+  await expect.poll(animations).toEqual(['idle-front', 'idle-back']);
+  await page.getByRole('button', { name: 'Idle Front Use prefab', exact: true }).click();
+  await expect.poll(animations).toEqual(['idle-back', 'idle-back']);
+
+  // A Pointlesh property edit and a native X edit must undo/redo in the same order.
+  const walkThrough = inspector.getByRole('checkbox', { name: 'WalkThrough', exact: true });
+  await walkThrough.check();
+  const x = page.getByRole('spinbutton', { name: 'X', exact: true });
+  const previousX = await x.inputValue();
+  await x.fill('250'); await x.press('Tab');
+  await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.undo());
+  await expect(x).toHaveValue(previousX); await expect(walkThrough).toBeChecked();
+  await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.undo());
+  await expect(walkThrough).not.toBeChecked();
+  await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.redo());
+  await expect(walkThrough).toBeChecked();
+  await inspector.getByRole('button', { name: 'Reset WalkThrough to prefab', exact: true }).click();
+  await expect(walkThrough).not.toBeChecked();
+  await expect(inspector.getByRole('button', { name: 'Reset WalkThrough to prefab', exact: true })).toBeDisabled();
+  expect(errors).toEqual([]);
 });

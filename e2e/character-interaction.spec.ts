@@ -1,3 +1,4 @@
+import { expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 async function spritePoint(page: Page, instanceId: string, sample: 'opaque' | 'transparent' | 'mirrored' = 'opaque') {
@@ -60,11 +61,10 @@ test('NPC sprite pixels are clickable and follow native authored movement, scale
     await scale.fill('2.8'); await scale.press('Tab');
   }
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.resolved().objects.find((object: any) => object.id === 'village.npc.elder').scaleX)).toBe(2.8);
-  await page.getByRole('button', { name: 'Toggle Adventure', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Adventure entity', exact: true }).selectOption(elder);
+  await expandProperties(page, 'Directional animations');
   await page.getByRole('combobox', { name: 'Facing', exact: true }).selectOption({ label: 'Right' });
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.resolved().objects.find((object: any) => object.id === 'village.npc.elder').properties.facing)).toBe('right');
-  await page.getByRole('button', { name: 'Toggle Adventure', exact: true }).click();
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.locator('#designer').click();
   await expect.poll(() => page.evaluate(() => {
     const sprite = (window as any).pointleshDemo.scene.entitySprites.get('village.npc.elder');

@@ -34,19 +34,19 @@ Inventory and dialogue puzzles can be prepared in different orders. Failed combi
 
 ## See the library features
 
-Open **Designer** to inspect the current room, or visit [the direct designer preview](http://127.0.0.1:5186/?designer=1) to begin in the village editor. Select an area in **Adventure** and use **Edit shape** to open its native vector handles. Drag vertices, double-click an edge to insert a vertex, press Delete to remove the selected vertex, and drag an edge to curve it. The native **Scenes** and **Prefabs** panels provide the existing Scene Designer controls; the **Adventure** panel exposes Pointlesh properties and custom behavior data. Close the scene editor to resume normal interaction.
+Open **Designer** to inspect the current room, or visit [the direct designer preview](http://127.0.0.1:5186/?designer=1) to begin in the village editor. Select an area in **Scenes** and use **Edit shape** to open its native vector handles. Drag vertices, double-click an edge to insert a vertex, press Delete to remove the selected vertex, and drag an edge to curve it. The native **Scenes** and **Prefabs** panels include Pointlesh properties and custom behavior data alongside the Scene Designer controls. Prefabs edit reusable defaults; Scenes edit placement and instance overrides. Close the scene editor to resume normal interaction.
 
 | Feature | What to try |
 | --- | --- |
 | Walkable areas | Select **Walkable ground & perspective**, keep **Walkable** enabled, and move its vertices. Close the editor, then walk across the changed area. Borin needs a continuous route to an interaction's approach point. |
 | Hotspots and approach | Move a hotspot's polygon, then tune its `approachX` and `approachY` properties. The click target and Borin's standing point are independent. |
 | Sprite interactions | Move or scale the rope, coin, mushroom, or an NPC. Its opaque sprite pixels remain clickable without a separate hotspot polygon. Relative `approachOffsetX`/`approachOffsetY` properties move the standing point with the object; the `interactive` property also controls its Nearby action. |
-| Directional character animations | Select Borin in Adventure. Choose **Idle**, **Walk**, or **Speak**, then assign front/back/left/right asset and animation slots. Use **Flip** to mirror an assignment, or enable eight directions to configure diagonal slots. **Use prefab** restores an inherited slot. |
+| Directional character animations | Select the Borin prefab and expand **Directional animations**. Choose **Idle**, **Walk**, or **Speak**, then assign front/back/left/right asset and animation slots. Use **Flip** to mirror an assignment, or enable eight directions to configure diagonal slots. **Use prefab** restores an inherited slot. |
 | Movement linked to animation | Compare linked movement with the property disabled; tune pixels per animation frame and walking speed. Assigned clips use their actual AI Assets frames and timing. Legacy frame count/duration fields appear only when no animations are assigned. |
 | Perspective scale | On the same ground area, enable **Character scale** and edit its axis and endpoint multipliers. Walk across the area to see sprite size and movement distance change. |
 | Camera zoom | Enable **Camera zoom** on the ground area and edit its axis, endpoint multipliers and camera response. Walk into it to see the camera respond. |
 | Walk-behind scenery | Select the foreground Area, enable **Walk-behind**, and edit its polygon and baseline, then move Borin across the baseline. The masked background fragment changes its depth relative to his feet. |
-| Extensible prefabs | Add a custom JSON property or behavior ID in Adventure. The manifest retains it; game code registers and dispatches behavior handlers. Unknown behavior IDs have no implementation until a client provides one. |
+| Extensible prefabs | Add a custom JSON property or behavior ID under **Custom properties & behaviors** in Scenes or Prefabs. The manifest retains it; game code registers and dispatches behavior handlers. Unknown behavior IDs have no implementation until a client provides one. |
 | Conversations | Open **Dialogs** to inspect the native dialogue trees and line assets. Changes update the demo's authored conversation runtime. |
 | Asset references | Open **AI Assets**, then **Graphics → Characters → Borin**. **Base image** shows one still pose. Its **Animation** dropdown contains real idle, walk and speak sequences for front, back and left views (right mirrors left). Preview or edit a sequence and see the bound character update. **Graphics → Objects** contains the pickup graphics. The catalog also contains room atlases and dialogue assets. Generated room backgrounds are documented in [art-prompts.md](art-prompts.md). |
 | Animated cutscenes | Save midway through the kidnapping, let the action advance and load. The cast resumes at the saved pose and time. Next scene, automatic playback and skipping all return control to the game. |
@@ -56,7 +56,7 @@ Some properties intentionally remain hooks for game-specific behavior rather tha
 
 ## Keep designer changes
 
-In a local checkout, run `npm run dev:server` alongside `npm run dev`. AI Assets, Scene Designer and Dialog Designer listen on ports 4287, 4288 and 4289. Use the relevant designer's promotion action to persist its authoring document, or export the scene JSON from Adventure. Hosted/static previews can edit and export, but project-file promotion requires the local authoring service.
+In a local checkout, run `npm run dev:server` alongside `npm run dev`. AI Assets, Scene Designer and Dialog Designer listen on ports 4287, 4288 and 4289. Use the relevant designer's promotion action to persist its authoring document, or export the scene JSON from the embedded property inspector. Hosted/static previews can edit and export, but project-file promotion requires the local authoring service.
 
 Designer manifests are authored content and are separate from saved-game slots. Saved games retain runtime progress; they do not automatically preserve every in-memory editor change. Keep stable content IDs and provide migrations when changing content in ways that invalidate existing saves.
 

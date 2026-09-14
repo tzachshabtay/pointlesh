@@ -1,3 +1,4 @@
+import { selectInstance, expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { cinematicView, expectCastMotion, expectCinematicCleanup } from './cinematic-helpers';
 
@@ -88,8 +89,8 @@ test('arrow movement is suppressed while using designers and focused property in
   expect(afterDesigner.x).toBeCloseTo(designerPosition.x, 3);
   expect(afterDesigner.y).toBeCloseTo(designerPosition.y, 3);
 
-  await page.getByRole('button', { name: 'Toggle Adventure', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Adventure entity', exact: true }).selectOption('village.borin');
+  await selectInstance(page, 'village.borin');
+  await expandProperties(page, 'Properties');
   await page.getByRole('spinbutton', { name: 'Courage', exact: true }).focus();
   const inputPosition = await player(page);
   await page.keyboard.down('ArrowLeft');
