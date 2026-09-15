@@ -13,6 +13,7 @@ import {
   resolveSceneArea,
   resolveSceneObject,
   type SceneAreaVertex,
+  type SceneArea,
   type SceneDesignerManifest,
   type SceneObjectDefaults,
   type ScenePrefabAttribute,
@@ -82,6 +83,35 @@ export type PointleshRegionPrefabInput = PointleshAreaPrefabInput & {
   baseline?: number;
 };
 export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults> & { walkThrough?: boolean };
+
+/** A native polygon owned by a scene layer, with extensible adventure data. */
+export type PointleshSceneArea = SceneArea & {
+  pointlesh: PointleshPrefabMetadata & {
+    name: string;
+    /** Retains existing game/save references when migrating prefab instances. */
+    entityId?: string;
+  };
+};
+export function isPointleshArea(area: SceneArea): area is PointleshSceneArea {
+  const data = (area as Partial<PointleshSceneArea>).pointlesh;
+  return !!data && ['area', 'hotspot', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(data.kind);
+}
+export type PointleshSceneAreaInput = PointleshRegionPrefabInput & {
+  kind?: 'area' | 'hotspot'; entityId?: string;
+  approachX?: number; approachY?: number; approachRadius?: number;
+};
+export function createPointleshArea(input: PointleshSceneAreaInput = {}): PointleshSceneArea {
+  const defaults = input.kind === 'hotspot' ? createHotspotPrefab(input) : createAreaPrefab(input);
+  const properties = structuredClone(defaults.pointlesh.properties);
+  const propertySchema = structuredClone(defaults.pointlesh.propertySchema ?? {});
+  for (const attribute of defaults.attributes) if (attribute.kind === 'number') {
+    properties[attribute.id] = attribute.number.value;
+    propertySchema[attribute.id] = { ...propertySchema[attribute.id], type: 'number', label: attribute.name, min: attribute.number.min, max: attribute.number.max, step: attribute.number.step };
+  }
+  return { ...createArea({ id: input.id, tag: `pointlesh:${input.kind ?? 'area'}`, closed: input.closed ?? false,
+    vertices: (input.vertices ?? []).map((vertex, index) => ({ ...vertex, id: 'id' in vertex ? vertex.id : `vertex-${index}` })) }),
+    pointlesh: { kind: defaults.pointlesh.kind, name: input.name ?? defaults.name, ...(input.entityId ? { entityId: input.entityId } : {}), properties, behaviors: defaults.pointlesh.behaviors, propertySchema } };
+}
 
 function number(id: string, label: string, value: number, options: Omit<ScenePrefabNumberDefaults, "value"> = {}): ScenePrefabAttribute {
   return createPrefabNumberAttribute({ id, name: label, number: { value, ...options } });
@@ -217,9 +247,8 @@ export function createCharacterPrefab(input: PointleshObjectPrefabInput & { spee
 /** Ready-to-register native prefabs. Supply asset ids from your ai-assets manifest. */
 export function pointleshPrefabs(options: { objectAssetId?: string; characterAssetId?: string; includeLegacyAreas?: boolean } = {}): Record<string, PointleshPrefabDefinition> {
   const prefabs = [
-    createAreaPrefab(), createHotspotPrefab(),
     createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }),
-    ...(options.includeLegacyAreas ? [createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab()] : []),
+    ...(options.includeLegacyAreas ? [createAreaPrefab(), createHotspotPrefab(), createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab()] : []),
   ];
   return Object.fromEntries(prefabs.map(prefab => {
     prefab.pointlesh.editor = { template: true };
@@ -265,10 +294,10 @@ function mergeProperties(base: PointleshProperties, overrides: PointleshProperti
 }
 
 export type ResolvedPointleshEntity = {
-  /** Stable native prefab instance id, suitable for interactions and save files. */
+  /** Stable gameplay entity ID, suitable for interactions and save files. */
   id: string;
-  instanceId: string;
-  prefabId: string;
+  instanceId?: string;
+  prefabId?: string;
   layerId: string;
   name: string;
   kind: PointleshPrefabKind;
@@ -278,11 +307,13 @@ export type ResolvedPointleshEntity = {
 };
 export type ResolvedPointleshArea = ResolvedPointleshEntity & {
   areaId: string;
-  attributeId: string;
+  attributeId?: string;
   polygon: PointleshPoint[];
   closed: boolean;
 };
 export type ResolvedPointleshObject = ResolvedPointleshEntity & {
+  instanceId: string;
+  prefabId: string;
   objectId: string;
   attributeId: string;
   position: PointleshPoint;
@@ -349,9 +380,18 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
           if (area) result.areas.push({ ...entity, enabled: entity.enabled && area.visible, areaId: area.id, attributeId: attribute.id, polygon: pointleshAreaPolygon(area.vertices, area.closed), closed: area.closed });
         } else if (attribute.kind === "object") {
           const object = resolveSceneObject(manifest, scene.id, prefabAttributeId(instance.id, attribute.id))?.object;
-          if (object) result.objects.push({ ...entity, enabled: entity.enabled && object.visible, objectId: object.id, attributeId: attribute.id, position: { x: object.x, y: object.y }, assetId: object.assetId, scaleX: object.scaleX, scaleY: object.scaleY, rotation: object.rotation, anchorX: object.anchorX, anchorY: object.anchorY });
+          if (object) result.objects.push({ ...entity, instanceId: instance.id, prefabId: prefab.id, enabled: entity.enabled && object.visible, objectId: object.id, attributeId: attribute.id, position: { x: object.x, y: object.y }, assetId: object.assetId, scaleX: object.scaleX, scaleY: object.scaleY, rotation: object.rotation, anchorX: object.anchorX, anchorY: object.anchorY });
         }
       }
+    }
+    for (const area of layer.areas) {
+      if (!isPointleshArea(area)) continue;
+      const entity: ResolvedPointleshEntity = { id: area.pointlesh.entityId ?? area.id, layerId: layer.id,
+        name: area.pointlesh.name ?? area.tag, kind: area.pointlesh.kind,
+        enabled: layer.visible && area.visible && area.pointlesh.properties.enabled !== false,
+        properties: structuredClone(area.pointlesh.properties), behaviors: [...area.pointlesh.behaviors] };
+      result.entities.push(entity);
+      result.areas.push({ ...entity, areaId: area.id, polygon: pointleshAreaPolygon(area.vertices, area.closed), closed: area.closed });
     }
   }
   return result;

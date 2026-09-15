@@ -1,65 +1,6 @@
 {
   "schemaVersion": 2,
   "prefabs": {
-    "pointlesh.hotspot": {
-      "id": "pointlesh.hotspot",
-      "name": "Hotspot",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 0,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 0,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "properties": {
-          "enabled": true,
-          "label": "Hotspot",
-          "cursor": "interact"
-        },
-        "behaviors": [],
-        "propertySchema": {},
-        "editor": {
-          "template": true
-        }
-      }
-    },
     "pointlesh.object": {
       "id": "pointlesh.object",
       "name": "Object",
@@ -240,104 +181,6 @@
               }
             }
           }
-        },
-        "behaviors": [],
-        "propertySchema": {},
-        "editor": {
-          "template": true
-        }
-      }
-    },
-    "pointlesh.area": {
-      "id": "pointlesh.area",
-      "name": "Area",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": []
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
         },
         "behaviors": [],
         "propertySchema": {},
@@ -1403,3263 +1246,6 @@
         ],
         "propertySchema": {}
       }
-    },
-    "forest.area.village.village.floor": {
-      "id": "forest.area.village.village.floor",
-      "name": "Walkable ground & perspective",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "floor-0",
-                "x": 35,
-                "y": 403
-              },
-              {
-                "id": "floor-1",
-                "x": 124,
-                "y": 371
-              },
-              {
-                "id": "floor-2",
-                "x": 360,
-                "y": 355
-              },
-              {
-                "id": "floor-3",
-                "x": 710,
-                "y": 355
-              },
-              {
-                "id": "floor-4",
-                "x": 835,
-                "y": 381
-              },
-              {
-                "id": "floor-5",
-                "x": 925,
-                "y": 403
-              },
-              {
-                "id": "floor-6",
-                "x": 925,
-                "y": 494
-              },
-              {
-                "id": "floor-7",
-                "x": 850,
-                "y": 515
-              },
-              {
-                "id": "floor-8",
-                "x": 110,
-                "y": 515
-              },
-              {
-                "id": "floor-9",
-                "x": 35,
-                "y": 494
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.75,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1.22,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.035,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "Bramblehollow"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": true,
-          "scaleEnabled": true,
-          "zoomEnabled": true,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.village.village.foreground": {
-      "id": "forest.area.village.village.foreground",
-      "name": "Foreground occlusion",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "foreground-0",
-                "x": 0,
-                "y": 160
-              },
-              {
-                "id": "foreground-1",
-                "x": 57,
-                "y": 162,
-                "curve": {
-                  "cx": 90,
-                  "cy": 248
-                }
-              },
-              {
-                "id": "foreground-2",
-                "x": 65,
-                "y": 338,
-                "curve": {
-                  "cx": 60,
-                  "cy": 435
-                }
-              },
-              {
-                "id": "foreground-3",
-                "x": 102,
-                "y": 504,
-                "curve": {
-                  "cx": 83,
-                  "cy": 525
-                }
-              },
-              {
-                "id": "foreground-4",
-                "x": 149,
-                "y": 540
-              },
-              {
-                "id": "foreground-5",
-                "x": 0,
-                "y": 540
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 505,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "Bramblehollow"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.village.pub-door": {
-      "id": "forest.hotspot.village.pub-door",
-      "name": "The Copper Tankard",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 127.79337567978689,
-                "y": 300.770955405699
-              },
-              {
-                "id": "vertex-mtroczsc-gp9y8z",
-                "x": 139.13900569934438,
-                "y": 254.55737934862296
-              },
-              {
-                "id": "vertex-mtrocn7s-5ygdg3",
-                "x": 161.97584650856945,
-                "y": 247.79090799774147,
-                "curve": {
-                  "cx": 206.80371920815938,
-                  "cy": 250.32833475432201
-                }
-              },
-              {
-                "id": "b",
-                "x": 195.7933756797869,
-                "y": 300.770955405699
-              },
-              {
-                "id": "c",
-                "x": 195.7933756797869,
-                "y": 364.770955405699
-              },
-              {
-                "id": "d",
-                "x": 127.79337567978689,
-                "y": 364.770955405699
-              }
-            ],
-            "id": "pub-door::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 221,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 403,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "Bramblehollow"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "The Copper Tankard",
-          "cursor": "interact",
-          "exit": "pub",
-          "description": "The windows glow with breakfast, gossip, and questionable decisions."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.village.home-door": {
-      "id": "forest.hotspot.village.home-door",
-      "name": "My cottage",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 739.9910318903649,
-                "y": 299.00896810963513
-              },
-              {
-                "id": "vertex-mtrodpa6-wpfdg3",
-                "x": 750.65885403526,
-                "y": 272.31936664468685
-              },
-              {
-                "id": "vertex-mtrodijj-ydj0qq",
-                "x": 775.1873126822055,
-                "y": 264.7070863749452
-              },
-              {
-                "id": "vertex-mtrodl2a-4dcopd",
-                "x": 800.5615802480111,
-                "y": 271.4735577258267
-              },
-              {
-                "id": "b",
-                "x": 807.9910318903649,
-                "y": 299.00896810963513
-              },
-              {
-                "id": "c",
-                "x": 807.9910318903649,
-                "y": 363.00896810963513
-              },
-              {
-                "id": "d",
-                "x": 739.9910318903649,
-                "y": 363.00896810963513
-              }
-            ],
-            "id": "home-door::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 752,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 403,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "Bramblehollow"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "My cottage",
-          "cursor": "interact",
-          "exit": "house",
-          "description": "Home. I should take supplies before venturing into the wood."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.village.forest-path": {
-      "id": "forest.hotspot.village.forest-path",
-      "name": "Forest path",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 409.617215901207,
-                "y": 231.738045092841
-              },
-              {
-                "id": "b",
-                "x": 477.617215901207,
-                "y": 231.738045092841
-              },
-              {
-                "id": "c",
-                "x": 477.617215901207,
-                "y": 295.738045092841
-              },
-              {
-                "id": "d",
-                "x": 409.617215901207,
-                "y": 295.738045092841
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 508,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 403,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "Bramblehollow"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Forest path",
-          "cursor": "interact",
-          "exit": "forest",
-          "description": "Fresh orc tracks head east beneath the ancient trees."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.pub.pub.floor": {
-      "id": "forest.area.pub.pub.floor",
-      "name": "Walkable ground & perspective",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "floor-0",
-                "x": 64.85668835121243,
-                "y": 402.8308602545111
-              },
-              {
-                "id": "floor-1",
-                "x": 85,
-                "y": 380
-              },
-              {
-                "id": "floor-2",
-                "x": 360,
-                "y": 355
-              },
-              {
-                "id": "floor-3",
-                "x": 710,
-                "y": 355
-              },
-              {
-                "id": "floor-4",
-                "x": 745.9841937683311,
-                "y": 359.0088380054916
-              },
-              {
-                "id": "floor-5",
-                "x": 732.3025618902881,
-                "y": 401.48999246395607
-              },
-              {
-                "id": "floor-6",
-                "x": 714.3420405353862,
-                "y": 476.7531295702114
-              },
-              {
-                "id": "floor-7",
-                "x": 694.6709933371604,
-                "y": 512.6741722800151
-              },
-              {
-                "id": "vertex-mtyjbxfv-dizwx6",
-                "x": 268.95979225344024,
-                "y": 514.4553452218695
-              },
-              {
-                "id": "vertex-mtyjbvai-6sjxm9",
-                "x": 224.1978967152368,
-                "y": 410.0856052138731
-              },
-              {
-                "id": "floor-8",
-                "x": 145.3625391110327,
-                "y": 426.1715929772927
-              },
-              {
-                "id": "floor-9",
-                "x": 67.16835855155038,
-                "y": 441.3059505049344
-              }
-            ],
-            "id": "pub.floor::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.75,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1.22,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.035,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Copper Tankard"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": true,
-          "scaleEnabled": true,
-          "zoomEnabled": true,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.pub.pub.foreground": {
-      "id": "forest.area.pub.pub.foreground",
-      "name": "Table",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "foreground-0",
-                "x": 2.8787955459764047,
-                "y": 352.57630963337743,
-                "curve": {
-                  "cx": 66.76152525738149,
-                  "cy": 351.7628187864515
-                }
-              },
-              {
-                "id": "foreground-1",
-                "x": 125.31758443143674,
-                "y": 357.61842470385704,
-                "curve": {
-                  "cx": 143.72091731471124,
-                  "cy": 362.6375154902046
-                }
-              },
-              {
-                "id": "foreground-2",
-                "x": 148.74000810105883,
-                "y": 381.8773635045371
-              },
-              {
-                "id": "foreground-3",
-                "x": 148.74000810105883,
-                "y": 407.80933256733294
-              },
-              {
-                "id": "vertex-mtyj80ho-oy7hbi",
-                "x": 111.93334233450983,
-                "y": 434.57781676118674
-              },
-              {
-                "id": "foreground-4",
-                "x": 121.13500877614707,
-                "y": 504.00857263899513
-              },
-              {
-                "id": "vertex-mtyj8kf3-dme796",
-                "x": 99.38561536864084,
-                "y": 505.681602901111
-              },
-              {
-                "id": "vertex-mtyj8nd3-cx3tbs",
-                "x": 86.00137327171393,
-                "y": 438.76039241647646
-              },
-              {
-                "id": "vertex-mtyj8qb8-wdopl4",
-                "x": 63.41546473314976,
-                "y": 443.77948320282405
-              },
-              {
-                "id": "vertex-mtyj8sy6-j8pcr8",
-                "x": 61.742434471033896,
-                "y": 530.777056832849
-              },
-              {
-                "id": "foreground-5",
-                "x": 6.815584223092938,
-                "y": 531.3590336512272
-              }
-            ],
-            "id": "pub.foreground::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 532,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Copper Tankard"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.pub.pub-exit": {
-      "id": "forest.hotspot.pub.pub-exit",
-      "name": "Back to the village",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 809.260002854402,
-                "y": 130.96779482620093,
-                "curve": {
-                  "cx": 857.5063271801115,
-                  "cy": 57.32866822380249
-                }
-              },
-              {
-                "id": "b",
-                "x": 905.7526515058207,
-                "y": 129.2749413410883
-              },
-              {
-                "id": "c",
-                "x": 906.599078248377,
-                "y": 307.8709840204683,
-                "curve": {
-                  "cx": 852.4277667247736,
-                  "cy": 301.09957008001794
-                }
-              },
-              {
-                "id": "d",
-                "x": 813.4921365671837,
-                "y": 298.56028985234906
-              }
-            ],
-            "id": "pub-exit::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 710,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 440,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Copper Tankard"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Back to the village",
-          "cursor": "interact",
-          "exit": "village",
-          "description": "The morning air might clear my head."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.pub.prefab-instance-mtyj1z1j-nxfwc1": {
-      "id": "forest.area.pub.prefab-instance-mtyj1z1j-nxfwc1",
-      "name": "Bar",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "vertex-mtyj22bi-jjnb4v",
-                "x": -1.6223058352163635,
-                "y": 241.42503231659114
-              },
-              {
-                "id": "vertex-mtyj25jh-alagcw",
-                "x": 332.50945996642366,
-                "y": 218.92265915593686
-              },
-              {
-                "id": "vertex-mtyj26qk-arsifc",
-                "x": 396.0829686015859,
-                "y": 224.856186628552
-              },
-              {
-                "id": "vertex-mtyj27hn-4h37ww",
-                "x": 399.4735557287945,
-                "y": 235.02794801017794
-              },
-              {
-                "id": "vertex-mtyj280d-h4lphk",
-                "x": 382.52062009275124,
-                "y": 235.87559479198012
-              },
-              {
-                "id": "vertex-mtyj293b-jhmb51",
-                "x": 389.3017943471686,
-                "y": 295.2108695181315
-              },
-              {
-                "id": "vertex-mtyj2bln-l0gsx3",
-                "x": -12.310601974503008,
-                "y": 356.71161688216813
-              }
-            ],
-            "id": "prefab-instance-mtyj1z1j-nxfwc1::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 352,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Copper Tankard"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.house.house.floor": {
-      "id": "forest.area.house.house.floor",
-      "name": "Walkable ground & perspective",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "floor-0",
-                "x": 74.69876719568336,
-                "y": 458.47115488785016
-              },
-              {
-                "id": "vertex-mtrw9d9p-l3rbvq",
-                "x": 189.7738562591219,
-                "y": 395.0106278308068
-              },
-              {
-                "id": "vertex-mtrw97fz-3mkiw5",
-                "x": 127.15946956283915,
-                "y": 362.8572941219049
-              },
-              {
-                "id": "vertex-mtrw924b-9yg1zu",
-                "x": 144.00777062093644,
-                "y": 349.3366412216503
-              },
-              {
-                "id": "floor-1",
-                "x": 266.77262908833444,
-                "y": 416.1641368498213
-              },
-              {
-                "id": "floor-2",
-                "x": 373.3863145441672,
-                "y": 368.78027664722896
-              },
-              {
-                "id": "floor-3",
-                "x": 698.5865569054505,
-                "y": 368.1812803074733
-              },
-              {
-                "id": "floor-4",
-                "x": 819,
-                "y": 390
-              },
-              {
-                "id": "floor-5",
-                "x": 925,
-                "y": 403
-              },
-              {
-                "id": "floor-6",
-                "x": 925,
-                "y": 494
-              },
-              {
-                "id": "floor-7",
-                "x": 850,
-                "y": 515
-              },
-              {
-                "id": "floor-8",
-                "x": 110,
-                "y": 515
-              },
-              {
-                "id": "floor-9",
-                "x": 35,
-                "y": 494
-              }
-            ],
-            "id": "house.floor::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 1.22,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.035,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "Borin’s Cottage"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": true,
-          "scaleEnabled": true,
-          "zoomEnabled": true,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.house.house.foreground": {
-      "id": "forest.area.house.house.foreground",
-      "name": "Foreground occlusion",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "foreground-0",
-                "x": 29.906347432395666,
-                "y": 325.08392907738505
-              },
-              {
-                "id": "foreground-1",
-                "x": 96.00275083747482,
-                "y": 309.53495907453515,
-                "curve": {
-                  "cx": 128.98929867302212,
-                  "cy": 317.14723934427684
-                }
-              },
-              {
-                "id": "foreground-2",
-                "x": 138.29319678048418,
-                "y": 328.9885642083195
-              },
-              {
-                "id": "foreground-3",
-                "x": 138.29319678048418,
-                "y": 389.886806366253,
-                "curve": {
-                  "cx": 90.0820884054535,
-                  "cy": 422.8733542018003
-                }
-              },
-              {
-                "id": "foreground-4",
-                "x": 68.43202300548967,
-                "y": 406.37783825661785
-              },
-              {
-                "id": "foreground-5",
-                "x": 22.983496700259995,
-                "y": 395.9417825055839
-              }
-            ],
-            "id": "house.foreground::area"
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 414,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "Borin’s Cottage"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.house.house-exit": {
-      "id": "forest.hotspot.house.house-exit",
-      "name": "Back to the village",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 840,
-                "y": 301
-              },
-              {
-                "id": "b",
-                "x": 908,
-                "y": 301
-              },
-              {
-                "id": "c",
-                "x": 908,
-                "y": 365
-              },
-              {
-                "id": "d",
-                "x": 840,
-                "y": 365
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 874,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 403,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "Borin’s Cottage"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Back to the village",
-          "cursor": "interact",
-          "exit": "village",
-          "description": "There is a king out there who needs me."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.forest.forest.floor": {
-      "id": "forest.area.forest.forest.floor",
-      "name": "Walkable ground & perspective",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "floor-0",
-                "x": 35,
-                "y": 443
-              },
-              {
-                "id": "floor-1",
-                "x": 190,
-                "y": 448
-              },
-              {
-                "id": "floor-2",
-                "x": 274,
-                "y": 371
-              },
-              {
-                "id": "floor-3",
-                "x": 360,
-                "y": 398
-              },
-              {
-                "id": "floor-4",
-                "x": 450,
-                "y": 435
-              },
-              {
-                "id": "floor-5",
-                "x": 680,
-                "y": 445
-              },
-              {
-                "id": "floor-6",
-                "x": 920,
-                "y": 438
-              },
-              {
-                "id": "floor-7",
-                "x": 1170,
-                "y": 419
-              },
-              {
-                "id": "floor-8",
-                "x": 1365,
-                "y": 365
-              },
-              {
-                "id": "floor-9",
-                "x": 1450,
-                "y": 389
-              },
-              {
-                "id": "floor-10",
-                "x": 1585,
-                "y": 443
-              },
-              {
-                "id": "floor-11",
-                "x": 1585,
-                "y": 515
-              },
-              {
-                "id": "floor-12",
-                "x": 35,
-                "y": 515
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.75,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1.22,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.035,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Whispering Wood"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": true,
-          "scaleEnabled": true,
-          "zoomEnabled": true,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.forest.forest.foreground": {
-      "id": "forest.area.forest.forest.foreground",
-      "name": "Foreground occlusion",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "foreground-0",
-                "x": 0,
-                "y": 113
-              },
-              {
-                "id": "foreground-1",
-                "x": 98,
-                "y": 103,
-                "curve": {
-                  "cx": 137,
-                  "cy": 204
-                }
-              },
-              {
-                "id": "foreground-2",
-                "x": 123,
-                "y": 311,
-                "curve": {
-                  "cx": 92,
-                  "cy": 409
-                }
-              },
-              {
-                "id": "foreground-3",
-                "x": 148,
-                "y": 465,
-                "curve": {
-                  "cx": 163,
-                  "cy": 495
-                }
-              },
-              {
-                "id": "foreground-4",
-                "x": 208,
-                "y": 515
-              },
-              {
-                "id": "foreground-5",
-                "x": 176,
-                "y": 540
-              },
-              {
-                "id": "foreground-6",
-                "x": 0,
-                "y": 540
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 505,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Whispering Wood"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.forest.mine-path": {
-      "id": "forest.hotspot.forest.mine-path",
-      "name": "Goldroot Mine",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 240,
-                "y": 250
-              },
-              {
-                "id": "b",
-                "x": 308,
-                "y": 250
-              },
-              {
-                "id": "c",
-                "x": 308,
-                "y": 314
-              },
-              {
-                "id": "d",
-                "x": 240,
-                "y": 314
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 274,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 410,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Whispering Wood"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Goldroot Mine",
-          "cursor": "interact",
-          "exit": "mine",
-          "description": "A lantern flickers in the old gold mine."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.forest.camp-path": {
-      "id": "forest.hotspot.forest.camp-path",
-      "name": "Orc encampment",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 1351,
-                "y": 240
-              },
-              {
-                "id": "b",
-                "x": 1419,
-                "y": 240
-              },
-              {
-                "id": "c",
-                "x": 1419,
-                "y": 304
-              },
-              {
-                "id": "d",
-                "x": 1351,
-                "y": 304
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 1385,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 410,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Whispering Wood"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Orc encampment",
-          "cursor": "interact",
-          "exit": "camp",
-          "description": "A crooked palisade. Smoke. Terrible singing."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.forest.forest-exit": {
-      "id": "forest.hotspot.forest.forest-exit",
-      "name": "Bramblehollow",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 437,
-                "y": 455
-              },
-              {
-                "id": "b",
-                "x": 505,
-                "y": 455
-              },
-              {
-                "id": "c",
-                "x": 505,
-                "y": 519
-              },
-              {
-                "id": "d",
-                "x": 437,
-                "y": 519
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 471,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 494,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Whispering Wood"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Bramblehollow",
-          "cursor": "interact",
-          "exit": "village",
-          "description": "The path home winds between the roots."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.mine.mine.floor": {
-      "id": "forest.area.mine.mine.floor",
-      "name": "Walkable ground & perspective",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "floor-0",
-                "x": 35,
-                "y": 403
-              },
-              {
-                "id": "floor-1",
-                "x": 142,
-                "y": 374
-              },
-              {
-                "id": "floor-2",
-                "x": 360,
-                "y": 355
-              },
-              {
-                "id": "floor-3",
-                "x": 710,
-                "y": 355
-              },
-              {
-                "id": "floor-4",
-                "x": 865,
-                "y": 390
-              },
-              {
-                "id": "floor-5",
-                "x": 925,
-                "y": 403
-              },
-              {
-                "id": "floor-6",
-                "x": 925,
-                "y": 494
-              },
-              {
-                "id": "floor-7",
-                "x": 850,
-                "y": 515
-              },
-              {
-                "id": "floor-8",
-                "x": 110,
-                "y": 515
-              },
-              {
-                "id": "floor-9",
-                "x": 35,
-                "y": 494
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.75,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1.22,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.035,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Goldroot Mine"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": true,
-          "scaleEnabled": true,
-          "zoomEnabled": true,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.mine.mine.foreground": {
-      "id": "forest.area.mine.mine.foreground",
-      "name": "Foreground occlusion",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "foreground-0",
-                "x": 0,
-                "y": 291
-              },
-              {
-                "id": "foreground-1",
-                "x": 44,
-                "y": 305
-              },
-              {
-                "id": "foreground-2",
-                "x": 57,
-                "y": 350,
-                "curve": {
-                  "cx": 96,
-                  "cy": 377
-                }
-              },
-              {
-                "id": "foreground-3",
-                "x": 70,
-                "y": 421
-              },
-              {
-                "id": "foreground-4",
-                "x": 115,
-                "y": 474,
-                "curve": {
-                  "cx": 86,
-                  "cy": 510
-                }
-              },
-              {
-                "id": "foreground-5",
-                "x": 147,
-                "y": 540
-              },
-              {
-                "id": "foreground-6",
-                "x": 0,
-                "y": 540
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 505,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Goldroot Mine"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.mine.tool-chest": {
-      "id": "forest.hotspot.mine.tool-chest",
-      "name": "Runed tool chest",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 224,
-                "y": 365
-              },
-              {
-                "id": "b",
-                "x": 292,
-                "y": 365
-              },
-              {
-                "id": "c",
-                "x": 292,
-                "y": 429
-              },
-              {
-                "id": "d",
-                "x": 224,
-                "y": 429
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 258,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 425,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Goldroot Mine"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Runed tool chest",
-          "cursor": "interact",
-          "exit": "",
-          "description": "The inscription reads: “What does the mountain remember?”"
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.mine.gold": {
-      "id": "forest.hotspot.mine.gold",
-      "name": "Gold seam",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 624,
-                "y": 296
-              },
-              {
-                "id": "b",
-                "x": 692,
-                "y": 296
-              },
-              {
-                "id": "c",
-                "x": 692,
-                "y": 360
-              },
-              {
-                "id": "d",
-                "x": 624,
-                "y": 360
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 658,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 432,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Goldroot Mine"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Gold seam",
-          "cursor": "interact",
-          "exit": "",
-          "description": "All that glitters. It can wait until the king is safe."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.mine.mine-exit": {
-      "id": "forest.hotspot.mine.mine-exit",
-      "name": "Back to the wood",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 34,
-                "y": 424
-              },
-              {
-                "id": "b",
-                "x": 102,
-                "y": 424
-              },
-              {
-                "id": "c",
-                "x": 102,
-                "y": 488
-              },
-              {
-                "id": "d",
-                "x": 34,
-                "y": 488
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 68,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 484,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Goldroot Mine"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Back to the wood",
-          "cursor": "interact",
-          "exit": "forest",
-          "description": "Cool air drifts in from the forest."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.camp.camp.floor": {
-      "id": "forest.area.camp.camp.floor",
-      "name": "Walkable ground & perspective",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "floor-0",
-                "x": 35,
-                "y": 403
-              },
-              {
-                "id": "floor-1",
-                "x": 116,
-                "y": 392
-              },
-              {
-                "id": "floor-2",
-                "x": 360,
-                "y": 355
-              },
-              {
-                "id": "floor-3",
-                "x": 710,
-                "y": 355
-              },
-              {
-                "id": "floor-4",
-                "x": 848,
-                "y": 366
-              },
-              {
-                "id": "floor-5",
-                "x": 925,
-                "y": 403
-              },
-              {
-                "id": "floor-6",
-                "x": 925,
-                "y": 494
-              },
-              {
-                "id": "floor-7",
-                "x": 850,
-                "y": 515
-              },
-              {
-                "id": "floor-8",
-                "x": 110,
-                "y": 515
-              },
-              {
-                "id": "floor-9",
-                "x": 35,
-                "y": 494
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.75,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1.22,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.035,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 160,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Orc Encampment"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": true,
-          "scaleEnabled": true,
-          "zoomEnabled": true,
-          "walkBehindEnabled": false,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.area.camp.camp.foreground": {
-      "id": "forest.area.camp.camp.foreground",
-      "name": "Foreground occlusion",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:area",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "foreground-0",
-                "x": 0,
-                "y": 465,
-                "curve": {
-                  "cx": 62,
-                  "cy": 458
-                }
-              },
-              {
-                "id": "foreground-1",
-                "x": 143,
-                "y": 471
-              },
-              {
-                "id": "foreground-2",
-                "x": 172,
-                "y": 493,
-                "curve": {
-                  "cx": 105,
-                  "cy": 500
-                }
-              },
-              {
-                "id": "foreground-3",
-                "x": 132,
-                "y": 540
-              },
-              {
-                "id": "foreground-4",
-                "x": 0,
-                "y": 540
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "minScale",
-          "name": "Scale at start",
-          "number": {
-            "value": 0.65,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxScale",
-          "name": "Scale at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "minZoom",
-          "name": "Zoom at start",
-          "number": {
-            "value": 1.2,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "maxZoom",
-          "name": "Zoom at end",
-          "number": {
-            "value": 1,
-            "min": 0.01,
-            "step": 0.05,
-            "unit": "multiplier"
-          },
-          "kind": "number"
-        },
-        {
-          "id": "smoothing",
-          "name": "Camera response",
-          "number": {
-            "value": 5,
-            "min": 0,
-            "step": 0.5
-          },
-          "kind": "number"
-        },
-        {
-          "id": "baseline",
-          "name": "Baseline",
-          "number": {
-            "value": 505,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "area",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Areas",
-            "The Orc Encampment"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "walkable": false,
-          "scaleEnabled": false,
-          "zoomEnabled": false,
-          "walkBehindEnabled": true,
-          "scaleAxis": "y",
-          "zoomAxis": "y"
-        },
-        "behaviors": [],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.camp.cauldron": {
-      "id": "forest.hotspot.camp.cauldron",
-      "name": "Stew cauldron",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 272,
-                "y": 363
-              },
-              {
-                "id": "b",
-                "x": 340,
-                "y": 363
-              },
-              {
-                "id": "c",
-                "x": 340,
-                "y": 427
-              },
-              {
-                "id": "d",
-                "x": 272,
-                "y": 427
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 402,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 466,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Orc Encampment"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Stew cauldron",
-          "cursor": "interact",
-          "exit": "",
-          "description": "The orcs’ supper. Even a sleeping potion would improve it."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.camp.cage": {
-      "id": "forest.hotspot.camp.cage",
-      "name": "King Aldric’s cage",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 743,
-                "y": 309
-              },
-              {
-                "id": "b",
-                "x": 811,
-                "y": 309
-              },
-              {
-                "id": "c",
-                "x": 811,
-                "y": 373
-              },
-              {
-                "id": "d",
-                "x": 743,
-                "y": 373
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 721,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 450,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Orc Encampment"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "King Aldric’s cage",
-          "cursor": "interact",
-          "exit": "",
-          "description": "The king is imprisoned above a steep ledge. I need a safe way down."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
-    "forest.hotspot.camp.camp-exit": {
-      "id": "forest.hotspot.camp.camp-exit",
-      "name": "Back to the wood",
-      "attributes": [
-        {
-          "id": "area",
-          "name": "Shape",
-          "area": {
-            "tag": "pointlesh:hotspot",
-            "visible": true,
-            "locked": false,
-            "closed": true,
-            "vertices": [
-              {
-                "id": "a",
-                "x": 56,
-                "y": 439
-              },
-              {
-                "id": "b",
-                "x": 124,
-                "y": 439
-              },
-              {
-                "id": "c",
-                "x": 124,
-                "y": 503
-              },
-              {
-                "id": "d",
-                "x": 56,
-                "y": 503
-              }
-            ]
-          },
-          "kind": "area"
-        },
-        {
-          "id": "approachX",
-          "name": "Approach X",
-          "number": {
-            "value": 90,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachY",
-          "name": "Approach Y",
-          "number": {
-            "value": 494,
-            "step": 1
-          },
-          "kind": "number"
-        },
-        {
-          "id": "approachRadius",
-          "name": "Approach distance",
-          "number": {
-            "value": 10,
-            "min": 0,
-            "step": 1
-          },
-          "kind": "number"
-        }
-      ],
-      "pointlesh": {
-        "kind": "hotspot",
-        "editor": {
-          "template": false,
-          "folderPath": [
-            "Hotspots",
-            "The Orc Encampment"
-          ]
-        },
-        "properties": {
-          "enabled": true,
-          "label": "Back to the wood",
-          "cursor": "interact",
-          "exit": "forest",
-          "description": "A discreet retreat is also a kind of strategy."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
     }
   },
   "scenes": {
@@ -4671,34 +1257,10 @@
       "layers": [
         {
           "id": "village.adventure",
-          "name": "Adventure prefabs",
+          "name": "Adventure",
           "visible": true,
           "locked": false,
           "prefabs": [
-            {
-              "id": "village.floor",
-              "prefabId": "forest.area.village.village.floor",
-              "name": "Walkable ground & perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "village.foreground",
-              "prefabId": "forest.area.village.village.foreground",
-              "name": "Foreground occlusion",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
             {
               "id": "village.borin",
               "prefabId": "forest.character.borin",
@@ -4735,46 +1297,461 @@
                 },
                 "behaviors": []
               }
-            },
-            {
-              "id": "pub-door",
-              "prefabId": "forest.hotspot.village.pub-door",
-              "name": "The Copper Tankard",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "home-door",
-              "prefabId": "forest.hotspot.village.home-door",
-              "name": "My cottage",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "forest-path",
-              "prefabId": "forest.hotspot.village.forest-path",
-              "name": "Forest path",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
             }
           ],
           "objects": [],
-          "areas": []
+          "areas": [
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "floor-0",
+                  "x": 35,
+                  "y": 403
+                },
+                {
+                  "id": "floor-1",
+                  "x": 124,
+                  "y": 371
+                },
+                {
+                  "id": "floor-2",
+                  "x": 360,
+                  "y": 355
+                },
+                {
+                  "id": "floor-3",
+                  "x": 710,
+                  "y": 355
+                },
+                {
+                  "id": "floor-4",
+                  "x": 835,
+                  "y": 381
+                },
+                {
+                  "id": "floor-5",
+                  "x": 925,
+                  "y": 403
+                },
+                {
+                  "id": "floor-6",
+                  "x": 925,
+                  "y": 494
+                },
+                {
+                  "id": "floor-7",
+                  "x": 850,
+                  "y": 515
+                },
+                {
+                  "id": "floor-8",
+                  "x": 110,
+                  "y": 515
+                },
+                {
+                  "id": "floor-9",
+                  "x": 35,
+                  "y": 494
+                }
+              ],
+              "id": "village.floor::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Walkable ground & perspective",
+                "entityId": "village.floor"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "foreground-0",
+                  "x": 0,
+                  "y": 160
+                },
+                {
+                  "id": "foreground-1",
+                  "x": 57,
+                  "y": 162,
+                  "curve": {
+                    "cx": 90,
+                    "cy": 248
+                  }
+                },
+                {
+                  "id": "foreground-2",
+                  "x": 65,
+                  "y": 338,
+                  "curve": {
+                    "cx": 60,
+                    "cy": 435
+                  }
+                },
+                {
+                  "id": "foreground-3",
+                  "x": 102,
+                  "y": 504,
+                  "curve": {
+                    "cx": 83,
+                    "cy": 525
+                  }
+                },
+                {
+                  "id": "foreground-4",
+                  "x": 149,
+                  "y": 540
+                },
+                {
+                  "id": "foreground-5",
+                  "x": 0,
+                  "y": 540
+                }
+              ],
+              "id": "village.foreground::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 505
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Foreground occlusion",
+                "entityId": "village.foreground"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 127.79337567978689,
+                  "y": 300.770955405699
+                },
+                {
+                  "id": "vertex-mtroczsc-gp9y8z",
+                  "x": 139.13900569934438,
+                  "y": 254.55737934862296
+                },
+                {
+                  "id": "vertex-mtrocn7s-5ygdg3",
+                  "x": 161.97584650856945,
+                  "y": 247.79090799774147,
+                  "curve": {
+                    "cx": 206.80371920815938,
+                    "cy": 250.32833475432201
+                  }
+                },
+                {
+                  "id": "b",
+                  "x": 195.7933756797869,
+                  "y": 300.770955405699
+                },
+                {
+                  "id": "c",
+                  "x": 195.7933756797869,
+                  "y": 364.770955405699
+                },
+                {
+                  "id": "d",
+                  "x": 127.79337567978689,
+                  "y": 364.770955405699
+                }
+              ],
+              "id": "pub-door::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "The Copper Tankard",
+                  "cursor": "interact",
+                  "exit": "pub",
+                  "description": "The windows glow with breakfast, gossip, and questionable decisions.",
+                  "approachX": 221,
+                  "approachY": 403,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "The Copper Tankard",
+                "entityId": "pub-door"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 739.9910318903649,
+                  "y": 299.00896810963513
+                },
+                {
+                  "id": "vertex-mtrodpa6-wpfdg3",
+                  "x": 750.65885403526,
+                  "y": 272.31936664468685
+                },
+                {
+                  "id": "vertex-mtrodijj-ydj0qq",
+                  "x": 775.1873126822055,
+                  "y": 264.7070863749452
+                },
+                {
+                  "id": "vertex-mtrodl2a-4dcopd",
+                  "x": 800.5615802480111,
+                  "y": 271.4735577258267
+                },
+                {
+                  "id": "b",
+                  "x": 807.9910318903649,
+                  "y": 299.00896810963513
+                },
+                {
+                  "id": "c",
+                  "x": 807.9910318903649,
+                  "y": 363.00896810963513
+                },
+                {
+                  "id": "d",
+                  "x": 739.9910318903649,
+                  "y": 363.00896810963513
+                }
+              ],
+              "id": "home-door::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "My cottage",
+                  "cursor": "interact",
+                  "exit": "house",
+                  "description": "Home. I should take supplies before venturing into the wood.",
+                  "approachX": 752,
+                  "approachY": 403,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "My cottage",
+                "entityId": "home-door"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 409.617215901207,
+                  "y": 231.738045092841
+                },
+                {
+                  "id": "b",
+                  "x": 477.617215901207,
+                  "y": 231.738045092841
+                },
+                {
+                  "id": "c",
+                  "x": 477.617215901207,
+                  "y": 295.738045092841
+                },
+                {
+                  "id": "d",
+                  "x": 409.617215901207,
+                  "y": 295.738045092841
+                }
+              ],
+              "id": "forest-path::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Forest path",
+                  "cursor": "interact",
+                  "exit": "forest",
+                  "description": "Fresh orc tracks head east beneath the ancient trees.",
+                  "approachX": 508,
+                  "approachY": 403,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Forest path",
+                "entityId": "forest-path"
+              }
+            }
+          ]
         }
       ]
     },
@@ -4786,34 +1763,10 @@
       "layers": [
         {
           "id": "pub.adventure",
-          "name": "Adventure prefabs",
+          "name": "Adventure",
           "visible": true,
           "locked": false,
           "prefabs": [
-            {
-              "id": "pub.floor",
-              "prefabId": "forest.area.pub.pub.floor",
-              "name": "Walkable ground & perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "pub.foreground",
-              "prefabId": "forest.area.pub.pub.foreground",
-              "name": "Table",
-              "visible": true,
-              "locked": true,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
             {
               "id": "pub.borin",
               "prefabId": "forest.character.borin",
@@ -4870,34 +1823,443 @@
                 },
                 "behaviors": []
               }
-            },
-            {
-              "id": "pub-exit",
-              "prefabId": "forest.hotspot.pub.pub-exit",
-              "name": "Back to the village",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "prefab-instance-mtyj1z1j-nxfwc1",
-              "prefabId": "forest.area.pub.prefab-instance-mtyj1z1j-nxfwc1",
-              "name": "Bar",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
             }
           ],
           "objects": [],
-          "areas": []
+          "areas": [
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "floor-0",
+                  "x": 64.85668835121243,
+                  "y": 402.8308602545111
+                },
+                {
+                  "id": "floor-1",
+                  "x": 85,
+                  "y": 380
+                },
+                {
+                  "id": "floor-2",
+                  "x": 360,
+                  "y": 355
+                },
+                {
+                  "id": "floor-3",
+                  "x": 710,
+                  "y": 355
+                },
+                {
+                  "id": "floor-4",
+                  "x": 745.9841937683311,
+                  "y": 359.0088380054916
+                },
+                {
+                  "id": "floor-5",
+                  "x": 732.3025618902881,
+                  "y": 401.48999246395607
+                },
+                {
+                  "id": "floor-6",
+                  "x": 714.3420405353862,
+                  "y": 476.7531295702114
+                },
+                {
+                  "id": "floor-7",
+                  "x": 694.6709933371604,
+                  "y": 512.6741722800151
+                },
+                {
+                  "id": "vertex-mtyjbxfv-dizwx6",
+                  "x": 268.95979225344024,
+                  "y": 514.4553452218695
+                },
+                {
+                  "id": "vertex-mtyjbvai-6sjxm9",
+                  "x": 224.1978967152368,
+                  "y": 410.0856052138731
+                },
+                {
+                  "id": "floor-8",
+                  "x": 145.3625391110327,
+                  "y": 426.1715929772927
+                },
+                {
+                  "id": "floor-9",
+                  "x": 67.16835855155038,
+                  "y": 441.3059505049344
+                }
+              ],
+              "id": "pub.floor::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Walkable ground & perspective",
+                "entityId": "pub.floor"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": true,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "foreground-0",
+                  "x": 2.8787955459764047,
+                  "y": 352.57630963337743,
+                  "curve": {
+                    "cx": 66.76152525738149,
+                    "cy": 351.7628187864515
+                  }
+                },
+                {
+                  "id": "foreground-1",
+                  "x": 125.31758443143674,
+                  "y": 357.61842470385704,
+                  "curve": {
+                    "cx": 143.72091731471124,
+                    "cy": 362.6375154902046
+                  }
+                },
+                {
+                  "id": "foreground-2",
+                  "x": 148.74000810105883,
+                  "y": 381.8773635045371
+                },
+                {
+                  "id": "foreground-3",
+                  "x": 148.74000810105883,
+                  "y": 407.80933256733294
+                },
+                {
+                  "id": "vertex-mtyj80ho-oy7hbi",
+                  "x": 111.93334233450983,
+                  "y": 434.57781676118674
+                },
+                {
+                  "id": "foreground-4",
+                  "x": 121.13500877614707,
+                  "y": 504.00857263899513
+                },
+                {
+                  "id": "vertex-mtyj8kf3-dme796",
+                  "x": 99.38561536864084,
+                  "y": 505.681602901111
+                },
+                {
+                  "id": "vertex-mtyj8nd3-cx3tbs",
+                  "x": 86.00137327171393,
+                  "y": 438.76039241647646
+                },
+                {
+                  "id": "vertex-mtyj8qb8-wdopl4",
+                  "x": 63.41546473314976,
+                  "y": 443.77948320282405
+                },
+                {
+                  "id": "vertex-mtyj8sy6-j8pcr8",
+                  "x": 61.742434471033896,
+                  "y": 530.777056832849
+                },
+                {
+                  "id": "foreground-5",
+                  "x": 6.815584223092938,
+                  "y": 531.3590336512272
+                }
+              ],
+              "id": "pub.foreground::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 532
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Table",
+                "entityId": "pub.foreground"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 809.260002854402,
+                  "y": 130.96779482620093,
+                  "curve": {
+                    "cx": 857.5063271801115,
+                    "cy": 57.32866822380249
+                  }
+                },
+                {
+                  "id": "b",
+                  "x": 905.7526515058207,
+                  "y": 129.2749413410883
+                },
+                {
+                  "id": "c",
+                  "x": 906.599078248377,
+                  "y": 307.8709840204683,
+                  "curve": {
+                    "cx": 852.4277667247736,
+                    "cy": 301.09957008001794
+                  }
+                },
+                {
+                  "id": "d",
+                  "x": 813.4921365671837,
+                  "y": 298.56028985234906
+                }
+              ],
+              "id": "pub-exit::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Back to the village",
+                  "cursor": "interact",
+                  "exit": "village",
+                  "description": "The morning air might clear my head.",
+                  "approachX": 710,
+                  "approachY": 440,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Back to the village",
+                "entityId": "pub-exit"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "vertex-mtyj22bi-jjnb4v",
+                  "x": -1.6223058352163635,
+                  "y": 241.42503231659114
+                },
+                {
+                  "id": "vertex-mtyj25jh-alagcw",
+                  "x": 332.50945996642366,
+                  "y": 218.92265915593686
+                },
+                {
+                  "id": "vertex-mtyj26qk-arsifc",
+                  "x": 396.0829686015859,
+                  "y": 224.856186628552
+                },
+                {
+                  "id": "vertex-mtyj27hn-4h37ww",
+                  "x": 399.4735557287945,
+                  "y": 235.02794801017794
+                },
+                {
+                  "id": "vertex-mtyj280d-h4lphk",
+                  "x": 382.52062009275124,
+                  "y": 235.87559479198012
+                },
+                {
+                  "id": "vertex-mtyj293b-jhmb51",
+                  "x": 389.3017943471686,
+                  "y": 295.2108695181315
+                },
+                {
+                  "id": "vertex-mtyj2bln-l0gsx3",
+                  "x": -12.310601974503008,
+                  "y": 356.71161688216813
+                }
+              ],
+              "id": "prefab-instance-mtyj1z1j-nxfwc1::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 352
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Bar",
+                "entityId": "prefab-instance-mtyj1z1j-nxfwc1"
+              }
+            }
+          ]
         }
       ]
     },
@@ -4909,34 +2271,10 @@
       "layers": [
         {
           "id": "house.adventure",
-          "name": "Adventure prefabs",
+          "name": "Adventure",
           "visible": true,
           "locked": false,
           "prefabs": [
-            {
-              "id": "house.floor",
-              "prefabId": "forest.area.house.house.floor",
-              "name": "Walkable ground & perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "house.foreground",
-              "prefabId": "forest.area.house.house.foreground",
-              "name": "Foreground occlusion",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
             {
               "id": "house.borin",
               "prefabId": "forest.character.borin",
@@ -4993,22 +2331,313 @@
                 },
                 "behaviors": []
               }
-            },
-            {
-              "id": "house-exit",
-              "prefabId": "forest.hotspot.house.house-exit",
-              "name": "Back to the village",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
             }
           ],
           "objects": [],
-          "areas": []
+          "areas": [
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "floor-0",
+                  "x": 74.69876719568336,
+                  "y": 458.47115488785016
+                },
+                {
+                  "id": "vertex-mtrw9d9p-l3rbvq",
+                  "x": 189.7738562591219,
+                  "y": 395.0106278308068
+                },
+                {
+                  "id": "vertex-mtrw97fz-3mkiw5",
+                  "x": 127.15946956283915,
+                  "y": 362.8572941219049
+                },
+                {
+                  "id": "vertex-mtrw924b-9yg1zu",
+                  "x": 144.00777062093644,
+                  "y": 349.3366412216503
+                },
+                {
+                  "id": "floor-1",
+                  "x": 266.77262908833444,
+                  "y": 416.1641368498213
+                },
+                {
+                  "id": "floor-2",
+                  "x": 373.3863145441672,
+                  "y": 368.78027664722896
+                },
+                {
+                  "id": "floor-3",
+                  "x": 698.5865569054505,
+                  "y": 368.1812803074733
+                },
+                {
+                  "id": "floor-4",
+                  "x": 819,
+                  "y": 390
+                },
+                {
+                  "id": "floor-5",
+                  "x": 925,
+                  "y": 403
+                },
+                {
+                  "id": "floor-6",
+                  "x": 925,
+                  "y": 494
+                },
+                {
+                  "id": "floor-7",
+                  "x": 850,
+                  "y": 515
+                },
+                {
+                  "id": "floor-8",
+                  "x": 110,
+                  "y": 515
+                },
+                {
+                  "id": "floor-9",
+                  "x": 35,
+                  "y": 494
+                }
+              ],
+              "id": "house.floor::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 1.22,
+                  "maxScale": 2,
+                  "minZoom": 1.035,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Walkable ground & perspective",
+                "entityId": "house.floor"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "foreground-0",
+                  "x": 29.906347432395666,
+                  "y": 325.08392907738505
+                },
+                {
+                  "id": "foreground-1",
+                  "x": 96.00275083747482,
+                  "y": 309.53495907453515,
+                  "curve": {
+                    "cx": 128.98929867302212,
+                    "cy": 317.14723934427684
+                  }
+                },
+                {
+                  "id": "foreground-2",
+                  "x": 138.29319678048418,
+                  "y": 328.9885642083195
+                },
+                {
+                  "id": "foreground-3",
+                  "x": 138.29319678048418,
+                  "y": 389.886806366253,
+                  "curve": {
+                    "cx": 90.0820884054535,
+                    "cy": 422.8733542018003
+                  }
+                },
+                {
+                  "id": "foreground-4",
+                  "x": 68.43202300548967,
+                  "y": 406.37783825661785
+                },
+                {
+                  "id": "foreground-5",
+                  "x": 22.983496700259995,
+                  "y": 395.9417825055839
+                }
+              ],
+              "id": "house.foreground::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 414
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Foreground occlusion",
+                "entityId": "house.foreground"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 840,
+                  "y": 301
+                },
+                {
+                  "id": "b",
+                  "x": 908,
+                  "y": 301
+                },
+                {
+                  "id": "c",
+                  "x": 908,
+                  "y": 365
+                },
+                {
+                  "id": "d",
+                  "x": 840,
+                  "y": 365
+                }
+              ],
+              "id": "house-exit::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Back to the village",
+                  "cursor": "interact",
+                  "exit": "village",
+                  "description": "There is a king out there who needs me.",
+                  "approachX": 874,
+                  "approachY": 403,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Back to the village",
+                "entityId": "house-exit"
+              }
+            }
+          ]
         }
       ]
     },
@@ -5020,34 +2649,10 @@
       "layers": [
         {
           "id": "forest.adventure",
-          "name": "Adventure prefabs",
+          "name": "Adventure",
           "visible": true,
           "locked": false,
           "prefabs": [
-            {
-              "id": "forest.floor",
-              "prefabId": "forest.area.forest.forest.floor",
-              "name": "Walkable ground & perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "forest.foreground",
-              "prefabId": "forest.area.forest.forest.foreground",
-              "name": "Foreground occlusion",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
             {
               "id": "forest.borin",
               "prefabId": "forest.character.borin",
@@ -5084,46 +2689,452 @@
                 },
                 "behaviors": []
               }
-            },
-            {
-              "id": "mine-path",
-              "prefabId": "forest.hotspot.forest.mine-path",
-              "name": "Goldroot Mine",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "camp-path",
-              "prefabId": "forest.hotspot.forest.camp-path",
-              "name": "Orc encampment",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "forest-exit",
-              "prefabId": "forest.hotspot.forest.forest-exit",
-              "name": "Bramblehollow",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
             }
           ],
           "objects": [],
-          "areas": []
+          "areas": [
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "floor-0",
+                  "x": 35,
+                  "y": 443
+                },
+                {
+                  "id": "floor-1",
+                  "x": 190,
+                  "y": 448
+                },
+                {
+                  "id": "floor-2",
+                  "x": 274,
+                  "y": 371
+                },
+                {
+                  "id": "floor-3",
+                  "x": 360,
+                  "y": 398
+                },
+                {
+                  "id": "floor-4",
+                  "x": 450,
+                  "y": 435
+                },
+                {
+                  "id": "floor-5",
+                  "x": 680,
+                  "y": 445
+                },
+                {
+                  "id": "floor-6",
+                  "x": 920,
+                  "y": 438
+                },
+                {
+                  "id": "floor-7",
+                  "x": 1170,
+                  "y": 419
+                },
+                {
+                  "id": "floor-8",
+                  "x": 1365,
+                  "y": 365
+                },
+                {
+                  "id": "floor-9",
+                  "x": 1450,
+                  "y": 389
+                },
+                {
+                  "id": "floor-10",
+                  "x": 1585,
+                  "y": 443
+                },
+                {
+                  "id": "floor-11",
+                  "x": 1585,
+                  "y": 515
+                },
+                {
+                  "id": "floor-12",
+                  "x": 35,
+                  "y": 515
+                }
+              ],
+              "id": "forest.floor::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Walkable ground & perspective",
+                "entityId": "forest.floor"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "foreground-0",
+                  "x": 0,
+                  "y": 113
+                },
+                {
+                  "id": "foreground-1",
+                  "x": 98,
+                  "y": 103,
+                  "curve": {
+                    "cx": 137,
+                    "cy": 204
+                  }
+                },
+                {
+                  "id": "foreground-2",
+                  "x": 123,
+                  "y": 311,
+                  "curve": {
+                    "cx": 92,
+                    "cy": 409
+                  }
+                },
+                {
+                  "id": "foreground-3",
+                  "x": 148,
+                  "y": 465,
+                  "curve": {
+                    "cx": 163,
+                    "cy": 495
+                  }
+                },
+                {
+                  "id": "foreground-4",
+                  "x": 208,
+                  "y": 515
+                },
+                {
+                  "id": "foreground-5",
+                  "x": 176,
+                  "y": 540
+                },
+                {
+                  "id": "foreground-6",
+                  "x": 0,
+                  "y": 540
+                }
+              ],
+              "id": "forest.foreground::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 505
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Foreground occlusion",
+                "entityId": "forest.foreground"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 240,
+                  "y": 250
+                },
+                {
+                  "id": "b",
+                  "x": 308,
+                  "y": 250
+                },
+                {
+                  "id": "c",
+                  "x": 308,
+                  "y": 314
+                },
+                {
+                  "id": "d",
+                  "x": 240,
+                  "y": 314
+                }
+              ],
+              "id": "mine-path::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Goldroot Mine",
+                  "cursor": "interact",
+                  "exit": "mine",
+                  "description": "A lantern flickers in the old gold mine.",
+                  "approachX": 274,
+                  "approachY": 410,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Goldroot Mine",
+                "entityId": "mine-path"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 1351,
+                  "y": 240
+                },
+                {
+                  "id": "b",
+                  "x": 1419,
+                  "y": 240
+                },
+                {
+                  "id": "c",
+                  "x": 1419,
+                  "y": 304
+                },
+                {
+                  "id": "d",
+                  "x": 1351,
+                  "y": 304
+                }
+              ],
+              "id": "camp-path::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Orc encampment",
+                  "cursor": "interact",
+                  "exit": "camp",
+                  "description": "A crooked palisade. Smoke. Terrible singing.",
+                  "approachX": 1385,
+                  "approachY": 410,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Orc encampment",
+                "entityId": "camp-path"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 437,
+                  "y": 455
+                },
+                {
+                  "id": "b",
+                  "x": 505,
+                  "y": 455
+                },
+                {
+                  "id": "c",
+                  "x": 505,
+                  "y": 519
+                },
+                {
+                  "id": "d",
+                  "x": 437,
+                  "y": 519
+                }
+              ],
+              "id": "forest-exit::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Bramblehollow",
+                  "cursor": "interact",
+                  "exit": "village",
+                  "description": "The path home winds between the roots.",
+                  "approachX": 471,
+                  "approachY": 494,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Bramblehollow",
+                "entityId": "forest-exit"
+              }
+            }
+          ]
         }
       ]
     },
@@ -5135,34 +3146,10 @@
       "layers": [
         {
           "id": "mine.adventure",
-          "name": "Adventure prefabs",
+          "name": "Adventure",
           "visible": true,
           "locked": false,
           "prefabs": [
-            {
-              "id": "mine.floor",
-              "prefabId": "forest.area.mine.mine.floor",
-              "name": "Walkable ground & perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "mine.foreground",
-              "prefabId": "forest.area.mine.mine.foreground",
-              "name": "Foreground occlusion",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
             {
               "id": "mine.borin",
               "prefabId": "forest.character.borin",
@@ -5179,46 +3166,433 @@
                 "properties": {},
                 "behaviors": []
               }
-            },
-            {
-              "id": "tool-chest",
-              "prefabId": "forest.hotspot.mine.tool-chest",
-              "name": "Runed tool chest",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "gold",
-              "prefabId": "forest.hotspot.mine.gold",
-              "name": "Gold seam",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "mine-exit",
-              "prefabId": "forest.hotspot.mine.mine-exit",
-              "name": "Back to the wood",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
             }
           ],
           "objects": [],
-          "areas": []
+          "areas": [
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "floor-0",
+                  "x": 35,
+                  "y": 403
+                },
+                {
+                  "id": "floor-1",
+                  "x": 142,
+                  "y": 374
+                },
+                {
+                  "id": "floor-2",
+                  "x": 360,
+                  "y": 355
+                },
+                {
+                  "id": "floor-3",
+                  "x": 710,
+                  "y": 355
+                },
+                {
+                  "id": "floor-4",
+                  "x": 865,
+                  "y": 390
+                },
+                {
+                  "id": "floor-5",
+                  "x": 925,
+                  "y": 403
+                },
+                {
+                  "id": "floor-6",
+                  "x": 925,
+                  "y": 494
+                },
+                {
+                  "id": "floor-7",
+                  "x": 850,
+                  "y": 515
+                },
+                {
+                  "id": "floor-8",
+                  "x": 110,
+                  "y": 515
+                },
+                {
+                  "id": "floor-9",
+                  "x": 35,
+                  "y": 494
+                }
+              ],
+              "id": "mine.floor::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Walkable ground & perspective",
+                "entityId": "mine.floor"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "foreground-0",
+                  "x": 0,
+                  "y": 291
+                },
+                {
+                  "id": "foreground-1",
+                  "x": 44,
+                  "y": 305
+                },
+                {
+                  "id": "foreground-2",
+                  "x": 57,
+                  "y": 350,
+                  "curve": {
+                    "cx": 96,
+                    "cy": 377
+                  }
+                },
+                {
+                  "id": "foreground-3",
+                  "x": 70,
+                  "y": 421
+                },
+                {
+                  "id": "foreground-4",
+                  "x": 115,
+                  "y": 474,
+                  "curve": {
+                    "cx": 86,
+                    "cy": 510
+                  }
+                },
+                {
+                  "id": "foreground-5",
+                  "x": 147,
+                  "y": 540
+                },
+                {
+                  "id": "foreground-6",
+                  "x": 0,
+                  "y": 540
+                }
+              ],
+              "id": "mine.foreground::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 505
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Foreground occlusion",
+                "entityId": "mine.foreground"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 224,
+                  "y": 365
+                },
+                {
+                  "id": "b",
+                  "x": 292,
+                  "y": 365
+                },
+                {
+                  "id": "c",
+                  "x": 292,
+                  "y": 429
+                },
+                {
+                  "id": "d",
+                  "x": 224,
+                  "y": 429
+                }
+              ],
+              "id": "tool-chest::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Runed tool chest",
+                  "cursor": "interact",
+                  "exit": "",
+                  "description": "The inscription reads: “What does the mountain remember?”",
+                  "approachX": 258,
+                  "approachY": 425,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Runed tool chest",
+                "entityId": "tool-chest"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 624,
+                  "y": 296
+                },
+                {
+                  "id": "b",
+                  "x": 692,
+                  "y": 296
+                },
+                {
+                  "id": "c",
+                  "x": 692,
+                  "y": 360
+                },
+                {
+                  "id": "d",
+                  "x": 624,
+                  "y": 360
+                }
+              ],
+              "id": "gold::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Gold seam",
+                  "cursor": "interact",
+                  "exit": "",
+                  "description": "All that glitters. It can wait until the king is safe.",
+                  "approachX": 658,
+                  "approachY": 432,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Gold seam",
+                "entityId": "gold"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 34,
+                  "y": 424
+                },
+                {
+                  "id": "b",
+                  "x": 102,
+                  "y": 424
+                },
+                {
+                  "id": "c",
+                  "x": 102,
+                  "y": 488
+                },
+                {
+                  "id": "d",
+                  "x": 34,
+                  "y": 488
+                }
+              ],
+              "id": "mine-exit::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Back to the wood",
+                  "cursor": "interact",
+                  "exit": "forest",
+                  "description": "Cool air drifts in from the forest.",
+                  "approachX": 68,
+                  "approachY": 484,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Back to the wood",
+                "entityId": "mine-exit"
+              }
+            }
+          ]
         }
       ]
     },
@@ -5230,34 +3604,10 @@
       "layers": [
         {
           "id": "camp.adventure",
-          "name": "Adventure prefabs",
+          "name": "Adventure",
           "visible": true,
           "locked": false,
           "prefabs": [
-            {
-              "id": "camp.floor",
-              "prefabId": "forest.area.camp.camp.floor",
-              "name": "Walkable ground & perspective",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "camp.foreground",
-              "prefabId": "forest.area.camp.camp.foreground",
-              "name": "Foreground occlusion",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
             {
               "id": "camp.borin",
               "prefabId": "forest.character.borin",
@@ -5314,46 +3664,423 @@
                 },
                 "behaviors": []
               }
-            },
-            {
-              "id": "cauldron",
-              "prefabId": "forest.hotspot.camp.cauldron",
-              "name": "Stew cauldron",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "cage",
-              "prefabId": "forest.hotspot.camp.cage",
-              "name": "King Aldric’s cage",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
-            },
-            {
-              "id": "camp-exit",
-              "prefabId": "forest.hotspot.camp.camp-exit",
-              "name": "Back to the wood",
-              "visible": true,
-              "locked": false,
-              "overrides": {},
-              "pointlesh": {
-                "properties": {},
-                "behaviors": []
-              }
             }
           ],
           "objects": [],
-          "areas": []
+          "areas": [
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "floor-0",
+                  "x": 35,
+                  "y": 403
+                },
+                {
+                  "id": "floor-1",
+                  "x": 116,
+                  "y": 392
+                },
+                {
+                  "id": "floor-2",
+                  "x": 360,
+                  "y": 355
+                },
+                {
+                  "id": "floor-3",
+                  "x": 710,
+                  "y": 355
+                },
+                {
+                  "id": "floor-4",
+                  "x": 848,
+                  "y": 366
+                },
+                {
+                  "id": "floor-5",
+                  "x": 925,
+                  "y": 403
+                },
+                {
+                  "id": "floor-6",
+                  "x": 925,
+                  "y": 494
+                },
+                {
+                  "id": "floor-7",
+                  "x": 850,
+                  "y": 515
+                },
+                {
+                  "id": "floor-8",
+                  "x": 110,
+                  "y": 515
+                },
+                {
+                  "id": "floor-9",
+                  "x": 35,
+                  "y": 494
+                }
+              ],
+              "id": "camp.floor::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Walkable ground & perspective",
+                "entityId": "camp.floor"
+              }
+            },
+            {
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "foreground-0",
+                  "x": 0,
+                  "y": 465,
+                  "curve": {
+                    "cx": 62,
+                    "cy": 458
+                  }
+                },
+                {
+                  "id": "foreground-1",
+                  "x": 143,
+                  "y": 471
+                },
+                {
+                  "id": "foreground-2",
+                  "x": 172,
+                  "y": 493,
+                  "curve": {
+                    "cx": 105,
+                    "cy": 500
+                  }
+                },
+                {
+                  "id": "foreground-3",
+                  "x": 132,
+                  "y": 540
+                },
+                {
+                  "id": "foreground-4",
+                  "x": 0,
+                  "y": 540
+                }
+              ],
+              "id": "camp.foreground::area",
+              "pointlesh": {
+                "kind": "area",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 505
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                },
+                "name": "Foreground occlusion",
+                "entityId": "camp.foreground"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 272,
+                  "y": 363
+                },
+                {
+                  "id": "b",
+                  "x": 340,
+                  "y": 363
+                },
+                {
+                  "id": "c",
+                  "x": 340,
+                  "y": 427
+                },
+                {
+                  "id": "d",
+                  "x": 272,
+                  "y": 427
+                }
+              ],
+              "id": "cauldron::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Stew cauldron",
+                  "cursor": "interact",
+                  "exit": "",
+                  "description": "The orcs’ supper. Even a sleeping potion would improve it.",
+                  "approachX": 402,
+                  "approachY": 466,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Stew cauldron",
+                "entityId": "cauldron"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 743,
+                  "y": 309
+                },
+                {
+                  "id": "b",
+                  "x": 811,
+                  "y": 309
+                },
+                {
+                  "id": "c",
+                  "x": 811,
+                  "y": 373
+                },
+                {
+                  "id": "d",
+                  "x": 743,
+                  "y": 373
+                }
+              ],
+              "id": "cage::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "King Aldric’s cage",
+                  "cursor": "interact",
+                  "exit": "",
+                  "description": "The king is imprisoned above a steep ledge. I need a safe way down.",
+                  "approachX": 721,
+                  "approachY": 450,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "King Aldric’s cage",
+                "entityId": "cage"
+              }
+            },
+            {
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 56,
+                  "y": 439
+                },
+                {
+                  "id": "b",
+                  "x": 124,
+                  "y": 439
+                },
+                {
+                  "id": "c",
+                  "x": 124,
+                  "y": 503
+                },
+                {
+                  "id": "d",
+                  "x": 56,
+                  "y": 503
+                }
+              ],
+              "id": "camp-exit::area",
+              "pointlesh": {
+                "kind": "hotspot",
+                "properties": {
+                  "enabled": true,
+                  "label": "Back to the wood",
+                  "cursor": "interact",
+                  "exit": "forest",
+                  "description": "A discreet retreat is also a kind of strategy.",
+                  "approachX": 90,
+                  "approachY": 494,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                },
+                "name": "Back to the wood",
+                "entityId": "camp-exit"
+              }
+            }
+          ]
         }
       ]
     }

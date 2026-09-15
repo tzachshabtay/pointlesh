@@ -8,9 +8,8 @@ type Vertex = { id: string; x: number; y: number; curve?: { cx: number; cy: numb
 async function nativeArea(page: Page) {
   return page.evaluate(() => {
     const demo = (window as any).pointleshDemo;
-    const instance = demo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.floor');
-    const defaults = demo.manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area;
-    return { ...defaults, ...instance.overrides?.area } as { vertices: Vertex[]; closed: boolean };
+    const area = demo.manifest.scenes.village.layers.flatMap((layer: any) => layer.areas).find((area: any) => area.id === 'village.floor::area');
+    return { vertices: area.vertices, closed: area.closed } as { vertices: Vertex[]; closed: boolean };
   });
 }
 
@@ -106,9 +105,9 @@ test('one area keeps independent walk, scale, zoom, and walk-behind capabilities
   const downloadPromise = page.waitForEvent('download');
   await inspector.getByRole('button', { name: 'Export JSON', exact: true }).click();
   const manifest = JSON.parse(await readFile((await (await downloadPromise).path())!, 'utf8'));
-  const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.floor');
-  expect({ ...manifest.prefabs[instance.prefabId].pointlesh.properties, ...instance.pointlesh.properties }).toMatchObject({ walkable: true, scaleEnabled: true, zoomEnabled: false, walkBehindEnabled: true, scaleAxis: 'x' });
-  expect({ ...manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area, ...instance.overrides?.area }).toEqual(initialShape);
+  const area = manifest.scenes.village.layers.flatMap((layer: any) => layer.areas).find((area: any) => area.id === 'village.floor::area');
+  expect(area.pointlesh.properties).toMatchObject({ walkable: true, scaleEnabled: true, zoomEnabled: false, walkBehindEnabled: true, scaleAxis: 'x' });
+  expect({ vertices: area.vertices, closed: area.closed }).toEqual(initialShape);
   await page.screenshot({ path: testInfo.outputPath('combined-area-capabilities.png'), fullPage: true });
 });
 

@@ -2,7 +2,8 @@ import { extendPointleshPrefab, isPointleshPrefab, type PointleshPrefabDefinitio
 import type { SceneDesignerManifest, ScenePrefabDefinition } from '@scene-designer/core';
 import type { SceneDesigner } from '@scene-designer/designer';
 
-const categories = ['Characters', 'Hotspots', 'Objects', 'Areas'];
+const categories = ['Characters', 'Objects'];
+const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) || ['character', 'object'].includes(prefab.pointlesh.kind);
 export function isPrefabTemplate(prefab: ScenePrefabDefinition): boolean {
   return isPointleshPrefab(prefab) && (prefab.pointlesh.editor?.template ?? prefab.id === `pointlesh.${prefab.pointlesh.kind}`);
 }
@@ -32,7 +33,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
   function navigate(next: string[]) { path = next; selected = undefined; renderedKey = ''; sync(designer.getManifest()); }
   function reveal(id: string) {
     const prefab = designer.getManifest().prefabs?.[id];
-    if (!prefab || isPrefabTemplate(prefab)) return;
+    if (!prefab || !isReusable(prefab) || isPrefabTemplate(prefab)) return;
     path = prefabFolderPath(prefab); selected = id; observedId = id; renderedKey = '';
     designer.select({ type: 'prefab-definition', prefabId: id });
     sync(designer.getManifest());
@@ -69,7 +70,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
   }
   function createDialog() {
     const manifest = designer.getManifest();
-    const templates = Object.values(manifest.prefabs ?? {}).filter(isPrefabTemplate) as PointleshPrefabDefinition[];
+    const templates = Object.values(manifest.prefabs ?? {}).filter(prefab => isReusable(prefab) && isPrefabTemplate(prefab)) as PointleshPrefabDefinition[];
     if (!templates.length) return;
     const dialog = document.createElement('dialog'); dialog.className = 'scene-designer__dialog pointlesh-new-prefab'; dialog.setAttribute('aria-label', 'New prefab');
     const form = document.createElement('form'); form.className = 'scene-designer__stack';
@@ -104,7 +105,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
   function sync(manifest: SceneDesignerManifest) {
     if (manifest !== cachedManifest) {
       cachedManifest = manifest;
-      catalog = Object.values(manifest.prefabs ?? {}).filter(prefab => !isPrefabTemplate(prefab)).sort((a, b) => a.name.localeCompare(b.name));
+      catalog = Object.values(manifest.prefabs ?? {}).filter(prefab => isReusable(prefab) && !isPrefabTemplate(prefab)).sort((a, b) => a.name.localeCompare(b.name));
     }
     const nativeId = designer.getSelectedPrefabId();
     if (nativeId !== observedId) {
@@ -125,7 +126,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
     if (key !== renderedKey) {
       renderedKey = key;
       navigation(browser, path, selected, navigate, reveal);
-      if (Object.values(manifest.prefabs ?? {}).some(isPrefabTemplate)) browser.append(button('New prefab', createDialog, 'scene-designer__button'));
+      if (Object.values(manifest.prefabs ?? {}).some(prefab => isReusable(prefab) && isPrefabTemplate(prefab))) browser.append(button('New prefab', createDialog, 'scene-designer__button'));
     }
     // The native Add Prefab dialog retains its placement/shape-drawing behavior.
     // Only replace its flat catalog chooser, using the same folder navigation.

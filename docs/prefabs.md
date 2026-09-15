@@ -1,69 +1,63 @@
 # Pointlesh prefabs
 
-Pointlesh's default catalog contains Area, Hotspot, Object and Character creation templates, all actual `ScenePrefabDefinition` values. Register them in a schema-version-2 scene manifest and use Scene Designer's existing Scenes and Prefabs panels to draw polygons, move sprites, change numeric values, and edit reusable defaults. Templates stay out of the prefab browser; **New prefab** uses them to create named game definitions.
+Characters and objects are reusable Scene Designer prefabs. Areas and hotspots belong directly to one scene, stored as native `SceneArea` values in `layer.areas`. Both use the same extensible Pointlesh properties and behavior IDs.
 
-| Factory | Native attributes | Adventure properties |
+| Factory | Storage | Adventure settings |
 | --- | --- | --- |
-| `createAreaPrefab` | `area` polygon, scale and zoom endpoints, `smoothing`, `baseline` | `enabled`, `walkable`, `scaleEnabled`, `zoomEnabled`, `walkBehindEnabled`, `scaleAxis`, `zoomAxis` |
-| `createHotspotPrefab` | `area`, `approachX`, `approachY`, `approachRadius` | `enabled`, `label`, `cursor` |
-| `createObjectPrefab` | `object` sprite | `enabled`, `interactive`, `ignoreScaling`, `label` |
-| `createCharacterPrefab` | `object`, `speed`, `walkStep`, `frameDurationMs`, `frameCount` | `movementLinkedToAnimation`, `facing`, `directions`, object properties |
+| `createPointleshArea({ kind: 'area' })` | Scene layer's native areas | Walking, character scale, camera zoom, walk-behind, baseline |
+| `createPointleshArea({ kind: 'hotspot' })` | Scene layer's native areas | Label, cursor, approach point and radius |
+| `createObjectPrefab` | Reusable prefab definition | Sprite, interaction, scaling, navigation |
+| `createCharacterPrefab` | Reusable prefab definition | Object settings, directional animations and movement |
 
-One Area can supply any combination of navigation, character scaling, camera zoom and walk-behind scenery. Each role has its own enable switch; global `enabled` disables all roles. The embedded inspector groups these switches and shows only the relevant settings. Switching a role off preserves its values and geometry. The demo combines walking, scale and zoom on each room's ground polygon; foreground occlusion uses another instance of the same Area prefab because its outline differs.
+One area can supply any combination of navigation, character scaling, camera zoom and walk-behind scenery. Each role has its own enable switch; global `enabled` disables all roles. The inspector shows the relevant settings. Switching a role off preserves its values and geometry. Use separate areas when their boundaries differ.
 
-Numeric attributes are read from Scene Designer's resolved defaults and overrides. `minScale`/`minZoom` mean the factor at the area's top edge (or left edge for an X axis); `maxScale`/`maxZoom` mean the factor at its bottom/right edge. They name interpolation endpoints, so the first value may be larger than the second. `scaleAxis` and `zoomAxis` can be chosen independently. Walk-behind baselines use scene Y coordinates. Object positions represent the feet: Scene Designer uses `anchorX: 0.5, anchorY: 0`, corresponding to Phaser origin `(0.5, 1)`.
+`minScale`/`minZoom` are the factors at the area's top edge (or left edge for an X axis); `maxScale`/`maxZoom` are the factors at its bottom/right edge. These are interpolation endpoints, so the first value may be larger than the second. Scale and zoom axes are independent. Walk-behind baselines use scene Y coordinates. Object positions represent the feet: Scene Designer uses `anchorX: 0.5, anchorY: 0`, corresponding to Phaser origin `(0.5, 1)`.
 
 ```ts
 import { defineSceneManifest, createLayer } from '@scene-designer/core';
 import {
-  pointleshPrefabs, createPointleshInstance,
-  resolvePointleshScene, walkablePolygons,
+  createPointleshArea, resolvePointleshScene, walkablePolygons,
 } from '@pointlesh/core';
 
 const layer = createLayer({ id: 'main', name: 'Main' });
-layer.prefabs = [createPointleshInstance({
-  id: 'village-path',
-  prefabId: 'pointlesh.area',
-  properties: { walkable: true, scaleEnabled: true, zoomEnabled: true },
-  overrides: {
-    area: {
-      closed: true,
-      vertices: [
-        { id: 'a', x: 20, y: 180 }, { id: 'b', x: 600, y: 180 },
-        { id: 'c', x: 600, y: 320 }, { id: 'd', x: 20, y: 320 },
-      ],
-    },
-  },
+layer.areas = [createPointleshArea({
+  id: 'village-path', name: 'Village path',
+  walkable: true, scaleEnabled: true, minScale: 0.8, maxScale: 1.2,
+  closed: true,
+  vertices: [
+    { x: 20, y: 180 }, { x: 600, y: 180 },
+    { x: 600, y: 320 }, { x: 20, y: 320 },
+  ],
+  properties: { surface: 'gravel' },
+  behaviors: ['my-game.footsteps'],
 })];
 const manifest = defineSceneManifest({
   schemaVersion: 2,
-  prefabs: pointleshPrefabs({
-    objectAssetId: 'item.lantern',
-    characterAssetId: 'character.dwarf',
-  }),
   scenes: { village: { id: 'village', name: 'Village', width: 640, height: 360, layers: [layer] } },
 });
 const room = resolvePointleshScene(manifest, 'village');
 const navigationPolygons = walkablePolygons(room);
 ```
 
-Supply asset IDs from your `@ai-game-assets/core` manifest when you instantiate objects or characters. The default catalog's placeholder asset IDs are convenience defaults, not bundled artwork. Newly created Area definitions have empty shapes and all roles disabled; draw and close an instance's shape and enable the desired roles. Curved edges are sampled into polygons when resolved.
+For hotspots, use `createPointleshArea({ kind: 'hotspot', name: 'Forest exit', approachX: 540, approachY: 290, ... })`. New shapes start empty and open; draw and close the polygon in Scenes. Areas start with all capabilities disabled. Geometry uses native Scene Designer vertices and curves, sampled into polygons for runtime use. The `pointlesh` sidecar stores the name, capability settings, custom properties, property schemas and behaviors on the area itself.
 
-`pointleshAreaCapabilities(area)` reads effective roles, including old manifests. `walkablePolygons(room)` returns the union's input polygons for enabled, closed walkable areas; turning off walkability on one overlapping region does not subtract another region's ground. Scale and zoom resolve independently: the last eligible region in manifest order wins for each enabled effect. A later region that only scales characters does not override another region's zoom.
+`pointleshAreaCapabilities(area)` reads effective roles, including legacy manifests. `walkablePolygons(room)` returns enabled, closed walkable polygons; turning off one overlapping region does not subtract another region's ground. Scale and zoom resolve independently: the last eligible region in manifest order wins for each effect. A later region that only scales characters does not override another region's zoom.
 
-The earlier `createWalkableAreaPrefab`, `createScaleAreaPrefab`, `createZoomAreaPrefab` and `createWalkBehindAreaPrefab` exports remain supported for existing clients and saved manifests. New code should use `createAreaPrefab({ walkable: true, scaleEnabled: true, zoomEnabled: true, ... })`. If existing code builds a catalog and references IDs such as `pointlesh.walkable`, use `pointleshPrefabs({ includeLegacyAreas: true })` during migration. Legacy `axis` is still honored. New default catalogs expose the single Area template.
+`pointleshPrefabs()` supplies hidden Object and Character creation templates. Supply asset IDs from your AI Assets manifest when creating game definitions; placeholder IDs are not bundled artwork.
+
+For existing projects, `migratePointleshSceneAreas(manifest)` returns a detached manifest with standalone region prefab instances converted to native scene areas. It preserves geometry, stable gameplay IDs, properties, numeric overrides and behavior order, then removes unreferenced region definitions. It is safe to rerun. Composite prefabs remain supported without being flattened. Legacy area/hotspot factories and resolution remain available; `pointleshPrefabs({ includeLegacyAreas: true })` includes the old catalog IDs while migrating. New content should use `createPointleshArea`.
 
 ## Extending a prefab
 
 Scene Designer stores native object, area, platform, and number attributes. Pointlesh adds a JSON sidecar called `pointlesh` containing the prefab kind, custom properties, behavior IDs, optional property schemas, and authoring metadata in `editor`. Upstream validation accepts this sidecar and its cloning, editing, promotion, and export preserve it. No fork of Scene Designer is required.
 
 ```ts
-import { createHotspotPrefab, extendPointleshPrefab } from '@pointlesh/core';
+import { createObjectPrefab, extendPointleshPrefab } from '@pointlesh/core';
 
-const lockedDoor = extendPointleshPrefab(createHotspotPrefab(), {
+const lockedDoor = extendPointleshPrefab(createObjectPrefab({ assetId: 'object.door' }), {
   id: 'my-game.locked-door',
   name: 'Locked door',
-  editor: { folderPath: ['Hotspots', 'Village'] },
+  editor: { folderPath: ['Objects', 'Doors'] },
   properties: { keyItem: 'brass-key', locked: true, message: 'It is locked.' },
   behaviors: ['my-game.locked-door'],
   propertySchema: {
@@ -96,15 +90,15 @@ const tools = installPointleshDesigner({
 
 If an engine adapter already installed Scene Designer, call `installPointleshInspector({ designer, onPreview })` instead of installing a second designer. Call its `sync()` from native manifest, scene, and selection change callbacks. The Phaser package provides this composition. Native keyboard shortcuts and embedded Undo/Redo controls share a history of native edits and Pointlesh property edits, restoring complete manifests. Canvas drags remain one history entry. Keep native change callbacks connected so the runtime rebuilds its geometry after undo or redo.
 
-`resolvePointleshScene` returns a room with `entities`, `areas`, and `objects`. Each entity's `id` is its stable prefab instance ID; `areaId` and `objectId` are the native `instance::attribute` IDs used by Scene Designer. The result merges inherited properties and instance properties, then resolves native numeric attributes over them. Areas include sampled `polygon` points; objects include position, asset ID, scale, rotation, and anchors. Visibility at the layer, instance, and attribute level plus the `enabled` property controls whether a resolved element is enabled. Locked designer elements still participate in gameplay.
+`resolvePointleshScene` returns a room with `entities`, `areas`, and `objects`. Character/object entities retain their prefab instance IDs and native `instance::attribute` object IDs. Scene areas have no `prefabId`, `instanceId` or `attributeId`; their `areaId` is the native polygon ID, and their stable gameplay `id` is `pointlesh.entityId` when supplied, otherwise the polygon ID. Prefab entities merge inherited properties and instance overrides; native areas read their own sidecar directly. Areas include sampled `polygon` points; objects include position, asset ID, scale, rotation, and anchors. Layer and element visibility, prefab instance visibility where applicable, and the `enabled` property determine whether a resolved element is enabled. Locked designer elements still participate in gameplay.
 
 The library leaves game-specific interaction code in TypeScript. Rebuild geometry and visual settings from `onPreview`, while preserving transient runtime state such as the player's current walking position. To persist designer changes in source, run the local dev servers and use Scene Designer's promotion action, or export the complete JSON manifest from the embedded inspector.
 
 ## Named entities in the forest demo
 
-The browser shows **Characters**, **Hotspots**, **Objects** and **Areas**, with clickable breadcrumbs. Hotspots and areas are grouped further by room. Each has its own named prefab, including each room's ground, foreground and exits. The generic templates are hidden from browsing and placement; use **New prefab** to create a named definition from them.
+The prefab browser shows **Characters** and **Objects**, with clickable breadcrumbs. Generic templates stay hidden from browsing and placement; **New prefab** creates a named definition. Each expanded scene layer lists its own **Areas** and **Hotspots**, with **Add area** and **Add hotspot** controls that start native shape drawing.
 
-Borin, Rowan, Mara, Orrin, Grub, Aldric, the coin, rope and mushroom each have a named prefab. Borin’s six room instances share `forest.character.borin`; NPCs use `forest.character.<actorName>` and pickups use `forest.object.<pickupId>`. Artwork, animations, shared scale/movement settings and behaviors are defaults. Sprite room coordinates and facing overrides remain instance data. Room-specific shape prefabs own their geometry and approach points; instance edits can override those defaults.
+Borin, Rowan, Mara, Orrin, Grub, Aldric, the coin, rope and mushroom each have a named prefab. Borin’s six room instances share `forest.character.borin`; NPCs use `forest.character.<actorName>` and pickups use `forest.object.<pickupId>`. Artwork, animations, shared scale/movement settings and behaviors are defaults. Sprite room coordinates and facing overrides remain instance data. Each room owns its ground, foreground and exit polygons, including their capabilities, approach points and custom behavior data. Editing an area affects that scene only.
 
 Factories accept `editor: { template?: boolean, folderPath?: string[] }`. Folder paths default to the prefab kind's category. `pointleshPrefabs()` marks the generic templates, and `extendPointleshPrefab()` makes the result visible unless explicitly marked as another template. This metadata affects authoring only; hiding a template never removes its definition or changes existing instances.
 

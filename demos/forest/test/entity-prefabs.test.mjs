@@ -7,7 +7,11 @@ import { createScene, createLayer, defineSceneManifest } from '@scene-designer/c
 const { specializeForestEntities } = await tsImport('../src/entity-prefabs.ts', import.meta.url);
 const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
 const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
-const normalized = value => JSON.parse(JSON.stringify(value, (key, value) => key === 'prefabId' ? undefined : value));
+const normalized = value => {
+  const result = JSON.parse(JSON.stringify(value, (key, value) => ['prefabId', 'instanceId', 'attributeId'].includes(key) ? undefined : value));
+  for (const key of ['entities', 'objects', 'areas']) result[key].sort((a, b) => a.id.localeCompare(b.id));
+  return result;
+};
 
 for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`${label} entities own named prefabs and Borin shares defaults across rooms`, () => {
   const characters = new Set(), objects = new Set();
@@ -23,10 +27,8 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`
   }
   assert.equal(characters.size, 6); assert.equal(objects.size, 3);
   for (const scene of Object.values(manifest.scenes)) for (const area of resolvePointleshScene(manifest, scene.id).areas) {
-    const prefab = manifest.prefabs[area.prefabId];
-    assert.ok(area.prefabId.startsWith(`forest.${area.kind}.`));
-    assert.deepEqual(prefab.pointlesh.editor.folderPath, [area.kind === 'hotspot' ? 'Hotspots' : 'Areas', scene.name]);
-    assert.equal(prefab.pointlesh.editor.template, false);
+    assert.equal(area.prefabId, undefined);
+    assert.ok(scene.layers.flatMap(layer => layer.areas).some(native => native.id === area.areaId));
   }
   const edited = structuredClone(manifest);
   edited.prefabs['forest.character.borin'].attributes.find(attribute => attribute.id === 'walkStep').number.value = 12;
@@ -47,7 +49,7 @@ test('named room shapes preserve curved geometry, inherited numbers, extensions 
   const original = structuredClone(source), result = specializeForestEntities(source);
   assert.deepEqual(source, original);
   assert.deepEqual(normalized(resolvePointleshScene(result, 'room')), normalized(resolvePointleshScene(source, 'room')));
-  assert.deepEqual(result.scenes.room.layers[0].prefabs[0].pointlesh.client, { retained: true });
+  assert.deepEqual(result.scenes.room.layers[0].areas[0].pointlesh.client, { retained: true });
   assert.deepEqual(specializeForestEntities(result), result);
 });
 

@@ -1,6 +1,6 @@
 import { defineAiAssets, type AiAssetDefinition } from '@ai-game-assets/core';
 import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
-import { createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
+import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
 import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
 import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
@@ -168,8 +168,6 @@ const roomPickups: Partial<Record<typeof roomIds[number], { pickupId: string; na
 };
 export const scenes = specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
   const instances: ScenePrefabInstance[] = [
-    createPointleshInstance({ id: `${roomId}.floor`, prefabId: 'pointlesh.area', name: 'Walkable ground & perspective', properties: { walkable: true, scaleEnabled: true, zoomEnabled: true }, overrides: { area: { vertices: roomFloorVertices(roomId), closed: true }, minScale: { value: 0.75 }, maxScale: { value: 1.22 }, minZoom: { value: 1.035 }, maxZoom: { value: 1 } } }),
-    createPointleshInstance({ id: `${roomId}.foreground`, prefabId: 'pointlesh.area', name: 'Foreground occlusion', properties: { walkBehindEnabled: true }, overrides: { area: { vertices: roomForegroundVertices(roomId), closed: true }, baseline: { value: 505 } } }),
     createPointleshInstance({ id: `${roomId}.borin`, prefabId: 'forest.rescue-character', name: 'Borin', overrides: { object: { x: 471, y: 462, scaleX: 2.4, scaleY: 2.4 }, speed: { value: 165 }, walkStep: { value: 16 }, frameDurationMs: { value: 100 } } }),
     ...(roomCharacters[roomId] ?? []).map(npc => {
       const targetId = npc.actorName === 'king' ? 'cage' : npc.actorName;
@@ -199,9 +197,13 @@ export const scenes = specializeForestEntities(defineSceneManifest({ schemaVersi
         overrides: { object: { assetId: pickup.pickupId, x: pickup.x, y: pickup.y, scaleX: 2, scaleY: 2 } },
       });
     }),
-    ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id) && !(roomPickups[roomId] ?? []).some(pickup => pickup.pickupId === target.id)).map(target => createPointleshInstance({ id: target.id, prefabId: 'pointlesh.hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], overrides: { area: { vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true }, approachX: { value: target.walkX ?? target.x }, approachY: { value: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) } } }))
   ];
-  const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure prefabs' }), prefabs: instances };
+  const areas = [
+    createPointleshArea({ id: `${roomId}.floor::area`, entityId: `${roomId}.floor`, name: 'Walkable ground & perspective', walkable: true, scaleEnabled: true, zoomEnabled: true, vertices: roomFloorVertices(roomId), closed: true, minScale: 0.75, maxScale: 1.22, minZoom: 1.035, maxZoom: 1 }),
+    createPointleshArea({ id: `${roomId}.foreground::area`, entityId: `${roomId}.foreground`, name: 'Foreground occlusion', walkBehindEnabled: true, vertices: roomForegroundVertices(roomId), closed: true, baseline: 505 }),
+    ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id) && !(roomPickups[roomId] ?? []).some(pickup => pickup.pickupId === target.id)).map(target => createPointleshArea({ id: `${target.id}::area`, entityId: target.id, kind: 'hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true, approachX: target.walkX ?? target.x, approachY: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) }))
+  ];
+  const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure' }), prefabs: instances, areas };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
 })) }));

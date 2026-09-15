@@ -6,7 +6,7 @@ test('prefab folders hide templates, navigate with breadcrumbs and follow Edit p
   await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   const browser = page.getByRole('region', { name: 'Prefab browser', exact: true });
-  for (const category of ['Characters', 'Hotspots', 'Objects', 'Areas']) await expect(browser.getByRole('button', { name: `Open ${category} folder` })).toBeVisible();
+  for (const category of ['Characters', 'Objects']) await expect(browser.getByRole('button', { name: `Open ${category} folder` })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Pointlesh properties', exact: true })).toHaveCount(0);
   await browser.getByRole('button', { name: 'Open Characters folder' }).click();
   await expect(browser.locator('[data-prefab-id]')).toHaveCount(6);
@@ -17,11 +17,8 @@ test('prefab folders hide templates, navigate with breadcrumbs and follow Edit p
   await browser.getByRole('button', { name: 'Characters', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Pointlesh properties', exact: true })).toBeHidden();
   await browser.getByRole('button', { name: 'Prefabs', exact: true }).click();
-  await browser.getByRole('button', { name: 'Open Hotspots folder' }).click();
-  await browser.getByRole('button', { name: 'Open Bramblehollow folder' }).click();
-  await browser.getByRole('button', { name: 'The Copper Tankard', exact: true }).click();
-  await expect(browser.locator('[aria-current="page"]')).toHaveText('The Copper Tankard');
-  await expect(page.getByRole('button', { name: 'Edit shape', exact: true })).toBeVisible();
+  await expect(browser.getByRole('button', { name: 'Open Hotspots folder' })).toHaveCount(0);
+  await expect(browser.getByRole('button', { name: 'Open Areas folder' })).toHaveCount(0);
   await selectInstance(page, 'village.borin');
   await page.getByRole('button', { name: 'Edit prefab', exact: true }).click();
   await expect(browser.locator('[aria-current="page"]')).toHaveText('Borin');

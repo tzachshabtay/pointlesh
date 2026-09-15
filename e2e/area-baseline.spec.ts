@@ -54,19 +54,19 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   await context.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(baseline).toHaveValue(String(changed));
   const exported = await page.evaluate(() => JSON.parse((window as any).pointleshDemo.scene.sceneDesigner.inspector.exportManifest()));
-  const instance = exported.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
-  expect(instance.overrides.baseline.value).toBe(changed);
-  expect(instance.pointlesh.properties.walkBehindEnabled ?? exported.prefabs[instance.prefabId].pointlesh.properties.walkBehindEnabled).toBe(true);
+  const area = exported.scenes.village.layers.flatMap((layer: any) => layer.areas).find((area: any) => area.id === 'village.foreground::area');
+  expect(area.pointlesh.properties.baseline).toBe(changed);
+  expect(area.pointlesh.properties.walkBehindEnabled).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('native-walk-behind-baseline.png'), fullPage: true });
 
   // A native vertex keeps input priority even where it sits on the baseline.
-  const vertex = (instance.overrides?.area ?? exported.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area).vertices[1];
+  const vertex = area.vertices[1];
   await baseline.fill(String(vertex.y)); await baseline.press('Tab');
   const vertexStart = await worldScreen(page, vertex.x, vertex.y);
   const vertexEnd = await worldScreen(page, vertex.x + 25, vertex.y + 20);
   await page.mouse.move(vertexStart.x, vertexStart.y); await page.mouse.down();
   await page.mouse.move(vertexEnd.x, vertexEnd.y, { steps: 8 }); await page.mouse.up();
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground').overrides.area.vertices[1].x)).toBeGreaterThan(vertex.x + 15);
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.manifest.scenes.village.layers.flatMap((layer: any) => layer.areas).find((area: any) => area.id === 'village.foreground::area').vertices[1].x)).toBeGreaterThan(vertex.x + 15);
   await expect(baseline).toHaveValue(String(vertex.y));
 
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
@@ -80,36 +80,6 @@ test('native area selection exposes Walk-behind and a live baseline with one und
     return parseFloat(label.style.fontSize) * label.scaleY * scene.cameras.main.zoom * scene.game.canvas.getBoundingClientRect().height / scene.scale.height;
   })).toBeCloseTo(12, 1);
   await page.screenshot({ path: testInfo.outputPath('narrow-walk-behind-baseline.png'), fullPage: true });
-});
-
-test('prefab defaults expose the same Walk-behind controls and baseline without changing instance overrides', async ({ page }) => {
-  await page.goto('/?designer=1');
-  await expect(page.locator('#loading')).toBeHidden();
-  await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
-  const native = page.locator('.scene-designer__panel[data-panel="prefabs"]');
-  const browser = native.getByRole('region', { name: 'Prefab browser', exact: true });
-  await browser.getByRole('button', { name: 'Open Areas folder', exact: true }).click();
-  await browser.getByRole('button', { name: 'Open Bramblehollow folder', exact: true }).click();
-  await browser.getByRole('button', { name: 'Foreground occlusion', exact: true }).click();
-  const context = native.getByRole('region', { name: 'Selected area adventure properties' });
-  await context.getByRole('checkbox', { name: 'Walk-behind', exact: true }).check();
-  const baseline = context.getByRole('spinbutton', { name: 'Baseline', exact: true });
-  const initial = Number(await baseline.inputValue());
-  await expect.poll(() => baselineVisible(page)).toBe(true);
-  await dragBaseline(page, initial, initial + 40);
-  await page.mouse.up();
-  await expect(baseline).toHaveValue(String(initial + 40));
-  const manifest = await page.evaluate(() => (window as any).pointleshDemo.manifest);
-  const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
-  expect(manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'baseline').number.value).toBe(initial + 40);
-  expect(instance.overrides?.baseline).toBeUndefined();
-  await context.getByRole('button', { name: 'Undo', exact: true }).click();
-  await expect(baseline).toHaveValue(String(initial));
-  await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.areaBaseline.destroy());
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.children.getByName('pointlesh-area-baseline'))).toBeNull();
-  await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.inspector.destroy());
-  await expect(native.getByRole('region', { name: 'Selected area adventure properties' })).toHaveCount(0);
-  await expect(native.getByRole('spinbutton', { name: 'Baseline', exact: true })).toBeVisible();
 });
 
 test('inline area undo restores the entire offscreen vertex drag', async ({ page }) => {

@@ -48,7 +48,7 @@ for (const farOutside of [false, true]) test(`${farOutside ? 'Distant' : 'Offscr
   await page.mouse.up();
   const after = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    return scene.sceneDesigner.designer.getManifest().scenes.house.layers[0].prefabs.find((instance: any) => instance.id === 'house.foreground').overrides.area.vertices;
+    return scene.sceneDesigner.designer.getManifest().scenes.house.layers[0].areas.find((area: any) => area.id === 'house.foreground::area').vertices;
   });
   expect(after[0].x).toBeGreaterThan(20);
   expect(after[0].y).toBeLessThan(357);
@@ -56,7 +56,7 @@ for (const farOutside of [false, true]) test(`${farOutside ? 'Distant' : 'Offscr
   expect(after[1].curve).toEqual({ cx: 84, cy: 387 });
   const projected = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    const vertex = scene.sceneDesigner.designer.getManifest().scenes.house.layers[0].prefabs.find((instance: any) => instance.id === 'house.foreground').overrides.area.vertices[0];
+    const vertex = scene.sceneDesigner.designer.getManifest().scenes.house.layers[0].areas.find((area: any) => area.id === 'house.foreground::area').vertices[0];
     const point = scene.cameras.main.matrixCombined.transformPoint(vertex.x, vertex.y);
     const canvas = scene.game.canvas, rect = canvas.getBoundingClientRect();
     return { x: rect.left + point.x * rect.width / scene.scale.gameSize.width, y: rect.top + point.y * rect.height / scene.scale.gameSize.height };

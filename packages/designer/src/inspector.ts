@@ -1,6 +1,9 @@
 import { type AiAssetManifest } from "@ai-game-assets/core";
 import {
   isPointleshPrefab,
+  isPointleshArea,
+  type PointleshSceneArea,
+  type PointleshPrefabMetadata,
   assertJSON,
   resolvePointleshScene,
   pointleshAreaCapabilities,
@@ -18,9 +21,10 @@ import {
   type PointleshPropertySchema,
   type PointleshResolvedScene,
 } from "@pointlesh/core";
-import { prefabAttributeId, prefabInstanceIdFromAttributeId, resolvePrefabNumber, resolveSceneArea, type SceneDesignerManifest, type SceneSelection } from "@scene-designer/core";
+import { prefabAttributeId, prefabInstanceIdFromAttributeId, resolvePrefabNumber, resolveSceneArea, resolveSceneObject, type SceneDesignerManifest, type ScenePrefabAttribute, type SceneSelection } from "@scene-designer/core";
 import { installSceneDesigner, type SceneDesigner, type SceneDesignerOptions } from "@scene-designer/designer";
 import { installPrefabBrowser } from './prefab-browser.js';
+import { installSceneAreas } from './scene-areas.js';
 
 export type PointleshInspectorOptions = {
   designer: SceneDesigner;
@@ -83,7 +87,7 @@ export function installPointleshDesigner(options: PointleshDesignerOptions): Ins
   return { designer, inspector, destroy() { inspector?.destroy(); designer.destroy(); } };
 }
 
-type Target = { prefab: PointleshPrefabDefinition; instance?: PointleshPrefabInstance; sceneId?: string; layerId?: string };
+type Target = { id: string; name: string; metadata: PointleshPrefabMetadata; attributes: ScenePrefabAttribute[]; area?: PointleshSceneArea; instance?: PointleshPrefabInstance; sceneId?: string; layerId?: string };
 const animationActivities: { id: CharacterAnimationActivity; label: string }[] = [{ id: 'idle', label: 'Idle' }, { id: 'walk', label: 'Walk' }, { id: 'speak', label: 'Speak' }];
 const animationDirections: { id: CharacterAnimationDirection; label: string; diagonal?: boolean }[] = [
   { id: 'front', label: 'Front' }, { id: 'back', label: 'Back' }, { id: 'left', label: 'Left' }, { id: 'right', label: 'Right' },
@@ -113,6 +117,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   const expanded = new Map<string, boolean>();
   const nativeUndo = designer.undo, nativeRedo = designer.redo;
   const prefabBrowser = installPrefabBrowser(designer, next => apply(next));
+  const sceneAreas = installSceneAreas(designer, next => apply(next));
 
   function exportJSON() {
     const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
@@ -132,7 +137,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     restoring = true;
     try {
       designer.setManifest(next);
-      if (selection) designer.select(selection);
+      if (selection && selectionExists(next, selection)) designer.select(selection);
     } finally { restoring = false; }
     last = designer.getManifest(); lastJson = JSON.stringify(last);
     render(); preview(); notify();
@@ -164,9 +169,9 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   }
   function setTargetProperties(next: SceneDesignerManifest, target: Target, properties: PointleshProperties, editOptions: PointleshInspectorEditOptions = {}) {
     for (const [key, value] of Object.entries(properties)) {
-      assertProperty(key, value, target.prefab.pointlesh.propertySchema?.[key]);
+      assertProperty(key, value, target.metadata.propertySchema?.[key]);
       if (key === 'animations') assertCharacterAnimations(value);
-      const numeric = target.prefab.attributes.find(attribute => attribute.id === key && attribute.kind === "number");
+      const numeric = target.attributes.find(attribute => attribute.id === key && attribute.kind === "number");
       if (numeric?.kind === "number") {
         if (typeof value !== "number" || !Number.isFinite(value)) throw new Error(`${key} must be a finite number.`);
         if (numeric.number.min !== undefined && value < numeric.number.min) throw new Error(`${key} must be at least ${numeric.number.min}.`);
@@ -177,13 +182,19 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
         target.instance.pointlesh ??= {};
         target.instance.pointlesh.properties ??= {};
         target.instance.pointlesh.properties[key] = structuredClone(value);
-      } else target.prefab.pointlesh.properties[key] = structuredClone(value);
+      } else target.metadata.properties[key] = structuredClone(value);
     }
     apply(next, editOptions.history !== false);
   }
 
   function editNativeShape(target: Target, attributeId: string) {
-    const attribute = target.prefab.attributes.find(attribute => attribute.id === attributeId && (attribute.kind === 'area' || attribute.kind === 'platform'));
+    if (target.area && target.sceneId && target.layerId) {
+      designer.open();
+      designer.select({ type: 'area', sceneId: target.sceneId, layerId: target.layerId, areaId: target.area.id });
+      designer.setMode(target.area.closed && target.area.vertices.length ? 'select' : 'area-draw');
+      return;
+    }
+    const attribute = target.attributes.find(attribute => attribute.id === attributeId && (attribute.kind === 'area' || attribute.kind === 'platform'));
     if (!attribute || (attribute.kind !== 'area' && attribute.kind !== 'platform')) throw new Error(`Unknown area attribute "${attributeId}".`);
     if (target.instance && target.sceneId && target.layerId) {
       const areaId = prefabAttributeId(target.instance.id, attribute.id);
@@ -196,7 +207,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       const prefabToggle = document.querySelector<HTMLButtonElement>('button[aria-label="Toggle prefab designer"]');
       if (!prefabToggle) throw new Error('Open the native Prefabs panel to edit this definition.');
       if (prefabToggle.getAttribute('aria-expanded') !== 'true') prefabToggle.click();
-      designer.select({ type: 'prefab-area', prefabId: target.prefab.id, attributeId });
+      designer.select({ type: 'prefab-area', prefabId: target.id, attributeId });
       const area = attribute.kind === 'area' ? attribute.area : attribute.platform;
       designer.setMode(area.closed && area.vertices.length ? 'select' : 'area-draw');
     }
@@ -204,9 +215,9 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
 
   function editAnimation(target: Target, activity: CharacterAnimationActivity, direction: CharacterAnimationDirection, assignment?: CharacterAnimationAssignment) {
     const next = designer.getManifest();
-    const current = target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.prefab.id);
+    const current = target.area ? instanceTarget(next, target.area.id) : target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.id);
     if (!current) throw new Error('The selected character no longer exists.');
-    const properties = current.instance?.pointlesh?.properties ?? (current.instance ? {} : current.prefab.pointlesh.properties);
+    const properties = current.instance?.pointlesh?.properties ?? (current.instance ? {} : current.metadata.properties);
     const animations = structuredClone(readCharacterAnimations(properties) ?? {});
     if (assignment) {
       animations[activity] ??= {};
@@ -218,7 +229,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     if (Object.keys(animations).length) setTargetProperties(next, current, { animations: animations as PointleshProperty });
     else {
       if (current.instance?.pointlesh?.properties) delete current.instance.pointlesh.properties.animations;
-      else if (!current.instance) delete current.prefab.pointlesh.properties.animations;
+      else if (!current.instance) delete current.metadata.properties.animations;
       apply(next);
     }
   }
@@ -254,11 +265,11 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(activity.id === activeAnimationActivity)); tabs.append(tab);
     }
     section.append(tabs);
-    const base = readCharacterAnimations(target.prefab.pointlesh.properties) ?? {};
+    const base = readCharacterAnimations(target.metadata.properties) ?? {};
     const overrides = readCharacterAnimations(target.instance?.pointlesh?.properties ?? {}) ?? {};
     const effective = target.instance ? mergeCharacterAnimations(base, overrides) : base;
     const own = target.instance ? overrides : base;
-    const objectAttribute = target.prefab.attributes.find(attribute => attribute.kind === 'object');
+    const objectAttribute = target.attributes.find(attribute => attribute.kind === 'object');
     const objectOverride = objectAttribute && target.instance?.overrides?.[objectAttribute.id] as { assetId?: string } | undefined;
     const defaultAssetId = objectOverride?.assetId ?? (objectAttribute?.kind === 'object' ? objectAttribute.object.assetId : '');
     const choices = Object.values(aiAssets.assets).filter(asset => animationChoices(asset.id).length || asset.kind === 'spritesheet' || asset.kind === 'animation');
@@ -319,7 +330,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     section.setAttribute('aria-label', 'Area capabilities');
     section.append(element(document, 'h4', '', 'Area capabilities'));
     section.append(element(document, 'p', 'pointlesh-inspector-help', 'One shape can control several behaviors. Turn each capability on independently.'));
-    const capabilities = pointleshAreaCapabilities({ kind: target.prefab.pointlesh.kind, properties: values });
+    const capabilities = pointleshAreaCapabilities({ kind: target.metadata.kind, properties: values });
     const numeric = (key: string, label: string, fallback: number, min: number | undefined, step: number) =>
       inheritedField(target, key, propertyField(document, key, values[key] ?? fallback, { label, min, step, ...schemas[key], type: 'number' }, edit, status));
     const axis = (key: 'scaleAxis' | 'zoomAxis', label: string) => {
@@ -360,6 +371,10 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     if (designer.getOpenView() === 'prefabs') return prefabBrowser.isEditing() ? prefabTarget(manifest, designer.getSelectedPrefabId()) : undefined;
     const selection = designer.getSelection();
     if (!selection) return;
+    if ('areaId' in selection) {
+      const direct = instanceTarget(manifest, selection.areaId);
+      if (direct?.area) return direct;
+    }
     // Native selection persists when changing tabs. A definition selected in
     // Prefabs must not expose shared defaults in the Scenes inspector.
     if ('prefabId' in selection) return;
@@ -370,17 +385,18 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   function syncNativeContext() {
     if (destroyed || restoring) return;
     prefabBrowser.sync(last);
+    sceneAreas.sync(last);
     const target = targetFromNativeSelection(last);
     const view = designer.getOpenView();
     const editor = view && designer.root.querySelector<HTMLElement>(`.scene-designer__panel[data-panel="${view}"] .scene-designer__editor`);
     if (!editor || !target) {
       root.remove(); nativeContextKey = ''; restoreNativeFields(); return;
     }
-    const key = `${view}:${target.prefab.id}:${JSON.stringify(designer.getSelection())}:${lastJson}:${past.length}:${future.length}:${activeAnimationActivity}:${assetsRevision}`;
+    const key = `${view}:${target.id}:${JSON.stringify(designer.getSelection())}:${lastJson}:${past.length}:${future.length}:${activeAnimationActivity}:${assetsRevision}`;
     if (root.parentElement === editor && nativeContextKey === key) return;
     restoreNativeFields();
     nativeContextKey = key;
-    const isBody = target.prefab.pointlesh.kind === 'character' || target.prefab.pointlesh.kind === 'object';
+    const isBody = target.metadata.kind === 'character' || target.metadata.kind === 'object';
     root.setAttribute('aria-label', isBody ? 'Selected object navigation properties' : 'Selected area adventure properties');
     renderProperties(target);
     const history = element(document, 'div', 'pointlesh-native-area-history');
@@ -398,7 +414,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     // Numeric attributes are still native data. Render them once with the related
     // Pointlesh properties, including inheritance/reset, instead of duplicating them.
     const sections = editor.querySelectorAll<HTMLElement>(':scope > .scene-designer__stack > .scene-designer__attribute');
-    target.prefab.attributes.forEach((attribute, index) => {
+    target.attributes.forEach((attribute, index) => {
       const section = sections[index];
       if (attribute.kind === 'number' && section && !section.hidden) {
         section.hidden = true; section.dataset.pointleshHiddenField = 'true';
@@ -408,7 +424,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
 
   function inheritedField(target: Target, key: string, field: HTMLElement): HTMLElement {
     if (!target.instance) return field;
-    const numeric = target.prefab.attributes.some(attribute => attribute.id === key && attribute.kind === 'number');
+    const numeric = target.attributes.some(attribute => attribute.id === key && attribute.kind === 'number');
     const own = Object.hasOwn(numeric ? target.instance.overrides ?? {} : target.instance.pointlesh?.properties ?? {}, key);
     const wrapper = element(document, 'div', 'pointlesh-property');
     const label = field.querySelector('input,select,textarea')?.getAttribute('aria-label') ?? key;
@@ -458,44 +474,51 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     body.replaceChildren();
     if (target.instance) {
       const identity = element(document, 'div', 'pointlesh-prefab-link');
-      identity.append(element(document, 'span', '', `Prefab: ${target.prefab.name}`));
+      identity.append(element(document, 'span', '', `Prefab: ${target.name}`));
       identity.append(button(document, 'Edit prefab', () => {
         const toggle = document.querySelector<HTMLButtonElement>('button[aria-label="Toggle prefab designer"]');
         if (toggle?.getAttribute('aria-expanded') !== 'true') toggle?.click();
-        prefabBrowser.reveal(target.prefab.id);
+        prefabBrowser.reveal(target.id);
       }));
       body.append(identity);
     }
-    const shapes = target.prefab.attributes.filter(attribute => attribute.kind === 'area' || attribute.kind === 'platform');
+    if (target.area) {
+      const name = propertyField(document, 'name', target.name, { type: 'string', label: 'Name' }, (_key, value) => {
+        const next = designer.getManifest(), current = instanceTarget(next, target.area!.id);
+        if (current?.area) { current.area.pointlesh.name = String(value); apply(next); }
+      }, status);
+      body.append(name, button(document, 'Edit shape', () => editNativeShape(target, 'area')));
+    }
+    const shapes = target.attributes.filter(attribute => attribute.kind === 'area' || attribute.kind === 'platform');
     for (const shape of shapes) body.append(button(document, shapes.length === 1 ? 'Edit shape' : `Edit ${shape.name} shape`, () => {
       try { editNativeShape(target, shape.id); }
       catch (error) { status.textContent = error instanceof Error ? error.message : String(error); }
     }));
-    const values: PointleshProperties = { ...target.prefab.pointlesh.properties, ...target.instance?.pointlesh?.properties };
-    const schemas = { ...target.prefab.pointlesh.propertySchema };
-    for (const attribute of target.prefab.attributes) if (attribute.kind === "number") {
-      values[attribute.id] = resolvePrefabNumber(last, target.prefab.id, attribute.id, target.instance);
+    const values: PointleshProperties = { ...target.metadata.properties, ...target.instance?.pointlesh?.properties };
+    const schemas = { ...target.metadata.propertySchema };
+    for (const attribute of target.attributes) if (attribute.kind === "number") {
+      values[attribute.id] = resolvePrefabNumber(last, target.id, attribute.id, target.instance);
       schemas[attribute.id] = { label: attribute.name, type: "number", min: attribute.number.min, max: attribute.number.max, step: attribute.number.step };
     }
     const edit = (key: string, value: PointleshProperty) => {
       const next = designer.getManifest();
-      const current = target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.prefab.id);
-      if (!current) throw new Error("The selected prefab no longer exists.");
+      const current = target.area ? instanceTarget(next, target.area.id) : target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.id);
+      if (!current) throw new Error("The selected entity no longer exists.");
       setTargetProperties(next, current, { [key]: value });
     };
-    const effectiveAnimations = target.prefab.pointlesh.kind === 'character'
-      ? mergeCharacterAnimations(readCharacterAnimations(target.prefab.pointlesh.properties), readCharacterAnimations(target.instance?.pointlesh?.properties ?? {}))
+    const effectiveAnimations = target.metadata.kind === 'character'
+      ? mergeCharacterAnimations(readCharacterAnimations(target.metadata.properties), readCharacterAnimations(target.instance?.pointlesh?.properties ?? {}))
       : {};
     const hasAnimationAssignments = Object.values(effectiveAnimations).some(slots => !!slots && Object.keys(slots).length > 0);
-    const isCharacter = target.prefab.pointlesh.kind === 'character';
-    const isBody = isCharacter || target.prefab.pointlesh.kind === 'object';
+    const isCharacter = target.metadata.kind === 'character';
+    const isBody = isCharacter || target.metadata.kind === 'object';
     if (isBody) {
       const navigation = element(document, 'section', 'pointlesh-property-group');
       navigation.append(element(document, 'h4', '', 'Navigation'), inheritedField(target, 'walkThrough', walkThroughField(values, edit)));
       body.append(navigation);
     }
     if (isCharacter) body.append(section('Directional animations', animationEditor(target, values, edit)));
-    const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.prefab.pointlesh.kind);
+    const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.metadata.kind);
     if (isArea) body.append(areaEditor(target, values, schemas, edit));
     const movement = element(document, 'div', 'pointlesh-property-group');
     const properties = element(document, 'div', 'pointlesh-property-group');
@@ -513,24 +536,24 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     if (properties.childElementCount) body.append(section('Properties', properties));
     const extensions = element(document, 'div', 'pointlesh-property-group');
     const behaviorLabel = element(document, "label", "pointlesh-inspector-field");
-    behaviorLabel.append(element(document, "span", "", target.instance ? "Extra behavior IDs" : "Default behavior IDs"));
+    behaviorLabel.append(element(document, "span", "", target.instance ? "Extra behavior IDs" : target.area ? "Behavior IDs" : "Default behavior IDs"));
     const behaviorInput = document.createElement("input");
-    behaviorInput.value = (target.instance ? target.instance.pointlesh?.behaviors ?? [] : target.prefab.pointlesh.behaviors).join(", ");
+    behaviorInput.value = (target.instance ? target.instance.pointlesh?.behaviors ?? [] : target.metadata.behaviors).join(", ");
     behaviorInput.placeholder = "inspect, quest.locked-door";
     behaviorInput.addEventListener("change", () => {
       try {
         const next = designer.getManifest();
-        const current = target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.prefab.id);
+        const current = target.area ? instanceTarget(next, target.area.id) : target.instance ? instanceTarget(next, target.instance.id) : prefabTarget(next, target.id);
         if (!current) return;
         const ids = behaviorInput.value.split(",").map(id => id.trim()).filter(Boolean);
         if (current.instance) { current.instance.pointlesh ??= {}; current.instance.pointlesh.behaviors = [...new Set(ids)]; }
-        else current.prefab.pointlesh.behaviors = [...new Set(ids)];
+        else current.metadata.behaviors = [...new Set(ids)];
         apply(next); status.textContent = "Behavior IDs updated.";
       } catch (error) { status.textContent = error instanceof Error ? error.message : String(error); }
     });
-    behaviorInput.setAttribute('aria-label', target.instance ? 'Extra behavior IDs' : 'Default behavior IDs');
+    behaviorInput.setAttribute('aria-label', target.instance ? 'Extra behavior IDs' : target.area ? 'Behavior IDs' : 'Default behavior IDs');
     behaviorLabel.append(behaviorInput); extensions.append(behaviorLabel);
-    if (target.instance) extensions.append(element(document, 'p', 'pointlesh-inspector-help', `Inherited behaviors: ${target.prefab.pointlesh.behaviors.join(', ') || 'None'}`));
+    if (target.instance) extensions.append(element(document, 'p', 'pointlesh-inspector-help', `Inherited behaviors: ${target.metadata.behaviors.join(', ') || 'None'}`));
     extensions.append(element(document, "p", "pointlesh-inspector-help", "Behavior IDs connect to code registered by your game. Save data stays JSON; behavior functions stay in source."));
     const extension = element(document, "details", "pointlesh-inspector-extension");
     extension.append(element(document, "summary", "", "Add custom property"));
@@ -550,12 +573,12 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     setAiAssets(manifest) { aiAssets = structuredClone(manifest); assetsRevision++; render(); },
     editShape(instanceId, attributeId = 'area') {
       const target = instanceTarget(designer.getManifest(), instanceId);
-      if (!target) throw new Error(`Unknown Pointlesh instance "${instanceId}".`);
+      if (!target) throw new Error(`Unknown Pointlesh entity "${instanceId}".`);
       editNativeShape(target, attributeId);
     },
     setProperties(instanceId, properties, editOptions) {
       const next = designer.getManifest(), target = instanceTarget(next, instanceId);
-      if (!target) throw new Error(`Unknown Pointlesh instance "${instanceId}".`);
+      if (!target) throw new Error(`Unknown Pointlesh entity "${instanceId}".`);
       setTargetProperties(next, target, properties, editOptions);
     },
     setPrefabProperties(prefabId, properties, editOptions) {
@@ -565,14 +588,16 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     },
     setBehaviors(instanceId, behaviorIds) {
       const next = designer.getManifest(), target = instanceTarget(next, instanceId);
-      if (!target?.instance) throw new Error(`Unknown Pointlesh instance "${instanceId}".`);
+      if (!target?.instance && !target?.area) throw new Error(`Unknown Pointlesh entity "${instanceId}".`);
       if (behaviorIds.some(id => typeof id !== "string" || !id.trim())) throw new Error("Behavior IDs must be nonempty strings.");
-      target.instance.pointlesh ??= {}; target.instance.pointlesh.behaviors = [...new Set(behaviorIds)]; apply(next);
+      if (target.area) target.area.pointlesh.behaviors = [...new Set(behaviorIds)];
+      else { target.instance!.pointlesh ??= {}; target.instance!.pointlesh.behaviors = [...new Set(behaviorIds)]; }
+      apply(next);
     },
     undo, redo, exportManifest() { return JSON.stringify(designer.getManifest(), null, 2) + "\n"; },
     destroy() {
       if (destroyed) return;
-      destroyed = true; nativeObserver.disconnect(); prefabBrowser.destroy(); restoreNativeFields(); root.remove();
+      destroyed = true; nativeObserver.disconnect(); prefabBrowser.destroy(); sceneAreas.destroy(); restoreNativeFields(); root.remove();
       if (designer.undo === undo) designer.undo = nativeUndo;
       if (designer.redo === redo) designer.redo = nativeRedo;
     },
@@ -589,6 +614,8 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
 
 function instanceTarget(manifest: SceneDesignerManifest, instanceId: string): Target | undefined {
   for (const scene of Object.values(manifest.scenes)) for (const layer of scene.layers) {
+    const area = layer.areas.find(area => isPointleshArea(area) && (area.id === instanceId || area.pointlesh.entityId === instanceId));
+    if (area && isPointleshArea(area)) return { id: area.id, name: area.pointlesh.name, metadata: area.pointlesh, attributes: [], area, sceneId: scene.id, layerId: layer.id };
     const instance = layer.prefabs?.find(candidate => candidate.id === instanceId) as PointleshPrefabInstance | undefined;
     if (!instance) continue;
     const target = prefabTarget(manifest, instance.prefabId);
@@ -597,13 +624,26 @@ function instanceTarget(manifest: SceneDesignerManifest, instanceId: string): Ta
 }
 function prefabTarget(manifest: SceneDesignerManifest, prefabId: string): Target | undefined {
   const prefab = manifest.prefabs?.[prefabId];
-  return prefab && isPointleshPrefab(prefab) ? { prefab } : undefined;
+  return prefab && isPointleshPrefab(prefab) ? { id: prefab.id, name: prefab.name, metadata: prefab.pointlesh, attributes: prefab.attributes } : undefined;
 }
 function instanceIdFromSelection(selection: SceneSelection): string | undefined {
   if (selection.type === "prefab") return selection.instanceId;
   if (selection.type === "area" || selection.type === "vertex" || selection.type === "tiles") return prefabInstanceIdFromAttributeId(selection.areaId);
   if (selection.type === "object") return prefabInstanceIdFromAttributeId(selection.objectId);
   return undefined;
+}
+function selectionExists(manifest: SceneDesignerManifest, selection: SceneSelection): boolean {
+  if ('prefabId' in selection) return !!manifest.prefabs?.[selection.prefabId];
+  if (!manifest.scenes[selection.sceneId]) return false;
+  const layers = manifest.scenes[selection.sceneId]!.layers;
+  if ('layerId' in selection && !layers.some(layer => layer.id === selection.layerId)) return false;
+  if ('instanceId' in selection) return layers.some(layer => layer.prefabs?.some(instance => instance.id === selection.instanceId));
+  try {
+    if ('areaId' in selection) resolveSceneArea(manifest, selection.sceneId, selection.areaId);
+    if ('objectId' in selection) resolveSceneObject(manifest, selection.sceneId, selection.objectId);
+    if ('objectIds' in selection) for (const id of selection.objectIds) resolveSceneObject(manifest, selection.sceneId, id);
+    return true;
+  } catch { return false; }
 }
 function assertProperty(key: string, value: PointleshProperty, schema?: PointleshPropertySchema): void {
   if (["__proto__", "prototype", "constructor"].includes(key)) throw new Error("Choose a different property name.");

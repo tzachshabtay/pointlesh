@@ -60,8 +60,8 @@ test('designer drawings sit above visible game controls, keep drag priority and 
     const scene = (window as any).pointleshDemo.scene;
     const designer = scene.sceneDesigner.designer;
     const manifest = designer.getManifest();
-    const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
-    const id = (instance.overrides?.area ?? manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area).vertices[1].id;
+    const area = manifest.scenes.village.layers.flatMap((layer: any) => layer.areas).find((area: any) => area.id === 'village.foreground::area');
+    const id = area.vertices[1].id;
     const rect = scene.game.canvas.getBoundingClientRect();
     const world = scene.cameras.main.getWorldPoint((point.x - rect.left) * scene.scale.width / rect.width, (point.y - rect.top) * scene.scale.height / rect.height);
     designer.updateAreaVertex('village.foreground::area', id, { x: world.x, y: world.y });
@@ -71,7 +71,7 @@ test('designer drawings sit above visible game controls, keep drag priority and 
   await page.mouse.move(start.x - 35, start.y - 20, { steps: 8 }); await page.mouse.up();
   await expect.poll(() => page.evaluate(id => {
     const manifest = (window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest();
-    return manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground').overrides.area.vertices.find((vertex: any) => vertex.id === id).x;
+    return manifest.scenes.village.layers.flatMap((layer: any) => layer.areas).find((area: any) => area.id === 'village.foreground::area').vertices.find((vertex: any) => vertex.id === id).x;
   }, vertex.id)).toBeLessThan(vertex.x - 15);
   await expect(hotspots).not.toHaveClass(/active/);
 

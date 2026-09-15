@@ -1,4 +1,4 @@
-import { isPointleshPrefab, pointleshAreaCapabilities, type PointleshPrefabInstance } from '@pointlesh/core';
+import { isPointleshArea, isPointleshPrefab, pointleshAreaCapabilities, type PointleshPrefabInstance } from '@pointlesh/core';
 import { prefabAttributeId, prefabInstanceIdFromAttributeId, resolvePrefabNumber, resolveSceneArea, type SceneAreaVertex } from '@scene-designer/core';
 import type { SceneDesigner } from '@scene-designer/designer';
 import type { PointleshInspector } from '@pointlesh/designer';
@@ -12,7 +12,7 @@ export type PhaserAreaBaselineOptions = {
   depth?: number;
 };
 
-type BaselineTarget = { key: string; prefabId: string; instanceId?: string; baseline: number; vertices: SceneAreaVertex[] };
+type BaselineTarget = { key: string; prefabId?: string; instanceId?: string; areaId?: string; baseline: number; vertices: SceneAreaVertex[] };
 
 /** A selected walk-behind area's authored Y baseline, edited through inspector history. */
 export function installPhaserAreaBaseline(options: PhaserAreaBaselineOptions): { sync(): void; destroy(): void } {
@@ -34,6 +34,14 @@ export function installPhaserAreaBaseline(options: PhaserAreaBaselineOptions): {
     const selection = designer.getSelection();
     if (!selection || !designer.isOpen()) return;
     const manifest = designer.getManifest();
+    if ('areaId' in selection) {
+      const area = manifest.scenes[selection.sceneId]?.layers.flatMap(layer => layer.areas).find(area => area.id === selection.areaId);
+      if (area && isPointleshArea(area)) {
+        const baseline = Number(area.pointlesh.properties.baseline ?? 160);
+        if (!pointleshAreaCapabilities(area.pointlesh).walkBehind || !Number.isFinite(baseline)) return;
+        return { key: area.id, areaId: area.id, baseline, vertices: area.vertices };
+      }
+    }
     const instanceId = selection.type === 'prefab' ? selection.instanceId
       : 'areaId' in selection ? prefabInstanceIdFromAttributeId(selection.areaId) : undefined;
     let instance: PointleshPrefabInstance | undefined;
@@ -107,8 +115,8 @@ export function installPhaserAreaBaseline(options: PhaserAreaBaselineOptions): {
     const baseline = Math.round(worldPoint(event).y - drag.offsetY);
     if (baseline === target?.baseline) return;
     const editOptions = { history: !drag.changed };
-    if (drag.target.instanceId) inspector.setProperties(drag.target.instanceId, { baseline }, editOptions);
-    else inspector.setPrefabProperties(drag.target.prefabId, { baseline }, editOptions);
+    if (drag.target.areaId || drag.target.instanceId) inspector.setProperties((drag.target.areaId ?? drag.target.instanceId)!, { baseline }, editOptions);
+    else inspector.setPrefabProperties(drag.target.prefabId!, { baseline }, editOptions);
     drag.changed = true; dirty = true; update();
   }
 

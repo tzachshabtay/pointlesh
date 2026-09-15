@@ -6,9 +6,13 @@ The root [installation notes](../../README.md#installation-and-compatibility) de
 
 ## Native adventure prefabs
 
-`pointleshPrefabs()` supplies Area, Hotspot, Object and Character prefab definitions. `createAreaPrefab()` has independent `walkable`, `scaleEnabled`, `zoomEnabled` and `walkBehindEnabled` roles on one native polygon, with separate scale/zoom axes and endpoints. Global `enabled` disables all roles. `pointleshAreaCapabilities()` reads these flags and supports legacy area kinds. Individual `create*Prefab` factories accept geometry, properties, behavior IDs, schemas and extra native attributes. Register the definitions in a Scene Designer schema-version-2 manifest; `createPointleshInstance()` produces normal prefab instances with optional adventure overrides.
+`pointleshPrefabs()` supplies hidden Object and Character creation templates. Create reusable definitions with the individual factories and place them with `createPointleshInstance()` in a Scene Designer schema-version-2 manifest.
 
-`resolvePointleshScene(manifest, sceneId)` resolves native defaults/overrides and returns `entities`, polygon `areas` and sprite `objects`. `walkablePolygons(scene)` extracts enabled, closed shapes with walking enabled. Existing specialized area factories remain supported; pass `includeLegacyAreas: true` to `pointleshPrefabs()` if you still reference their catalog IDs. Native curves are sampled for runtime geometry. World coordinates have positive Y downward; object/actor positions are ground anchors.
+Areas and hotspots belong to a scene layer's `areas`, created with `createPointleshArea({ kind: 'area' | 'hotspot', ... })`. One area has independent `walkable`, `scaleEnabled`, `zoomEnabled` and `walkBehindEnabled` roles on a native polygon, with separate scale/zoom axes and endpoints. Global `enabled` disables all roles. Names, settings, custom JSON properties, schemas and behavior IDs live on the area's `pointlesh` sidecar.
+
+`resolvePointleshScene(manifest, sceneId)` resolves native areas and prefab instances into `entities`, polygon `areas` and sprite `objects`. Native scene areas have no prefab or instance IDs. `walkablePolygons(scene)` extracts enabled, closed walking shapes; curves are sampled for runtime geometry. World coordinates have positive Y downward; object/actor positions are ground anchors.
+
+`migratePointleshSceneAreas(manifest)` converts standalone legacy region instances into scene-owned areas without changing geometry, gameplay IDs or settings. Existing area/hotspot factories remain supported; pass `includeLegacyAreas: true` to `pointleshPrefabs()` if you still reference their catalog IDs while migrating. `pointleshAreaCapabilities()` supports both native and legacy area kinds.
 
 Use `extendPointleshPrefab(base, extension)` for reusable specializations. It produces a new definition rather than a live inheritance chain between definitions. Instances still inherit omitted native fields from their selected prefab. Custom JSON properties and behavior IDs stay editable and serializable. See the [prefab guide](../../docs/prefabs.md).
 
