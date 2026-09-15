@@ -1,6 +1,6 @@
 # Pointlesh prefabs
 
-Pointlesh's default catalog contains Area, Hotspot, Object and Character prefabs, all actual `ScenePrefabDefinition` values. Register them in a schema-version-2 scene manifest and use Scene Designer's existing Scenes and Prefabs panels to draw polygons, move sprites, change numeric values, and edit reusable defaults.
+Pointlesh's default catalog contains Area, Hotspot, Object and Character creation templates, all actual `ScenePrefabDefinition` values. Register them in a schema-version-2 scene manifest and use Scene Designer's existing Scenes and Prefabs panels to draw polygons, move sprites, change numeric values, and edit reusable defaults. Templates stay out of the prefab browser; **New prefab** uses them to create named game definitions.
 
 | Factory | Native attributes | Adventure properties |
 | --- | --- | --- |
@@ -55,7 +55,7 @@ The earlier `createWalkableAreaPrefab`, `createScaleAreaPrefab`, `createZoomArea
 
 ## Extending a prefab
 
-Scene Designer stores native object, area, platform, and number attributes. Pointlesh adds a JSON sidecar called `pointlesh` containing the prefab kind, custom properties, behavior IDs, and optional property schemas. Upstream validation accepts this sidecar and its cloning, editing, promotion, and export preserve it. No fork of Scene Designer is required.
+Scene Designer stores native object, area, platform, and number attributes. Pointlesh adds a JSON sidecar called `pointlesh` containing the prefab kind, custom properties, behavior IDs, optional property schemas, and authoring metadata in `editor`. Upstream validation accepts this sidecar and its cloning, editing, promotion, and export preserve it. No fork of Scene Designer is required.
 
 ```ts
 import { createHotspotPrefab, extendPointleshPrefab } from '@pointlesh/core';
@@ -63,6 +63,7 @@ import { createHotspotPrefab, extendPointleshPrefab } from '@pointlesh/core';
 const lockedDoor = extendPointleshPrefab(createHotspotPrefab(), {
   id: 'my-game.locked-door',
   name: 'Locked door',
+  editor: { folderPath: ['Hotspots', 'Village'] },
   properties: { keyItem: 'brass-key', locked: true, message: 'It is locked.' },
   behaviors: ['my-game.locked-door'],
   propertySchema: {
@@ -101,6 +102,10 @@ The library leaves game-specific interaction code in TypeScript. Rebuild geometr
 
 ## Named entities in the forest demo
 
-The generic Character and Object templates remain available as starting definitions. Borin, Rowan, Mara, Orrin, Grub, Aldric, the coin, rope and mushroom each have a named prefab. Borin’s six room instances share `forest.character.borin`; NPCs use `forest.character.<actorName>` and pickups use `forest.object.<pickupId>`. Artwork, animations, shared scale/movement settings and behaviors are defaults. Room coordinates, facing overrides and approach points remain instance data.
+The browser shows **Characters**, **Hotspots**, **Objects** and **Areas**, with clickable breadcrumbs. Hotspots and areas are grouped further by room. Each has its own named prefab, including each room's ground, foreground and exits. The generic templates are hidden from browsing and placement; use **New prefab** to create a named definition from them.
+
+Borin, Rowan, Mara, Orrin, Grub, Aldric, the coin, rope and mushroom each have a named prefab. Borin’s six room instances share `forest.character.borin`; NPCs use `forest.character.<actorName>` and pickups use `forest.object.<pickupId>`. Artwork, animations, shared scale/movement settings and behaviors are defaults. Sprite room coordinates and facing overrides remain instance data. Room-specific shape prefabs own their geometry and approach points; instance edits can override those defaults.
+
+Factories accept `editor: { template?: boolean, folderPath?: string[] }`. Folder paths default to the prefab kind's category. `pointleshPrefabs()` marks the generic templates, and `extendPointleshPrefab()` makes the result visible unless explicitly marked as another template. This metadata affects authoring only; hiding a template never removes its definition or changes existing instances.
 
 `extendPointleshPrefab` builds a concrete definition from shared defaults; it does not establish a live inheritance link between two prefab definitions. Scene instances inherit live edits from their named prefab. The demo migration (`demos/forest/scripts/specialize-entity-prefabs.ts`) preserves resolved room data and can be rerun safely. It updates scene data only; it does not regenerate assets or reset authored placements.

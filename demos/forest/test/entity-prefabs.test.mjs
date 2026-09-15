@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { tsImport } from 'tsx/esm/api';
-import { createCharacterPrefab, createPointleshInstance, resolvePointleshScene } from '@pointlesh/core';
+import { createAreaPrefab, createHotspotPrefab, createCharacterPrefab, createPointleshInstance, resolvePointleshScene } from '@pointlesh/core';
 import { createScene, createLayer, defineSceneManifest } from '@scene-designer/core';
 const { specializeForestEntities } = await tsImport('../src/entity-prefabs.ts', import.meta.url);
 const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
@@ -22,10 +22,33 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`
     (entity.kind === 'character' ? characters : objects).add(identity);
   }
   assert.equal(characters.size, 6); assert.equal(objects.size, 3);
+  for (const scene of Object.values(manifest.scenes)) for (const area of resolvePointleshScene(manifest, scene.id).areas) {
+    const prefab = manifest.prefabs[area.prefabId];
+    assert.ok(area.prefabId.startsWith(`forest.${area.kind}.`));
+    assert.deepEqual(prefab.pointlesh.editor.folderPath, [area.kind === 'hotspot' ? 'Hotspots' : 'Areas', scene.name]);
+    assert.equal(prefab.pointlesh.editor.template, false);
+  }
   const edited = structuredClone(manifest);
   edited.prefabs['forest.character.borin'].attributes.find(attribute => attribute.id === 'walkStep').number.value = 12;
   for (const scene of Object.values(edited.scenes)) assert.equal(resolvePointleshScene(edited, scene.id).objects.find(object => object.properties.role === 'player').properties.walkStep, 12);
   assert.deepEqual(specializeForestEntities(manifest), manifest);
+});
+
+test('named room shapes preserve curved geometry, inherited numbers, extensions and behavior order', () => {
+  const base = createAreaPrefab({ walkBehindEnabled: true, baseline: 200, behaviors: ['shared'] });
+  const hotspot = createHotspotPrefab();
+  const instance = createPointleshInstance({ id: 'foreground', name: 'Foreground', prefabId: base.id,
+    properties: { custom: { value: 7 } }, behaviors: ['room'],
+    overrides: { baseline: { value: 345 }, area: { vertices: [{ id: 'a', x: -10, y: 350, curve: { cx: 60, cy: 200 } }, { id: 'b', x: 300, y: 400 }, { id: 'c', x: 0, y: 500 }], closed: true } } });
+  instance.pointlesh.client = { retained: true };
+  const scene = createScene({ id: 'room', name: 'A room' });
+  scene.layers = [{ ...createLayer(), prefabs: [instance, createPointleshInstance({ id: 'door', name: 'Door', prefabId: hotspot.id, overrides: { approachX: { value: 80 } } })] }];
+  const source = defineSceneManifest({ schemaVersion: 2, prefabs: { [base.id]: base, [hotspot.id]: hotspot }, scenes: { room: scene } });
+  const original = structuredClone(source), result = specializeForestEntities(source);
+  assert.deepEqual(source, original);
+  assert.deepEqual(normalized(resolvePointleshScene(result, 'room')), normalized(resolvePointleshScene(source, 'room')));
+  assert.deepEqual(result.scenes.room.layers[0].prefabs[0].pointlesh.client, { retained: true });
+  assert.deepEqual(specializeForestEntities(result), result);
 });
 
 test('specialization preserves placement, room-specific overrides, extension data, and behavior dispatch', () => {

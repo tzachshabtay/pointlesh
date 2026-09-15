@@ -26,7 +26,7 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
   await native.getByRole('button', { name: 'Expand layer', exact: true }).click();
-  await native.getByText('Foreground occlusion', { exact: true }).click();
+  await native.locator('.scene-designer__item-title').getByText('Foreground occlusion', { exact: true }).click();
   const context = native.getByRole('region', { name: 'Selected area adventure properties' });
   const enabled = context.getByRole('checkbox', { name: 'Walk-behind', exact: true });
   await expect(enabled).toBeChecked();
@@ -56,11 +56,11 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   const exported = await page.evaluate(() => JSON.parse((window as any).pointleshDemo.scene.sceneDesigner.inspector.exportManifest()));
   const instance = exported.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
   expect(instance.overrides.baseline.value).toBe(changed);
-  expect(instance.pointlesh.properties.walkBehindEnabled).toBe(true);
+  expect(instance.pointlesh.properties.walkBehindEnabled ?? exported.prefabs[instance.prefabId].pointlesh.properties.walkBehindEnabled).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('native-walk-behind-baseline.png'), fullPage: true });
 
   // A native vertex keeps input priority even where it sits on the baseline.
-  const vertex = instance.overrides.area.vertices[1];
+  const vertex = (instance.overrides?.area ?? exported.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area).vertices[1];
   await baseline.fill(String(vertex.y)); await baseline.press('Tab');
   const vertexStart = await worldScreen(page, vertex.x, vertex.y);
   const vertexEnd = await worldScreen(page, vertex.x + 25, vertex.y + 20);
@@ -87,7 +87,10 @@ test('prefab defaults expose the same Walk-behind controls and baseline without 
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   const native = page.locator('.scene-designer__panel[data-panel="prefabs"]');
-  await native.locator(':scope > .scene-designer__section select').selectOption('pointlesh.area');
+  const browser = native.getByRole('region', { name: 'Prefab browser', exact: true });
+  await browser.getByRole('button', { name: 'Open Areas folder', exact: true }).click();
+  await browser.getByRole('button', { name: 'Open Bramblehollow folder', exact: true }).click();
+  await browser.getByRole('button', { name: 'Foreground occlusion', exact: true }).click();
   const context = native.getByRole('region', { name: 'Selected area adventure properties' });
   await context.getByRole('checkbox', { name: 'Walk-behind', exact: true }).check();
   const baseline = context.getByRole('spinbutton', { name: 'Baseline', exact: true });
@@ -97,8 +100,9 @@ test('prefab defaults expose the same Walk-behind controls and baseline without 
   await page.mouse.up();
   await expect(baseline).toHaveValue(String(initial + 40));
   const manifest = await page.evaluate(() => (window as any).pointleshDemo.manifest);
-  expect(manifest.prefabs['pointlesh.area'].attributes.find((attribute: any) => attribute.id === 'baseline').number.value).toBe(initial + 40);
-  expect(manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground').overrides.baseline.value).not.toBe(initial + 40);
+  const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
+  expect(manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'baseline').number.value).toBe(initial + 40);
+  expect(instance.overrides?.baseline).toBeUndefined();
   await context.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(baseline).toHaveValue(String(initial));
   await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.areaBaseline.destroy());
@@ -140,7 +144,7 @@ test('inline area controls remain clickable where a scrolled dock resize grip cr
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
   await native.getByRole('button', { name: 'Expand layer', exact: true }).click();
-  await native.getByText('Foreground occlusion', { exact: true }).click();
+  await native.locator('.scene-designer__item-title').getByText('Foreground occlusion', { exact: true }).click();
   const context = native.getByRole('region', { name: 'Selected area adventure properties' });
   const enabled = context.getByRole('checkbox', { name: 'Walk-behind', exact: true });
   await enabled.uncheck();

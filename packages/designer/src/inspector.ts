@@ -20,6 +20,7 @@ import {
 } from "@pointlesh/core";
 import { prefabAttributeId, prefabInstanceIdFromAttributeId, resolvePrefabNumber, resolveSceneArea, type SceneDesignerManifest, type SceneSelection } from "@scene-designer/core";
 import { installSceneDesigner, type SceneDesigner, type SceneDesignerOptions } from "@scene-designer/designer";
+import { installPrefabBrowser } from './prefab-browser.js';
 
 export type PointleshInspectorOptions = {
   designer: SceneDesigner;
@@ -111,6 +112,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   let assetsRevision = 0;
   const expanded = new Map<string, boolean>();
   const nativeUndo = designer.undo, nativeRedo = designer.redo;
+  const prefabBrowser = installPrefabBrowser(designer, next => apply(next));
 
   function exportJSON() {
     const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
@@ -355,7 +357,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
 
   function targetFromNativeSelection(manifest: SceneDesignerManifest): Target | undefined {
     // Prefabs can display a definition before a particular attribute is selected.
-    if (designer.getOpenView() === 'prefabs') return prefabTarget(manifest, designer.getSelectedPrefabId());
+    if (designer.getOpenView() === 'prefabs') return prefabBrowser.isEditing() ? prefabTarget(manifest, designer.getSelectedPrefabId()) : undefined;
     const selection = designer.getSelection();
     if (!selection) return;
     // Native selection persists when changing tabs. A definition selected in
@@ -367,6 +369,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
 
   function syncNativeContext() {
     if (destroyed || restoring) return;
+    prefabBrowser.sync(last);
     const target = targetFromNativeSelection(last);
     const view = designer.getOpenView();
     const editor = view && designer.root.querySelector<HTMLElement>(`.scene-designer__panel[data-panel="${view}"] .scene-designer__editor`);
@@ -446,6 +449,12 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   function render() { syncNativeContext(); }
 
   function renderProperties(target: Target) {
+    // Native edits can rerender before the browser dispatches a details toggle.
+    // Preserve the actual open state instead of relying only on that event.
+    for (const details of body.querySelectorAll<HTMLDetailsElement>('details.pointlesh-property-section')) {
+      const title = details.querySelector(':scope > summary')?.textContent;
+      if (title) expanded.set(title, details.open);
+    }
     body.replaceChildren();
     if (target.instance) {
       const identity = element(document, 'div', 'pointlesh-prefab-link');
@@ -453,7 +462,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       identity.append(button(document, 'Edit prefab', () => {
         const toggle = document.querySelector<HTMLButtonElement>('button[aria-label="Toggle prefab designer"]');
         if (toggle?.getAttribute('aria-expanded') !== 'true') toggle?.click();
-        designer.select({ type: 'prefab-definition', prefabId: target.prefab.id });
+        prefabBrowser.reveal(target.prefab.id);
       }));
       body.append(identity);
     }
@@ -563,7 +572,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     undo, redo, exportManifest() { return JSON.stringify(designer.getManifest(), null, 2) + "\n"; },
     destroy() {
       if (destroyed) return;
-      destroyed = true; nativeObserver.disconnect(); restoreNativeFields(); root.remove();
+      destroyed = true; nativeObserver.disconnect(); prefabBrowser.destroy(); restoreNativeFields(); root.remove();
       if (designer.undo === undo) designer.undo = nativeUndo;
       if (designer.redo === redo) designer.redo = nativeRedo;
     },

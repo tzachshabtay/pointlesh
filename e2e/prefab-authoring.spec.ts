@@ -9,7 +9,8 @@ async function nativeArea(page: Page) {
   return page.evaluate(() => {
     const demo = (window as any).pointleshDemo;
     const instance = demo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.floor');
-    return instance.overrides.area as { vertices: Vertex[]; closed: boolean };
+    const defaults = demo.manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area;
+    return { ...defaults, ...instance.overrides?.area } as { vertices: Vertex[]; closed: boolean };
   });
 }
 
@@ -106,8 +107,8 @@ test('one area keeps independent walk, scale, zoom, and walk-behind capabilities
   await inspector.getByRole('button', { name: 'Export JSON', exact: true }).click();
   const manifest = JSON.parse(await readFile((await (await downloadPromise).path())!, 'utf8'));
   const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.floor');
-  expect(instance.pointlesh.properties).toMatchObject({ walkable: true, scaleEnabled: true, zoomEnabled: false, walkBehindEnabled: true, scaleAxis: 'x' });
-  expect(instance.overrides.area).toEqual(initialShape);
+  expect({ ...manifest.prefabs[instance.prefabId].pointlesh.properties, ...instance.pointlesh.properties }).toMatchObject({ walkable: true, scaleEnabled: true, zoomEnabled: false, walkBehindEnabled: true, scaleAxis: 'x' });
+  expect({ ...manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area, ...instance.overrides?.area }).toEqual(initialShape);
   await page.screenshot({ path: testInfo.outputPath('combined-area-capabilities.png'), fullPage: true });
 });
 

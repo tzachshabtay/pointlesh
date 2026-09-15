@@ -23,6 +23,10 @@ See the repository's [prefab documentation](https://github.com/tzachshabtay/poin
 
 The same controls edit prefab defaults or scene-instance overrides according to the native selection. **Edit prefab** jumps from an instance to its definition. Standard properties display **Inherited from prefab** or **Instance override** and a **Reset to prefab** action. Directional animations retain per-slot **Use prefab** actions. Numeric controls appear once alongside their related properties, while their data remains in native numeric attributes.
 
+The Prefabs browser and the scene's **Add prefab** chooser use folders and breadcrumbs. Pointlesh definitions default to **Characters**, **Hotspots**, **Objects**, or **Areas**; set `editor: { folderPath: ['Characters', 'Orcs'] }` when creating or extending a prefab for deeper folders. Non-Pointlesh definitions remain available under **Other**. **Edit prefab** opens the selected definition's folder automatically.
+
+The generic catalog entries are creation templates, hidden from both browsers. **New prefab** creates a named definition from one of these templates; then add instances in Scenes. `pointleshPrefabs()` marks templates automatically, and `extendPointleshPrefab()` produces a visible definition. Explicit `editor.template` metadata takes precedence over the legacy `pointlesh.<kind>` ID convention. These are authoring settings, separate from runtime properties, and are preserved through JSON export and promotion.
+
 Collapsible **Directional animations**, **Movement**, **Properties** and **Custom properties & behaviors** sections keep the inspector manageable. Client-defined `propertySchema` fields and JSON extensions use the same controls in both views; behavior IDs remain source-registered game logic. **Undo**, **Redo** and **Export JSON** are at the end of the embedded inspector.
 
 ## Native shapes and directional characters

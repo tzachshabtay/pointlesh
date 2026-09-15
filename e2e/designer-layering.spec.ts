@@ -24,7 +24,7 @@ test('designer drawings sit above visible game controls, keep drag priority and 
   await expect.poll(position).toBeLessThan(initialX - 30);
 
   await page.getByRole('button', { name: 'Expand layer', exact: true }).click();
-  await page.getByText('Foreground occlusion', { exact: true }).click();
+  await page.locator('.scene-designer__item-title').getByText('Foreground occlusion', { exact: true }).click();
   // Move the floating properties panel away from the game button under test.
   const title = (await page.locator('.scene-designer__panel[data-panel="scenes"] .scene-designer__title').boundingBox())!;
   await page.mouse.move(title.x + 20, title.y + 8); await page.mouse.down();
@@ -59,8 +59,9 @@ test('designer drawings sit above visible game controls, keep drag priority and 
   const vertex = await page.evaluate(point => {
     const scene = (window as any).pointleshDemo.scene;
     const designer = scene.sceneDesigner.designer;
-    const instance = designer.getManifest().scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
-    const id = instance.overrides.area.vertices[1].id;
+    const manifest = designer.getManifest();
+    const instance = manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs).find((instance: any) => instance.id === 'village.foreground');
+    const id = (instance.overrides?.area ?? manifest.prefabs[instance.prefabId].attributes.find((attribute: any) => attribute.id === 'area').area).vertices[1].id;
     const rect = scene.game.canvas.getBoundingClientRect();
     const world = scene.cameras.main.getWorldPoint((point.x - rect.left) * scene.scale.width / rect.width, (point.y - rect.top) * scene.scale.height / rect.height);
     designer.updateAreaVertex('village.foreground::area', id, { x: world.x, y: world.y });

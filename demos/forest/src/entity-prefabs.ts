@@ -68,6 +68,27 @@ export function specializeForestEntities(input: SceneDesignerManifest): SceneDes
   }
   const referenced = new Set(Object.values(manifest.scenes).flatMap(scene => scene.layers.flatMap(layer => (layer.prefabs ?? []).map(instance => instance.prefabId))));
   if (!referenced.has('forest.rescue-character')) delete prefabs['forest.rescue-character'];
+  // Each room shape has its own editable definition. Never merge similarly named
+  // exits or foregrounds across rooms: their geometry and behavior can differ.
+  for (const scene of Object.values(manifest.scenes)) for (const layer of scene.layers) for (const instance of layer.prefabs ?? []) {
+    const base = prefabs[instance.prefabId];
+    if (!base || !isPointleshPrefab(base) || !['area', 'hotspot'].includes(base.pointlesh.kind) || !base.id.startsWith('pointlesh.')) continue;
+    const typed = instance as PointleshPrefabInstance;
+    const id = `forest.${base.pointlesh.kind}.${scene.id}.${instance.id}`;
+    if (prefabs[id]) throw new Error(`Cannot specialize an area over existing prefab ${id}`);
+    const prefab = extendPointleshPrefab(base, { id, name: instance.name ?? base.name,
+      editor: { folderPath: [base.pointlesh.kind === 'hotspot' ? 'Hotspots' : 'Areas', scene.name] },
+      properties: typed.pointlesh?.properties, behaviors: typed.pointlesh?.behaviors });
+    for (const attribute of prefab.attributes) {
+      const override = instance.overrides?.[attribute.id];
+      if (override) Object.assign((attribute as any)[attribute.kind], structuredClone(override));
+    }
+    prefabs[id] = prefab; instance.prefabId = id; instance.overrides = {};
+    typed.pointlesh = { ...typed.pointlesh, properties: {}, behaviors: [] };
+  }
+  for (const prefab of Object.values(prefabs)) if (isPointleshPrefab(prefab) && prefab.id === `pointlesh.${prefab.pointlesh.kind}`) {
+    prefab.pointlesh.editor = { ...prefab.pointlesh.editor, template: true };
+  }
   assertSceneManifest(manifest);
   return manifest;
 }

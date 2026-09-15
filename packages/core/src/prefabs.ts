@@ -36,6 +36,8 @@ export type PointleshPropertySchema = {
 };
 export type PointleshPrefabMetadata<P extends PointleshProperties = PointleshProperties> = {
   kind: PointleshPrefabKind;
+  /** Authoring metadata; never participates in runtime property inheritance. */
+  editor?: { template?: boolean; folderPath?: string[] };
   properties: P;
   behaviors: string[];
   propertySchema?: Record<string, PointleshPropertySchema>;
@@ -54,6 +56,7 @@ export type PointleshPoint = { x: number; y: number };
 export type PointleshPrefabInput = {
   id?: string;
   name?: string;
+  editor?: PointleshPrefabMetadata['editor'];
   properties?: PointleshProperties;
   behaviors?: string[];
   propertySchema?: Record<string, PointleshPropertySchema>;
@@ -87,6 +90,7 @@ function number(id: string, label: string, value: number, options: Omit<ScenePre
 function metadata(kind: PointleshPrefabKind, input: PointleshPrefabInput, properties: PointleshProperties): PointleshPrefabMetadata {
   return {
     kind,
+    ...(input.editor ? { editor: structuredClone(input.editor) } : {}),
     properties: mergeProperties({ enabled: true, ...properties }, input.properties, kind === 'character'),
     behaviors: [...new Set(input.behaviors ?? [])],
     propertySchema: structuredClone(input.propertySchema ?? {}),
@@ -217,7 +221,10 @@ export function pointleshPrefabs(options: { objectAssetId?: string; characterAss
     createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }),
     ...(options.includeLegacyAreas ? [createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab()] : []),
   ];
-  return Object.fromEntries(prefabs.map(prefab => [prefab.id, prefab]));
+  return Object.fromEntries(prefabs.map(prefab => {
+    prefab.pointlesh.editor = { template: true };
+    return [prefab.id, prefab];
+  }));
 }
 
 /** Create a reusable derived prefab; instances then inherit the resulting native defaults. */
@@ -229,6 +236,7 @@ export function extendPointleshPrefab(base: PointleshPrefabDefinition, extension
     attributes: mergeAttributes(base.attributes, extension.attributes),
     pointlesh: {
       kind: base.pointlesh.kind,
+      editor: { ...structuredClone(base.pointlesh.editor ?? {}), template: false, ...structuredClone(extension.editor ?? {}) },
       properties: mergeProperties(base.pointlesh.properties, extension.properties, base.pointlesh.kind === 'character'),
       behaviors: [...new Set([...base.pointlesh.behaviors, ...(extension.behaviors ?? [])])],
       propertySchema: { ...structuredClone(base.pointlesh.propertySchema ?? {}), ...structuredClone(extension.propertySchema ?? {}) },
