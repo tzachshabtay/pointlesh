@@ -180,6 +180,8 @@ test('named character prefab edits reach every instance and share history with n
   const animations = () => page.evaluate(() => (window as any).pointleshDemo.scene.resolved().objects.filter((object: any) => object.prefabId === 'forest.character.innkeeper').map((object: any) => object.properties.animations.idle.front.key));
   await expect.poll(animations).toEqual(['idle-back', 'idle-back']);
 
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
+  await expect(inspector).toHaveCount(0);
   await selectInstance(page, 'pub.npc.innkeeper');
   await expandProperties(page, 'Directional animations');
   await expect(front).toHaveValue('idle-back');

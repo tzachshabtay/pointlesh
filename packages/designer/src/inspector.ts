@@ -358,7 +358,9 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     if (designer.getOpenView() === 'prefabs') return prefabTarget(manifest, designer.getSelectedPrefabId());
     const selection = designer.getSelection();
     if (!selection) return;
-    if ('prefabId' in selection) return prefabTarget(manifest, selection.prefabId);
+    // Native selection persists when changing tabs. A definition selected in
+    // Prefabs must not expose shared defaults in the Scenes inspector.
+    if ('prefabId' in selection) return;
     const id = instanceIdFromSelection(selection);
     return id ? instanceTarget(manifest, id) : undefined;
   }
