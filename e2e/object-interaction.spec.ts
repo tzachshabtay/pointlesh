@@ -30,11 +30,20 @@ async function dismiss(page: Page) {
   await expect(page.locator('#dialog')).toBeHidden();
 }
 
+async function assignedWalkPoint(page: Page, instanceId: string) {
+  return page.evaluate(instanceId => {
+    const room = (window as any).pointleshDemo.scene.resolved();
+    const object = room.objects.find((object: any) => object.id === instanceId);
+    return room.points.find((point: any) => point.id === object.properties.walkPointId).position;
+  }, instanceId);
+}
+
 test('rope sprite follows authored transforms and its interactive toggle without a duplicate area', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await ready(page, 'house');
   const rope = 'house.pickup.rope';
+  const ropeWalkPoint = await assignedWalkPoint(page, rope);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('house.pickup.rope').texture.key)).toBe('pickup.rope');
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.resolved().areas.some((area: any) => area.id === 'rope' || area.id === 'coin'))).toBe(false);
   const transparent = await spritePoint(page, rope, false);
@@ -76,7 +85,7 @@ test('rope sprite follows authored transforms and its interactive toggle without
   await expect(page.locator('#hover-label')).toHaveText('Climbing rope');
   await page.mouse.click(clickable.x, clickable.y);
   await expect(page.locator('#speech')).toContainText('Never go on a rescue without a rope');
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toMatchObject({ x: 650, y: 443 });
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(ropeWalkPoint);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('house.pickup.rope').visible)).toBe(false);
   await expect(page.getByRole('button', { name: 'Interact with Climbing rope', exact: true })).toHaveCount(0);
   await dismiss(page);
@@ -90,10 +99,11 @@ test('rope sprite follows authored transforms and its interactive toggle without
 
 test('coin and mushroom use direct sprite clicks and the same Nearby behavior', async ({ page }) => {
   await ready(page, 'house');
+  const coinWalkPoint = await assignedWalkPoint(page, 'house.pickup.coin');
   const coin = await spritePoint(page, 'house.pickup.coin');
   await page.mouse.click(coin.x, coin.y);
   await expect(page.locator('#speech')).toContainText('One copper coin');
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toMatchObject({ x: 516, y: 421 });
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(coinWalkPoint);
   await dismiss(page);
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.resolved().areas.some((area: any) => area.id === 'mushroom'))).toBe(false);
