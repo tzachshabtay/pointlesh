@@ -32,17 +32,37 @@ test('point prefabs preserve coordinate inheritance, names and extensions withou
   assert.deepEqual(migratePointleshSceneAreas(manifest), manifest);
 });
 
-test('move is immediate, walk animates along navigation and explicit unreachable points never snap', async () => {
+test('move is immediate and walking snaps outside points to the closest reachable ground', async () => {
   const { room, actor } = fixture(), point = room().points[0];
   const walking = actOnPoint(actor, point, 'walk');
   assert.equal(actor.state.activity, 'walking'); assert.deepEqual(actor.state.position, { x: 10, y: 70 });
   actor.tick(500); assert.deepEqual(actor.state.position, { x: 60, y: 70 });
   actor.tick(500); assert.equal(await walking, true); assert.deepEqual(actor.state.position, point.position);
   const outside = { ...point, position: { x: 400, y: 70 } };
-  assert.equal(await actOnPoint(actor, outside, 'walk'), false);
-  assert.deepEqual(actor.state.position, point.position);
+  const snapped = actOnPoint(actor, outside, 'walk');
+  assert.deepEqual(actor.destination, { x: 300, y: 70 });
+  actor.tick(2000); assert.equal(await snapped, true);
+  assert.deepEqual(actor.state.position, { x: 300, y: 70 });
   assert.equal(await actOnPoint(actor, outside, 'move'), true);
   assert.deepEqual(actor.state.position, outside.position);
+});
+
+test('objects and hotspots with outside walk points interact only after reaching the closest ground', async () => {
+  const { manifest, actor, room } = fixture();
+  manifest.scenes.room.layers[0].prefabs[0].overrides.x.value = 400;
+  for (const target of [room().objects[0], room().areas[0]]) {
+    actor.place({ x: 10, y: 70 });
+    let interacted = false;
+    const pending = approachPointleshEntity(actor, room(), target).then(arrived => { interacted = arrived; });
+    assert.deepEqual(actor.destination, { x: 300, y: 70 });
+    actor.tick(500); await Promise.resolve(); assert.equal(interacted, false);
+    actor.tick(2500); await pending; assert.equal(interacted, true);
+    assert.deepEqual(actor.state.position, { x: 300, y: 70 });
+    assert.equal(actor.state.facing, 'left');
+  }
+  assert.deepEqual(room().points[0].position, { x: 400, y: 70 });
+  actor.setNavigationSource(() => ({ walkables: [] }));
+  assert.equal(await approachPointleshEntity(actor, room(), room().objects[0]), false);
 });
 
 test('objects and hotspots reach named walk points before dispatch; interruption and broken references prevent it', async () => {

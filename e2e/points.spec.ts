@@ -73,7 +73,7 @@ test('scene entry uses the point for the source room, including live edits and t
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBe(1300);
 });
 
-test('object interaction waits for the assigned point and unreachable points prevent the effect', async ({ page }) => {
+test('object interaction waits for the assigned point and snaps outside points to reachable ground', async ({ page }) => {
   await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('house'));
   await selectInstance(page, 'house.pickup.coin');
@@ -90,8 +90,30 @@ test('object interaction waits for the assigned point and unreachable points pre
   await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).fill('-200');
   await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).press('Tab');
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
-  await page.evaluate(() => (window as any).pointleshDemo.scene.act('rope'));
+  const snapped = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    void scene.act('rope');
+    return scene.character.destination;
+  });
+  expect(snapped).not.toBeNull();
+  expect(snapped.y).toBeGreaterThan(0);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.story.inventory)).not.toContain('rope');
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.inventory), { timeout: 20000 }).toContain('rope');
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(snapped);
+  expect((await position(page, 'house.walk.house.pickup.rope')).y).toBe(-200);
+});
+
+test('designer walks to the closest reachable position when the selected point is outside the floor', async ({ page }) => {
+  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  const id = 'village.entry.from-pub'; await selectInstance(page, id);
+  await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).fill('-200');
+  await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).press('Tab');
+  await context(page).getByRole('combobox', { name: 'Character', exact: true }).selectOption('village.borin');
+  await context(page).getByRole('button', { name: 'Walk character here', exact: true }).click();
+  const snapped = await page.evaluate(() => (window as any).pointleshDemo.scene.character.destination);
+  expect(snapped).not.toBeNull(); expect(snapped.y).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position), { timeout: 20000 }).toEqual(snapped);
+  expect((await position(page, id)).y).toBe(-200);
 });
 
 test('create and place a Point through the prefab browser', async ({ page }) => {

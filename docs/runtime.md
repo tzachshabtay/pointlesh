@@ -25,7 +25,7 @@ Boundary points are allowed, including obstacle edges. The low-level algorithm u
 
 `CharacterController.walkTo` uses reachable-point snapping by default; pass `{ snap: false }` as its fourth argument for exact navigation. Before each movement step it validates the remaining route and replans if blocked. Bind live geometry with `hero.setNavigationSource(() => ({ walkables: currentFloors(), obstacles: currentObstacles() }))`; the returned function detaches it. `walkTo`, `approach` and `setMovementDirection` can then omit floor arguments. Explicit floors override the bound floors; explicit obstacles add to bound obstacles. Without a binding, the geometry supplied when walking starts remains in use.
 
-Restored paths also validate against the bound source and replan to their saved endpoint if necessary. If the actor starts inside a newly placed solid obstacle or no route remains, walking stops with failure. The low-level `findPath` stays exact. Explicit approach points also remain exact, while an implicit approach to a solid entity stops at its closest reachable boundary. There is no fallback that moves straight through walls.
+Restored paths also validate against the bound source and replan to their saved endpoint if necessary. If the actor starts inside a newly placed solid obstacle or no route remains, walking stops with failure. The low-level `findPath` stays exact. Authored approach points snap to the closest reachable walkable position, while an implicit approach to a solid entity stops at its closest reachable boundary. There is no fallback that moves straight through walls.
 
 ## Characters
 

@@ -16,12 +16,12 @@ export function resolvePointleshWalkPoint(scene: PointleshResolvedScene, entity:
   return { ...resolvePointleshPoint(scene, id).position };
 }
 
-/** Move teleports; walking requires reaching the exact authored coordinate. */
+/** Move teleports; walking snaps to the closest reachable position to the authored point. */
 export function actOnPoint(character: CharacterController, point: ResolvedPointleshPoint, action: 'move' | 'walk'): Promise<boolean> {
   if (!point.enabled) return Promise.resolve(false);
   if (action === 'move') { character.place(point.position); return Promise.resolve(true); }
   if (action !== 'walk') throw new Error('Unknown point action.');
-  return character.walkTo(point.position, undefined, [], { snap: false });
+  return character.walkTo(point.position);
 }
 
 /** Build an interaction approach, giving a named walk point priority over legacy coordinates. */

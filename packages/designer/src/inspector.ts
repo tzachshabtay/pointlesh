@@ -494,14 +494,14 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
         const pointId = target.instance!.id, characterId = select.value;
         status.textContent = action === 'walk' ? 'Walking to point…' : 'Moving to point…';
         Promise.resolve().then(() => options.onPointAction!({ sceneId: room.id, pointId, characterId, action }))
-          .then(arrived => { status.textContent = arrived ? 'Character reached the point.' : 'Character could not reach the point, or the walk was interrupted.'; })
+          .then(arrived => { status.textContent = arrived ? 'Character reached the destination.' : 'Character could not reach the point, or the walk was interrupted.'; })
           .catch(error => { status.textContent = error instanceof Error ? error.message : String(error); });
       });
       run.disabled = !characters.length || !options.onPointAction;
       actions.append(run);
     }
     controls.append(actions, element(document, 'p', 'pointlesh-inspector-help', options.onPointAction
-      ? 'Move places the character instantly. Walk follows the walkable path. These actions preview the live character; they do not change its saved placement.'
+      ? 'Move places the character instantly. Walk uses the closest reachable position. These actions preview the live character; they do not change its saved placement.'
       : 'Connect onPointAction (or getCharacter in Phaser) to preview character movement.'));
     return controls;
   }

@@ -75,13 +75,19 @@ test('moving blockers reroute pending and restored walks without resetting compl
   detach();
 });
 
-test('implicit approach stops alongside a solid target while explicit unreachable walk points fail', async () => {
+test('implicit approaches and blocked walk points stop at the closest reachable solid boundary', async () => {
   const { controller } = setup();
   const approach = controller.approach({ position: { x: 150, y: 100 } }, 'walk');
   controller.tick(5000);
   assert.equal(await approach, true);
   assert.deepEqual(controller.state.position, { x: 150, y: 92 });
-  assert.equal(await controller.approach({ position: { x: 150, y: 100 }, walkPoint: { x: 150, y: 100 } }, 'walk'), false);
+  controller.place({ x: 30, y: 100 });
+  const explicit = controller.approach({ position: { x: 150, y: 100 }, walkPoint: { x: 150, y: 100 } }, 'walk');
+  assert.deepEqual(controller.destination, { x: 150, y: 92 });
+  controller.tick(5000);
+  assert.equal(await explicit, true);
+  assert.deepEqual(controller.state.position, { x: 150, y: 92 });
+  assert.equal(controller.state.facing, 'down');
 });
 
 test('hidden/disabled bodies and scene shutdown remove obstacles and controller bindings', () => {

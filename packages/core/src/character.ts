@@ -177,9 +177,9 @@ export class CharacterController {
     if (!['face', 'walk-if-point', 'walk'].includes(mode)) throw new Error('Unknown approach mode');
     if (mode === 'walk' || (mode === 'walk-if-point' && target.walkPoint)) {
       const geometry = this.navigation(walkables, obstacles);
+      // Authored walk points use the closest reachable ground, just like click walking.
       // An implicit approach to a solid entity ends alongside its footprint.
-      // Explicit authored approach points and locations outside the floor stay exact.
-      const snap = !target.walkPoint && isWalkable(target.position, geometry.walkables) && !isWalkable(target.position, geometry.walkables, geometry.obstacles);
+      const snap = !!target.walkPoint || (isWalkable(target.position, geometry.walkables) && !isWalkable(target.position, geometry.walkables, geometry.obstacles));
       const completion = this.walkTo(target.walkPoint ?? target.position, walkables, obstacles, { snap });
       const operation = this.operation;
       if (!await completion || operation !== this.operation) return false;
