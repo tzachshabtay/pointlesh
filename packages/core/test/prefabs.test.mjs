@@ -99,7 +99,7 @@ test('one native region combines independent roles and inherits later prefab edi
 });
 
 test('default catalog contains reusable sprites while legacy area factories remain available', () => {
-  assert.deepEqual(Object.keys(pointleshPrefabs()), ['pointlesh.object', 'pointlesh.character']);
+  assert.deepEqual(Object.keys(pointleshPrefabs()), ['pointlesh.object', 'pointlesh.character', 'pointlesh.point']);
   const legacy = pointleshPrefabs({ includeLegacyAreas: true });
   for (const [kind, role] of [['walkable', 'walkable'], ['scale', 'scale'], ['zoom', 'zoom'], ['walk-behind', 'walkBehind']]) {
     const prefab = legacy[`pointlesh.${kind}`];

@@ -2,6 +2,7 @@ import { defineAiAssets, type AiAssetDefinition } from '@ai-game-assets/core';
 import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
 import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
 import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
+import { addForestPoints } from './points';
 import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
 import { bramblehollowStyleGuide } from './art-style';
@@ -166,7 +167,7 @@ const roomPickups: Partial<Record<typeof roomIds[number], { pickupId: string; na
   ],
   forest: [{ pickupId: 'mushroom', name: 'Dreamcap mushroom', x: 111, y: 409 }],
 };
-export const scenes = specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
+export const scenes = addForestPoints(specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
   const instances: ScenePrefabInstance[] = [
     createPointleshInstance({ id: `${roomId}.borin`, prefabId: 'forest.rescue-character', name: 'Borin', overrides: { object: { x: 471, y: 462, scaleX: 2.4, scaleY: 2.4 }, speed: { value: 165 }, walkStep: { value: 16 }, frameDurationMs: { value: 100 } } }),
     ...(roomCharacters[roomId] ?? []).map(npc => {
@@ -206,4 +207,4 @@ export const scenes = specializeForestEntities(defineSceneManifest({ schemaVersi
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure' }), prefabs: instances, areas };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
-})) }));
+})) })));

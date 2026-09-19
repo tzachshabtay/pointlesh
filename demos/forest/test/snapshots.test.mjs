@@ -2,7 +2,7 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { tsImport } from 'tsx/esm/api';
-import { AdventureDialog, CharacterController, SaveStore, MemorySaveStorage, resolvePointleshScene, walkablePolygons, findPath } from '@pointlesh/core';
+import { AdventureDialog, CharacterController, SaveStore, MemorySaveStorage, resolvePointleshScene, walkablePolygons, findPath, pointleshApproachTarget } from '@pointlesh/core';
 
 const story = await tsImport('../src/story.ts', import.meta.url);
 const { assets, dialogs, scenes } = await tsImport('../src/content.ts', import.meta.url);
@@ -76,12 +76,12 @@ test(`every ${catalog} hotspot and interactive sprite approach point is reachabl
   for (const roomId of story.roomIds) {
     const scene = resolvePointleshScene(sceneManifest, roomId), floors = walkablePolygons(scene);
     for (const area of scene.areas.filter(area => area.kind === 'hotspot')) {
-      assert.ok(findPath({ x: 471, y: 462 }, { x: area.properties.approachX, y: area.properties.approachY }, floors), `${roomId}/${area.id} must be reachable`);
+      assert.ok(findPath({ x: 471, y: 462 }, pointleshApproachTarget(scene, area).walkPoint, floors), `${roomId}/${area.id} must be reachable`);
     }
     for (const object of scene.objects.filter(object => typeof object.properties.targetId === 'string')) {
       assert.ok(story.targets[roomId].some(target => target.id === object.properties.targetId), `${object.id} maps to an existing story interaction`);
       assert.ok(object.behaviors.includes('forest.interact'));
-      assert.ok(findPath({ x: 471, y: 462 }, { x: object.position.x + object.properties.approachOffsetX, y: object.position.y + object.properties.approachOffsetY }, floors), `${object.id} must be approachable`);
+      assert.ok(findPath({ x: 471, y: 462 }, pointleshApproachTarget(scene, object).walkPoint, floors), `${object.id} must be approachable`);
       if (object.properties.actorName !== 'king') assert.equal(scene.areas.some(area => area.id === object.properties.targetId), false, `${object.id} must not have a duplicate hotspot`);
     }
   }

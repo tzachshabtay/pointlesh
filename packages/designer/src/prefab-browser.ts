@@ -2,8 +2,8 @@ import { extendPointleshPrefab, isPointleshPrefab, type PointleshPrefabDefinitio
 import type { SceneDesignerManifest, ScenePrefabDefinition } from '@scene-designer/core';
 import type { SceneDesigner } from '@scene-designer/designer';
 
-const categories = ['Characters', 'Objects'];
-const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) || ['character', 'object'].includes(prefab.pointlesh.kind);
+const categories = ['Characters', 'Objects', 'Points'];
+const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) || ['character', 'object', 'point'].includes(prefab.pointlesh.kind);
 export function isPrefabTemplate(prefab: ScenePrefabDefinition): boolean {
   return isPointleshPrefab(prefab) && (prefab.pointlesh.editor?.template ?? prefab.id === `pointlesh.${prefab.pointlesh.kind}`);
 }
@@ -12,7 +12,7 @@ export function prefabFolderPath(prefab: ScenePrefabDefinition): string[] {
   const path = prefab.pointlesh.editor?.folderPath;
   if (path?.length) return [...path];
   const kind = prefab.pointlesh.kind;
-  return [kind === 'character' ? 'Characters' : kind === 'object' ? 'Objects' : kind === 'hotspot' ? 'Hotspots' : 'Areas'];
+  return [kind === 'character' ? 'Characters' : kind === 'object' ? 'Objects' : kind === 'point' ? 'Points' : kind === 'hotspot' ? 'Hotspots' : 'Areas'];
 }
 const samePath = (a: string[], b: string[]) => a.length === b.length && a.every((part, index) => part === b[index]);
 

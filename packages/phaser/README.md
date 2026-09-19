@@ -191,6 +191,7 @@ const editor = installPhaserPointleshDesigner({
   scene, manifest: sceneManifest, aiAssets: assetManifest,
   defaultSceneId: 'village',
   renderSceneObjects: false, // The game already owns its actor sprites.
+  getCharacter: (instanceId, sceneId) => liveCharacters.get(instanceId),
   onManifestChange(manifest) { sceneManifest = manifest; },
   onPreview(resolved) { room = resolved; view.sync(); },
 });
@@ -209,7 +210,15 @@ Vertices outside the visible canvas or behind designer panels use the same small
 
 Pointlesh's inspector uses Scene Designer's standard palette and theme variables. Designer controls are styled by the library independently of the demo game's UI.
 
-`installPhaserPointleshDesigner` installs both helpers and exposes them as `areaBaseline` and `areaEdgeHandles`. Standalone integrations can use `installPhaserAreaBaseline({ scene, designer, inspector })` and `installPhaserAreaEdgeHandles({ scene, designer })`; both accept an optional camera getter and return `sync()` and `destroy()`. Native selection and manifest changes keep the controls synchronized. Scene shutdown or `editor.destroy()` cleans up the panels, drawings, and input handlers.
+`installPhaserPointleshDesigner` installs these helpers and exposes them as `areaBaseline` and `areaEdgeHandles`. Standalone integrations can use `installPhaserAreaBaseline({ scene, designer, inspector })` and `installPhaserAreaEdgeHandles({ scene, designer })`; both accept an optional camera getter and return `sync()` and `destroy()`. Native selection and manifest changes keep the controls synchronized. Scene shutdown or `editor.destroy()` cleans up the panels, drawings, and input handlers.
+
+## Named point markers
+
+The combined installer includes `pointHandles`, which draws named coordinate markers while the scene/prefab designer is open. Dragging changes native X/Y overrides (or prefab defaults) in one undo step. Markers follow camera pan/zoom and page layout, respect hidden/locked layers and instances, and never become game sprites or navigation obstacles. `installPhaserPointHandles({ scene, designer, inspector })` is available separately.
+
+Supply `getCharacter(instanceId, sceneId)` to connect the point inspector's **Character** dropdown and **Move character here** / **Walk character here** buttons to live `CharacterController` instances. Controllers should already be registered with `PhaserAdventureNavigation`; walking uses their current floors and obstacles. Continue ticking those actors while the designer is open. Movement previews do not change the manifest.
+
+Use `approachPointleshEntity` from core before dispatching hotspot/object interactions. It resolves optional `walkPointId` references from the current room and returns false when exact arrival is impossible or interrupted. Points and entry mappings stay in core data; game code chooses which entry point belongs to each room transition.
 
 ## ai-assets and dialog-designer
 

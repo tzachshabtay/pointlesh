@@ -5,7 +5,7 @@ test('areas and hotspots belong to scenes, retain edits and never appear in the 
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
   const initial = await page.evaluate(() => (window as any).pointleshDemo.manifest);
-  expect(Object.values(initial.prefabs).every((prefab: any) => ['character', 'object'].includes(prefab.pointlesh.kind))).toBe(true);
+  expect(Object.values(initial.prefabs).every((prefab: any) => ['character', 'object', 'point'].includes(prefab.pointlesh.kind))).toBe(true);
   await selectInstance(page, 'village.foreground');
   const context = page.getByRole('region', { name: 'Pointlesh properties', exact: true });
   await expect(context.getByRole('button', { name: 'Edit prefab', exact: true })).toHaveCount(0);
@@ -24,7 +24,7 @@ test('areas and hotspots belong to scenes, retain edits and never appear in the 
   await expect(browser.getByRole('button', { name: 'Open Areas folder' })).toHaveCount(0);
   await expect(browser.getByRole('button', { name: 'Open Hotspots folder' })).toHaveCount(0);
   await browser.getByRole('button', { name: 'New prefab', exact: true }).click();
-  expect(await page.getByRole('combobox', { name: 'Prefab type' }).locator('option').allTextContents()).toEqual(['Object', 'Character']);
+  expect(await page.getByRole('combobox', { name: 'Prefab type' }).locator('option').allTextContents()).toEqual(['Object', 'Character', 'Point']);
   await page.getByRole('dialog', { name: 'New prefab' }).getByRole('button', { name: 'Cancel', exact: true }).click();
   expect(errors).toEqual([]);
 });

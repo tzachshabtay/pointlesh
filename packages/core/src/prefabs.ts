@@ -26,7 +26,7 @@ import { assertCharacterAnimations, mergeCharacterAnimations, readCharacterAnima
 /** Only data belongs in a manifest. Register behavior implementations in your game. */
 export type PointleshProperty = string | number | boolean | null | PointleshProperty[] | { [key: string]: PointleshProperty };
 export type PointleshProperties = Record<string, PointleshProperty>;
-export type PointleshPrefabKind = "area" | "walkable" | "walk-behind" | "scale" | "zoom" | "hotspot" | "object" | "character";
+export type PointleshPrefabKind = "area" | "walkable" | "walk-behind" | "scale" | "zoom" | "hotspot" | "object" | "character" | "point";
 export type PointleshPropertySchema = {
   label?: string;
   type: "string" | "number" | "boolean" | "json";
@@ -82,7 +82,7 @@ export type PointleshRegionPrefabInput = PointleshAreaPrefabInput & {
   smoothing?: number;
   baseline?: number;
 };
-export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults> & { walkThrough?: boolean };
+export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults> & { walkThrough?: boolean; walkPointId?: string };
 
 /** A native polygon owned by a scene layer, with extensible adventure data. */
 export type PointleshSceneArea = SceneArea & {
@@ -97,7 +97,7 @@ export function isPointleshArea(area: SceneArea): area is PointleshSceneArea {
   return !!data && ['area', 'hotspot', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(data.kind);
 }
 export type PointleshSceneAreaInput = PointleshRegionPrefabInput & {
-  kind?: 'area' | 'hotspot'; entityId?: string;
+  kind?: 'area' | 'hotspot'; entityId?: string; walkPointId?: string;
   approachX?: number; approachY?: number; approachRadius?: number;
 };
 export function createPointleshArea(input: PointleshSceneAreaInput = {}): PointleshSceneArea {
@@ -196,8 +196,8 @@ export function createZoomAreaPrefab(input: PointleshAreaPrefabInput & { minZoom
   ]);
 }
 
-export function createHotspotPrefab(input: PointleshAreaPrefabInput & { approachX?: number; approachY?: number; approachRadius?: number } = {}): PointleshPrefabDefinition {
-  return areaPrefab("hotspot", "Hotspot", input, { label: input.name ?? "Hotspot", cursor: "interact" }, [
+export function createHotspotPrefab(input: PointleshAreaPrefabInput & { approachX?: number; approachY?: number; approachRadius?: number; walkPointId?: string } = {}): PointleshPrefabDefinition {
+  return areaPrefab("hotspot", "Hotspot", input, { label: input.name ?? "Hotspot", cursor: "interact", walkPointId: input.walkPointId ?? '' }, [
     number("approachX", "Approach X", input.approachX ?? 0, { step: 1 }),
     number("approachY", "Approach Y", input.approachY ?? 0, { step: 1 }),
     number("approachRadius", "Approach distance", input.approachRadius ?? 10, { min: 0, step: 1 }),
@@ -220,7 +220,7 @@ function objectPrefab(kind: "object" | "character", input: PointleshObjectPrefab
       name: input.name ?? (kind === "character" ? "Character" : "Object"),
       attributes: mergeAttributes([createPrefabObjectAttribute({ id: "object", name: "Sprite", object }), ...numeric], input.attributes),
     }),
-    pointlesh: metadata(kind, input, { label: input.name ?? kind, walkThrough: input.walkThrough ?? false, ...properties }),
+    pointlesh: metadata(kind, input, { label: input.name ?? kind, walkPointId: input.walkPointId ?? '', walkThrough: input.walkThrough ?? false, ...properties }),
   };
 }
 
@@ -244,10 +244,17 @@ export function createCharacterPrefab(input: PointleshObjectPrefabInput & { spee
   ]);
 }
 
+/** A named coordinate. It has no sprite, collision footprint or area geometry. */
+export function createPointPrefab(input: PointleshPrefabInput & Partial<PointleshPoint> = {}): PointleshPrefabDefinition {
+  return { ...createPrefab({ id: input.id ?? 'pointlesh.point', name: input.name ?? 'Point',
+    attributes: mergeAttributes([number('x', 'X', input.x ?? 160, { step: 1 }), number('y', 'Y', input.y ?? 160, { step: 1 })], input.attributes) }),
+    pointlesh: metadata('point', input, {}) };
+}
+
 /** Ready-to-register native prefabs. Supply asset ids from your ai-assets manifest. */
 export function pointleshPrefabs(options: { objectAssetId?: string; characterAssetId?: string; includeLegacyAreas?: boolean } = {}): Record<string, PointleshPrefabDefinition> {
   const prefabs = [
-    createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }),
+    createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }), createPointPrefab(),
     ...(options.includeLegacyAreas ? [createAreaPrefab(), createHotspotPrefab(), createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab()] : []),
   ];
   return Object.fromEntries(prefabs.map(prefab => {
@@ -284,7 +291,7 @@ export function createPointleshInstance(input: Parameters<typeof createPrefabIns
 
 export function isPointleshPrefab(prefab: ScenePrefabDefinition): prefab is PointleshPrefabDefinition {
   const data = (prefab as Partial<PointleshPrefabDefinition>).pointlesh;
-  return !!data && ["area", "walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character"].includes(data.kind);
+  return !!data && ["area", "walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character", "point"].includes(data.kind);
 }
 
 function mergeProperties(base: PointleshProperties, overrides: PointleshProperties = {}, character = false): PointleshProperties {
@@ -324,6 +331,12 @@ export type ResolvedPointleshObject = ResolvedPointleshEntity & {
   anchorX: number;
   anchorY: number;
 };
+export type ResolvedPointleshPoint = ResolvedPointleshEntity & {
+  kind: 'point';
+  instanceId: string;
+  prefabId: string;
+  position: PointleshPoint;
+};
 export type PointleshResolvedScene = {
   id: string;
   name: string;
@@ -332,6 +345,7 @@ export type PointleshResolvedScene = {
   entities: ResolvedPointleshEntity[];
   areas: ResolvedPointleshArea[];
   objects: ResolvedPointleshObject[];
+  points: ResolvedPointleshPoint[];
 };
 
 /** Preserve designer curves by sampling their quadratic edges for runtime geometry. */
@@ -355,7 +369,7 @@ export function pointleshAreaPolygon(vertices: SceneAreaVertex[], closed = true,
 export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: string): PointleshResolvedScene {
   assertSceneManifest(manifest);
   const scene = getScene(manifest, sceneId);
-  const result: PointleshResolvedScene = { id: scene.id, name: scene.name, width: scene.width, height: scene.height, entities: [], areas: [], objects: [] };
+  const result: PointleshResolvedScene = { id: scene.id, name: scene.name, width: scene.width, height: scene.height, entities: [], areas: [], objects: [], points: [] };
   for (const layer of scene.layers) {
     for (const rawInstance of layer.prefabs ?? []) {
       const instance = rawInstance as PointleshPrefabInstance;
@@ -374,6 +388,11 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
         properties, behaviors: [...new Set([...prefab.pointlesh.behaviors, ...(instance.pointlesh?.behaviors ?? [])])],
       };
       result.entities.push(entity);
+      if (entity.kind === 'point') {
+        const x = Number(properties.x), y = Number(properties.y);
+        if (!Number.isFinite(x) || !Number.isFinite(y)) throw new Error(`Point "${entity.name}" must have finite X/Y coordinates.`);
+        result.points.push({ ...entity, kind: 'point', instanceId: instance.id, prefabId: prefab.id, position: { x, y } });
+      }
       for (const attribute of prefab.attributes) {
         if (attribute.kind === "area" || attribute.kind === "platform") {
           const area = resolveSceneArea(manifest, scene.id, prefabAttributeId(instance.id, attribute.id))?.area;

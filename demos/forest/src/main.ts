@@ -3,7 +3,7 @@ import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClien
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
-import { AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
+import { approachPointleshEntity, resolvePointleshPoint, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
 import { PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
@@ -11,6 +11,7 @@ import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
 import { applyDialogChoice, combineItems, ending, guardLookingAway, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
+import { roomEntryPointId } from './points';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import './style.css';
 
@@ -228,12 +229,10 @@ class ForestAdventure extends Phaser.Scene {
     if (!entity) return;
     const selected = this.selected;
     const operation = ++this.epoch;
-    const center = 'position' in entity ? entity.position : entity.polygon.reduce((sum, point) => ({ x: sum.x + point.x / entity.polygon.length, y: sum.y + point.y / entity.polygon.length }), { x: 0, y: 0 });
-    const walkPoint = 'position' in entity
-      ? { x: center.x + Number(entity.properties.approachOffsetX ?? 0), y: center.y + Number(entity.properties.approachOffsetY ?? 25) }
-      : { x: Number(entity.properties.approachX), y: Number(entity.properties.approachY) };
     let arrived: boolean;
-    try { arrived = await this.character.approach({ position: center, walkPoint }, 'walk'); }
+    // Named walk points take priority; legacy approach offsets remain supported.
+    const livePosition = 'position' in entity ? this.entitySprites.get(entity.id) : undefined;
+    try { arrived = await approachPointleshEntity(this.character, this.resolved(), entity, livePosition ? { x: livePosition.x, y: livePosition.y } : undefined); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); return; }
     const current = this.interactionEntity(targetId, instanceId);
     if (operation !== this.epoch || !current) return;
@@ -257,9 +256,11 @@ class ForestAdventure extends Phaser.Scene {
     this.story.roomId = room;
     this.background.setTexture(`room.${room}`);
     if (move) {
-      const returningExit = room === 'forest' ? targets.forest.find(target => target.exit === previousRoom) : undefined;
-      const entrance = returningExit ? resolvePointleshScene(authoredScenes, room).areas.find(area => area.id === returningExit.id) : undefined;
-      this.character.place(entrance ? { x: Number(entrance.properties.approachX), y: Number(entrance.properties.approachY) } : { x: room === 'camp' ? 160 : 471, y: 465 }, 'down');
+      const destination = resolvePointleshScene(authoredScenes, room);
+      const entryId = roomEntryPointId(room, previousRoom);
+      const entry = destination.points.find(point => point.id === entryId && point.enabled);
+      this.character.place(entry ? resolvePointleshPoint(destination, entryId).position
+        : destination.objects.find(object => object.properties.role === 'player')?.position ?? { x: 471, y: 465 }, 'down');
     }
     for (const sprite of this.entitySprites.values()) sprite.destroy(); this.entitySprites.clear(); this.npcActors.clear();
     for (const star of this.stars) star.image.destroy(); this.stars = [];
@@ -381,6 +382,11 @@ class ForestAdventure extends Phaser.Scene {
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200,
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),
+      getCharacter: (id, sceneId) => {
+        if (sceneId !== this.story.roomId) return undefined;
+        this.clearMovementKeys(); this.epoch++;
+        return id === this.playerDefinition()?.id ? this.character : this.npcActors.get(id)?.controller;
+      },
       onOpenChange: open => { this.editing = open; },
       onSceneChange: sceneId => { if (roomIds.includes(sceneId as RoomId) && this.story.roomId !== sceneId) this.changeRoom(sceneId as RoomId); },
       onManifestChange: manifest => { authoredScenes = manifest; this.refreshDesign(); }

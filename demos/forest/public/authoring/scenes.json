@@ -1246,6 +1246,117 @@
         ],
         "propertySchema": {}
       }
+    },
+    "pointlesh.point": {
+      "id": "pointlesh.point",
+      "name": "Point",
+      "attributes": [
+        {
+          "id": "x",
+          "name": "X",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        },
+        {
+          "id": "y",
+          "name": "Y",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "point",
+        "editor": {
+          "template": true
+        },
+        "properties": {
+          "enabled": true
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.point.entry": {
+      "id": "forest.point.entry",
+      "name": "Room entry",
+      "attributes": [
+        {
+          "id": "x",
+          "name": "X",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        },
+        {
+          "id": "y",
+          "name": "Y",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "point",
+        "editor": {
+          "template": false,
+          "folderPath": [
+            "Points"
+          ]
+        },
+        "properties": {
+          "enabled": true
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.point.interaction": {
+      "id": "forest.point.interaction",
+      "name": "Interaction point",
+      "attributes": [
+        {
+          "id": "x",
+          "name": "X",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        },
+        {
+          "id": "y",
+          "name": "Y",
+          "number": {
+            "value": 160,
+            "step": 1
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "point",
+        "editor": {
+          "template": false,
+          "folderPath": [
+            "Points"
+          ]
+        },
+        "properties": {
+          "enabled": true
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
     }
   },
   "scenes": {
@@ -1296,6 +1407,51 @@
                   "approachOffsetY": 25
                 },
                 "behaviors": []
+              }
+            },
+            {
+              "id": "village.entry.from-pub",
+              "prefabId": "forest.point.entry",
+              "name": "From The Copper Tankard",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 221
+                },
+                "y": {
+                  "value": 403
+                }
+              }
+            },
+            {
+              "id": "village.entry.from-house",
+              "prefabId": "forest.point.entry",
+              "name": "From Borin’s Cottage",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 752
+                },
+                "y": {
+                  "value": 403
+                }
+              }
+            },
+            {
+              "id": "village.entry.from-forest",
+              "prefabId": "forest.point.entry",
+              "name": "From The Whispering Wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 508
+                },
+                "y": {
+                  "value": 403
+                }
               }
             }
           ],
@@ -1579,7 +1735,8 @@
                   "description": "The windows glow with breakfast, gossip, and questionable decisions.",
                   "approachX": 221,
                   "approachY": 403,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "village.entry.from-pub"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -1659,7 +1816,8 @@
                   "description": "Home. I should take supplies before venturing into the wood.",
                   "approachX": 752,
                   "approachY": 403,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "village.entry.from-house"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -1724,7 +1882,8 @@
                   "description": "Fresh orc tracks head east beneath the ancient trees.",
                   "approachX": 508,
                   "approachY": 403,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "village.entry.from-forest"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -1822,6 +1981,21 @@
                   "approachOffsetY": 25
                 },
                 "behaviors": []
+              }
+            },
+            {
+              "id": "pub.entry.from-village",
+              "prefabId": "forest.point.entry",
+              "name": "From Bramblehollow",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 710
+                },
+                "y": {
+                  "value": 440
+                }
               }
             }
           ],
@@ -2130,7 +2304,8 @@
                   "description": "The morning air might clear my head.",
                   "approachX": 710,
                   "approachY": 440,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "pub.entry.from-village"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -2307,7 +2482,8 @@
               "pointlesh": {
                 "properties": {
                   "approachOffsetX": 0,
-                  "approachOffsetY": 124
+                  "approachOffsetY": 124,
+                  "walkPointId": "house.walk.house.pickup.coin"
                 },
                 "behaviors": []
               }
@@ -2327,9 +2503,55 @@
               "pointlesh": {
                 "properties": {
                   "approachOffsetX": 0,
-                  "approachOffsetY": 68
+                  "approachOffsetY": 68,
+                  "walkPointId": "house.walk.house.pickup.rope"
                 },
                 "behaviors": []
+              }
+            },
+            {
+              "id": "house.entry.from-village",
+              "prefabId": "forest.point.entry",
+              "name": "From Bramblehollow",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 860.515084618482
+                },
+                "y": {
+                  "value": 508.4479561311276
+                }
+              }
+            },
+            {
+              "id": "house.walk.house.pickup.coin",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Copper coin",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 525.7366639746534
+                },
+                "y": {
+                  "value": 395.94745008936513
+                }
+              }
+            },
+            {
+              "id": "house.walk.house.pickup.rope",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Climbing rope",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 136.08714126975252
+                },
+                "y": {
+                  "value": 472.4493661551733
+                }
               }
             }
           ],
@@ -2610,7 +2832,8 @@
                   "description": "There is a king out there who needs me.",
                   "approachX": 874,
                   "approachY": 403,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "house.entry.from-village"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -2685,9 +2908,70 @@
               "pointlesh": {
                 "properties": {
                   "approachOffsetX": 0,
-                  "approachOffsetY": 39
+                  "approachOffsetY": 39,
+                  "walkPointId": "forest.walk.forest.pickup.mushroom"
                 },
                 "behaviors": []
+              }
+            },
+            {
+              "id": "forest.entry.from-mine",
+              "prefabId": "forest.point.entry",
+              "name": "From The Goldroot Mine",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 274
+                },
+                "y": {
+                  "value": 410
+                }
+              }
+            },
+            {
+              "id": "forest.entry.from-camp",
+              "prefabId": "forest.point.entry",
+              "name": "From The Orc Encampment",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 1385
+                },
+                "y": {
+                  "value": 410
+                }
+              }
+            },
+            {
+              "id": "forest.entry.from-village",
+              "prefabId": "forest.point.entry",
+              "name": "From Bramblehollow",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 471
+                },
+                "y": {
+                  "value": 494
+                }
+              }
+            },
+            {
+              "id": "forest.walk.forest.pickup.mushroom",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Dreamcap mushroom",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 111
+                },
+                "y": {
+                  "value": 448
+                }
               }
             }
           ],
@@ -2977,7 +3261,8 @@
                   "description": "A lantern flickers in the old gold mine.",
                   "approachX": 274,
                   "approachY": 410,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "forest.entry.from-mine"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3042,7 +3327,8 @@
                   "description": "A crooked palisade. Smoke. Terrible singing.",
                   "approachX": 1385,
                   "approachY": 410,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "forest.entry.from-camp"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3107,7 +3393,8 @@
                   "description": "The path home winds between the roots.",
                   "approachX": 471,
                   "approachY": 494,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "forest.entry.from-village"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3165,6 +3452,51 @@
               "pointlesh": {
                 "properties": {},
                 "behaviors": []
+              }
+            },
+            {
+              "id": "mine.walk.tool-chest",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Runed tool chest",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 258
+                },
+                "y": {
+                  "value": 425
+                }
+              }
+            },
+            {
+              "id": "mine.walk.gold",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Gold seam",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 658
+                },
+                "y": {
+                  "value": 432
+                }
+              }
+            },
+            {
+              "id": "mine.entry.from-forest",
+              "prefabId": "forest.point.entry",
+              "name": "From The Whispering Wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 68
+                },
+                "y": {
+                  "value": 484
+                }
               }
             }
           ],
@@ -3435,7 +3767,8 @@
                   "description": "The inscription reads: “What does the mountain remember?”",
                   "approachX": 258,
                   "approachY": 425,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "mine.walk.tool-chest"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3500,7 +3833,8 @@
                   "description": "All that glitters. It can wait until the king is safe.",
                   "approachX": 658,
                   "approachY": 432,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "mine.walk.gold"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3565,7 +3899,8 @@
                   "description": "Cool air drifts in from the forest.",
                   "approachX": 68,
                   "approachY": 484,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "mine.entry.from-forest"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3663,6 +3998,51 @@
                   "approachOffsetY": 106
                 },
                 "behaviors": []
+              }
+            },
+            {
+              "id": "camp.walk.cauldron",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Stew cauldron",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 402
+                },
+                "y": {
+                  "value": 466
+                }
+              }
+            },
+            {
+              "id": "camp.walk.cage",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to King Aldric’s cage",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 721
+                },
+                "y": {
+                  "value": 450
+                }
+              }
+            },
+            {
+              "id": "camp.entry.from-forest",
+              "prefabId": "forest.point.entry",
+              "name": "From The Whispering Wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 90
+                },
+                "y": {
+                  "value": 494
+                }
               }
             }
           ],
@@ -3923,7 +4303,8 @@
                   "description": "The orcs’ supper. Even a sleeping potion would improve it.",
                   "approachX": 402,
                   "approachY": 466,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "camp.walk.cauldron"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -3988,7 +4369,8 @@
                   "description": "The king is imprisoned above a steep ledge. I need a safe way down.",
                   "approachX": 721,
                   "approachY": 450,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "camp.walk.cage"
                 },
                 "behaviors": [
                   "forest.interact"
@@ -4053,7 +4435,8 @@
                   "description": "A discreet retreat is also a kind of strategy.",
                   "approachX": 90,
                   "approachY": 494,
-                  "approachRadius": 10
+                  "approachRadius": 10,
+                  "walkPointId": "camp.entry.from-forest"
                 },
                 "behaviors": [
                   "forest.interact"

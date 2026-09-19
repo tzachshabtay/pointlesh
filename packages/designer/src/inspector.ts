@@ -26,6 +26,7 @@ import { installSceneDesigner, type SceneDesigner, type SceneDesignerOptions } f
 import { installPrefabBrowser } from './prefab-browser.js';
 import { installSceneAreas } from './scene-areas.js';
 
+export type PointleshPointAction = { sceneId: string; pointId: string; characterId: string; action: 'move' | 'walk' };
 export type PointleshInspectorOptions = {
   designer: SceneDesigner;
   aiAssets?: AiAssetManifest;
@@ -33,6 +34,8 @@ export type PointleshInspectorOptions = {
   /** Runs for inspector edits and inspector undo/redo. Native edits keep their own callback. */
   onManifestChange?(manifest: SceneDesignerManifest): void;
   onPreview?(scene: PointleshResolvedScene): void;
+  /** Test a point with a live character; does not change authored character placement. */
+  onPointAction?(request: PointleshPointAction): boolean | Promise<boolean>;
 };
 export type PointleshInspector = {
   root: HTMLElement;
@@ -58,6 +61,8 @@ export type PointleshInspectorEditOptions = { history?: boolean };
 export type PointleshDesignerOptions = SceneDesignerOptions & {
   inspectorMount?: HTMLElement;
   onPreview?(scene: PointleshResolvedScene): void;
+  /** Test a point with a live character; does not change authored character placement. */
+  onPointAction?(request: PointleshPointAction): boolean | Promise<boolean>;
 };
 export type InstalledPointleshDesigner = {
   designer: SceneDesigner;
@@ -83,7 +88,7 @@ export function installPointleshDesigner(options: PointleshDesignerOptions): Ins
       inspector?.sync();
     },
   });
-  inspector = installPointleshInspector({ designer, aiAssets: options.aiAssets, mount: options.inspectorMount ?? options.mount, onPreview: options.onPreview });
+  inspector = installPointleshInspector({ designer, aiAssets: options.aiAssets, mount: options.inspectorMount ?? options.mount, onPreview: options.onPreview, onPointAction: options.onPointAction });
   return { designer, inspector, destroy() { inspector?.destroy(); designer.destroy(); } };
 }
 
@@ -115,6 +120,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   let nativeContextKey = '';
   let assetsRevision = 0;
   const expanded = new Map<string, boolean>();
+  const pointCharacters = new Map<string, string>();
   const nativeUndo = designer.undo, nativeRedo = designer.redo;
   const prefabBrowser = installPrefabBrowser(designer, next => apply(next));
   const sceneAreas = installSceneAreas(designer, next => apply(next));
@@ -397,7 +403,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     restoreNativeFields();
     nativeContextKey = key;
     const isBody = target.metadata.kind === 'character' || target.metadata.kind === 'object';
-    root.setAttribute('aria-label', isBody ? 'Selected object navigation properties' : 'Selected area adventure properties');
+    root.setAttribute('aria-label', target.metadata.kind === 'point' ? 'Selected point properties' : isBody ? 'Selected object navigation properties' : 'Selected area adventure properties');
     renderProperties(target);
     const history = element(document, 'div', 'pointlesh-native-area-history');
     const undoButton = button(document, 'Undo', undo); undoButton.disabled = !past.length;
@@ -464,6 +470,56 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
 
   function render() { syncNativeContext(); }
 
+  function pointControls(target: Target, values: PointleshProperties, schemas: Record<string, PointleshPropertySchema>, edit: (key: string, value: PointleshProperty) => void) {
+    const controls = element(document, 'section', 'pointlesh-property-group');
+    if (target.instance) controls.append(propertyField(document, 'name', target.instance.name ?? target.name, { type: 'string', label: 'Point name' }, (_key, value) => {
+      const next = designer.getManifest(), current = instanceTarget(next, target.instance!.id);
+      if (current?.instance) { current.instance.name = String(value); apply(next); }
+    }, status));
+    for (const key of ['x', 'y']) controls.append(inheritedField(target, key, propertyField(document, key, values[key]!, schemas[key], edit, status)));
+    if (!target.instance || !target.sceneId) return controls;
+    const room = resolvePointleshScene(last, target.sceneId);
+    const characters = room.objects.filter(entity => entity.kind === 'character' && entity.enabled);
+    const label = element(document, 'label', 'pointlesh-inspector-field');
+    label.append(element(document, 'span', '', 'Character'));
+    const select = document.createElement('select'); select.setAttribute('aria-label', 'Character');
+    for (const character of characters) addOption(select, character.id, character.name);
+    const selected = pointCharacters.get(room.id);
+    select.value = characters.find(character => character.id === selected)?.id ?? characters.find(character => character.properties.role === 'player')?.id ?? characters[0]?.id ?? '';
+    select.addEventListener('change', () => pointCharacters.set(room.id, select.value));
+    label.append(select); controls.append(label);
+    const actions = element(document, 'div', 'pointlesh-native-area-history');
+    for (const action of ['move', 'walk'] as const) {
+      const run = button(document, action === 'move' ? 'Move character here' : 'Walk character here', () => {
+        const pointId = target.instance!.id, characterId = select.value;
+        status.textContent = action === 'walk' ? 'Walking to point…' : 'Moving to point…';
+        Promise.resolve().then(() => options.onPointAction!({ sceneId: room.id, pointId, characterId, action }))
+          .then(arrived => { status.textContent = arrived ? 'Character reached the point.' : 'Character could not reach the point, or the walk was interrupted.'; })
+          .catch(error => { status.textContent = error instanceof Error ? error.message : String(error); });
+      });
+      run.disabled = !characters.length || !options.onPointAction;
+      actions.append(run);
+    }
+    controls.append(actions, element(document, 'p', 'pointlesh-inspector-help', options.onPointAction
+      ? 'Move places the character instantly. Walk follows the walkable path. These actions preview the live character; they do not change its saved placement.'
+      : 'Connect onPointAction (or getCharacter in Phaser) to preview character movement.'));
+    return controls;
+  }
+
+  function walkPointControl(target: Target, values: PointleshProperties, edit: (key: string, value: PointleshProperty) => void) {
+    const room = resolvePointleshScene(last, target.sceneId ?? designer.getSceneId());
+    const label = element(document, 'label', 'pointlesh-inspector-field'); label.append(element(document, 'span', '', 'Walk point'));
+    const select = document.createElement('select'); select.setAttribute('aria-label', 'Walk point');
+    addOption(select, '', 'None (normal approach)');
+    for (const point of room.points.filter(point => point.enabled)) addOption(select, point.id, point.name);
+    const id = String(values.walkPointId ?? '');
+    if (id && !room.points.some(point => point.id === id && point.enabled)) addOption(select, id, `Missing or disabled: ${id}`);
+    select.value = id;
+    select.addEventListener('change', () => edit('walkPointId', select.value));
+    label.append(select);
+    return inheritedField(target, 'walkPointId', label);
+  }
+
   function renderProperties(target: Target) {
     // Native edits can rerender before the browser dispatches a details toggle.
     // Preserve the actual open state instead of relying only on that event.
@@ -510,6 +566,8 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       ? mergeCharacterAnimations(readCharacterAnimations(target.metadata.properties), readCharacterAnimations(target.instance?.pointlesh?.properties ?? {}))
       : {};
     const hasAnimationAssignments = Object.values(effectiveAnimations).some(slots => !!slots && Object.keys(slots).length > 0);
+    const isPoint = target.metadata.kind === 'point';
+    if (isPoint) body.append(pointControls(target, values, schemas, edit));
     const isCharacter = target.metadata.kind === 'character';
     const isBody = isCharacter || target.metadata.kind === 'object';
     if (isBody) {
@@ -517,6 +575,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       navigation.append(element(document, 'h4', '', 'Navigation'), inheritedField(target, 'walkThrough', walkThroughField(values, edit)));
       body.append(navigation);
     }
+    if (isBody || target.metadata.kind === 'hotspot') body.append(walkPointControl(target, values, edit));
     if (isCharacter) body.append(section('Directional animations', animationEditor(target, values, edit)));
     const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.metadata.kind);
     if (isArea) body.append(areaEditor(target, values, schemas, edit));
@@ -524,6 +583,9 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     const properties = element(document, 'div', 'pointlesh-property-group');
     const movementKeys = new Set(['speed', 'walkStep', 'frameCount', 'frameDurationMs', 'movementLinkedToAnimation', 'adjustSpeedToScale']);
     for (const [key, value] of Object.entries(values)) {
+      if (key === 'walkPointId' && (isBody || target.metadata.kind === 'hotspot')) continue;
+      if (values.walkPointId && ['approachX', 'approachY', 'approachOffsetX', 'approachOffsetY', 'approachRadius'].includes(key)) continue;
+      if (isPoint && ['x', 'y'].includes(key)) continue;
       if (isBody && key === 'walkThrough') continue;
       if (isArea && areaPropertyKeys.has(key)) continue;
       if (isCharacter && ['animations', 'directions', 'facing'].includes(key)) continue;

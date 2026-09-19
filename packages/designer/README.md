@@ -23,7 +23,7 @@ See the repository's [prefab documentation](https://github.com/tzachshabtay/poin
 
 The same controls edit prefab defaults or scene-instance overrides according to the native selection. **Edit prefab** jumps from an instance to its definition. Standard properties display **Inherited from prefab** or **Instance override** and a **Reset to prefab** action. Directional animations retain per-slot **Use prefab** actions. Numeric controls appear once alongside their related properties, while their data remains in native numeric attributes.
 
-The Prefabs browser and the scene's **Add prefab** chooser use folders and breadcrumbs. Pointlesh definitions default to **Characters** or **Objects**; set `editor: { folderPath: ['Characters', 'Orcs'] }` when creating or extending a prefab for deeper folders. Non-Pointlesh definitions remain available under **Other**. **Edit prefab** opens the selected definition's folder automatically.
+The Prefabs browser and the scene's **Add prefab** chooser use folders and breadcrumbs. Pointlesh definitions default to **Characters**, **Objects** or **Points**; set `editor: { folderPath: ['Characters', 'Orcs'] }` when creating or extending a prefab for deeper folders. Non-Pointlesh definitions remain available under **Other**. **Edit prefab** opens the selected definition's folder automatically.
 
 The generic catalog entries are creation templates, hidden from both browsers. **New prefab** creates a named definition from one of these templates; then add instances in Scenes. `pointleshPrefabs()` marks templates automatically, and `extendPointleshPrefab()` produces a visible definition. Explicit `editor.template` metadata takes precedence over the legacy `pointlesh.<kind>` ID convention. These are authoring settings, separate from runtime properties, and are preserved through JSON export and promotion.
 
@@ -38,3 +38,9 @@ Character instances and prefab definitions expose Idle/Walk/Speak tabs with fron
 Pass `aiAssets` to `installPointleshInspector` (the Phaser wrapper supplies it automatically). Call `inspector.setAiAssets(manifest)` after asset catalog edits so pickers include new native linked animation states. `inspector.editShape(entityId, attributeId?)` opens native shape tooling programmatically. Assigned clips obtain timing from AI Assets; `walkStep` remains the character's movement-per-frame setting.
 
 Area properties are grouped under **Walkable**, **Character scale**, **Camera zoom** and **Walk-behind** switches. Enable any combination on a shared native shape. Scale and zoom have independent axes/endpoints, and disabled settings remain stored for re-enabling. Undo and JSON export retain each role independently.
+
+## Points
+
+Create a **Point** from **Prefabs → New prefab**, then place and name instances in Scenes. Its inspector shows X/Y coordinates, a **Character** dropdown and **Move character here** / **Walk character here** actions. Supply `onPointAction({ sceneId, pointId, characterId, action })` to connect those buttons to live actors, returning whether arrival succeeded. The Phaser installer provides that integration through `getCharacter(instanceId, sceneId)`. Actions do not edit authored character placements.
+
+Hotspots and sprite entities expose a **Walk point** selector over enabled points in the current room. It writes a stable point instance ID to `walkPointId` and supports inheritance, reset, undo/redo and export. Legacy approach fields remain available when no point is assigned. Missing references remain visible so they can be repaired.

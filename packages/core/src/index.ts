@@ -8,3 +8,4 @@ export * from './cutscene.js';
 export * from './prefabs.js';
 export * from './scene-areas.js';
 export * from './dialog.js';
+export * from './points.js';

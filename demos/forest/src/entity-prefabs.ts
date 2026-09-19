@@ -2,7 +2,7 @@ import { migratePointleshSceneAreas, extendPointleshPrefab, isPointleshPrefab, t
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 
 const equal = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
-const placementProperties = new Set(['facing', 'approachX', 'approachY', 'approachOffsetX', 'approachOffsetY']);
+const placementProperties = new Set(['facing', 'approachX', 'approachY', 'approachOffsetX', 'approachOffsetY', 'walkPointId']);
 
 /** Move shared identity/settings to named prefabs without changing resolved room content. */
 export function specializeForestEntities(input: SceneDesignerManifest): SceneDesignerManifest {

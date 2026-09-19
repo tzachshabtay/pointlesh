@@ -54,6 +54,8 @@ Under **Assets → Voices**, select a speaker and use **Line** to switch between
 
 Areas are native Scene Designer vector shapes. Select an area in **Scenes** and choose **Edit shape** to drag vertices, double-click an edge to add a vertex, press Delete on a selected vertex, or drag an edge to create a quadratic curve. The demo combines walking, character scale and camera zoom on each room’s floor polygon, with a separate curved foreground area. Each expanded scene layer has **Areas** and **Hotspots** lists and **Add area** / **Add hotspot** controls. These polygons belong to that scene and stay out of the prefab browser.
 
+Named **Point** prefabs store X/Y coordinates and show draggable markers in the designer. Select a point, choose a character, then **Move character here** or **Walk character here** to try it. Hotspots and objects have an optional **Walk point** dropdown; interactions wait for the character to arrive. The demo uses distinct room-entry points for each connecting room, including the forest's village, mine and camp entrances. Create points under **Prefabs → Points**, then place instances in Scenes.
+
 Characters and objects are solid by default. Select one in Scenes or Prefabs and use **Navigation → WalkThrough** to let other characters pass through it. Click walks detour around occupied ground; arrow movement stops at it. Footprints follow moving entities and live edits, and disappear when an entity is hidden or collected.
 
 The [walkthrough](docs/walkthrough.md) contains puzzle solutions and an editor tour. The [art provenance and prompts](docs/art-prompts.md) describe the six generated room backgrounds. Character sprites and ambient music are created locally by the demo; dialogue is text-based unless generated voice assets are supplied.
@@ -62,7 +64,7 @@ Each named character has a dedicated prefab: Borin, Elder Rowan, Mara, Orrin, Gr
 
 ## Prefabs that remain extensible
 
-Pointlesh uses reusable Scene Designer prefabs for characters and objects, and native scene-owned polygons for areas and hotspots. A single area has independently enabled walking, character scaling, camera zoom and walk-behind roles; create another area when boundaries differ. Both models carry custom properties, schemas and behavior IDs in a JSON `pointlesh` extension.
+Pointlesh uses reusable Scene Designer prefabs for characters, objects and points, and native scene-owned polygons for areas and hotspots. A single area has independently enabled walking, character scaling, camera zoom and walk-behind roles; create another area when boundaries differ. Both models carry custom properties, schemas and behavior IDs in a JSON `pointlesh` extension.
 
 ```ts
 import {

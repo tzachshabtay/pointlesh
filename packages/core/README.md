@@ -6,15 +6,23 @@ The root [installation notes](../../README.md#installation-and-compatibility) de
 
 ## Native adventure prefabs
 
-`pointleshPrefabs()` supplies hidden Object and Character creation templates. Create reusable definitions with the individual factories and place them with `createPointleshInstance()` in a Scene Designer schema-version-2 manifest.
+`pointleshPrefabs()` supplies hidden Object, Character and Point creation templates. Create reusable definitions with the individual factories and place them with `createPointleshInstance()` in a Scene Designer schema-version-2 manifest.
 
 Areas and hotspots belong to a scene layer's `areas`, created with `createPointleshArea({ kind: 'area' | 'hotspot', ... })`. One area has independent `walkable`, `scaleEnabled`, `zoomEnabled` and `walkBehindEnabled` roles on a native polygon, with separate scale/zoom axes and endpoints. Global `enabled` disables all roles. Names, settings, custom JSON properties, schemas and behavior IDs live on the area's `pointlesh` sidecar.
 
-`resolvePointleshScene(manifest, sceneId)` resolves native areas and prefab instances into `entities`, polygon `areas` and sprite `objects`. Native scene areas have no prefab or instance IDs. `walkablePolygons(scene)` extracts enabled, closed walking shapes; curves are sampled for runtime geometry. World coordinates have positive Y downward; object/actor positions are ground anchors.
+`resolvePointleshScene(manifest, sceneId)` resolves native areas and prefab instances into `entities`, polygon `areas`, sprite `objects` and coordinate `points`. Native scene areas have no prefab or instance IDs. `walkablePolygons(scene)` extracts enabled, closed walking shapes; curves are sampled for runtime geometry. World coordinates have positive Y downward; object/actor positions are ground anchors.
 
 `migratePointleshSceneAreas(manifest)` converts standalone legacy region instances into scene-owned areas without changing geometry, gameplay IDs or settings. Existing area/hotspot factories remain supported; pass `includeLegacyAreas: true` to `pointleshPrefabs()` if you still reference their catalog IDs while migrating. `pointleshAreaCapabilities()` supports both native and legacy area kinds.
 
 Use `extendPointleshPrefab(base, extension)` for reusable specializations. It produces a new definition rather than a live inheritance chain between definitions. Instances still inherit omitted native fields from their selected prefab. Custom JSON properties and behavior IDs stay editable and serializable. See the [prefab guide](../../docs/prefabs.md).
+
+## Named points
+
+`createPointPrefab({ name, x, y })` creates native numeric X/Y attributes with no artwork or polygon. Place named instances in a scene and read them through `resolvePointleshScene(...).points`. `resolvePointleshPoint(room, instanceId)` requires an enabled point in that room. Names can change without changing IDs or references.
+
+Hotspots and objects accept optional `walkPointId` (also editable as a property/instance override). `resolvePointleshWalkPoint(room, entity)` returns that point's coordinates or `undefined` for an unassigned reference; broken references throw. `approachPointleshEntity(controller, room, entity, livePosition?)` resolves the named point before legacy approach fields, walks to it exactly, then faces the target. Await its boolean result before running an interaction; false indicates an unreachable point or interrupted walk. Bind the controller's navigation source with current floors and obstacles. `pointleshApproachTarget` exposes the same target for custom movement logic.
+
+`actOnPoint(controller, point, 'move')` teleports immediately. `'walk'` requires exact arrival and never snaps an unreachable point onto nearby ground. These functions are renderer-independent. See the [point authoring guide](../../docs/prefabs.md#named-points-and-interaction-walk-points).
 
 ## Navigation and characters
 

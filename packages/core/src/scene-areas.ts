@@ -9,7 +9,7 @@ export function migratePointleshSceneAreas(source: SceneDesignerManifest): Scene
     for (const raw of layer.prefabs ?? []) {
       const instance = raw as PointleshPrefabInstance;
       const prefab = manifest.prefabs?.[instance.prefabId];
-      if (!prefab || !isPointleshPrefab(prefab) || ['character', 'object'].includes(prefab.pointlesh.kind)) { retained.push(raw); continue; }
+      if (!prefab || !isPointleshPrefab(prefab) || ['character', 'object', 'point'].includes(prefab.pointlesh.kind)) { retained.push(raw); continue; }
       const shapes = prefab.attributes.filter(attribute => attribute.kind === 'area' || attribute.kind === 'platform');
       // Composite prefabs remain supported; only standalone region definitions migrate.
       if (shapes.length !== 1 || prefab.attributes.some(attribute => attribute.kind === 'object')) { retained.push(raw); continue; }
@@ -32,7 +32,7 @@ export function migratePointleshSceneAreas(source: SceneDesignerManifest): Scene
   }
   const referenced = new Set(Object.values(manifest.scenes).flatMap(scene => scene.layers.flatMap(layer => (layer.prefabs ?? []).map(instance => instance.prefabId))));
   for (const [id, prefab] of Object.entries(manifest.prefabs ?? {})) {
-    if (isPointleshPrefab(prefab) && !['character', 'object'].includes(prefab.pointlesh.kind) && !referenced.has(id)) delete manifest.prefabs![id];
+    if (isPointleshPrefab(prefab) && !['character', 'object', 'point'].includes(prefab.pointlesh.kind) && !referenced.has(id)) delete manifest.prefabs![id];
   }
   assertSceneManifest(manifest);
   return manifest;

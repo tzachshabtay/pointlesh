@@ -1,20 +1,24 @@
 import { installPointleshInspector, type PointleshInspector } from "@pointlesh/designer";
-import type { PointleshResolvedScene } from "@pointlesh/core";
+import { actOnPoint, resolvePointleshPoint, resolvePointleshScene, type CharacterController, type PointleshResolvedScene } from "@pointlesh/core";
 import { installPhaserSceneDesigner, type PhaserSceneDesignerOptions, type InstalledPhaserSceneDesigner } from "@scene-designer/phaser";
 import { installPhaserAreaBaseline } from "./area-baseline.js";
 import { installPhaserAreaEdgeHandles } from "./area-edge-handles.js";
 import Phaser from 'phaser';
+import { installPhaserPointHandles } from './points.js';
 import { installPhaserDesignerLayer } from './designer-layer.js';
 
 export type PhaserPointleshDesignerOptions = PhaserSceneDesignerOptions & {
   inspectorMount?: HTMLElement;
   onPreview?: (scene: PointleshResolvedScene) => void;
+  /** Resolve a scene character instance to its live controller for point preview actions. */
+  getCharacter?: (instanceId: string, sceneId: string) => CharacterController | undefined;
 };
 export type InstalledPhaserPointleshDesigner = InstalledPhaserSceneDesigner & {
   inspector: PointleshInspector;
   areaBaseline: ReturnType<typeof installPhaserAreaBaseline>;
   areaEdgeHandles: ReturnType<typeof installPhaserAreaEdgeHandles>;
   layer: ReturnType<typeof installPhaserDesignerLayer>;
+  pointHandles: ReturnType<typeof installPhaserPointHandles>;
 };
 
 /** Native draggable vertices, prefab editing and minimap, plus adventure properties. */
@@ -38,6 +42,12 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
     aiAssets: options.aiAssets,
     mount: options.inspectorMount ?? options.mount,
     onPreview: options.onPreview,
+    onPointAction: options.getCharacter ? request => {
+      const character = options.getCharacter!(request.characterId, request.sceneId);
+      if (!character) throw new Error('This character is not available in the current scene.');
+      const room = resolvePointleshScene(native.designer.getManifest(), request.sceneId);
+      return actOnPoint(character, resolvePointleshPoint(room, request.pointId), request.action);
+    } : undefined,
   });
   // Native drags mark only their first update as a history checkpoint. Preserve
   // that grouping in the contextual inspector's undo stack as well.
@@ -60,6 +70,7 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   native.designer.updateObjects = groupedObjects;
   const areaBaseline = installPhaserAreaBaseline({ scene: options.scene, designer: native.designer, inspector, depth: (options.areaDepth ?? 10_000) + 1 });
   const areaEdgeHandles = installPhaserAreaEdgeHandles({ scene: options.scene, designer: native.designer });
+  const pointHandles = installPhaserPointHandles({ scene: options.scene, designer: native.designer, inspector });
   const drawings = options.scene.children.list.filter(object => !previousObjects.has(object)
     && (object instanceof Phaser.GameObjects.Graphics || object.name === 'pointlesh-area-baseline-label'));
   const layer = installPhaserDesignerLayer(options.scene, drawings, () => native.designer.isOpen());
@@ -79,6 +90,7 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
     layer.destroy();
     areaBaseline.destroy();
     areaEdgeHandles.destroy();
+    pointHandles.destroy();
     if (native.designer.updateArea === groupedArea) native.designer.updateArea = updateArea;
     if (native.designer.updateAreaVertex === groupedVertex) native.designer.updateAreaVertex = updateAreaVertex;
     if (native.designer.updateObject === groupedObject) native.designer.updateObject = updateObject;
@@ -88,5 +100,5 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   };
   options.scene.events.on("update", syncSelection);
   options.scene.events.once("shutdown", destroy);
-  return { ...native, inspector, areaBaseline, areaEdgeHandles, layer, destroy };
+  return { ...native, inspector, areaBaseline, areaEdgeHandles, pointHandles, layer, destroy };
 }

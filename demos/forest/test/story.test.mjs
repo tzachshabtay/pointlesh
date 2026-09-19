@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
-import { isWalkable, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
+import { isWalkable, resolvePointleshScene, walkablePolygons, pointleshApproachTarget } from '@pointlesh/core';
 const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, targetVisible, hint } = await tsImport('../src/story.ts', import.meta.url);
 
 test('the rescue puzzle has an achievable dependency chain and a recoverable timing failure', () => {
@@ -65,7 +65,7 @@ test('authored scene prefabs provide reachable interactions, editable NPCs, and 
   for (const room of rooms) {
     const floor = walkablePolygons(room);
     for (const target of room.areas.filter(area => area.kind === 'hotspot')) {
-      assert.equal(isWalkable({ x: target.properties.approachX, y: target.properties.approachY }, floor), true, `${room.id}/${target.id} must be approachable`);
+      assert.equal(isWalkable(pointleshApproachTarget(room, target).walkPoint, floor), true, `${room.id}/${target.id} must be approachable`);
     }
     for (const object of room.objects) {
       assert.ok(assets.assets[object.assetId], `Asset ${object.assetId} exists in ai-assets`);
@@ -89,8 +89,9 @@ test('seed and promoted pickups own their interactions without duplicate hotspot
       assert.ok(object.behaviors.includes('forest.interact'));
       assert.ok(object.properties.description);
       assert.equal(room.areas.some(area => area.id === pickupId), false);
-      const standingPoint = { x: object.position.x + object.properties.approachOffsetX, y: object.position.y + object.properties.approachOffsetY };
-      assert.deepEqual(standingPoint, approach);
+      const standingPoint = pointleshApproachTarget(room, object).walkPoint;
+      assert.ok(object.properties.walkPointId);
+      if (manifest === scenes) assert.deepEqual(standingPoint, approach);
       assert.equal(isWalkable(standingPoint, walkablePolygons(room)), true);
     }
     assert.ok(resolvePointleshScene(manifest, 'camp').areas.some(area => area.id === 'cage'));
