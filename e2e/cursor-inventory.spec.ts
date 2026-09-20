@@ -35,7 +35,8 @@ test('walk and interact cursors switch, animate on click, and use the base asset
   await page.mouse.click(ground.x, ground.y);
   await expectFeedback(page, 'cursor.walk');
   await expect(cursor).toHaveAttribute('data-state', 'idle');
-  expect((await cursor.boundingBox())!.width).toBe(32);
+  const baseWidth = await page.evaluate(() => (window as any).pointleshDemo.scene.aiRuntime.manifest.assets['cursor.walk'].dimensions.width);
+  expect((await cursor.boundingBox())!.width).toBe(baseWidth);
   const centroid = await page.evaluate(() => {
     const vertices = (window as any).pointleshDemo.scene.resolved().areas.find((area: any) => area.id === 'pub-door').polygon;
     return vertices.reduce((sum: any, point: any) => ({ x: sum.x + point.x / vertices.length, y: sum.y + point.y / vertices.length }), { x: 0, y: 0 });
@@ -95,9 +96,13 @@ test('asset designer exposes cursor and inventory parents with native Click anim
   await page.getByRole('button', { name: /Graphics$/ }).click();
   await page.locator('.ai-game-assets-designer__asset-folder').filter({ hasText: /^Cursors$/ }).click();
   await page.getByRole('button', { name: 'Cursor Walk', exact: true }).click();
-  await expect(page.locator('.ai-game-assets-designer__current-image')).toHaveAttribute('src', /cursor.walk.png$/);
+  const activeFile = (id: string) => page.evaluate(id => {
+    const asset = (window as any).pointleshDemo.scene.aiRuntime.manifest.assets[id];
+    return asset.versions[asset.activeVersion].file;
+  }, id);
+  await expect.poll(() => page.locator('.ai-game-assets-designer__current-image').getAttribute('src')).toContain(await activeFile('cursor.walk'));
   await page.getByRole('combobox', { name: 'Animation', exact: true }).selectOption('cursor.walk.click');
-  await expect(page.locator('.ai-game-assets-designer__current-image')).toHaveAttribute('src', /cursor.walk.click.png$/);
+  await expect.poll(() => page.locator('.ai-game-assets-designer__current-image').getAttribute('src')).toContain(await activeFile('cursor.walk.click'));
   const before = await page.locator('#inventory .pointlesh-asset-icon').evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;

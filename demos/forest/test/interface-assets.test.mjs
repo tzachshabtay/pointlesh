@@ -1,9 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { inflateSync } from 'node:zlib';
 import { tsImport } from 'tsx/esm/api';
 import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
+import { createAiAssetDevServer } from '@ai-game-assets/dev';
 
 const { assets: seed } = await tsImport('../src/content.ts', import.meta.url);
 const { addForestInterfaceAssets, inventoryAssetId } = await tsImport('../src/interface-assets.ts', import.meta.url);
@@ -49,4 +53,31 @@ test('catalog additions preserve authored inventory art and unrelated promoted a
   const original = structuredClone(manifest);
   addForestInterfaceAssets(manifest);
   assert.deepEqual(manifest, original);
+});
+
+test('cursor and inventory click generation sends the active base image to the provider', async (t) => {
+  const root = await mkdtemp(path.join(tmpdir(), 'pointlesh-click-references-'));
+  const manifestPath = path.join(root, 'assets.json');
+  const manifest = structuredClone(authored);
+  delete manifest.styleGuide;
+  await writeFile(manifestPath, JSON.stringify(manifest));
+  const calls = [];
+  const server = createAiAssetDevServer({
+    manifestPath, assetsDir: fileURLToPath(new URL('art/', directory)), publicPathPrefix: 'art', port: 0,
+    provider: { async generate(request) { calls.push(request); return []; } },
+  });
+  await server.listen();
+  t.after(async () => { await server.close(); await rm(root, { recursive: true, force: true }); });
+  for (const id of ['cursor.walk', 'cursor.interact', ...Object.keys(items).map(inventoryAssetId)]) {
+    const base = manifest.assets[id];
+    const response = await fetch(`http://127.0.0.1:${server.server.address().port}/__ai-assets/generate`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ assetId: base.linkedAnimationAssets.click.assetId }),
+    });
+    assert.equal(response.status, 200, await response.text());
+    const expected = await readFile(new URL(base.versions[base.activeVersion].file, directory));
+    const reference = calls.at(-1).references[0];
+    assert.ok(reference, `${id} includes its base image`);
+    assert.ok(expected.equals(reference.image), `${id} includes its promoted base pixels`);
+  }
 });
