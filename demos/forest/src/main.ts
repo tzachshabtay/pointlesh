@@ -109,7 +109,7 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.markers = this.add.graphics().setDepth(2000);
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
-      assetId: 'cursor.walk', size: 40, enabled: () => !this.blocked(),
+      assetId: 'cursor.walk', enabled: () => !this.blocked(),
       resolve: target => {
         if (this.worldEditorOpen() || this.editing || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
         const inventory = target.closest('#inventory button, #nearby button');
@@ -543,7 +543,7 @@ class ForestAdventure extends Phaser.Scene {
         this.inventoryIcons.get(id)?.play('click');
       });
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
-      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: inventoryAssetId(id), width: 36 });
+      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: inventoryAssetId(id), width: 36, height: 36 });
       this.inventoryIcons.set(id, icon); node.append(icon.canvas);
       const label = document.createElement('span'); label.className = 'item-label'; label.textContent = items[id].name; node.append(label); el('inventory').append(node);
     }

@@ -3,7 +3,8 @@ import { applyAiAnimationFrameTransform, type AiAssetRuntime, type AiAssetAnimat
 
 export type AdventureIconOptions = {
   assetId: string;
-  /** Fixed UI size in CSS pixels, independent of room zoom and asset resolution. */
+  /** Optional CSS size override. Defaults to the selected base image/frame's size.
+   * A single dimension preserves its aspect ratio; both dimensions define a fit box. */
   width?: number;
   height?: number;
   pixelArt?: boolean;
@@ -19,16 +20,17 @@ export class PhaserAdventureIcon {
   private elapsed = 0;
   private assetId: string;
   private destroyed = false;
-  private readonly width: number;
-  private readonly height: number;
+  private width = 0;
+  private height = 0;
   private readonly context: CanvasRenderingContext2D;
   constructor(private scene: Phaser.Scene, private runtime: AiAssetRuntime, private options: AdventureIconOptions) {
     this.assetId = options.assetId;
-    this.width = options.width ?? 40; this.height = options.height ?? this.width;
-    if (!(this.width > 0 && this.height > 0)) throw new Error('Icon dimensions must be positive.');
+    for (const dimension of [options.width, options.height]) {
+      if (dimension !== undefined && (!Number.isFinite(dimension) || dimension <= 0)) throw new Error('Icon dimensions must be positive and finite.');
+    }
     this.canvas = scene.game.canvas.ownerDocument.createElement('canvas');
     this.canvas.className = 'pointlesh-asset-icon'; this.canvas.setAttribute('aria-hidden', 'true');
-    Object.assign(this.canvas.style, { width: `${this.width}px`, height: `${this.height}px`, pointerEvents: 'none', imageRendering: options.pixelArt === false ? 'auto' : 'pixelated' });
+    Object.assign(this.canvas.style, { pointerEvents: 'none', imageRendering: options.pixelArt === false ? 'auto' : 'pixelated' });
     this.context = this.canvas.getContext('2d')!;
     // Kept out of the room display/update lists: its animation clock is UI-owned.
     this.sprite = scene.make.sprite({ key: runtime.key(this.assetId), add: false });
@@ -38,6 +40,8 @@ export class PhaserAdventureIcon {
   }
   get playing(): boolean { return !!this.state; }
   get asset(): string { return this.assetId; }
+  get displayWidth(): number { return this.width; }
+  get displayHeight(): number { return this.height; }
   setAsset(assetId: string): void {
     if (this.assetId === assetId) return;
     this.assetId = assetId; this.state = undefined; this.elapsed = 0; this.refresh();
@@ -69,6 +73,12 @@ export class PhaserAdventureIcon {
     this.draw();
   };
   private draw(): void {
+    // Read the base texture, including live previews, before variant selection.
+    // Click sheets and higher-resolution variants must not change the UI bounds.
+    const base = this.scene.textures.getFrame(this.runtime.key(this.assetId));
+    this.width = this.options.width ?? (this.options.height === undefined ? base.realWidth : base.realWidth * this.options.height / base.realHeight);
+    this.height = this.options.height ?? (this.options.width === undefined ? base.realHeight : base.realHeight * this.options.width / base.realWidth);
+    this.canvas.style.width = `${this.width}px`; this.canvas.style.height = `${this.height}px`;
     const ratio = this.canvas.ownerDocument.defaultView?.devicePixelRatio || 1;
     if (this.canvas.width !== Math.round(this.width * ratio)) this.canvas.width = Math.round(this.width * ratio);
     if (this.canvas.height !== Math.round(this.height * ratio)) this.canvas.height = Math.round(this.height * ratio);

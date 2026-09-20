@@ -175,15 +175,17 @@ Sprite input consumes the press before room input. `resolve` runs once on press,
 
 ## Cursor and inventory graphics
 
-`PhaserAdventureIcon` renders an AI Assets image into an HTML canvas for inventory slots. `PhaserAdventureCursor` uses the same renderer for a cursor that follows the pointer in screen coordinates. Both preserve a fixed CSS size through camera movement, room zoom, different source resolutions and device pixel ratios. Scaled variants and animation frame transforms use the existing AI Assets runtime; pixel art uses nearest-neighbor sampling by default.
+`PhaserAdventureIcon` renders an AI Assets image into an HTML canvas for inventory slots. `PhaserAdventureCursor` uses the same renderer for a cursor that follows the pointer in screen coordinates. By default, both use the selected base image/frame's pixel dimensions as CSS dimensions, updating when a different-sized image is previewed or promoted. Room zoom and device pixel ratio do not change the CSS size. Click animations fit the base image's bounds, and scaled variants improve resolution without resizing the cursor. Pixel art uses nearest-neighbor sampling by default.
+
+Pass `size` to the cursor for an explicit fixed square fit box. Icons accept `width` and `height` overrides: one dimension preserves the base image's aspect ratio, while both define a fixed fit box. The demo follows asset dimensions for cursors and uses 36×36 inventory slots.
 
 Give each icon a base image and a linked animation state named `click`. Calling `play('click')` on an icon, or `click()` on the cursor, plays one cycle and returns to the base image. The cursor keeps the clicked asset until the cycle finishes, including when an inventory item is consumed during that click.
 
 ```ts
-const icon = new PhaserAdventureIcon(scene, assets, { assetId: 'inventory.rope', width: 36 });
+const icon = new PhaserAdventureIcon(scene, assets, { assetId: 'inventory.rope', width: 36, height: 36 });
 inventoryButton.append(icon.canvas);
 const cursor = new PhaserAdventureCursor(scene, assets, {
-  assetId: 'cursor.walk', size: 40, hotspot: { x: .5, y: .5 },
+  assetId: 'cursor.walk', hotspot: { x: .5, y: .5 },
   enabled: () => !dialogOpen,
   resolve(target) {
     if (editorOpen || target !== scene.game.canvas) return undefined;

@@ -24,7 +24,7 @@ async function worldPoint(page: Page, x: number, y: number) {
   }, { x, y });
 }
 
-test('walk and interact cursors switch, animate on click, and keep a fixed screen size', async ({ page }, testInfo) => {
+test('walk and interact cursors switch, animate on click, and use the base asset size', async ({ page }, testInfo) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await ready(page);
   const cursor = page.locator('.pointlesh-adventure-cursor');
@@ -35,7 +35,7 @@ test('walk and interact cursors switch, animate on click, and keep a fixed scree
   await page.mouse.click(ground.x, ground.y);
   await expectFeedback(page, 'cursor.walk');
   await expect(cursor).toHaveAttribute('data-state', 'idle');
-  expect((await cursor.boundingBox())!.width).toBe(40);
+  expect((await cursor.boundingBox())!.width).toBe(32);
   const centroid = await page.evaluate(() => {
     const vertices = (window as any).pointleshDemo.scene.resolved().areas.find((area: any) => area.id === 'pub-door').polygon;
     return vertices.reduce((sum: any, point: any) => ({ x: sum.x + point.x / vertices.length, y: sum.y + point.y / vertices.length }), { x: 0, y: 0 });
@@ -106,4 +106,60 @@ test('asset designer exposes cursor and inventory parents with native Click anim
   });
   await expect.poll(() => page.locator('#inventory .pointlesh-asset-icon').evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL())).not.toBe(before);
   await expect(page.locator('#inventory .pointlesh-asset-icon')).toHaveAttribute('data-texture', 'inventory.coin');
+});
+
+test.describe('cursor asset sizing', () => {
+  test.use({ deviceScaleFactor: 2 });
+  test('previews and promotions resize the cursor while clicks, variants and camera zoom preserve its bounds', async ({ page }) => {
+    const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+    await ready(page);
+    const cursor = page.locator('.pointlesh-adventure-cursor');
+    const ground = await worldPoint(page, 600, 470); await page.mouse.move(ground.x, ground.y);
+    const preview = async (width: number, height: number) => page.evaluate(({ width, height }) => {
+      const scene = (window as any).pointleshDemo.scene, key = `cursor-preview-${width}-${height}`;
+      const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+      canvas.getContext('2d')!.fillRect(0, 0, width, height); scene.textures.addCanvas(key, canvas);
+      const asset = structuredClone(scene.aiRuntime.manifest.assets['cursor.walk']); asset.dimensions = { width, height };
+      scene.aiRuntime.designerCallbacks().onPreview('cursor.walk', key, asset); scene.refreshCharacterAnimations();
+    }, { width, height });
+    await preview(96, 48);
+    await expect(cursor).toHaveCSS('width', '96px'); await expect(cursor).toHaveCSS('height', '48px');
+    await expect(cursor).toHaveAttribute('width', '192'); await expect(cursor).toHaveAttribute('height', '96');
+    const box = (await cursor.boundingBox())!;
+    expect(Math.abs(box.x + box.width / 2 - ground.x)).toBeLessThanOrEqual(.5);
+    expect(Math.abs(box.y + box.height / 2 - ground.y)).toBeLessThanOrEqual(.5);
+    await page.evaluate(() => {
+      const scene = (window as any).pointleshDemo.scene; (window as any).clickSizes = [];
+      scene.events.on('postupdate', () => {
+        if (scene.cursor.icon.playing) (window as any).clickSizes.push([scene.cursor.icon.displayWidth, scene.cursor.icon.displayHeight]);
+      });
+    });
+    await page.mouse.click(ground.x, ground.y); await expectFeedback(page, 'cursor.walk');
+    await expect(cursor).toHaveAttribute('data-state', 'idle');
+    const sizes = await page.evaluate(() => (window as any).clickSizes);
+    expect(sizes.length).toBeGreaterThan(0); expect(sizes.every((size: number[]) => size[0] === 96 && size[1] === 48)).toBe(true);
+    await preview(24, 64);
+    await expect(cursor).toHaveCSS('width', '24px'); await expect(cursor).toHaveCSS('height', '64px');
+    const fixedSize = await page.evaluate(() => {
+      const scene = (window as any).pointleshDemo.scene;
+      const fixed = new scene.cursor.constructor(scene, scene.aiRuntime, { assetId: 'cursor.walk', size: 40, resolve: () => undefined });
+      const size = [fixed.icon.displayWidth, fixed.icon.displayHeight]; fixed.destroy(); return size;
+    });
+    expect(fixedSize).toEqual([40, 40]);
+    await page.evaluate(() => {
+      const scene = (window as any).pointleshDemo.scene, runtime = scene.aiRuntime;
+      const image = (width: number, height: number) => { const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height; canvas.getContext('2d')!.fillRect(0, 0, width, height); return canvas; };
+      scene.textures.remove('cursor.walk'); scene.textures.addCanvas('cursor.walk', image(80, 40));
+      scene.textures.addCanvas('cursor.walk::scaled::test-cursor-2x.png', image(160, 80));
+      const manifest = structuredClone(runtime.manifest), asset = manifest.assets['cursor.walk']; asset.dimensions = { width: 80, height: 40 };
+      const version = asset.versions[asset.activeVersion];
+      version.scaledVariants = { retina: { id: 'retina', dimensions: { width: 160, height: 80 }, file: 'test-cursor-2x.png', method: 'nearest', sourceFile: version.file, createdAt: '2026-09-20T00:00:00Z' } };
+      const callbacks = runtime.designerCallbacks(); callbacks.onManifestUpdated(manifest); callbacks.onAssetReady('cursor.walk', 'cursor.walk', asset); scene.refreshCharacterAnimations();
+      scene.character.stop(); scene.cameras.main.setZoom(1.5);
+    });
+    await expect(cursor).toHaveCSS('width', '80px'); await expect(cursor).toHaveCSS('height', '40px');
+    await expect(cursor).toHaveAttribute('width', '160'); await expect(cursor).toHaveAttribute('height', '80');
+    await expect(cursor).toHaveAttribute('data-texture', 'cursor.walk::scaled::test-cursor-2x.png');
+    expect(errors).toEqual([]);
+  });
 });

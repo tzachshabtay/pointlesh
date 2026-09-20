@@ -4,6 +4,7 @@ import { PhaserAdventureIcon } from './asset-icon.js';
 
 export type AdventureCursorOptions = {
   assetId: string;
+  /** Optional fixed square fit box in CSS pixels. Omit to follow the base asset's dimensions. */
   size?: number;
   pixelArt?: boolean;
   /** Return an asset only over game surfaces; leave designer/browser controls native. */
@@ -23,7 +24,7 @@ export class PhaserAdventureCursor {
   private priorCursor = '';
   private destroyed = false;
   constructor(private scene: Phaser.Scene, runtime: AiAssetRuntime, private options: AdventureCursorOptions) {
-    this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: options.assetId, width: options.size ?? 40, pixelArt: options.pixelArt });
+    this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: options.assetId, width: options.size, height: options.size, pixelArt: options.pixelArt });
     this.icon.canvas.classList.add('pointlesh-adventure-cursor');
     Object.assign(this.icon.canvas.style, { position: 'fixed', zIndex: '1000', left: '0', top: '0' });
     this.icon.canvas.hidden = true;
@@ -55,8 +56,8 @@ export class PhaserAdventureCursor {
     this.restoreCursor();
     if (!visible) return;
     if (target instanceof HTMLElement) { this.styled = target; this.priorCursor = target.style.cursor; target.style.cursor = 'none'; }
-    const size = this.options.size ?? 40, hotspot = this.options.hotspot ?? { x: .5, y: .5 };
-    this.icon.canvas.style.transform = `translate(${Math.round(this.x - size * hotspot.x)}px, ${Math.round(this.y - size * hotspot.y)}px)`;
+    const hotspot = this.options.hotspot ?? { x: .5, y: .5 };
+    this.icon.canvas.style.transform = `translate(${Math.round(this.x - this.icon.displayWidth * hotspot.x)}px, ${Math.round(this.y - this.icon.displayHeight * hotspot.y)}px)`;
   };
   /** Snapshot the selected asset so consuming an item cannot replace its click animation. */
   click(assetId?: string): void { this.update(); if (assetId) this.icon.setAsset(assetId); this.icon.play('click'); this.update(); }
