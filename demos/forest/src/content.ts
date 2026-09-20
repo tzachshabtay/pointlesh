@@ -7,6 +7,7 @@ import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
 import { bramblehollowStyleGuide } from './art-style';
 import { specializeForestEntities } from './entity-prefabs';
+import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-assets';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -58,6 +59,7 @@ for (const id of CHARACTER_IDS) {
   };
 }
 Object.assign(definitions, characterAssetDefinitions);
+Object.assign(definitions, interfaceAssetDefinitions);
 
 /** Facing slots use parent asset states so linked animation replacement stays editable. */
 export function characterAnimations(id: ForestCharacterId) {
@@ -117,6 +119,7 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
 export const assets = {
   ...defineAiAssets(definitions), styleGuide: bramblehollowStyleGuide,
   assetPaths: {
+    ...interfaceAssetPaths,
     ...Object.fromEntries(Object.keys(characterAssetDefinitions).map(id => [id, ['Graphics', 'Characters']])),
     ...Object.fromEntries(['coin', 'rope', 'mushroom'].map(id => [id, ['Graphics', 'Objects']])),
   },

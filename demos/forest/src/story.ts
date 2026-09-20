@@ -2,12 +2,12 @@ export const roomIds = ['village', 'pub', 'house', 'forest', 'mine', 'camp'] as 
 export type RoomId = typeof roomIds[number];
 export const roomNames: Record<RoomId, string> = { village: 'Bramblehollow', pub: 'The Copper Tankard', house: 'Borin’s Cottage', forest: 'The Whispering Wood', mine: 'The Goldroot Mine', camp: 'The Orc Encampment' };
 export const items = {
-  coin: { name: 'Copper coin', icon: '◉', description: 'One copper. A small fortune before breakfast.' },
-  rope: { name: 'Climbing rope', icon: '∞', description: 'Strong enough to lower a king. Probably.' },
-  stout: { name: 'Honey stout', icon: '▥', description: 'Orcs cannot resist the smell. Combine it with something soporific.' },
-  mushroom: { name: 'Dreamcap', icon: '♠', description: 'A harmless sleeping mushroom. Best served in a drink.' },
-  sleepyStout: { name: 'Dreamcap stout', icon: '◈', description: 'An exceptionally relaxing brew.' },
-  pickaxe: { name: 'Goldroot pickaxe', icon: '⚒', description: 'The dwarven answer to a stubborn lock.' }
+  coin: { name: 'Copper coin', description: 'One copper. A small fortune before breakfast.' },
+  rope: { name: 'Climbing rope', description: 'Strong enough to lower a king. Probably.' },
+  stout: { name: 'Honey stout', description: 'Orcs cannot resist the smell. Combine it with something soporific.' },
+  mushroom: { name: 'Dreamcap', description: 'A harmless sleeping mushroom. Best served in a drink.' },
+  sleepyStout: { name: 'Dreamcap stout', description: 'An exceptionally relaxing brew.' },
+  pickaxe: { name: 'Goldroot pickaxe', description: 'The dwarven answer to a stubborn lock.' }
 } as const;
 export type ItemId = keyof typeof items;
 export interface StoryState {

@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
@@ -12,6 +12,7 @@ import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
 import { applyDialogChoice, combineItems, ending, guardLookingAway, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
 import { roomEntryPointId } from './points';
+import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import './style.css';
 
@@ -68,6 +69,9 @@ class ForestAdventure extends Phaser.Scene {
   movementKeys = new Set<string>();
   talking = false;
   showHotspots = false;
+  cursor!: PhaserAdventureCursor;
+  inventoryIcons = new Map<ItemId, PhaserAdventureIcon>();
+  hoveredTarget?: string;
   epoch = 0;
   editing = false;
   saves!: SaveStore;
@@ -104,6 +108,15 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.markers = this.add.graphics().setDepth(2000);
+    this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
+      assetId: 'cursor.walk', size: 40, enabled: () => !this.blocked(),
+      resolve: target => {
+        if (this.worldEditorOpen() || this.editing || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
+        const inventory = target.closest('#inventory button, #nearby button');
+        if (target !== this.game.canvas && !inventory) return undefined;
+        return this.selected ? inventoryAssetId(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
+      },
+    });
     this.behaviors.register('forest.interact', { handle: context => this.applyInteraction(context.targetId, context.item) });
     this.behaviors.register('forest.rescue', { handle: () => {} });
     this.conversation.onTurn(turn => this.renderTurn(turn));
@@ -122,7 +135,9 @@ class ForestAdventure extends Phaser.Scene {
           onInteract: () => {
             this.clearMovementKeys();
             if (target) void this.act(target.id);
-            else if (!this.selected) {
+            else {
+              this.cursor.click();
+              if (this.selected) return;
               this.epoch++;
               try { void this.character.walkTo(point); }
               catch (error) { toast(error instanceof Error ? error.message : String(error)); }
@@ -217,10 +232,10 @@ class ForestAdventure extends Phaser.Scene {
   }
   hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
   hover(id?: string) {
+    this.hoveredTarget = id;
     const target = id ? targets[this.story.roomId].find(target => target.id === id) ?? this.resolved().objects.find(object => object.properties.targetId === id) : undefined;
     el('hover-label').textContent = target ? this.selected ? `Use ${items[this.selected].name} with ${target.name}` : target.name : '';
     el('hover-label').classList.toggle('visible', !!target);
-    this.game.canvas.style.cursor = target ? 'pointer' : 'crosshair';
   }
   interactionEntity(targetId: string, instanceId?: string) {
     if (!targetVisible(this.story, targetId)) return undefined;
@@ -233,6 +248,7 @@ class ForestAdventure extends Phaser.Scene {
     if (this.blocked()) return;
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
+    this.cursor.click();
     const target = targets[this.story.roomId].find(target => target.id === targetId);
     this.say(typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name);
   }
@@ -241,6 +257,7 @@ class ForestAdventure extends Phaser.Scene {
     this.clearMovementKeys();
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
+    this.cursor.click();
     const selected = this.selected;
     const operation = ++this.epoch;
     let arrived: boolean;
@@ -268,6 +285,7 @@ class ForestAdventure extends Phaser.Scene {
     this.clearMovementKeys();
     this.epoch++;
     this.story.roomId = room;
+    this.hover();
     this.background.setTexture(`room.${room}`);
     if (move) {
       const destination = resolvePointleshScene(authoredScenes, room);
@@ -391,6 +409,8 @@ class ForestAdventure extends Phaser.Scene {
   refreshCharacterAnimations() {
     this.binding.refreshAnimation();
     for (const npc of this.npcActors.values()) npc.binding.refreshAnimation();
+    this.cursor?.refresh();
+    for (const icon of this.inventoryIcons.values()) icon.refresh();
   }
   installTools() {
     this.sceneDesigner = installPhaserPointleshDesigner({
@@ -508,16 +528,21 @@ class ForestAdventure extends Phaser.Scene {
   render() {
     el('room-name').textContent = roomNames[this.story.roomId];
     el('inventory-count').textContent = this.story.inventory.length ? `${this.story.inventory.length} useful ${this.story.inventory.length === 1 ? 'thing' : 'things'}` : 'Travel light.';
+    for (const icon of this.inventoryIcons.values()) icon.destroy(); this.inventoryIcons.clear();
     el('inventory').replaceChildren();
     for (const id of this.story.inventory) {
       const node = button('', () => {
         if (this.blocked()) return;
+        this.cursor.click(inventoryAssetId(this.selected ?? id));
         if (this.selected && this.selected !== id) { const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text); }
         else this.selected = this.selected === id ? undefined : id;
         this.render();
+        this.inventoryIcons.get(id)?.play('click');
       });
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
-      node.append(items[id].icon); const label = document.createElement('span'); label.className = 'item-label'; label.textContent = items[id].name; node.append(label); el('inventory').append(node);
+      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: inventoryAssetId(id), width: 36 });
+      this.inventoryIcons.set(id, icon); node.append(icon.canvas);
+      const label = document.createElement('span'); label.className = 'item-label'; label.textContent = items[id].name; node.append(label); el('inventory').append(node);
     }
     for (let i = this.story.inventory.length; i < 6; i++) { const slot = document.createElement('span'); slot.className = 'inventory-slot empty'; slot.textContent = '·'; el('inventory').append(slot); }
     el('clear-item').hidden = !this.selected; el('inventory-hint').textContent = this.selected ? `Use ${items[this.selected].name} with…` : 'A little courage goes a long way.';

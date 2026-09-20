@@ -4070,6 +4070,614 @@
           "model": "imagegen"
         }
       }
+    },
+    "cursor.walk": {
+      "id": "cursor.walk",
+      "kind": "image",
+      "prompt": "A pair of small dwarven boot prints, a clear walking cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/cursor.walk.png",
+          "prompt": "A pair of small dwarven boot prints, a clear walking cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "cursor.walk.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "cursor"
+      ]
+    },
+    "cursor.walk.click": {
+      "id": "cursor.walk.click",
+      "kind": "animation",
+      "prompt": "A pair of small dwarven boot prints, a clear walking cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "cursor.walk.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/cursor.walk.click.png",
+          "prompt": "A pair of small dwarven boot prints, a clear walking cursor: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "cursor.interact": {
+      "id": "cursor.interact",
+      "kind": "image",
+      "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/cursor.interact.png",
+          "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "cursor.interact.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "cursor"
+      ]
+    },
+    "cursor.interact.click": {
+      "id": "cursor.interact.click",
+      "kind": "animation",
+      "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "cursor.interact.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/cursor.interact.click.png",
+          "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "inventory.coin": {
+      "id": "inventory.coin",
+      "kind": "image",
+      "prompt": "Copper coin. One copper. A small fortune before breakfast.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.coin.png",
+          "prompt": "Copper coin. One copper. A small fortune before breakfast.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "inventory.coin.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "inventory.coin.click": {
+      "id": "inventory.coin.click",
+      "kind": "animation",
+      "prompt": "Copper coin. One copper. A small fortune before breakfast.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "inventory.coin.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.coin.click.png",
+          "prompt": "Copper coin. One copper. A small fortune before breakfast.: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "inventory.rope": {
+      "id": "inventory.rope",
+      "kind": "image",
+      "prompt": "Climbing rope. Strong enough to lower a king. Probably.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.rope.png",
+          "prompt": "Climbing rope. Strong enough to lower a king. Probably.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "inventory.rope.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "inventory.rope.click": {
+      "id": "inventory.rope.click",
+      "kind": "animation",
+      "prompt": "Climbing rope. Strong enough to lower a king. Probably.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "inventory.rope.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.rope.click.png",
+          "prompt": "Climbing rope. Strong enough to lower a king. Probably.: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "inventory.stout": {
+      "id": "inventory.stout",
+      "kind": "image",
+      "prompt": "Honey stout. Orcs cannot resist the smell. Combine it with something soporific.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.stout.png",
+          "prompt": "Honey stout. Orcs cannot resist the smell. Combine it with something soporific.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "inventory.stout.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "inventory.stout.click": {
+      "id": "inventory.stout.click",
+      "kind": "animation",
+      "prompt": "Honey stout. Orcs cannot resist the smell. Combine it with something soporific.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "inventory.stout.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.stout.click.png",
+          "prompt": "Honey stout. Orcs cannot resist the smell. Combine it with something soporific.: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "inventory.mushroom": {
+      "id": "inventory.mushroom",
+      "kind": "image",
+      "prompt": "Dreamcap. A harmless sleeping mushroom. Best served in a drink.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.mushroom.png",
+          "prompt": "Dreamcap. A harmless sleeping mushroom. Best served in a drink.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "inventory.mushroom.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "inventory.mushroom.click": {
+      "id": "inventory.mushroom.click",
+      "kind": "animation",
+      "prompt": "Dreamcap. A harmless sleeping mushroom. Best served in a drink.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "inventory.mushroom.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.mushroom.click.png",
+          "prompt": "Dreamcap. A harmless sleeping mushroom. Best served in a drink.: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "inventory.sleepyStout": {
+      "id": "inventory.sleepyStout",
+      "kind": "image",
+      "prompt": "Dreamcap stout. An exceptionally relaxing brew.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.sleepyStout.png",
+          "prompt": "Dreamcap stout. An exceptionally relaxing brew.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "inventory.sleepyStout.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "inventory.sleepyStout.click": {
+      "id": "inventory.sleepyStout.click",
+      "kind": "animation",
+      "prompt": "Dreamcap stout. An exceptionally relaxing brew.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "inventory.sleepyStout.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.sleepyStout.click.png",
+          "prompt": "Dreamcap stout. An exceptionally relaxing brew.: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
+    },
+    "inventory.pickaxe": {
+      "id": "inventory.pickaxe",
+      "kind": "image",
+      "prompt": "Goldroot pickaxe. The dwarven answer to a stubborn lock.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.pickaxe.png",
+          "prompt": "Goldroot pickaxe. The dwarven answer to a stubborn lock.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "click": {
+          "label": "Click",
+          "assetId": "inventory.pickaxe.click"
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "inventory.pickaxe.click": {
+      "id": "inventory.pickaxe.click",
+      "kind": "animation",
+      "prompt": "Goldroot pickaxe. The dwarven answer to a stubborn lock.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "dimensions": {
+        "width": 192,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 6,
+        "rows": 1,
+        "frameCount": 6
+      },
+      "animations": [
+        {
+          "key": "inventory.pickaxe.click",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 12,
+          "repeat": 0
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/inventory.pickaxe.click.png",
+          "prompt": "Goldroot pickaxe. The dwarven answer to a stubborn lock.: click feedback animation.",
+          "createdAt": "2026-09-20T00:00:00.000Z",
+          "model": "pointlesh-pixel-art",
+          "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "click"
+      ]
     }
   },
   "styleGuide": {
@@ -4334,6 +4942,70 @@
     "mushroom": [
       "Graphics",
       "Objects"
+    ],
+    "cursor.walk": [
+      "Graphics",
+      "Cursors"
+    ],
+    "cursor.walk.click": [
+      "Graphics",
+      "Cursors"
+    ],
+    "cursor.interact": [
+      "Graphics",
+      "Cursors"
+    ],
+    "cursor.interact.click": [
+      "Graphics",
+      "Cursors"
+    ],
+    "inventory.coin": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.coin.click": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.rope": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.rope.click": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.stout": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.stout.click": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.mushroom": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.mushroom.click": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.sleepyStout": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.sleepyStout.click": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.pickaxe": [
+      "Graphics",
+      "Inventory"
+    ],
+    "inventory.pickaxe.click": [
+      "Graphics",
+      "Inventory"
     ]
   }
 }

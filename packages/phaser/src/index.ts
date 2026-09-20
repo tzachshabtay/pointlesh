@@ -13,3 +13,5 @@ export * from "./area-edge-handles.js";
 export { SceneDesignerRuntime, installPhaserSceneDesigner } from "@scene-designer/phaser";
 export * from "./display-resolution.js";
 export * from './points.js';
+export * from './asset-icon.js';
+export * from './cursor.js';

@@ -173,6 +173,33 @@ bindAdventureInput(scene, {
 
 Sprite input consumes the press before room input. `resolve` runs once on press, keeping the original target even if the camera or an actor moves during the hold. Both bindings accept `longPressMs` and `dragThreshold` (default 10 CSS pixels); movement beyond the threshold, multiple fingers, cancellation, lost focus, or scene pause/shutdown abandon the gesture. A completed hold cannot also interact on release; release timestamps also identify holds if the timer callback was delayed. `enabled` is checked again before a delayed action. Bindings suppress the browser context menu and touch callout on the game canvas only, and restore them when destroyed. The scene binding also exposes `cancel()` for game-specific interruptions.
 
+## Cursor and inventory graphics
+
+`PhaserAdventureIcon` renders an AI Assets image into an HTML canvas for inventory slots. `PhaserAdventureCursor` uses the same renderer for a cursor that follows the pointer in screen coordinates. Both preserve a fixed CSS size through camera movement, room zoom, different source resolutions and device pixel ratios. Scaled variants and animation frame transforms use the existing AI Assets runtime; pixel art uses nearest-neighbor sampling by default.
+
+Give each icon a base image and a linked animation state named `click`. Calling `play('click')` on an icon, or `click()` on the cursor, plays one cycle and returns to the base image. The cursor keeps the clicked asset until the cycle finishes, including when an inventory item is consumed during that click.
+
+```ts
+const icon = new PhaserAdventureIcon(scene, assets, { assetId: 'inventory.rope', width: 36 });
+inventoryButton.append(icon.canvas);
+const cursor = new PhaserAdventureCursor(scene, assets, {
+  assetId: 'cursor.walk', size: 40, hotspot: { x: .5, y: .5 },
+  enabled: () => !dialogOpen,
+  resolve(target) {
+    if (editorOpen || target !== scene.game.canvas) return undefined;
+    return selectedItem?.assetId ?? (hoveredEntity ? 'cursor.interact' : 'cursor.walk');
+  },
+});
+// At the accepted interaction, walk, or look action:
+cursor.click();
+// When selecting an inventory item, optionally specify the clicked asset:
+cursor.click('inventory.rope');
+```
+
+The overlay ignores pointer events and is below designer UI. It restores the native cursor outside the game surfaces returned by `resolve`. Touch displays click feedback without leaving a persistent mouse cursor behind. Call `refresh()` after forwarding AI Assets designer callbacks to update an animation already in progress. Destroy removed inventory icons with `destroy()`; both adapters clean up automatically when the scene shuts down.
+
+The forest demo supplies separate **Graphics / Cursors** and **Graphics / Inventory** folders, each base image containing its native **Click** animation. The inventory art covers the coin, rope, both stouts, mushroom and pickaxe. `npx tsx demos/forest/scripts/generate-interface-art.ts --promote` reproduces the original PNGs and registers missing entries while preserving existing authored versions.
+
 ## Client behavior extensions
 
 Prefab files reference behavior IDs and JSON properties. Client code registers the executable behavior:
