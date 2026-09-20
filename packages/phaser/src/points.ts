@@ -55,7 +55,7 @@ export function installPhaserPointHandles(options: { scene: Phaser.Scene; design
         selection: { type: 'prefab-definition', prefabId: prefab.id }, definition: true, locked: false }] : [];
     }
     const room = resolvePointleshScene(manifest, designer.getSceneId());
-    return room.points.filter(point => point.enabled).map(point => {
+    return room.points.filter(point => point.enabled && point.visible).map(point => {
       const layer = manifest.scenes[room.id]!.layers.find(layer => layer.id === point.layerId)!;
       return { id: point.id, name: point.name, position: point.position,
         selection: { type: 'prefab', sceneId: room.id, layerId: layer.id, instanceId: point.id },

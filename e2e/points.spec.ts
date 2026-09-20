@@ -1,10 +1,49 @@
 import { expect, test } from '@playwright/test';
 import { selectInstance } from './designer-helpers';
+import { findClosestReachablePath, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
 
 test.setTimeout(60000);
 
 const context = (page: any) => page.getByRole('region', { name: 'Pointlesh properties', exact: true });
 const position = (page: any, id: string) => page.evaluate((id: string) => (window as any).pointleshDemo.scene.resolved().points.find((point: any) => point.id === id).position, id);
+
+test('hidden entry markers remain assigned walk points and support cottage and pub round trips', async ({ page }) => {
+  test.setTimeout(90000);
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+  const arrivals: Record<string, { x: number; y: number }> = {};
+  await page.route('**/authoring/scenes.json', async route => {
+    const response = await route.fetch(), manifest = await response.json();
+    for (const layer of manifest.scenes.village.layers) for (const point of layer.prefabs ?? []) {
+      if (['village.entry.from-house', 'village.entry.from-pub'].includes(point.id)) point.visible = false;
+      if (point.id === 'village.entry.from-house') point.overrides.y.value = -200;
+    }
+    const room = resolvePointleshScene(manifest, 'village');
+    const spawn = room.objects.find(object => object.properties.role === 'player')!.position;
+    for (const from of ['house', 'pub']) {
+      const point = room.points.find(point => point.id === `village.entry.from-${from}`)!;
+      arrivals[from] = findClosestReachablePath(spawn, point.position, walkablePolygons(room))!.at(-1)!;
+    }
+    await route.fulfill({ response, json: manifest });
+  });
+  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await selectInstance(page, 'home-door');
+  const walkPoint = context(page).getByRole('combobox', { name: 'Walk point', exact: true });
+  await expect(walkPoint).toHaveValue('village.entry.from-house');
+  await expect(walkPoint.locator('option:checked')).toHaveText('From Borin’s Cottage');
+  for (const from of ['house', 'pub']) await expect(page.locator(`.pointlesh-point-handle[data-point-id="village.entry.from-${from}"]`)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
+  for (const [from, entrance] of [['house', 'My cottage'], ['pub', 'The Copper Tankard']]) {
+    await page.evaluate(from => (window as any).pointleshDemo.scene.changeRoom(from), from);
+    await page.getByRole('button', { name: 'Interact with Back to the village', exact: true }).click();
+    await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.roomId)).toBe('village');
+    expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(arrivals[from]);
+    await page.getByRole('button', { name: `Interact with ${entrance}`, exact: true }).click();
+    await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.roomId)).toBe(from);
+  }
+  await expect(page.locator('#toast')).not.toContainText('missing or disabled');
+  expect(await page.evaluate(() => (window as any).pointleshDemo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs ?? []).find((point: any) => point.id === 'village.entry.from-house').overrides.y.value)).toBe(-200);
+  expect(errors).toEqual([]);
+});
 
 test('named points drag in world coordinates, rename without breaking references, and undo as one edit', async ({ page }) => {
   await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();

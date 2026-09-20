@@ -80,6 +80,28 @@ test('objects and hotspots reach named walk points before dispatch; interruption
   const interrupted = approachPointleshEntity(actor, room(), room().objects[0]); actor.stop();
   assert.equal(await interrupted, false);
   assert.throws(() => resolvePointleshPoint(resolvePointleshScene(manifest, 'other'), 'standing'), /missing or disabled/);
-  manifest.scenes.room.layers[0].prefabs[0].visible = false;
+  manifest.scenes.room.layers[0].prefabs[0].pointlesh = { properties: { enabled: false } };
   assert.throws(() => approachPointleshEntity(actor, room(), room().objects[0]), /missing or disabled/);
+});
+
+test('hiding point markers or their layer preserves runtime references, walking and placement', async () => {
+  for (const hide of ['instance', 'layer']) {
+    const { manifest, actor, room } = fixture();
+    const layer = manifest.scenes.room.layers[0];
+    if (hide === 'instance') layer.prefabs[0].visible = false;
+    else layer.visible = false;
+    const resolved = room(), point = resolvePointleshPoint(resolved, 'standing');
+    assert.equal(point.visible, false); assert.equal(point.enabled, true);
+    assert.equal(resolved.entities.find(entity => entity.id === point.id).enabled, true);
+    assert.deepEqual(resolvePointleshWalkPoint(resolved, resolved.objects[0]), point.position);
+    const walking = actOnPoint(actor, point, 'walk');
+    actor.tick(1000); assert.equal(await walking, true);
+    assert.deepEqual(actor.state.position, point.position);
+    actor.place({ x: 10, y: 70 });
+    assert.equal(await actOnPoint(actor, point, 'move'), true);
+    assert.deepEqual(actor.state.position, point.position);
+    layer.prefabs[0].pointlesh = { properties: { enabled: false } };
+    assert.throws(() => resolvePointleshPoint(room(), point.id), /missing or disabled/);
+    assert.equal(await actOnPoint(actor, room().points[0], 'move'), false);
+  }
 });

@@ -3,7 +3,7 @@ import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClien
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
-import { approachPointleshEntity, resolvePointleshPoint, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
+import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
 import { PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
@@ -291,8 +291,11 @@ class ForestAdventure extends Phaser.Scene {
       const destination = resolvePointleshScene(authoredScenes, room);
       const entryId = roomEntryPointId(room, previousRoom);
       const entry = destination.points.find(point => point.id === entryId && point.enabled);
-      this.character.place(entry ? resolvePointleshPoint(destination, entryId).position
-        : destination.objects.find(object => object.properties.role === 'player')?.position ?? { x: 471, y: 465 }, 'down');
+      const spawn = destination.objects.find(object => object.properties.role === 'player')?.position ?? { x: 471, y: 465 };
+      const requested = entry ? resolvePointleshPoint(destination, entryId).position : spawn;
+      // Editing an entry outside the floor must not strand the arriving player.
+      const arrival = findClosestReachablePath(spawn, requested, walkablePolygons(destination))?.at(-1) ?? requested;
+      this.character.place(arrival, 'down');
     }
     for (const sprite of this.entitySprites.values()) sprite.destroy(); this.entitySprites.clear(); this.npcActors.clear();
     for (const star of this.stars) star.image.destroy(); this.stars = [];

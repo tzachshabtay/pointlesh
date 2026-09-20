@@ -20,6 +20,8 @@ Use `extendPointleshPrefab(base, extension)` for reusable specializations. It pr
 
 `createPointPrefab({ name, x, y })` creates native numeric X/Y attributes with no artwork or polygon. Place named instances in a scene and read them through `resolvePointleshScene(...).points`. `resolvePointleshPoint(room, instanceId)` requires an enabled point in that room. Names can change without changing IDs or references.
 
+Point `visible` controls only its designer marker, including inherited layer visibility. Hidden points remain valid entrances and walk targets. Set the Pointlesh property `enabled: false` to disable a point for gameplay explicitly.
+
 Hotspots and objects accept optional `walkPointId` (also editable as a property/instance override). `resolvePointleshWalkPoint(room, entity)` returns that point's coordinates or `undefined` for an unassigned reference; broken references throw. `approachPointleshEntity(controller, room, entity, livePosition?)` resolves the named point before legacy approach fields, walks to the closest reachable position to it, then faces the target. Await its boolean result before running an interaction; false indicates unavailable navigation or an interrupted walk. Bind the controller's navigation source with current floors and obstacles. `pointleshApproachTarget` exposes the same target for custom movement logic.
 
 `actOnPoint(controller, point, 'move')` teleports immediately. `'walk'` snaps an inaccessible point to the closest reachable ground without changing the authored coordinate. These functions are renderer-independent. See the [point authoring guide](../../docs/prefabs.md#named-points-and-interaction-walk-points).

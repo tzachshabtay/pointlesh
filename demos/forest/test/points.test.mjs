@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { tsImport } from 'tsx/esm/api';
-import { resolvePointleshScene, resolvePointleshPoint, resolvePointleshWalkPoint, isWalkable, walkablePolygons } from '@pointlesh/core';
+import { resolvePointleshScene, resolvePointleshPoint, resolvePointleshWalkPoint, findClosestReachablePath, isWalkable, walkablePolygons } from '@pointlesh/core';
 const { scenes } = await tsImport('../src/content.ts', import.meta.url);
 const { targets } = await tsImport('../src/story.ts', import.meta.url);
 const { addForestPoints, roomEntryPointId } = await tsImport('../src/points.ts', import.meta.url);
@@ -13,7 +13,9 @@ for (const [name, manifest] of [['seed', scenes], ['authored', authored]]) test(
     for (const exit of exits.filter(exit => exit.exit)) {
       const point = resolvePointleshPoint(room, roomEntryPointId(roomId, exit.exit));
       assert.ok(point.name.startsWith('From '));
-      assert.ok(isWalkable(point.position, walkablePolygons(room)), `${roomId}/${point.id}`);
+      const floors = walkablePolygons(room), spawn = room.objects.find(object => object.properties.role === 'player').position;
+      const path = findClosestReachablePath(spawn, point.position, floors);
+      assert.ok(path?.length && isWalkable(path.at(-1), floors), `${roomId}/${point.id} has reachable ground`);
       assert.deepEqual(resolvePointleshWalkPoint(room, room.areas.find(area => area.id === exit.id)), point.position);
     }
   }

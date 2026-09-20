@@ -335,6 +335,8 @@ export type ResolvedPointleshPoint = ResolvedPointleshEntity & {
   kind: 'point';
   instanceId: string;
   prefabId: string;
+  /** Designer marker visibility; hidden coordinates remain available to gameplay. */
+  visible: boolean;
   position: PointleshPoint;
 };
 export type PointleshResolvedScene = {
@@ -384,14 +386,15 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
       const entity: ResolvedPointleshEntity = {
         id: instance.id, instanceId: instance.id, prefabId: prefab.id, layerId: layer.id,
         name: instance.name ?? prefab.name, kind: prefab.pointlesh.kind,
-        enabled: layer.visible && instance.visible && properties.enabled !== false,
+        enabled: properties.enabled !== false && (prefab.pointlesh.kind === 'point' || layer.visible && instance.visible),
         properties, behaviors: [...new Set([...prefab.pointlesh.behaviors, ...(instance.pointlesh?.behaviors ?? [])])],
       };
       result.entities.push(entity);
       if (entity.kind === 'point') {
         const x = Number(properties.x), y = Number(properties.y);
         if (!Number.isFinite(x) || !Number.isFinite(y)) throw new Error(`Point "${entity.name}" must have finite X/Y coordinates.`);
-        result.points.push({ ...entity, kind: 'point', instanceId: instance.id, prefabId: prefab.id, position: { x, y } });
+        result.points.push({ ...entity, kind: 'point', instanceId: instance.id, prefabId: prefab.id,
+          visible: layer.visible && instance.visible, position: { x, y } });
       }
       for (const attribute of prefab.attributes) {
         if (attribute.kind === "area" || attribute.kind === "platform") {
