@@ -46,6 +46,20 @@ const state = (page: Page) => page.evaluate(() => {
   return { room: scene.story.roomId, inventory: scene.story.inventory, flags: scene.story.flags, position: scene.character.state.position, selected: scene.selected ?? null };
 });
 
+test('holding the primary mouse button looks without starting an interaction', async ({ page }) => {
+  await ready(page);
+  const point = await targetPoint(page, 'elder'), before = await state(page);
+  await page.mouse.move(point.x, point.y);
+  await page.mouse.down();
+  await expect(page.locator('#speech')).toContainText('The oldest beard in Bramblehollow', { timeout: 2000 });
+  expect(await state(page)).toEqual(before);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.dismissSpeech());
+  await page.mouse.up();
+  await page.waitForTimeout(150);
+  await expect(page.locator('#dialog')).toBeHidden();
+  expect(await state(page)).toEqual(before);
+});
+
 test('right click looks at characters, objects and exits without interacting or walking', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

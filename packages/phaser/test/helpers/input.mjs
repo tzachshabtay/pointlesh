@@ -25,3 +25,16 @@ export function touchDown(scene, x = 30, y = 50) {
   scene.input.emit('pointerdown', pointer);
   return pointer;
 }
+
+export function mouseEvent(target, type, { button = 0, buttons = type === 'mouseup' ? 0 : 1, clientX = 30, clientY = 50 } = {}) {
+  const event = Object.assign(new Event(type), { button, buttons, clientX, clientY });
+  target.dispatchEvent(event);
+  return event;
+}
+
+export function mouseDown(scene, options) {
+  const event = mouseEvent(scene.game.canvas.ownerDocument.defaultView, 'mousedown', options);
+  const pointer = { wasTouch: false, isDown: true, button: event.button, event };
+  scene.input.emit('pointerdown', pointer);
+  return pointer;
+}

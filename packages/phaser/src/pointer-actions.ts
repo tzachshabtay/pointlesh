@@ -6,11 +6,11 @@ export type AdventurePointerActions = {
 };
 
 export type AdventureGestureOptions = {
-  /** Read current game/editor state, including again before a delayed touch action. */
+  /** Read current game/editor state, including again before a delayed press action. */
   enabled?: () => boolean;
-  /** Hold duration for touch look, in milliseconds. Defaults to 500. */
+  /** Hold duration for look, in milliseconds. Defaults to 500. */
   longPressMs?: number;
-  /** Maximum touch movement in CSS pixels before cancelling. Defaults to 10. */
+  /** Maximum press movement in CSS pixels before cancelling. Defaults to 10. */
   dragThreshold?: number;
 };
 
@@ -49,7 +49,7 @@ export function createAdventurePointerHandler(scene: Phaser.Scene, options: Adve
   let destroyed = false;
   let pending: {
     pointer: Phaser.Input.Pointer; actions: AdventurePointerActions;
-    x: number; y: number; identifier: number; timer: ReturnType<typeof setTimeout>;
+    x: number; y: number; identifier?: number; startedAt: number; timer: ReturnType<typeof setTimeout>;
   } | undefined;
   const enabled = () => !destroyed && (options.enabled?.() ?? true);
   const cancel = () => {
@@ -59,37 +59,54 @@ export function createAdventurePointerHandler(scene: Phaser.Scene, options: Adve
     window.removeEventListener('touchmove', move, true);
     window.removeEventListener('touchend', release, true);
     window.removeEventListener('touchcancel', cancel, true);
+    window.removeEventListener('mousemove', mouseMove, true);
+    window.removeEventListener('mouseup', mouseRelease, true);
+    window.removeEventListener('mousedown', cancel, true);
     window.removeEventListener('blur', cancel);
     document.removeEventListener('visibilitychange', cancel);
   };
   const extraTouch = (event: TouchEvent) => { if (event.touches.length > 1) cancel(); };
-  const moved = (touch: Touch) => !!pending && Math.hypot(touch.clientX - pending.x, touch.clientY - pending.y) > threshold;
+  const moved = (position: { clientX: number; clientY: number }) => !!pending && Math.hypot(position.clientX - pending.x, position.clientY - pending.y) > threshold;
   const move = (event: TouchEvent) => {
     const touch = Array.from(event.changedTouches).find(touch => touch.identifier === pending?.identifier);
     if (touch && moved(touch)) cancel();
   };
+  const finish = (position: { clientX: number; clientY: number }, timeStamp: number) => {
+    if (!pending) return;
+    const { pointer, actions, startedAt } = pending;
+    const valid = enabled() && !moved(position);
+    // A busy event loop can deliver release before the timeout callback. Use the
+    // event timestamps too, so a completed hold can never become an interaction.
+    const action = timeStamp - startedAt >= duration && actions.onLook ? actions.onLook : actions.onInteract;
+    cancel();
+    if (valid) action(pointer);
+  };
   const release = (event: TouchEvent) => {
     const touch = Array.from(event.changedTouches).find(touch => touch.identifier === pending?.identifier);
-    if (!pending || !touch) return;
-    const { pointer, actions } = pending;
-    const valid = enabled() && !moved(touch);
-    cancel();
-    if (valid) actions.onInteract(pointer);
+    if (touch) finish(touch, event.timeStamp);
+  };
+  const mouseMove = (event: MouseEvent) => {
+    if (pending?.identifier === undefined && (!(event.buttons & 1) || moved(event))) cancel();
+  };
+  const mouseRelease = (event: MouseEvent) => {
+    if (pending?.identifier === undefined && event.button === 0) finish(event, event.timeStamp);
   };
   const down = (pointer: Phaser.Input.Pointer): boolean => {
     if (!enabled() || (!pointer.wasTouch && pointer.button !== 0 && pointer.button !== 2)) return false;
     const actions = options.resolve(pointer);
     if (!actions) return false;
     cancel();
-    if (!pointer.wasTouch) {
-      if (pointer.button === 2) actions.onLook?.(pointer);
-      else actions.onInteract(pointer);
+    if (!pointer.wasTouch && pointer.button === 2) {
+      actions.onLook?.(pointer);
       return true;
     }
-    const event = pointer.event as TouchEvent;
-    const touch = Array.from(event.changedTouches).find(touch => touch.identifier === pointer.identifier);
-    if (!touch || event.touches.length !== 1) return true;
-    pending = { pointer, actions, x: touch.clientX, y: touch.clientY, identifier: touch.identifier,
+    const event = pointer.event;
+    const position = pointer.wasTouch
+      ? Array.from((event as TouchEvent).changedTouches).find(touch => touch.identifier === pointer.identifier)
+      : event as MouseEvent;
+    if (!position || pointer.wasTouch && (event as TouchEvent).touches.length !== 1) return true;
+    pending = { pointer, actions, x: position.clientX, y: position.clientY,
+      identifier: pointer.wasTouch ? pointer.identifier : undefined, startedAt: event.timeStamp,
       timer: setTimeout(() => {
         if (!pending || !actions.onLook) return;
         const valid = enabled() && pointer.isDown && !pointer.wasCanceled;
@@ -103,6 +120,9 @@ export function createAdventurePointerHandler(scene: Phaser.Scene, options: Adve
     window.addEventListener('touchmove', move, true);
     window.addEventListener('touchend', release, true);
     window.addEventListener('touchcancel', cancel, true);
+    window.addEventListener('mousemove', mouseMove, true);
+    window.addEventListener('mouseup', mouseRelease, true);
+    window.addEventListener('mousedown', cancel, true);
     window.addEventListener('blur', cancel);
     document.addEventListener('visibilitychange', cancel);
     return true;
@@ -118,7 +138,7 @@ export function createAdventurePointerHandler(scene: Phaser.Scene, options: Adve
   return { down, cancel, destroy };
 }
 
-/** Left click/tap interacts; right click/touch hold looks. Sprite handlers take priority. */
+/** Click/tap on release interacts; right click or a hold looks. Sprite handlers take priority. */
 export function bindAdventureInput(scene: Phaser.Scene, options: AdventureInputOptions): { cancel(): void; destroy(): void } {
   const handler = createAdventurePointerHandler(scene, options);
   scene.input.on('pointerdown', handler.down);

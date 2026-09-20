@@ -150,7 +150,7 @@ Loading a newer version or an older version without the required migration fails
 
 ## Pointer interactions
 
-`@pointlesh/phaser` shares the same controls between `bindAdventureSpriteInteraction` (alpha-tested, including animated/flipped frames) and `bindAdventureInput` (room polygons and empty ground). Left click interacts immediately; a touch tap interacts on release. Right click or a 500 ms touch hold calls `onLook` instead. Looking does not automatically walk or dispatch an interaction: the game supplies that callback, for example to show the entity's description.
+`@pointlesh/phaser` shares the same controls between `bindAdventureSpriteInteraction` (alpha-tested, including animated/flipped frames) and `bindAdventureInput` (room polygons and empty ground). A short left click or touch tap interacts on release. Right click or a 500 ms hold with touch, mouse, or trackpad calls `onLook` instead. Looking does not automatically walk or dispatch an interaction: the game supplies that callback, for example to show the entity's description.
 
 ```ts
 bindAdventureSpriteInteraction(sprite, {
@@ -171,7 +171,7 @@ bindAdventureInput(scene, {
 });
 ```
 
-Sprite input consumes the press before room input. `resolve` runs once on press, keeping the original target even if the camera or an actor moves during the hold. Both bindings accept `longPressMs` and `dragThreshold` (default 10 CSS pixels); movement beyond the threshold, multiple fingers, cancellation, lost focus, or scene pause/shutdown abandon the touch gesture. A completed hold cannot also tap on release. `enabled` is checked again before a delayed action. Bindings suppress the browser context menu and touch callout on the game canvas only, and restore them when destroyed. The scene binding also exposes `cancel()` for game-specific interruptions.
+Sprite input consumes the press before room input. `resolve` runs once on press, keeping the original target even if the camera or an actor moves during the hold. Both bindings accept `longPressMs` and `dragThreshold` (default 10 CSS pixels); movement beyond the threshold, multiple fingers, cancellation, lost focus, or scene pause/shutdown abandon the gesture. A completed hold cannot also interact on release; release timestamps also identify holds if the timer callback was delayed. `enabled` is checked again before a delayed action. Bindings suppress the browser context menu and touch callout on the game canvas only, and restore them when destroyed. The scene binding also exposes `cancel()` for game-specific interruptions.
 
 ## Client behavior extensions
 

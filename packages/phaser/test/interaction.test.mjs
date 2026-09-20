@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import { bindAdventureSpriteInteraction } from '../dist/interaction.js';
-import { inputScene, touchEvent } from './helpers/input.mjs';
+import { inputScene, touchEvent, mouseEvent } from './helpers/input.mjs';
 
 function actor() {
   const sprite = Object.assign(new EventEmitter(), {
@@ -66,7 +66,11 @@ test('sprite interaction gates input, consumes clicks, and restores existing inp
   sprite.input = { enabled: false, hitArea: { width: 4 }, hitAreaCallback: priorHit, customHitArea: false };
   let enabled = false, interactions = 0, stopped = 0;
   const binding = bindAdventureSpriteInteraction(sprite, { enabled: () => enabled, onInteract: () => interactions++ });
-  const click = () => sprite.emit('pointerdown', { button: 0 }, 3.5, 1.5, { stopPropagation() { stopped++; } });
+  const window = sprite.scene.game.canvas.ownerDocument.defaultView;
+  const click = () => {
+    sprite.emit('pointerdown', { button: 0, event: mouseEvent(window, 'mousedown') }, 3.5, 1.5, { stopPropagation() { stopped++; } });
+    mouseEvent(window, 'mouseup');
+  };
   click(); assert.equal(interactions, 0);
   enabled = true; click(); assert.equal(interactions, 1); assert.equal(stopped, 1);
   binding.destroy();

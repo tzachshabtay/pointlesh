@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { bindAdventureInput } from '../dist/pointer-actions.js';
-import { inputScene, touchDown, touchEvent } from './helpers/input.mjs';
+import { inputScene, touchDown, touchEvent, mouseDown, mouseEvent } from './helpers/input.mjs';
 
 function setup(t, options = {}) {
   t.mock.timers.enable({ apis: ['setTimeout'] });
@@ -12,9 +12,49 @@ function setup(t, options = {}) {
 }
 
 test('left click interacts, right click looks, and other mouse buttons are ignored', t => {
-  const { scene, calls } = setup(t);
-  for (const button of [0, 2, 1, 3, 4]) scene.input.emit('pointerdown', { button });
+  const { scene, calls, window } = setup(t);
+  for (const button of [0, 2, 1, 3, 4]) { mouseDown(scene, { button }); mouseEvent(window, 'mouseup', { button }); }
   assert.deepEqual(calls, ['interact', 'look']);
+});
+
+test('mouse hold waits instead of interacting on down and cannot click again on release', t => {
+  const { scene, calls, window } = setup(t);
+  mouseDown(scene); t.mock.timers.tick(499);
+  assert.deepEqual(calls, []);
+  t.mock.timers.tick(1);
+  assert.deepEqual(calls, ['look']);
+  mouseEvent(window, 'mouseup'); t.mock.timers.tick(1000);
+  assert.deepEqual(calls, ['look']);
+  mouseDown(scene); mouseEvent(window, 'mouseup');
+  assert.deepEqual(calls, ['look', 'interact']);
+});
+
+test('a mouse drag or lost release cannot later interact or look', t => {
+  const { scene, calls, window } = setup(t);
+  for (const cancel of [
+    () => mouseEvent(window, 'mousemove', { clientX: 90 }),
+    () => mouseEvent(window, 'mousemove', { buttons: 0 }),
+    () => window.dispatchEvent(new Event('blur')),
+  ]) {
+    mouseDown(scene); cancel(); t.mock.timers.tick(1000); mouseEvent(window, 'mouseup');
+  }
+  assert.deepEqual(calls, []);
+});
+
+test('mouse and touch releases recognize a hold even when the timer has not run', t => {
+  const { scene, calls, window } = setup(t);
+  for (const kind of ['mouse', 'touch']) {
+    const pointer = kind === 'mouse' ? mouseDown(scene) : touchDown(scene);
+    const event = Object.assign(new Event(kind === 'mouse' ? 'mouseup' : 'touchend'), {
+      button: 0, clientX: 30, clientY: 50,
+      changedTouches: [{ identifier: 7, clientX: 30, clientY: 50 }],
+    });
+    Object.defineProperty(event, 'timeStamp', { value: pointer.event.timeStamp + 700 });
+    window.dispatchEvent(event);
+  }
+  assert.deepEqual(calls, ['look', 'look']);
+  t.mock.timers.tick(1000);
+  assert.deepEqual(calls, ['look', 'look']);
 });
 
 test('tap waits for release, while a hold looks once and never also interacts', t => {
