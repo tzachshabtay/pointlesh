@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import { bindAdventureSpriteInteraction } from '../dist/interaction.js';
+import { inputScene, touchEvent } from './helpers/input.mjs';
 
 function actor() {
   const sprite = Object.assign(new EventEmitter(), {
@@ -10,7 +11,7 @@ function actor() {
     flipX: false, flipY: false, texture: { key: 'actor' },
     frame: { name: 'right-pixel', realWidth: 4, realHeight: 3, customPivot: false },
     scene: {
-      events: new EventEmitter(),
+      ...inputScene(),
       textures: { getPixelAlpha(x, y, _texture, frame) { return y === 1 && x === (frame === 'right-pixel' ? 3 : 0) ? 255 : 0; } },
     },
     setInteractive(hitArea, hitAreaCallback) { this.input ??= { enabled: true, hitArea, hitAreaCallback, customHitArea: true }; return this; },
@@ -31,6 +32,22 @@ test('sprite alpha input follows frame replacement and mirrored view without a c
   sprite.frame = { ...sprite.frame, name: 'left-pixel' };
   assert.equal(hit(.5, 1.5), false);
   assert.equal(hit(3.5, 1.5), true);
+});
+
+test('sprite look consumes right clicks and cancels pending touch on destruction', t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const sprite = actor();
+  let looks = 0, interactions = 0, stopped = 0;
+  bindAdventureSpriteInteraction(sprite, { onInteract: () => interactions++, onLook: () => looks++ });
+  const event = { stopPropagation() { stopped++; } };
+  sprite.emit('pointerdown', { button: 2 }, 3.5, 1.5, event);
+  assert.equal(looks, 1); assert.equal(interactions, 0); assert.equal(stopped, 1);
+  const window = sprite.scene.game.canvas.ownerDocument.defaultView;
+  const pointer = { wasTouch: true, isDown: true, identifier: 7, event: touchEvent(window, 'touchstart') };
+  sprite.emit('pointerdown', pointer, 3.5, 1.5, event);
+  sprite.emit('destroy');
+  t.mock.timers.tick(500); touchEvent(window, 'touchend');
+  assert.equal(looks, 1); assert.equal(interactions, 0);
 });
 
 test('a flipped atlas custom pivot can place visible pixels outside the unflipped bounds', () => {

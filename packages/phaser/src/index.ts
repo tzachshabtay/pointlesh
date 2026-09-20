@@ -7,6 +7,7 @@ export * from "./assets.js";
 export * from "./texture-scaling.js";
 export * from "./dialog.js";
 export * from "./interaction.js";
+export { bindAdventureInput, type AdventureInputOptions, type AdventureGestureOptions, type AdventurePointerActions } from './pointer-actions.js';
 export * from "./area-baseline.js";
 export * from "./area-edge-handles.js";
 export { SceneDesignerRuntime, installPhaserSceneDesigner } from "@scene-designer/phaser";

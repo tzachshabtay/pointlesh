@@ -1,11 +1,9 @@
 import type Phaser from 'phaser';
+import { createAdventurePointerHandler, type AdventureGestureOptions, type AdventurePointerActions } from './pointer-actions.js';
 
-export type AdventureSpriteInteractionOptions = {
-  /** Read current game/editor state without rebuilding the interaction after a change. */
-  enabled?: () => boolean;
+export type AdventureSpriteInteractionOptions = AdventureGestureOptions & AdventurePointerActions & {
   alphaTolerance?: number;
   onHover?(hovered: boolean, pointer: Phaser.Input.Pointer): void;
-  onInteract(pointer: Phaser.Input.Pointer): void;
 };
 
 /** Native Phaser input, with alpha sampled from the sprite's current frame and mirrored view. */
@@ -21,6 +19,7 @@ export function bindAdventureSpriteInteraction(
     hitAreaCallback: sprite.input.hitAreaCallback, customHitArea: sprite.input.customHitArea,
   } : undefined;
   const enabled = () => sprite.active && sprite.visible && sprite.alpha > 0 && (options.enabled?.() ?? true);
+  const gestures = createAdventurePointerHandler(scene, { ...options, enabled, resolve: () => options });
   const contains: Phaser.Types.Input.HitAreaCallback = (_area, localX, localY) => {
     if (!enabled()) return false;
     // Phaser transforms pointer coordinates for position, scale, rotation and origin,
@@ -44,8 +43,10 @@ export function bindAdventureSpriteInteraction(
   };
   const out = (pointer: Phaser.Input.Pointer) => options.onHover?.(false, pointer);
   const interact = (pointer: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
-    if (!enabled() || pointer.button !== 0) return;
-    event.stopPropagation(); options.onInteract(pointer);
+    if (!enabled()) return;
+    // Consume before invoking callbacks, which may destroy or replace this sprite.
+    if (pointer.wasTouch || pointer.button === 0 || pointer.button === 2) event.stopPropagation();
+    gestures.down(pointer);
   };
   sprite.on('pointerover', hover);
   sprite.on('pointermove', hover);
@@ -55,6 +56,7 @@ export function bindAdventureSpriteInteraction(
   const destroy = () => {
     if (destroyed) return;
     destroyed = true;
+    gestures.destroy();
     sprite.off('pointerover', hover); sprite.off('pointermove', hover);
     sprite.off('pointerout', out); sprite.off('pointerdown', interact);
     sprite.off('destroy', destroy); scene.events.off('shutdown', destroy);

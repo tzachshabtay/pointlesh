@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
@@ -113,17 +113,24 @@ class ForestAdventure extends Phaser.Scene {
       const point = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
       this.hover(this.hit(point.x, point.y)?.id);
     });
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (this.blocked()) return;
-      this.clearMovementKeys();
-      const point = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
-      const target = this.hit(point.x, point.y);
-      if (target) void this.act(target.id);
-      else if (!this.selected) {
-        this.epoch++;
-        try { void this.character.walkTo(point); }
-        catch (error) { toast(error instanceof Error ? error.message : String(error)); }
-      }
+    bindAdventureInput(this, {
+      enabled: () => !this.blocked(),
+      resolve: pointer => {
+        const point = pointer.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
+        const target = this.hit(point.x, point.y);
+        return {
+          onInteract: () => {
+            this.clearMovementKeys();
+            if (target) void this.act(target.id);
+            else if (!this.selected) {
+              this.epoch++;
+              try { void this.character.walkTo(point); }
+              catch (error) { toast(error instanceof Error ? error.message : String(error)); }
+            }
+          },
+          onLook: () => { if (target) this.look(target.id); },
+        };
+      },
     });
     this.changeRoom('village', false);
     this.installTools();
@@ -221,6 +228,13 @@ class ForestAdventure extends Phaser.Scene {
     if (instanceId) return object;
     // Environmental scenery can share a story action with a character, such as the king's cage.
     return this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled && area.closed && area.properties.interactive !== false) ?? object;
+  }
+  look(targetId: string, instanceId?: string) {
+    if (this.blocked()) return;
+    const entity = this.interactionEntity(targetId, instanceId);
+    if (!entity) return;
+    const target = targets[this.story.roomId].find(target => target.id === targetId);
+    this.say(typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name);
   }
   async act(targetId: string, instanceId?: string) {
     if (this.blocked()) return;
@@ -326,6 +340,7 @@ class ForestAdventure extends Phaser.Scene {
           enabled: () => !this.blocked() && current().enabled && current().properties.interactive !== false && typeof current().properties.targetId === 'string' && targetVisible(this.story, String(current().properties.targetId)),
           onHover: hovered => this.hover(hovered ? String(current().properties.targetId) : undefined),
           onInteract: () => { void this.act(String(current().properties.targetId), current().id); },
+          onLook: () => this.look(String(current().properties.targetId), current().id),
         });
         sprite.once('destroy', () => {
           this.objectTextureBindings.get(object.id)?.binding.destroy();
@@ -609,7 +624,7 @@ function setupControls() {
     const body = modal('A corner of the Elderwood'); const grid = document.createElement('div'); grid.className = 'map-grid';
     for (const id of roomIds) { const card = document.createElement('div'); card.className = 'map-room'; const image = document.createElement('img'); image.src = gameScene.textures.get(`room.${id}`).getSourceImage() instanceof HTMLCanvasElement ? (gameScene.textures.get(`room.${id}`).getSourceImage() as HTMLCanvasElement).toDataURL() : ''; image.alt = roomNames[id]; const label = document.createElement('span'); label.textContent = roomNames[id]; const sub = document.createElement('small'); sub.textContent = id === gameScene.story.roomId ? 'YOU ARE HERE' : ({ village:'Pub · Cottage · Forest',pub:'From Bramblehollow',house:'From Bramblehollow',forest:'Village · Mine · Camp',mine:'From the Whispering Wood',camp:'From the Whispering Wood' })[id]; label.append(sub); card.append(image, label); grid.append(card); } body.append(grid);
   };
-  el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click a person to talk, or an object to interact. Nearby buttons do the same thing and work with the keyboard.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Put away clears your selection.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
+  el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click or tap a person to talk, or an object to interact. Nearby buttons also interact and work with the keyboard.', 'Right-click or hold a touch for half a second to look at a person, object, or hotspot.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Put away clears your selection.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
   function saveMenu(mode: 'save' | 'load') {
     const body = modal(mode === 'save' ? 'Keep your place' : 'Pick up the trail');
     let saves: ReturnType<SaveStore['list']>;
