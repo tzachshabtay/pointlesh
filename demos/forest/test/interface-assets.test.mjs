@@ -55,7 +55,7 @@ test('catalog additions preserve authored inventory art and unrelated promoted a
   assert.deepEqual(manifest, original);
 });
 
-test('cursor and inventory click generation sends the active base image to the provider', async (t) => {
+test('cursor and inventory click generation sends the active base image as the frame-scale reference', async (t) => {
   const root = await mkdtemp(path.join(tmpdir(), 'pointlesh-click-references-'));
   const manifestPath = path.join(root, 'assets.json');
   const manifest = structuredClone(authored);
@@ -79,5 +79,6 @@ test('cursor and inventory click generation sends the active base image to the p
     const reference = calls.at(-1).references[0];
     assert.ok(reference, `${id} includes its base image`);
     assert.ok(expected.equals(reference.image), `${id} includes its promoted base pixels`);
+    assert.equal(reference.role, 'animation-base', `${id} preserves base scale inside each frame`);
   }
 });
