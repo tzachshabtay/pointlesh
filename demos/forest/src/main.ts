@@ -109,11 +109,13 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.markers = this.add.graphics().setDepth(2000);
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
-      assetId: 'cursor.walk', enabled: () => !this.blocked(),
+      assetId: 'cursor.walk',
       resolve: target => {
         if (this.worldEditorOpen() || this.editing || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
         const inventory = target.closest('#inventory button, #nearby button');
-        if (target !== this.game.canvas && !inventory) return undefined;
+        const dialog = target.closest('#dialog');
+        if (target !== this.game.canvas && !inventory && !dialog) return undefined;
+        if (this.talking || dialog) return 'cursor.interact';
         return this.selected ? inventoryAssetId(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
       },
     });
@@ -248,7 +250,7 @@ class ForestAdventure extends Phaser.Scene {
     if (this.blocked()) return;
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
-    this.cursor.click();
+    this.cursor.click(this.selected ? inventoryAssetId(this.selected) : undefined);
     const target = targets[this.story.roomId].find(target => target.id === targetId);
     this.say(typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name);
   }
@@ -257,7 +259,7 @@ class ForestAdventure extends Phaser.Scene {
     this.clearMovementKeys();
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
-    this.cursor.click();
+    this.cursor.click(this.selected ? inventoryAssetId(this.selected) : undefined);
     const selected = this.selected;
     const operation = ++this.epoch;
     let arrived: boolean;

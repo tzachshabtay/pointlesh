@@ -55,6 +55,90 @@ test('walk and interact cursors switch, animate on click, and use the base asset
   expect(errors).toEqual([]);
 });
 
+test('hovering scenery or a character interrupts walk feedback immediately', async ({ page }) => {
+  await ready(page);
+  const cursor = page.locator('.pointlesh-adventure-cursor');
+  // A long clip makes the regression fail instead of passing after the old animation expires.
+  await page.evaluate(() => {
+    const runtime = (window as any).pointleshDemo.scene.aiRuntime;
+    const clip = runtime.manifest.assets['cursor.walk.click'].animations[0];
+    clip.frameTimings = clip.frames.map(() => ({ delayMs: 2000 }));
+  });
+  for (const target of ['pub-door', 'village.npc.elder']) {
+    const ground = await worldPoint(page, 600, 470);
+    await page.mouse.click(ground.x, ground.y);
+    await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.walk');
+    await expect(cursor).toHaveAttribute('data-state', 'click');
+    const point = await page.evaluate(target => {
+      const scene = (window as any).pointleshDemo.scene;
+      scene.character.stop();
+      if (target === 'pub-door') {
+        const vertices = scene.resolved().areas.find((area: any) => area.id === target).polygon;
+        return vertices.reduce((sum: any, p: any) => ({ x: sum.x + p.x / vertices.length, y: sum.y + p.y / vertices.length }), { x: 0, y: 0 });
+      }
+      const sprite = scene.entitySprites.get(target);
+      return { x: sprite.x, y: sprite.y - sprite.displayHeight / 2 };
+    }, target);
+    const screen = await worldPoint(page, point.x, point.y);
+    await page.mouse.move(screen.x, screen.y);
+    await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact', { timeout: 2000 });
+    await expect(cursor).toHaveAttribute('data-state', 'idle');
+  }
+  // Explicit item feedback survives a selection change, but never locks out the next hover.
+  const ground = await worldPoint(page, 600, 470);
+  await page.mouse.move(ground.x, ground.y);
+  await clearFeedback(page);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.cursor.click('inventory.coin'));
+  await expectFeedback(page, 'inventory.coin');
+  await page.mouse.move(ground.x + 5, ground.y);
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.walk', { timeout: 2000 });
+  await expect(cursor).toHaveAttribute('data-state', 'idle');
+  await page.evaluate(() => {
+    const cursor = (window as any).pointleshDemo.scene.cursor;
+    cursor.click('inventory.coin'); cursor.click();
+  });
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.walk');
+  await expect(cursor).toHaveAttribute('data-state', 'click');
+});
+
+test('speech and conversation choices retain the interact cursor on the game and dialog controls', async ({ page }) => {
+  await ready(page);
+  const cursor = page.locator('.pointlesh-adventure-cursor');
+  const ground = await worldPoint(page, 600, 470);
+  await page.mouse.move(ground.x, ground.y);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.say('A cursor should remain available while speaking.'));
+  await expect(cursor).toBeVisible();
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact');
+  await page.locator('#speech').hover();
+  await expect(cursor).toBeVisible();
+  await expect(page.locator('#speech')).toHaveCSS('cursor', 'none');
+  await page.locator('#dialog-next').hover();
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact');
+  await expect(page.locator('#dialog-next')).toHaveCSS('cursor', 'none');
+  await page.locator('#dialog-next').click();
+  await page.mouse.move(ground.x, ground.y);
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.walk');
+
+  await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.selected = 'rope'; scene.conversation.start('elder');
+  });
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact');
+  await page.locator('#dialog-next').click();
+  const choice = page.getByRole('button', { name: 'I will bring him home.', exact: true });
+  await choice.hover();
+  await expect(cursor).toBeVisible();
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact');
+  await expect(choice).toHaveCSS('cursor', 'none');
+  await choice.click();
+  await page.locator('#dialog-next').click();
+  await expect(page.locator('#dialog')).toBeHidden();
+  await page.mouse.move(ground.x, ground.y);
+  await expect(cursor).toHaveAttribute('data-asset-id', 'inventory.rope');
+  await page.locator('#designer').click();
+  await expect(cursor).toBeHidden();
+});
+
 test('every inventory slot uses an image, selected items become animated cursors and reset after use', async ({ page }, testInfo) => {
   await ready(page);
   await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.story.inventory = ['coin', 'rope', 'stout', 'mushroom', 'sleepyStout', 'pickaxe']; scene.render(); });
