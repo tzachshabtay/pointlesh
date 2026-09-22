@@ -139,6 +139,53 @@ test('speech and conversation choices retain the interact cursor on the game and
   await expect(cursor).toBeHidden();
 });
 
+test('native cursor never flashes between dialog options and returns outside the game', async ({ page }) => {
+  // Observe entry before the game's pointer handlers run, not only the settled hover state.
+  await page.addInitScript(() => {
+    (window as any).dialogCursorEntries = [];
+    window.addEventListener('pointerover', event => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('#dialog')) {
+        (window as any).dialogCursorEntries.push({ tag: target.tagName, cursor: getComputedStyle(target).cursor });
+      }
+    }, true);
+  });
+  await ready(page);
+  const cursor = page.locator('.pointlesh-adventure-cursor');
+  await page.evaluate(() => (window as any).pointleshDemo.scene.conversation.start('elder'));
+  await page.locator('#dialog-next').click();
+  const choices = page.locator('#choices button');
+  expect(await choices.count()).toBeGreaterThan(1);
+  await choices.first().hover();
+  await page.evaluate(() => { (window as any).dialogCursorEntries = []; });
+  for (const choice of [choices.nth(1), choices.first()]) {
+    const box = (await choice.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 12 });
+  }
+  const entries = await page.evaluate(() => (window as any).dialogCursorEntries as { tag: string; cursor: string }[]);
+  expect(entries.some(entry => entry.tag === 'BUTTON')).toBe(true);
+  expect(entries.some(entry => entry.tag === 'DIV')).toBe(true);
+  expect(entries.filter(entry => entry.cursor !== 'none')).toEqual([]);
+  await expect(cursor).toBeVisible();
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact');
+
+  // Designer/browser controls retain their original native cursor styles.
+  await page.locator('#designer').hover();
+  await expect(cursor).toBeHidden();
+  await expect(page.locator('#designer')).toHaveCSS('cursor', 'pointer');
+  await choices.first().hover();
+  await expect(cursor).toBeVisible();
+  await expect(choices.first()).toHaveCSS('cursor', 'none');
+  await page.evaluate(() => window.dispatchEvent(new Event('blur')));
+  await expect(cursor).toBeHidden();
+  await expect(choices.first()).toHaveCSS('cursor', 'pointer');
+  await choices.nth(1).hover();
+  await expect(cursor).toBeVisible();
+  await page.evaluate(() => (window as any).pointleshDemo.scene.cursor.destroy());
+  await expect(cursor).toHaveCount(0);
+  await expect(choices.nth(1)).toHaveCSS('cursor', 'pointer');
+});
+
 test('every inventory slot uses an image, selected items become animated cursors and reset after use', async ({ page }, testInfo) => {
   await ready(page);
   await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.story.inventory = ['coin', 'rope', 'stout', 'mushroom', 'sleepyStout', 'pickaxe']; scene.render(); });

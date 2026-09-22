@@ -20,8 +20,7 @@ export class PhaserAdventureCursor {
   private x = -100;
   private y = -100;
   private touch = false;
-  private styled?: HTMLElement;
-  private priorCursor = '';
+  private nativeCursorStyle: HTMLStyleElement;
   private retainClickAsset = false;
   private destroyed = false;
   constructor(private scene: Phaser.Scene, runtime: AiAssetRuntime, private options: AdventureCursorOptions) {
@@ -30,6 +29,12 @@ export class PhaserAdventureCursor {
     Object.assign(this.icon.canvas.style, { position: 'fixed', zIndex: '1000', left: '0', top: '0' });
     this.icon.canvas.hidden = true;
     const document = scene.game.canvas.ownerDocument, window = document.defaultView!;
+    // Hide the native cursor across element boundaries before the next pointer event.
+    // A per-target inline style can flash the next button's cursor before JS runs.
+    this.nativeCursorStyle = document.createElement('style');
+    this.nativeCursorStyle.textContent = ':root, :root * { cursor: none !important; }';
+    this.nativeCursorStyle.media = 'not all';
+    document.head.append(this.nativeCursorStyle);
     document.body.append(this.icon.canvas);
     window.addEventListener('pointermove', this.move, true);
     window.addEventListener('pointerdown', this.move, true);
@@ -42,11 +47,12 @@ export class PhaserAdventureCursor {
     if (event.clientX !== this.x || event.clientY !== this.y) this.retainClickAsset = false;
     this.x = event.clientX; this.y = event.clientY; this.touch = event.pointerType === 'touch'; this.update();
   };
-  private restoreCursor() {
-    if (this.styled) this.styled.style.cursor = this.priorCursor;
-    this.styled = undefined;
+  private setVisible(visible: boolean) {
+    this.icon.canvas.hidden = !visible;
+    const media = visible ? 'all' : 'not all';
+    if (this.nativeCursorStyle.media !== media) this.nativeCursorStyle.media = media;
   }
-  private hide = () => { this.x = -100; this.restoreCursor(); this.icon.canvas.hidden = true; };
+  private hide = () => { this.x = -100; this.setVisible(false); };
   private update = () => {
     if (this.destroyed) return;
     const target = this.icon.canvas.ownerDocument.elementFromPoint(this.x, this.y);
@@ -56,10 +62,8 @@ export class PhaserAdventureCursor {
     // Explicit click assets stay visible through inventory consumption until the pointer moves.
     if (assetId && enabled && (!this.icon.playing || !this.retainClickAsset)) this.icon.setAsset(assetId);
     const visible = !!assetId && (enabled || this.icon.playing) && (!this.touch || this.icon.playing);
-    this.icon.canvas.hidden = !visible;
-    this.restoreCursor();
+    this.setVisible(visible);
     if (!visible) return;
-    if (target instanceof HTMLElement) { this.styled = target; this.priorCursor = target.style.cursor; target.style.cursor = 'none'; }
     const hotspot = this.options.hotspot ?? { x: .5, y: .5 };
     this.icon.canvas.style.transform = `translate(${Math.round(this.x - this.icon.displayWidth * hotspot.x)}px, ${Math.round(this.y - this.icon.displayHeight * hotspot.y)}px)`;
   };
@@ -74,7 +78,7 @@ export class PhaserAdventureCursor {
   refresh(): void { this.icon.refresh(); this.update(); }
   destroy = () => {
     if (this.destroyed) return;
-    this.destroyed = true; this.restoreCursor();
+    this.destroyed = true; this.nativeCursorStyle.remove();
     const document = this.scene.game.canvas.ownerDocument, window = document.defaultView!;
     window.removeEventListener('pointermove', this.move, true); window.removeEventListener('pointerdown', this.move, true);
     window.removeEventListener('blur', this.hide); document.removeEventListener('pointerleave', this.hide);
