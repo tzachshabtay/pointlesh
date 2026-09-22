@@ -4,6 +4,8 @@
 .stage-wrap{width:100%;max-width:100%}
 body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!important}.tools-visible #designer{color:#f1d296}
 
+#dialog-next:is(:hover,:focus-visible) { color:#ffe3a4; text-decoration:underline; text-underline-offset:3px; }
+
 /* Cinematic controls sit around the animation; subtitles leave the stage visible. */
 #cutscene { position:absolute; inset:0; z-index:10; pointer-events:none; background:linear-gradient(transparent 72%,#07100dd9); }
 .cutscene-inner { position:absolute; inset:0; max-width:none; width:100%; padding:18px 26px; display:flex; flex-direction:column; justify-content:space-between; }
