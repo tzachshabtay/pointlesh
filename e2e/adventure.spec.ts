@@ -85,17 +85,18 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   await target(page, 'Stew cauldron');
   await speech(page, 'sleeping potion'); await dismiss(page);
   // Observe a complete transition so there is a full watching window to attempt the failure.
-  await expect(page.locator('#guard-status')).toContainText('Guard looking away');
-  await expect(page.locator('#guard-status')).toContainText('Guard watching');
+  const guardPhase = () => page.evaluate(() => (window as any).pointleshDemo.scene.guardPatrol.phase);
+  await expect(page.locator('#guard-status')).toHaveCount(0);
+  await expect.poll(guardPhase, { timeout: 35000 }).toBe('idle-front');
   await inventory(page, 'Dreamcap stout');
   await target(page, 'Stew cauldron');
   await speech(page, 'He is watching!');
   await expect(page.locator('#inventory').getByRole('button', { name: 'Dreamcap stout', exact: true })).toBeVisible();
   await dismiss(page);
-  await expect(page.locator('#guard-status')).toContainText('Guard looking away');
+  await expect.poll(guardPhase, { timeout: 35000 }).toBe('idle-back');
   await target(page, 'Stew cauldron');
-  await speech(page, 'Grub falls asleep'); await dismiss(page);
-  await expect(page.locator('#guard-status')).toContainText('Grub is sound asleep');
+  await speech(page, 'wait for his next drink'); await dismiss(page);
+  await expect.poll(guardPhase, { timeout: 35000 }).toBe('asleep');
   await expect(page.locator('#inventory').getByRole('button', { name: 'Dreamcap stout', exact: true })).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('camp-guard-asleep.png'), fullPage: true });
 

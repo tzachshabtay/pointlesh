@@ -22,7 +22,12 @@ export interface StoryState {
 export function newStory(): StoryState {
   return { roomId: 'village', inventory: [], flags: {}, journal: ['King Aldric was taken east. Find a way into the orc camp.'], guardClock: 0, introStep: 0, endingStep: -1 };
 }
-export function guardLookingAway(state: StoryState): boolean { return state.guardClock % 7200 >= 4100; }
+export function guardLookingAway(state: StoryState): boolean { return state.flags.guardDistracted === true; }
+export function finishGuardDrink(state: StoryState): boolean {
+  if (!state.flags.stewSpiked) return false;
+  addClue(state, 'guardAsleep', 'Grub drank the doctored stew. His snores are shaking the palisade.');
+  return true;
+}
 export function addClue(state: StoryState, flag: string, clue: string): void {
   if (!state.flags[flag]) { state.flags[flag] = true; state.journal.push(clue); }
 }
@@ -67,7 +72,7 @@ export const targets: Record<RoomId, Target[]> = {
   ],
   camp: [
     { id: 'cauldron', name: 'Stew cauldron', x: 306, y: 398, walkX: 402, walkY: 466, description: 'The orcs’ supper. Even a sleeping potion would improve it.' },
-    { id: 'guard', name: 'Grub the guard', x: 568, y: 412, description: 'An enormous orc. He turns away to inspect the stew every few seconds.' },
+    { id: 'guard', name: 'Grub the guard', x: 568, y: 412, description: 'An enormous orc with a well-worn route between the cage and the stew.' },
     { id: 'cage', name: 'King Aldric’s cage', x: 777, y: 344, walkX: 721, walkY: 450, description: 'The king is imprisoned above a steep ledge. I need a safe way down.' },
     { id: 'camp-exit', name: 'Back to the wood', x: 90, y: 474, exit: 'forest', description: 'A discreet retreat is also a kind of strategy.' }
   ]
@@ -89,8 +94,8 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
     if (item === 'sleepyStout' && targetId === 'cauldron') {
       if (!guardLookingAway(state)) return { text: 'He is watching! Wait until he turns his back, then try the brew again.' };
       state.inventory = state.inventory.filter(value => value !== item);
-      addClue(state, 'guardAsleep', 'Grub drank the doctored stew. His snores are shaking the palisade.');
-      return { text: 'A discreet splash. One enthusiastic taste. Grub falls asleep mid-complaint.' };
+      addClue(state, 'stewSpiked', 'The dreamcap stout is in the stew. Now wait for Grub’s next drink.');
+      return { text: 'A discreet splash. Now to wait for his next drink.' };
     }
     if (item === 'rope' && targetId === 'cage') {
       if (!state.flags.guardAsleep) return { text: 'The guard would hear me. I need to send him to sleep first.' };
@@ -140,7 +145,7 @@ export function hint(state: StoryState): string {
   if (!state.flags.tookMushroom) return 'Mara described the silver-spotted mushrooms beside the forest path.';
   if (!state.flags.mixedBrew) return 'Select the dreamcap, then select the stout to combine them.';
   if (!state.flags.tookPickaxe) return 'The runed chest in Goldroot Mine opens with Orrin’s words.';
-  if (!state.flags.guardAsleep) return 'At the camp, use the dreamcap stout on the cauldron when the guard turns away.';
+  if (!state.flags.guardAsleep) return state.flags.stewSpiked ? 'The stew is ready. Let Grub finish his next drink.' : 'At the camp, use the dreamcap stout on the cauldron when the guard turns away.';
   if (!state.flags.ropeTied) return 'Tie your rope to the cage so the king can climb down safely.';
   if (!state.flags.won) return 'Use the pickaxe on the cage’s lock. The way home is almost open.';
   return 'The king is home. There are worse reasons to have another round.';

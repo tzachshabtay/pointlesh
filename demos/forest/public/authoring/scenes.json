@@ -1085,7 +1085,7 @@
           "actorName": "guard",
           "displayedScale": 3.1,
           "targetId": "guard",
-          "description": "An enormous orc. He turns away to inspect the stew every few seconds."
+          "description": "An enormous orc with a well-worn route between the cage and the stew."
         },
         "behaviors": [
           "forest.interact"
@@ -4044,6 +4044,36 @@
                   "value": 494
                 }
               }
+            },
+            {
+              "id": "camp.guard.cage",
+              "prefabId": "forest.point.interaction",
+              "name": "Grub · cage post",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 568
+                },
+                "y": {
+                  "value": 412
+                }
+              }
+            },
+            {
+              "id": "camp.guard.cauldron",
+              "prefabId": "forest.point.interaction",
+              "name": "Grub · drink at cauldron",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 220
+                },
+                "y": {
+                  "value": 350
+                }
+              }
             }
           ],
           "objects": [],
@@ -4461,6 +4491,93 @@
                 },
                 "name": "Back to the wood",
                 "entityId": "camp-exit"
+              }
+            },
+            {
+              "id": "camp.cauldron-ground::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "a",
+                  "x": 210,
+                  "y": 337
+                },
+                {
+                  "id": "b",
+                  "x": 325,
+                  "y": 337
+                },
+                {
+                  "id": "c",
+                  "x": 340,
+                  "y": 405
+                },
+                {
+                  "id": "d",
+                  "x": 210,
+                  "y": 405
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cauldron approach",
+                "entityId": "camp.cauldron-ground",
+                "properties": {
+                  "enabled": true,
+                  "walkable": true,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
               }
             }
           ]

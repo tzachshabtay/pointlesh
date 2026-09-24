@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, resolvePointleshScene, walkablePolygons, pointleshApproachTarget } from '@pointlesh/core';
-const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, targetVisible, hint } = await tsImport('../src/story.ts', import.meta.url);
+const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, targetVisible, hint } = await tsImport('../src/story.ts', import.meta.url);
 
 test('the rescue puzzle has an achievable dependency chain and a recoverable timing failure', () => {
   const state = newStory();
@@ -27,8 +27,11 @@ test('the rescue puzzle has an achievable dependency chain and a recoverable tim
   assert.match(interact(state, 'cauldron', 'sleepyStout').text, /watching/);
   assert.ok(state.inventory.includes('sleepyStout'));
   assert.equal(state.flags.guardAsleep, undefined);
-  state.guardClock = 5000;
+  state.flags.guardDistracted = true;
   interact(state, 'cauldron', 'sleepyStout');
+  assert.equal(state.flags.guardAsleep, undefined, 'Dosing the stew does not put the distant guard to sleep');
+  assert.equal(state.flags.stewSpiked, true);
+  assert.equal(finishGuardDrink(state), true);
   assert.equal(state.flags.guardAsleep, true);
   assert.match(interact(state, 'cage', 'pickaxe').text, /secure a rope/);
   assert.equal(state.flags.won, undefined);

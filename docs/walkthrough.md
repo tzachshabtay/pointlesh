@@ -24,7 +24,7 @@ Click an inventory item to select it, then click a target to use it. Click a sec
 
 6. **Get the pickaxe.** Enter **Goldroot Mine** from the wood. Interact with the **Runed tool chest** and choose **Stone remembers.** The chest opens and supplies the **Goldroot pickaxe**. If that answer is unavailable, return to Orrin for the clue. Leave the mine and enter the orc camp from the forest.
 
-7. **Put Grub to sleep.** Select **Dreamcap stout**, then use it on the **Stew cauldron** while Grub looks away. The guard status tells you when it is safe. Borin approaches before performing the action, so the guard's state at arrival matters. If Grub is watching, Borin refuses and keeps the brew; dismiss the response and try again. It is easier to approach the cauldron first, then wait for the next safe window. The cycle repeats without a failure limit.
+7. **Put Grub to sleep.** Watch Grub's patrol: he turns his back at the cage, walks to the cauldron, drinks, and returns. Select **Dreamcap stout**, then use it on the **Stew cauldron** while he stands facing away or walks back to the cage. Borin approaches before performing the action, so the guard's state at arrival matters. If Grub is watching, Borin refuses and keeps the brew; dismiss the response and try again. It is easier to approach the cauldron first, then wait for the next safe window. After adding the brew, wait for Grub to finish his next drink and fall asleep. The cycle repeats without a failure limit.
 
 8. **Secure the king's escape.** Once Grub is asleep, use the **Climbing rope** on **King Aldric's cage**. Borin will not break the lock until the king has a safe way down.
 
@@ -51,7 +51,8 @@ Open **Designer** to inspect the current room, or visit [the direct designer pre
 | Conversations | Open **Dialogs** to inspect the native dialogue trees and line assets. Changes update the demo's authored conversation runtime. |
 | Asset references | Open **AI Assets**, then **Graphics → Characters → Borin**. **Base image** shows one still pose. Its **Animation** dropdown contains real idle, walk and speak sequences for front, back and left views (right mirrors left). Preview or edit a sequence and see the bound character update. **Graphics → Objects** contains the pickup graphics. The catalog also contains room atlases and dialogue assets. Generated room backgrounds are documented in [art-prompts.md](art-prompts.md). |
 | Animated cutscenes | Save midway through the kidnapping, let the action advance and load. The cast resumes at the saved pose and time. Next scene, automatic playback and skipping all return control to the game. |
-| Save/load | Save before the guard puzzle, change rooms or consume an item, and load. Inventory, flags, journal, guard timer and presentation checkpoints are restored. |
+| Guard patrol | In the camp, drag **Grub · cage post** and **Grub · drink at cauldron** to adjust the route. In Assets, Grub has linked **Face · front to back**, **Face · back to left**, and **Drink · cauldron** clips. Return turns play the same frames in reverse. |
+| Save/load | Save before the guard puzzle, change rooms or consume an item, and load. Inventory, flags, journal, the guard's patrol phase, position and animation timing, and presentation checkpoints are restored. |
 
 Some properties intentionally remain hooks for game-specific behavior rather than automatic rules. For example, a client can use custom properties to add keys, quests, permissions or interaction verbs; the library does not interpret arbitrary JSON as executable code.
 

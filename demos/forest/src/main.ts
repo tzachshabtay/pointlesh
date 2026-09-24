@@ -9,9 +9,11 @@ import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
-import { applyDialogChoice, combineItems, ending, guardLookingAway, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { applyDialogChoice, combineItems, ending, finishGuardDrink, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
-import { roomEntryPointId } from './points';
+import { addForestPoints, roomEntryPointId } from './points';
+import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
+import { addGuardAnimations } from './guard-assets';
 import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import './style.css';
@@ -51,6 +53,8 @@ class ForestAdventure extends Phaser.Scene {
   background!: Phaser.GameObjects.Image;
   private roomTextureSources = new Map<RoomId, string>();
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
+  guardPatrol?: GuardPatrol;
+  private guardCheckpoint?: GuardPatrolSnapshot;
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
   objectTextureBindings = new Map<string, { assetId: string; binding: ReturnType<AiAssetRuntime['bindTexture']> }>();
   private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
@@ -283,6 +287,8 @@ class ForestAdventure extends Phaser.Scene {
     this.render();
   }
   changeRoom(room: RoomId, move = true) {
+    if (this.guardPatrol) this.guardCheckpoint = this.guardPatrol.snapshot();
+    this.guardPatrol = undefined;
     const previousRoom = this.background.texture.key.slice('room.'.length) as RoomId;
     this.clearMovementKeys();
     this.epoch++;
@@ -387,7 +393,7 @@ class ForestAdventure extends Phaser.Scene {
           const controller = new CharacterController({ id: object.id, position: object.position, facing: this.authoredFacing(object), directions: object.properties.directions === 8 ? 8 : 4 });
           const binding = new PhaserAdventureCharacter(this, controller, sprite, {
             autoUpdate: false, aiRuntime: this.aiRuntime, assetId: object.assetId,
-            animations: () => readCharacterAnimations(current().properties),
+            animations: () => actorName === 'guard' ? this.guardPatrol?.animations(readCharacterAnimations(current().properties)) ?? readCharacterAnimations(current().properties) : readCharacterAnimations(current().properties),
             baseScale: () => ({ x: current().scaleX, y: current().scaleY }),
             origin: () => ({ x: current().anchorX, y: 1 - current().anchorY }),
             angle: () => current().rotation,
@@ -400,9 +406,25 @@ class ForestAdventure extends Phaser.Scene {
           });
         }
         npc.actorName = actorName;
-        npc.controller.state.position = { ...object.position };
+        if (actorName !== 'guard' || !this.guardPatrol) npc.controller.state.position = { ...object.position };
         npc.controller.config.directions = object.properties.directions === 8 ? 8 : 4;
-        npc.controller.face(this.authoredFacing(object));
+        for (const key of ['speed', 'walkStep'] as const) {
+          const value = Number(object.properties[key]);
+          if (Number.isFinite(value) && value > 0) npc.controller.config[key] = value;
+        }
+        npc.controller.config.movementLinkedToAnimation = object.properties.movementLinkedToAnimation !== false;
+        if (actorName === 'guard' && !this.guardPatrol) {
+          this.guardPatrol = new GuardPatrol(npc.controller, npc.binding, () => ({
+            home: resolvePointleshPoint(this.resolved(), GUARD_HOME_POINT).position,
+            drink: resolvePointleshPoint(this.resolved(), GUARD_DRINK_POINT).position,
+          }), () => {
+            const asleep = finishGuardDrink(this.story);
+            if (asleep) this.render();
+            return asleep;
+          });
+          if (this.guardCheckpoint) this.guardPatrol.restore(this.guardCheckpoint);
+          else this.guardPatrol.start(this.story.flags.guardAsleep);
+        } else if (actorName !== 'guard') npc.controller.face(this.authoredFacing(object));
         npc.binding.sync();
       }
     }
@@ -559,7 +581,9 @@ class ForestAdventure extends Phaser.Scene {
     return { roomId: this.story.roomId, inventory: [...this.story.inventory], flags: { ...this.story.flags }, characters: { borin: this.character.snapshot() }, selectedItem: this.selected ?? null,
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
       cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
-      extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock, speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '' } };
+      extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
+        ...(this.guardPatrol || this.guardCheckpoint ? { guardPatrol: (this.guardPatrol?.snapshot() ?? this.guardCheckpoint) as unknown as JSONValue } : {}),
+        speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '' } };
   }
   validateSave(save: GameState) {
     if (!roomIds.includes(save.roomId as RoomId) || !save.characters.borin || Object.keys(save.characters).length !== 1 || save.inventory.some(item => !(item in items)) || Object.values(save.flags).some(flag => typeof flag !== 'boolean')) throw new Error('Save references unknown adventure content');
@@ -570,6 +594,7 @@ class ForestAdventure extends Phaser.Scene {
       new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, stepIndex), elapsedMs: cutscene[`${kind}ElapsedMs`] ?? 0 });
     }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
+    if (save.extensions.guardPatrol !== undefined) assertGuardPatrolSnapshot(save.extensions.guardPatrol);
     const checkDialog = new AdventureDialog(dialogs, assets); checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const actor = new CharacterController(this.character.config); actor.restore(save.characters.borin);
   }
@@ -582,6 +607,8 @@ class ForestAdventure extends Phaser.Scene {
     this.story = { roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep };
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: checkpoint[`${kind}ElapsedMs`] ?? 0 });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
+    this.guardPatrol = undefined;
+    this.guardCheckpoint = save.extensions.guardPatrol as unknown as GuardPatrolSnapshot | undefined;
     this.changeRoom(this.story.roomId, false);
     this.conversation = conversation; conversation.onTurn(next => this.renderTurn(next));
     if (turn && turn.type !== 'end') this.renderTurn(turn);
@@ -618,21 +645,21 @@ class ForestAdventure extends Phaser.Scene {
       if (!this.talking && this.story.roomId === 'camp' && !this.story.flags.guardAsleep) this.story.guardClock += Math.min(delta, 100);
     }
     for (const npc of this.npcActors.values()) {
+      if (npc.actorName === 'guard' && this.guardPatrol) {
+        if (!paused && !this.talking) this.guardPatrol.update(Math.min(delta, 100));
+        else npc.binding.sync();
+        this.story.flags.guardDistracted = this.guardPatrol.distracted;
+        if (this.story.flags.guardAsleep) npc.sprite.setAngle(80);
+        continue;
+      }
       const speaking = this.talking && npc.actorName === this.speakingVoice;
       const speech = el('speech').textContent ?? '';
       if (speaking && npc.controller.state.speech?.text !== speech) void npc.controller.say(speech, 3600000);
       else if (!speaking) npc.controller.finishSpeech();
-      if (npc.actorName === 'guard') {
-        npc.controller.face(guardLookingAway(this.story) && !this.story.flags.guardAsleep ? 'up' : 'down');
-      }
       if (!paused) npc.binding.update(Math.min(delta, 100));
-      if (npc.actorName === 'guard' && this.story.flags.guardAsleep) npc.sprite.setAngle(80);
     }
     this.drawRoomTexture(this.story.roomId);
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
-    el('guard-status').hidden = this.story.roomId !== 'camp' || this.story.introStep < intro.length;
-    const away = guardLookingAway(this.story); el('guard-status').classList.toggle('away', away || this.story.flags.guardAsleep);
-    el('guard-status').textContent = this.story.flags.guardAsleep ? '☾ Grub is sound asleep' : away ? '◇ Guard looking away · now is your chance' : '◉ Guard watching · wait for your moment';
   }
 }
 
@@ -699,10 +726,11 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
   const response = await fetch(`${import.meta.env.BASE_URL}authoring/${name}.json`);
   if (response.ok) {
     const value = await response.json(); validate(value);
-    if (name === 'scenes') authoredScenes = value;
+    if (name === 'scenes') authoredScenes = addForestPoints(value);
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }
+addGuardAnimations(assets);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });

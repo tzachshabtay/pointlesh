@@ -1,6 +1,7 @@
-import { createPointPrefab, createPointleshInstance, extendPointleshPrefab, findClosestReachablePath, isPointleshArea, pointleshApproachTarget, resolvePointleshScene, walkablePolygons, type Point, type PointleshPrefabInstance } from '@pointlesh/core';
+import { createPointPrefab, createPointleshArea, createPointleshInstance, extendPointleshPrefab, findClosestReachablePath, isPointleshArea, pointleshApproachTarget, resolvePointleshScene, walkablePolygons, type Point, type PointleshPrefabInstance } from '@pointlesh/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { roomNames, targets, type RoomId } from './story';
+import { GUARD_HOME_POINT, GUARD_DRINK_POINT } from './guard-patrol';
 
 export const roomEntryPointId = (room: RoomId, from: RoomId) => `${room}.entry.from-${from}`;
 
@@ -12,6 +13,10 @@ export function addForestPoints(source: SceneDesignerManifest): SceneDesignerMan
   prefabs['forest.point.entry'] ??= extendPointleshPrefab(template, { id: 'forest.point.entry', name: 'Room entry', editor: { folderPath: ['Points'] } });
   prefabs['forest.point.interaction'] ??= extendPointleshPrefab(template, { id: 'forest.point.interaction', name: 'Interaction point', editor: { folderPath: ['Points'] } });
   for (const scene of Object.values(manifest.scenes)) {
+    if (scene.id === 'camp' && !scene.layers.some(layer => layer.areas.some(area => area.id === 'camp.cauldron-ground::area'))) {
+      scene.layers[0]?.areas.push(createPointleshArea({ id: 'camp.cauldron-ground::area', entityId: 'camp.cauldron-ground', name: 'Cauldron approach',
+        walkable: true, closed: true, vertices: [{ id: 'a', x: 210, y: 337 }, { id: 'b', x: 325, y: 337 }, { id: 'c', x: 340, y: 405 }, { id: 'd', x: 210, y: 405 }] }));
+    }
     const room = resolvePointleshScene(manifest, scene.id), roomId = scene.id as RoomId;
     if (!targets[roomId]) continue;
     const player = room.objects.find(object => object.properties.role === 'player');
@@ -21,6 +26,13 @@ export function addForestPoints(source: SceneDesignerManifest): SceneDesignerMan
       if (scene.layers.some(layer => layer.prefabs?.some(instance => instance.id === id))) return;
       const layer = scene.layers.find(layer => layer.id === layerId)!;
       (layer.prefabs ??= []).push(createPointleshInstance({ id, name, prefabId, overrides: { x: { value: position.x }, y: { value: position.y } } }));
+    }
+    if (roomId === 'camp') {
+      const guard = room.objects.find(object => object.properties.actorName === 'guard');
+      if (guard) {
+        add(GUARD_HOME_POINT, 'Grub · cage post', 'forest.point.interaction', guard.position, guard.layerId);
+        add(GUARD_DRINK_POINT, 'Grub · drink at cauldron', 'forest.point.interaction', onGround({ x: 220, y: 350 }), guard.layerId);
+      }
     }
     for (const entity of [...room.areas.filter(area => area.kind === 'hotspot'), ...room.objects.filter(object => object.kind === 'object')]) {
       if (entity.properties.walkPointId) continue;

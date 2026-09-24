@@ -54,6 +54,26 @@ test('native linked animation states drive idle frames and frame-linked walking 
   view.destroy();
 });
 
+test('reverse assignments reverse frame holds and transforms without mutating the shared clip', () => {
+  const f = fixture();
+  const animation = f.manifest.assets.walk.animations[0];
+  animation.frameTimings[5] = { delayMs: 200, scaleX: .5, rotation: 12 };
+  f.mapping.idle.front = { assetId: 'parent', key: 'walk', reverse: true };
+  f.view.sync();
+  assert.equal(f.sprite.frame, 5);
+  assert.equal(f.sprite.scaleX, .5);
+  assert.equal(f.sprite.rotation, 12 * Math.PI / 180);
+  assert.equal(f.view.animationDurationMs, 700);
+  f.view.update(199); assert.equal(f.sprite.frame, 5);
+  f.view.update(1); assert.equal(f.sprite.frame, 4); assert.equal(f.sprite.scaleX, 1);
+  assert.deepEqual(animation.frames, [0, 1, 2, 3, 4, 5]);
+  assert.equal(animation.frameTimings[0].delayMs, 50);
+  f.controller.stop(); f.mapping.idle.front.reverse = false; f.view.sync();
+  assert.equal(f.sprite.frame, 0);
+  f.view.update(50); assert.equal(f.sprite.frame, 1);
+  f.view.destroy();
+});
+
 test('restoring walk frame 5 while idle frame count is 2 retains the exact authored phase', () => {
   const source = fixture(); source.controller.walkTo({ x: 1000, y: 100 }, floor); source.view.update(575);
   const snapshot = source.controller.snapshot(); assert.equal(snapshot.animationFrame, 5); assert.equal(snapshot.animationElapsedMs, 75);

@@ -1,8 +1,8 @@
 # Forest demo art
 
-These original pixel-art room backgrounds were generated with the built-in `image_gen` tool, then copied unmodified into the project. There are no external runtime image dependencies. No fallback CLI or post-generation image editing was used.
+These original pixel-art room backgrounds were generated with the built-in `image_gen` tool, then copied unmodified into the project. There are no external runtime image dependencies. The guard patrol artwork added later uses the sprite import process documented below.
 
-The six characters are original code-authored pixel art in `demos/forest/src/sprites.ts`. Each has separate front, back, and left-profile drawings; the editable right-facing prefab slot mirrors the left profile. Each view includes four walk frames, two idle frames, and two speaking frames, all 24 × 32 pixels. The PNGs in `demos/forest/public/art/characters/` include a 24 × 32 `base.png` still, a 192 × 96 sheet, and nine animation strips per character. The base image is the first front-facing idle frame. AI Assets registers this still as the parent image and links each strip as a native animation, so its designer previews the same sequences used by the game.
+The six original character seeds are code-authored pixel art in `demos/forest/src/sprites.ts`; later designer promotions can replace them. Each seed has separate front, back, and left-profile drawings; the editable right-facing prefab slot mirrors the left profile. Each view includes four walk frames, two idle frames, and two speaking frames, all 24 × 32 pixels. The PNGs in `demos/forest/public/art/characters/` include a 24 × 32 `base.png` still, a 192 × 96 sheet, and nine animation strips per character. The base image is the first front-facing idle frame. AI Assets registers this still as the parent image and links each strip as a native animation, so its designer previews the same sequences used by the game.
 
 Regenerate the 66 committed PNGs with `npx tsx demos/forest/scripts/generate-character-art.ts`. Add `--promote` to explicitly update the authored manifests with the character image and animation definitions and prefab direction slots. Promotion changes the known generated parent sheet path to `base.png`, removes its frame grid, and preserves custom version files and the selected version. It also preserves unrelated manifest entries, existing custom direction slots, and custom area shapes; it updates only untouched legacy floor and foreground rectangles to the demo's vector outlines. Normal builds never regenerate art or replace authored manifests. The generator uses Node's built-in PNG compression and requires no image-generation service.
 
@@ -81,3 +81,28 @@ Composition: traditional side-on adventure-game three-quarter perspective, level
 Style and invariants: match the reference's classic richly painted pixel-art game background: distinct crisp square pixel clusters, textured moss and bark, ochre earth, emerald leaves, deep teal and blue-green distant woodland, warm yellow-green afternoon sunshafts and a few tiny golden light motes. Preserve the reference's detailed chunky pixel treatment rather than smoothing it into a modern painting. Natural continuous lighting and ground across the whole panorama.
 Constraints: one seamless continuous landscape, no separate panels, no seams, no divider, no borders, no letterboxing, no text or sign lettering, no UI, no labels, no logo, no watermark, no people, no dwarfs, no orcs, no animals, no added characters. Do not include any interior or cottage. Aspect ratio exactly 3:1 horizontal if available.
 ```
+
+## Grub's animated patrol
+
+The September 2026 patrol uses the promoted 40 × 80 reference `demos/forest/public/art/guard.promoted-1790287059346.png`. Three original sheets were generated with the built-in image tool, with that image as the reference. No fallback image-generation API was used. Each requested sheet had four columns and two rows, eight consecutive poses, native transparency, a fixed camera and consistent scale, planted boots, and no scenery, shadows, text, or grid. Equipment, colors, armor, helmet and proportions were to match the reference.
+
+The generated sources were imported with `demos/forest/scripts/pack-guard-patrol-art.mjs FACE_BACK.png FACE_BACK_LEFT.png DRINK.png`. This is texture packing: one uniform scale per sheet, nearest-neighbor sampling, transparent padding and a shared foot pivot. It preserves the bending poses, rejects cropping and does not stretch individual poses to equal heights. Original generated source files were retained in the image tool's output directory.
+
+Final assets in `demos/forest/public/art/characters/guard/`:
+
+| File | Layout | Playback |
+| --- | --- | --- |
+| `face-back.png` | 4 × 2, eight 40 × 80 frames | Front to back, one second; reversed when returning to front idle. |
+| `face-back-left.png` | 4 × 2, eight 40 × 80 frames | Back to left, one second; reversed before the rightward walk. |
+| `drink.png` | 4 × 2, eight 40 × 80 frames | Bend, drink, straighten; longer holds on the drinking poses. |
+| `patrol-idle-back.png` | 3 × 3, eight 40 × 80 frames | Uses the last two back-facing poses of `face-back.png`, one four-second cycle. The prior promoted version remains available. |
+
+### Saved animation prompts
+
+These prompts are registered with the corresponding linked AI Assets animations for future regeneration, alongside the base-image reference:
+
+**Face front to back:** The exact guard from the base image turns smoothly in place from front-facing through a side view to fully back-facing. Eight consecutive frames, stable scale and planted feet; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.
+
+**Face back to left:** The exact guard from the base image turns in place from fully back-facing to a left-facing profile. Eight consecutive quarter-turn frames that also play smoothly in reverse; stable scale and planted feet. Preserve all equipment and proportions. Transparent background; no scenery or shadows.
+
+**Drink:** The exact guard from the base image bends toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean down, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.

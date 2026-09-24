@@ -430,12 +430,12 @@
     "guard": {
       "id": "guard",
       "kind": "image",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
+      "prompt": "A big pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 40,
+        "height": 80
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790287059346",
       "versions": {
         "original": {
           "name": "original",
@@ -444,6 +444,40 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790286869709": {
+          "name": "promoted-1790286869709",
+          "file": "art/guard.promoted-1790286869709.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-24T21:54:29.741Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790287059346": {
+          "name": "promoted-1790287059346",
+          "file": "art/guard.promoted-1790287059346.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-24T21:57:39.364Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790286869709",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -482,13 +516,33 @@
         "speak-left": {
           "label": "Speak · left",
           "assetId": "guard.speak-left"
+        },
+        "face-back": {
+          "label": "Face · front to back",
+          "assetId": "guard.face-back"
+        },
+        "face-back-left": {
+          "label": "Face · back to left",
+          "assetId": "guard.face-back-left"
+        },
+        "drink": {
+          "label": "Drink · cauldron",
+          "assetId": "guard.drink"
         }
       },
       "tags": [
         "forest",
         "character",
         "guard"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "king": {
       "id": "king",
@@ -3230,28 +3284,34 @@
       "kind": "animation",
       "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 120,
+        "height": 240
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 40,
+        "frameHeight": 80,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.idle-front",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 2,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790287002312",
       "versions": {
         "original": {
           "name": "original",
@@ -3260,6 +3320,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790287002312": {
+          "name": "promoted-1790287002312",
+          "file": "art/guard.idle-front.promoted-1790287002312.png",
+          "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+          "createdAt": "2026-09-24T21:56:42.346Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3268,35 +3346,50 @@
         "guard",
         "idle",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.idle-back": {
       "id": "guard.idle-back",
       "kind": "animation",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing back; 2 horizontal frames.",
+      "prompt": "The same armored orc seen fully from behind, breathing gently with his boots planted. Transparent background.",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 120,
+        "height": 240
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 40,
+        "frameHeight": 80,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.idle-back",
           "frames": [
             0,
-            1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
           ],
           "frameRate": 2,
           "repeat": -1
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "patrol-back-idle",
       "versions": {
         "original": {
           "name": "original",
@@ -3305,6 +3398,33 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790287163060": {
+          "name": "promoted-1790287163060",
+          "file": "art/guard.idle-back.promoted-1790287163060.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. idle animation, facing back",
+          "createdAt": "2026-09-24T21:59:23.078Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "patrol-back-idle": {
+          "name": "patrol-back-idle",
+          "file": "art/characters/guard/patrol-idle-back.png",
+          "prompt": "The same armored orc seen fully from behind, breathing gently with his boots planted. Transparent background.",
+          "createdAt": "2026-09-24T00:00:00.000Z",
+          "model": "imagegen",
+          "parentVersion": "promoted-1790287163060",
+          "notes": "Back-facing poses from the new face-back animation. Earlier promoted idle-back artwork is preserved."
         }
       },
       "tags": [
@@ -3313,7 +3433,16 @@
         "guard",
         "idle",
         "back"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.idle-left": {
       "id": "guard.idle-left",
@@ -3457,32 +3586,36 @@
     "guard.walk-left": {
       "id": "guard.walk-left",
       "kind": "animation",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "prompt": "walk left animation for the orc",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 120,
+        "height": 240
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 40,
+        "frameHeight": 80,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.walk-left",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790287258801",
       "versions": {
         "original": {
           "name": "original",
@@ -3491,6 +3624,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790287258801": {
+          "name": "promoted-1790287258801",
+          "file": "art/guard.walk-left.promoted-1790287258801.png",
+          "prompt": "walk left animation for the orc",
+          "createdAt": "2026-09-24T22:00:58.819Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3499,7 +3650,16 @@
         "guard",
         "walk",
         "left"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.speak-front": {
       "id": "guard.speak-front",
@@ -4678,6 +4838,200 @@
         "forest",
         "click"
       ]
+    },
+    "guard.face-back": {
+      "id": "guard.face-back",
+      "kind": "animation",
+      "prompt": "The exact guard from the base image turns smoothly in place from front-facing through a side view to fully back-facing. Eight consecutive frames, stable scale and planted feet; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.",
+      "dimensions": {
+        "width": 160,
+        "height": 160
+      },
+      "frameGrid": {
+        "frameWidth": 40,
+        "frameHeight": 80,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "guard.face-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "patrol",
+      "versions": {
+        "patrol": {
+          "name": "patrol",
+          "file": "art/characters/guard/face-back.png",
+          "prompt": "The exact guard from the base image turns smoothly in place from front-facing through a side view to fully back-facing. Eight consecutive frames, stable scale and planted feet; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.",
+          "createdAt": "2026-09-24T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "patrol",
+        "face-back"
+      ]
+    },
+    "guard.face-back-left": {
+      "id": "guard.face-back-left",
+      "kind": "animation",
+      "prompt": "The exact guard from the base image turns in place from fully back-facing to a left-facing profile. Eight consecutive quarter-turn frames that also play smoothly in reverse; stable scale and planted feet. Preserve all equipment and proportions. Transparent background; no scenery or shadows.",
+      "dimensions": {
+        "width": 160,
+        "height": 160
+      },
+      "frameGrid": {
+        "frameWidth": 40,
+        "frameHeight": 80,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "guard.face-back-left",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "patrol",
+      "versions": {
+        "patrol": {
+          "name": "patrol",
+          "file": "art/characters/guard/face-back-left.png",
+          "prompt": "The exact guard from the base image turns in place from fully back-facing to a left-facing profile. Eight consecutive quarter-turn frames that also play smoothly in reverse; stable scale and planted feet. Preserve all equipment and proportions. Transparent background; no scenery or shadows.",
+          "createdAt": "2026-09-24T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "patrol",
+        "face-back-left"
+      ]
+    },
+    "guard.drink": {
+      "id": "guard.drink",
+      "kind": "animation",
+      "prompt": "The exact guard from the base image bends toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean down, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+      "dimensions": {
+        "width": 160,
+        "height": 160
+      },
+      "frameGrid": {
+        "frameWidth": 40,
+        "frameHeight": 80,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "guard.drink",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 125
+            },
+            {
+              "delayMs": 180
+            },
+            {
+              "delayMs": 250
+            },
+            {
+              "delayMs": 700
+            },
+            {
+              "delayMs": 700
+            },
+            {
+              "delayMs": 700
+            },
+            {
+              "delayMs": 180
+            },
+            {
+              "delayMs": 200
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "patrol",
+      "versions": {
+        "patrol": {
+          "name": "patrol",
+          "file": "art/characters/guard/drink.png",
+          "prompt": "The exact guard from the base image bends toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean down, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+          "createdAt": "2026-09-24T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "guard",
+        "patrol",
+        "drink"
+      ]
     }
   },
   "styleGuide": {
@@ -5006,6 +5360,18 @@
     "inventory.pickaxe.click": [
       "Graphics",
       "Inventory"
+    ],
+    "guard.face-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.face-back-left": [
+      "Graphics",
+      "Characters"
+    ],
+    "guard.drink": [
+      "Graphics",
+      "Characters"
     ]
   }
 }

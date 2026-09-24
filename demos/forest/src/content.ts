@@ -8,6 +8,7 @@ import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestC
 import { bramblehollowStyleGuide } from './art-style';
 import { specializeForestEntities } from './entity-prefabs';
 import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-assets';
+import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -58,6 +59,8 @@ for (const id of CHARACTER_IDS) {
     tags: ['forest', 'character', id]
   };
 }
+Object.assign(characterAssetDefinitions, guardAnimationDefinitions);
+Object.assign(characterAssetDefinitions.guard.linkedAnimationAssets!, guardAnimationLinks);
 Object.assign(definitions, characterAssetDefinitions);
 Object.assign(definitions, interfaceAssetDefinitions);
 

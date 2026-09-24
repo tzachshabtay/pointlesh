@@ -5,7 +5,7 @@ export const CHARACTER_ANIMATION_DIRECTIONS = ['front', 'back', 'left', 'right',
 export type CharacterAnimationActivity = typeof CHARACTER_ANIMATION_ACTIVITIES[number];
 export type CharacterAnimationDirection = typeof CHARACTER_ANIMATION_DIRECTIONS[number];
 /** key is an ai-assets animation key or a linked animation state on assetId. */
-export type CharacterAnimationAssignment = { assetId: string; key: string; flipX?: boolean };
+export type CharacterAnimationAssignment = { assetId: string; key: string; flipX?: boolean; /** Play frame order and frame delays backwards without duplicating the asset. */ reverse?: boolean };
 export type CharacterAnimations = Partial<Record<CharacterAnimationActivity, Partial<Record<CharacterAnimationDirection, CharacterAnimationAssignment>>>>;
 
 const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -18,7 +18,8 @@ export function assertCharacterAnimations(value: unknown): asserts value is Char
     for (const [direction, assignment] of Object.entries(directions)) {
       if (!(CHARACTER_ANIMATION_DIRECTIONS as readonly string[]).includes(direction) || !object(assignment) ||
         typeof assignment.assetId !== 'string' || !assignment.assetId.trim() || typeof assignment.key !== 'string' || !assignment.key.trim() ||
-        (assignment.flipX !== undefined && typeof assignment.flipX !== 'boolean')) throw new Error(`Invalid character animation assignment: ${activity}.${direction}`);
+        (assignment.flipX !== undefined && typeof assignment.flipX !== 'boolean') ||
+        (assignment.reverse !== undefined && typeof assignment.reverse !== 'boolean')) throw new Error(`Invalid character animation assignment: ${activity}.${direction}`);
     }
   }
 }

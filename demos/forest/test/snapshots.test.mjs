@@ -31,8 +31,8 @@ test('full authored-dialog rescue walkthrough travels through all six room exits
   state.guardClock = 0;
   interact('cauldron', 'sleepyStout');
   assert.equal(state.inventory.includes('sleepyStout'), true, 'Mistimed use preserves the only potion');
-  state.guardClock = 4100;
-  interact('cauldron', 'sleepyStout'); interact('cage', 'rope');
+  state.flags.guardDistracted = true;
+  interact('cauldron', 'sleepyStout'); story.finishGuardDrink(state); interact('cage', 'rope');
   assert.equal(interact('cage', 'pickaxe').ending, true);
   assert.equal(state.flags.won, true);
   assert.deepEqual([...visited].sort(), [...story.roomIds].sort());

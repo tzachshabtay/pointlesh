@@ -99,6 +99,14 @@ export class PhaserAdventureCharacter {
   /** Refresh after external asset changes; normal manifest/preview replacements are also detected automatically. */
   refreshAnimation(): void { this.playbackSignature = undefined; this.sync(); }
 
+  /** One full cycle of the currently selected clip, including authored per-frame holds. */
+  get animationDurationMs(): number {
+    const animation = this.playback?.animation;
+    return animation?.frames.length
+      ? animation.frames.reduce((sum, _frame, index) => sum + (animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate), 0)
+      : this.controller.config.frameCount * this.controller.config.frameDurationMs;
+  }
+
   destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
@@ -132,7 +140,8 @@ export class PhaserAdventureCharacter {
     else if (this.options.flipLeft) this.sprite.setFlipX(state.facing.includes("left"));
     const frames = this.playback ? this.sprite.anims.currentAnim?.frames : undefined;
     if (frames?.length) {
-      const slot = state.animationFrame % frames.length;
+      const phase = state.animationFrame % frames.length;
+      const slot = this.selectedAssignment?.reverse ? frames.length - 1 - phase : phase;
       this.sprite.anims.pause();
       this.sprite.anims.setCurrentFrame(frames[slot]!);
       // Compose generated offsets/scales with live perspective. A free-running
@@ -225,6 +234,7 @@ export class PhaserAdventureCharacter {
     const animation = assignment ? this.playback?.animation : undefined;
     if (animation?.frames.length) {
       const durations = animation.frames.map((_frame, index) => animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate);
+      if (assignment?.reverse) durations.reverse();
       const timingSignature = JSON.stringify(durations);
       if (timingSignature !== this.timingSignature || this.controller.config.frameCount !== durations.length || this.controller.config.frameDurationMs !== durations[0]) {
         this.controller.setAnimationTiming(durations);
