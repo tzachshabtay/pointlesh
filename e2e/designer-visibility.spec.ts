@@ -42,6 +42,11 @@ test('eye and lock controls only affect editing, including live blockers and hid
   const before = await state(page);
   expect(before.walkables.length).toBeGreaterThan(0);
   expect(before.obstacles).toBeGreaterThanOrEqual(2);
+  await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.character.place({ x: 180, y: 465 });
+    void scene.character.walkTo({ x: 300, y: 465 });
+  });
   for (const name of ['Grub the guard', 'King Aldric']) {
     await row(page, name).getByRole('button', { name: 'Hide instance', exact: true }).click();
     await row(page, name).getByRole('button', { name: 'Lock instance', exact: true }).click();
@@ -49,6 +54,7 @@ test('eye and lock controls only affect editing, including live blockers and hid
   await row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Hide area', exact: true }).click();
   await row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Lock area', exact: true }).click();
   await expect.poll(() => state(page)).toEqual({ ...before, objects: before.objects.map(object => ({ ...object, rendered: false })) });
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBeCloseTo(300, 0);
   // The hidden guard continues walking/animating while the editor is open.
   const guardProgress = () => page.evaluate(() => {
     const patrol = (window as any).pointleshDemo.scene.guardPatrol;

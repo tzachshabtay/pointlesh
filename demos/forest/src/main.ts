@@ -456,7 +456,15 @@ class ForestAdventure extends Phaser.Scene {
       },
       onOpenChange: open => { this.editing = open; },
       onSceneChange: sceneId => { if (roomIds.includes(sceneId as RoomId) && this.story.roomId !== sceneId) this.changeRoom(sceneId as RoomId); },
-      onManifestChange: manifest => { authoredScenes = manifest; this.refreshDesign(); }
+      onManifestChange: manifest => {
+        const previous = this.resolved();
+        authoredScenes = manifest; this.resolvedCache = undefined;
+        // Eye/lock edits must not reset placements, interrupt walks or rebuild game objects.
+        const gameplay = (room: ReturnType<typeof resolvePointleshScene>) => JSON.stringify({
+          ...room, points: room.points.map(({ visible, ...point }) => point),
+        });
+        if (gameplay(previous) !== gameplay(this.resolved())) this.refreshDesign();
+      }
     });
     installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
       Object.assign(dialogs, manifest); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech();
