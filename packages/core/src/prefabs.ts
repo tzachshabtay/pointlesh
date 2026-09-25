@@ -386,7 +386,8 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
       const entity: ResolvedPointleshEntity = {
         id: instance.id, instanceId: instance.id, prefabId: prefab.id, layerId: layer.id,
         name: instance.name ?? prefab.name, kind: prefab.pointlesh.kind,
-        enabled: properties.enabled !== false && (prefab.pointlesh.kind === 'point' || layer.visible && instance.visible),
+        // Eye/lock flags belong to the editor; gameplay uses the enabled property.
+        enabled: properties.enabled !== false,
         properties, behaviors: [...new Set([...prefab.pointlesh.behaviors, ...(instance.pointlesh?.behaviors ?? [])])],
       };
       result.entities.push(entity);
@@ -399,10 +400,10 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
       for (const attribute of prefab.attributes) {
         if (attribute.kind === "area" || attribute.kind === "platform") {
           const area = resolveSceneArea(manifest, scene.id, prefabAttributeId(instance.id, attribute.id))?.area;
-          if (area) result.areas.push({ ...entity, enabled: entity.enabled && area.visible, areaId: area.id, attributeId: attribute.id, polygon: pointleshAreaPolygon(area.vertices, area.closed), closed: area.closed });
+          if (area) result.areas.push({ ...entity, areaId: area.id, attributeId: attribute.id, polygon: pointleshAreaPolygon(area.vertices, area.closed), closed: area.closed });
         } else if (attribute.kind === "object") {
           const object = resolveSceneObject(manifest, scene.id, prefabAttributeId(instance.id, attribute.id))?.object;
-          if (object) result.objects.push({ ...entity, instanceId: instance.id, prefabId: prefab.id, enabled: entity.enabled && object.visible, objectId: object.id, attributeId: attribute.id, position: { x: object.x, y: object.y }, assetId: object.assetId, scaleX: object.scaleX, scaleY: object.scaleY, rotation: object.rotation, anchorX: object.anchorX, anchorY: object.anchorY });
+          if (object) result.objects.push({ ...entity, instanceId: instance.id, prefabId: prefab.id, objectId: object.id, attributeId: attribute.id, position: { x: object.x, y: object.y }, assetId: object.assetId, scaleX: object.scaleX, scaleY: object.scaleY, rotation: object.rotation, anchorX: object.anchorX, anchorY: object.anchorY });
         }
       }
     }
@@ -410,7 +411,7 @@ export function resolvePointleshScene(manifest: SceneDesignerManifest, sceneId: 
       if (!isPointleshArea(area)) continue;
       const entity: ResolvedPointleshEntity = { id: area.pointlesh.entityId ?? area.id, layerId: layer.id,
         name: area.pointlesh.name ?? area.tag, kind: area.pointlesh.kind,
-        enabled: layer.visible && area.visible && area.pointlesh.properties.enabled !== false,
+        enabled: area.pointlesh.properties.enabled !== false,
         properties: structuredClone(area.pointlesh.properties), behaviors: [...area.pointlesh.behaviors] };
       result.entities.push(entity);
       result.areas.push({ ...entity, areaId: area.id, polygon: pointleshAreaPolygon(area.vertices, area.closed), closed: area.closed });

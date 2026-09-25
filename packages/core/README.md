@@ -12,6 +12,8 @@ Areas and hotspots belong to a scene layer's `areas`, created with `createPointl
 
 `resolvePointleshScene(manifest, sceneId)` resolves native areas and prefab instances into `entities`, polygon `areas`, sprite `objects` and coordinate `points`. Native scene areas have no prefab or instance IDs. `walkablePolygons(scene)` extracts enabled, closed walking shapes; curves are sampled for runtime geometry. World coordinates have positive Y downward; object/actor positions are ground anchors.
 
+Native `visible` (eye) and `locked` flags are editor settings only. They never disable navigation, area effects, interactions, characters or objects. Use the Pointlesh `enabled` property to disable gameplay explicitly.
+
 `migratePointleshSceneAreas(manifest)` converts standalone legacy region instances into scene-owned areas without changing geometry, gameplay IDs or settings. Existing area/hotspot factories remain supported; pass `includeLegacyAreas: true` to `pointleshPrefabs()` if you still reference their catalog IDs while migrating. `pointleshAreaCapabilities()` supports both native and legacy area kinds.
 
 Use `extendPointleshPrefab(base, extension)` for reusable specializations. It produces a new definition rather than a live inheritance chain between definitions. Instances still inherit omitted native fields from their selected prefab. Custom JSON properties and behavior IDs stay editable and serializable. See the [prefab guide](../../docs/prefabs.md).

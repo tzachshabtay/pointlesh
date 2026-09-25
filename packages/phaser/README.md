@@ -216,6 +216,8 @@ Pointlesh's inspector uses Scene Designer's standard palette and theme variables
 
 The combined installer includes `pointHandles`, which draws named coordinate markers while the scene/prefab designer is open. Dragging changes native X/Y overrides (or prefab defaults) in one undo step. Markers follow camera pan/zoom and page layout, respect hidden/locked layers and instances, and never become game sprites or navigation obstacles. `installPhaserPointHandles({ scene, designer, inspector })` is available separately.
 
+When the game owns its sprites (`renderSceneObjects: false`), supply `getSceneObject(objectId, sceneId)` to map resolved native object IDs to live Phaser sprites. The eye control then hides their rendering only while the scene designer is open, without changing game visibility, animation, collisions or navigation. Closing the designer restores rendering, and lock controls only restrict editing.
+
 Supply `getCharacter(instanceId, sceneId)` to connect the point inspector's **Character** dropdown and **Move character here** / **Walk character here** buttons to live `CharacterController` instances. Controllers should already be registered with `PhaserAdventureNavigation`; walking uses their current floors and obstacles. Continue ticking those actors while the designer is open. Movement previews do not change the manifest.
 
 Use `approachPointleshEntity` from core before dispatching hotspot/object interactions. It resolves optional `walkPointId` references from the current room and returns false when exact arrival is impossible or interrupted. Points and entry mappings stay in core data; game code chooses which entry point belongs to each room transition.

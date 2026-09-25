@@ -444,6 +444,11 @@ class ForestAdventure extends Phaser.Scene {
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200,
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),
+      getSceneObject: (objectId, sceneId) => {
+        if (sceneId !== this.story.roomId) return undefined;
+        const object = this.resolved().objects.find(object => object.objectId === objectId);
+        return object?.properties.role === 'player' ? this.actor : object ? this.entitySprites.get(object.id) : undefined;
+      },
       getCharacter: (id, sceneId) => {
         if (sceneId !== this.story.roomId) return undefined;
         this.clearMovementKeys(); this.epoch++;

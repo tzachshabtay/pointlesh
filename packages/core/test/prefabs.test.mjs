@@ -57,7 +57,7 @@ test('derived prefabs merge extension data without mutating the source', () => {
   assert.equal(derived.pointlesh.propertySchema.key.type, 'string');
 });
 
-test('only closed enabled walkable shapes enter navigation and visibility resolves at every level', () => {
+test('only closed enabled walkable shapes enter navigation, independently of editor eye and lock flags', () => {
   const prefab = createWalkableAreaPrefab({ vertices: square });
   const instances = [
     createPointleshInstance({ id: 'floor', prefabId: prefab.id }),
@@ -67,9 +67,28 @@ test('only closed enabled walkable shapes enter navigation and visibility resolv
     createPointleshInstance({ id: 'nonwalkable', prefabId: prefab.id, properties: { walkable: false } }),
   ];
   const manifest = manifestFor([prefab], instances);
-  assert.equal(walkablePolygons(resolvePointleshScene(manifest, 'room')).length, 1);
+  assert.equal(walkablePolygons(resolvePointleshScene(manifest, 'room')).length, 2);
   manifest.scenes.room.layers[0].visible = false;
-  assert.equal(walkablePolygons(resolvePointleshScene(manifest, 'room')).length, 0);
+  manifest.scenes.room.layers[0].locked = true;
+  prefab.attributes.find(attribute => attribute.id === 'area').area.visible = false;
+  assert.equal(walkablePolygons(resolvePointleshScene(manifest, 'room')).length, 2);
+});
+
+test('editor eye and lock flags never disable characters or objects at any prefab level', () => {
+  for (const create of [createObjectPrefab, createCharacterPrefab]) {
+    const prefab = create({ assetId: 'body' });
+    const instance = createPointleshInstance({ id: 'body', prefabId: prefab.id });
+    const manifest = manifestFor([prefab], [instance]);
+    const before = resolvePointleshScene(manifest, 'room');
+    const layer = manifest.scenes.room.layers[0];
+    for (const item of [layer, instance, prefab.attributes.find(attribute => attribute.id === 'object').object]) {
+      item.visible = false;
+      item.locked = true;
+      assert.deepEqual(resolvePointleshScene(manifest, 'room'), before);
+    }
+    instance.pointlesh = { properties: { enabled: false } };
+    assert.equal(resolvePointleshScene(manifest, 'room').objects[0].enabled, false);
+  }
 });
 
 test('quadratic area curves are converted to runtime geometry rather than straight edges', () => {

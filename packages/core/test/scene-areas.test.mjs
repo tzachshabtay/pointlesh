@@ -16,6 +16,11 @@ test('scene polygons resolve without prefabs and persist capabilities, geometry 
   assert.deepEqual(resolved.areas[0].properties.terrain, { footsteps: 'leaves' });
   assert.equal(walkablePolygons(resolved).length, 1);
   area.visible = false;
+  area.locked = true;
+  scene.layers[0].visible = false;
+  scene.layers[0].locked = true;
+  assert.deepEqual(resolvePointleshScene(manifest, 'room'), resolved);
+  area.pointlesh.properties.enabled = false;
   assert.equal(walkablePolygons(resolvePointleshScene(manifest, 'room')).length, 0);
 });
 
