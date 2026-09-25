@@ -109,7 +109,7 @@ test('inline area undo restores the entire offscreen vertex drag', async ({ page
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getManifest())).toEqual(after);
 });
 
-test('inline area controls remain clickable where a scrolled dock resize grip crosses them', async ({ page }) => {
+test('inline area controls remain clickable while resize handles stay outside scrolled content', async ({ page }) => {
   await page.goto('/?designer=1');
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
@@ -120,24 +120,13 @@ test('inline area controls remain clickable where a scrolled dock resize grip cr
   await enabled.uncheck();
   const undo = context.getByRole('button', { name: 'Undo', exact: true });
   await undo.scrollIntoViewIfNeeded();
-  // The upstream dock mounts its absolute resize grips inside the scrolling panel.
-  // Choose a window height that puts its south grip across the Undo button, then
-  // scroll both into the middle of the panel, reproducing the Linux layout failure.
-  const heightAdjustment = await native.evaluate(panel => {
-    const button = panel.querySelector('.pointlesh-native-area-history button')!.getBoundingClientRect();
-    const grip = panel.querySelector('[data-edge="s"]')!.getBoundingClientRect();
-    return button.y + button.height / 2 - grip.y - grip.height / 2;
-  });
-  const viewport = page.viewportSize()!;
-  await page.setViewportSize({ ...viewport, height: Math.round(viewport.height + heightAdjustment) });
-  await native.evaluate(panel => { panel.scrollTop += 300; });
-  const overlaps = await native.evaluate(panel => {
-    const button = panel.querySelector('.pointlesh-native-area-history button')!.getBoundingClientRect();
-    const grip = panel.querySelector('[data-edge="s"]')!.getBoundingClientRect();
-    const x = button.x + button.width / 2, y = button.y + button.height / 2;
-    return x >= grip.left && x <= grip.right && y >= grip.top && y <= grip.bottom;
-  });
-  expect(overlaps).toBe(true);
+  // The shared dock's frame sits outside the scrolling content and stays at
+  // the panel border rather than drifting across property buttons.
+  const panelId = await native.getAttribute('id');
+  const grip = page.locator(`[data-resize-panel="${panelId}"] [data-edge="s"]`);
+  const panelRect = (await native.boundingBox())!, gripRect = (await grip.boundingBox())!;
+  expect(await native.evaluate(panel => panel.scrollTop)).toBeGreaterThan(0);
+  expect(gripRect.y + gripRect.height / 2).toBeCloseTo(panelRect.y + panelRect.height, 0);
   await undo.click({ timeout: 10_000 });
   await expect(enabled).toBeChecked();
 });
