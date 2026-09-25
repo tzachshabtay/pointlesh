@@ -92,8 +92,8 @@ Final assets in `demos/forest/public/art/characters/guard/`:
 
 | File | Layout | Playback |
 | --- | --- | --- |
-| `face-back.png` | 4 × 2, eight 40 × 80 frames | Front to back, one second; reversed when returning to front idle. |
-| `face-back-left.png` | 4 × 2, eight 40 × 80 frames | Back to left, one second; reversed before the rightward walk. |
+| `face-back.png` | 4 × 2, eight 40 × 80 frames | Front-to-back turn, retained in Assets but no longer used by the patrol. |
+| `face-back-left.png` | 4 × 2, eight 40 × 80 frames | Back-to-left turn, retained in Assets but no longer used by the patrol. |
 | `drink.png` | 4 × 2, eight 40 × 80 frames | Bend, drink, straighten; longer holds on the drinking poses. |
 | `patrol-idle-back.png` | 3 × 3, eight 40 × 80 frames | Uses the last two back-facing poses of `face-back.png`, one four-second cycle. The prior promoted version remains available. |
 

@@ -35,11 +35,11 @@ test('guard patrol animates its full loop, restores mid-walk, and sleeps only af
   await page.screenshot({ path: testInfo.outputPath('drink.png') });
   await expect.poll(() => page.evaluate(() => (window as any).guardVisits.filter((v: any) => v.phase === 'idle-front').length), { timeout: 20000 }).toBe(2);
   const visits = await page.evaluate(() => (window as any).guardVisits);
-  expect(visits.map((v: any) => v.phase)).toEqual(['idle-front', 'face-back', 'idle-back', 'face-left', 'walk-left', 'drink', 'face-right', 'walk-right', 'face-front', 'idle-front']);
+  expect(visits.map((v: any) => v.phase)).toEqual(['idle-front', 'idle-back', 'walk-left', 'drink', 'walk-right', 'idle-front']);
+  expect(visits.some((v: any) => v.texture.includes('face-back'))).toBe(false);
   expect(visits.find((v: any) => v.phase === 'drink').x).toBeLessThan(visits[0].x - 150);
   expect(visits.find((v: any) => v.phase === 'walk-right').flip).toBe(true);
   expect(Math.abs(visits.at(-1).x - visits[0].x)).toBeLessThan(1);
-  expect(visits.find((v: any) => v.phase === 'face-right').frame).toBe(7);
   const conversation = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
     const before = scene.guardPatrol.snapshot();

@@ -15,36 +15,59 @@ function fixture(onDrink = () => false) {
   patrol.start(); return { patrol, controller };
 }
 
-test('patrol plays the ordered turns, exactly one back-idle cycle, walks both legs, and loops', () => {
+test('patrol changes direction immediately, plays one back-idle cycle, walks both legs, and loops', () => {
   const { patrol, controller } = fixture();
   const phases = [patrol.phase];
-  for (let i = 0; i < 76; i++) { patrol.update(25); if (phases.at(-1) !== patrol.phase) phases.push(patrol.phase); }
-  assert.deepEqual(phases, ['idle-front', 'face-back', 'idle-back', 'face-left', 'walk-left', 'drink', 'face-right', 'walk-right', 'face-front', 'idle-front']);
+  for (let i = 0; i < 60; i++) { patrol.update(25); if (phases.at(-1) !== patrol.phase) phases.push(patrol.phase); }
+  assert.deepEqual(phases, ['idle-front', 'idle-back', 'walk-left', 'drink', 'walk-right', 'idle-front']);
   assert.deepEqual(controller.state.position, { x: 80, y: 50 });
-  const again = fixture(); again.patrol.update(200);
+  assert.equal(controller.state.facing, 'down');
+  const again = fixture(); again.patrol.update(100);
   assert.equal(again.patrol.phase, 'idle-back'); assert.equal(again.patrol.distracted, true);
+  assert.equal(again.controller.state.facing, 'up');
   again.patrol.update(99); assert.equal(again.patrol.phase, 'idle-back');
-  again.patrol.update(1); assert.equal(again.patrol.phase, 'face-left'); assert.equal(again.patrol.distracted, false);
-  again.patrol.update(900); assert.equal(again.patrol.phase, 'walk-right');
+  again.patrol.update(1); assert.equal(again.patrol.phase, 'walk-left'); assert.equal(again.patrol.distracted, false);
+  assert.equal(again.controller.state.facing, 'left');
+  again.patrol.update(700); assert.equal(again.patrol.phase, 'walk-right');
+  assert.equal(again.controller.state.facing, 'right');
 });
 
-test('save/load resumes each patrol phase, including walks and reversed return clips', () => {
-  for (const elapsed of [35, 140, 265, 330, 525, 1050, 1150, 1400, 1850]) {
+test('save/load resumes each patrol phase, including both walks and drinking', () => {
+  for (const elapsed of [35, 140, 265, 525, 850, 950, 1400, 1535]) {
     const a = fixture(); a.patrol.update(elapsed);
     const b = fixture(); b.patrol.restore(JSON.parse(JSON.stringify(a.patrol.snapshot())));
     assert.deepEqual(b.patrol.snapshot(), a.patrol.snapshot());
     a.patrol.update(75); b.patrol.update(75);
     assert.deepEqual(b.patrol.snapshot(), a.patrol.snapshot());
   }
-  const { patrol } = fixture(); patrol.update(1100);
-  assert.equal(patrol.assignment.reverse, true);
-  assert.equal(patrol.assignment.key, 'face-back-left');
+});
+
+test('older saves from removed turns resume the next action without playing a turn', () => {
+  for (const [oldPhase, nextPhase, facing, position, walking] of [
+    ['face-back', 'idle-back', 'up', { x: 80, y: 50 }, false],
+    ['face-left', 'walk-left', 'left', { x: 80, y: 50 }, true],
+    ['face-right', 'walk-right', 'right', { x: 20, y: 50 }, true],
+    ['face-front', 'idle-front', 'down', { x: 80, y: 50 }, false],
+  ]) {
+    const { patrol, controller } = fixture();
+    const saved = patrol.snapshot();
+    saved.phase = oldPhase; saved.elapsedMs = 50; saved.character.position = position;
+    patrol.restore(JSON.parse(JSON.stringify(saved)));
+    assert.equal(patrol.phase, nextPhase);
+    assert.equal(patrol.elapsedMs, 0);
+    assert.equal(controller.state.facing, facing);
+    assert.deepEqual(controller.state.position, position);
+    assert.equal(controller.isWalking, walking);
+    assert.equal(patrol.assignment, undefined);
+    patrol.update(25);
+    assert.equal(patrol.phase, nextPhase);
+  }
 });
 
 test('only completing a drink triggers sleep, and sleeping freezes the patrol', () => {
   let poisoned = false, drinks = 0;
   const { patrol, controller } = fixture(() => { drinks++; return poisoned; });
-  patrol.update(1000); assert.equal(patrol.phase, 'drink'); assert.equal(drinks, 0);
+  patrol.update(800); assert.equal(patrol.phase, 'drink'); assert.equal(drinks, 0);
   poisoned = true; patrol.update(99); assert.equal(drinks, 0);
   patrol.update(1); assert.equal(drinks, 1); assert.equal(patrol.phase, 'asleep');
   assert.deepEqual(controller.state.position, { x: 20, y: 50 });
