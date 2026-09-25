@@ -48,7 +48,7 @@ The authoring server loads `demos/forest/.env` and connects AI Assets' OpenAI im
 
 The demo loads its committed documents from `demos/forest/public/authoring/`. Promotion writes those JSON files, so edits survive a refresh and are included in the next build. `src/content.ts` defines the initial seed; normal builds never regenerate or overwrite promoted documents. To deliberately reset them, run `node --import tsx demos/forest/scripts/seed-authoring.ts --reset` from the repository root.
 
-In **Assets**, select **Graphics → Characters → Borin**. **Base image** is a single still portrait; choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. Pickup graphics are under **Graphics → Objects**. In **Prefabs → Directional animations**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
+In **Assets**, select **Graphics → Characters → Borin**. **Base image** is a single still portrait; choose an **Animation** to preview or edit its frames. Each character has idle, walk and speak sequences with front, back and side artwork. When an animation is selected as a generation reference, AI Assets uses one complete frame with its original margins to guide appearance and size; it does not send the whole sheet as a single pose. Pickup graphics are under **Graphics → Objects**. In **Prefabs → Directional animations**, character prefabs expose directional asset/animation slots, a per-slot **Flip** checkbox and optional diagonal slots. Animation timing comes from AI Assets, including movement linked to frame changes.
 
 Grub patrols between the cage and cauldron: front idle, turn back, one back-idle cycle, turn left, walk, drink, then turn and return. His linked turn/drink clips are editable in Assets, and the two named **Grub** points in the camp control his route. The puzzle follows his visible actions; the sleeping brew takes effect when he finishes drinking. Saving preserves his current patrol phase and position.
 
@@ -137,26 +137,26 @@ npm pack --workspace @pointlesh/core --workspace @pointlesh/designer \
   --workspace @pointlesh/dev --workspace @pointlesh/phaser
 ```
 
-The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.9`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.9 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
+The current integration uses Scene Designer `^0.2.1`, AI Assets `^0.11.17`, Dialog Designer `^0.1.1` and Phaser `^4.2.0`. Scene Designer 0.2 and Dialog Designer 0.1.1 still declare older AI Assets 0.7 and 0.8 ranges, respectively. This checkout resolves one AI Assets 0.11.17 family and verifies compatibility through the build and tests. Downstream npm applications using these package artifacts need the same application-level overrides until upstream dependency ranges are updated:
 
 ```json
 {
   "overrides": {
-    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.9" },
-    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.9" },
+    "@scene-designer/core": { "@ai-game-assets/core": "^0.11.17" },
+    "@scene-designer/designer": { "@ai-game-assets/core": "^0.11.17" },
     "@scene-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.9",
-      "@ai-game-assets/phaser": "^0.11.9"
+      "@ai-game-assets/core": "^0.11.17",
+      "@ai-game-assets/phaser": "^0.11.17"
     },
-    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.9" },
-    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.9" },
+    "@dialog-designer/core": { "@ai-game-assets/core": "^0.11.17" },
+    "@dialog-designer/designer": { "@ai-game-assets/core": "^0.11.17" },
     "@dialog-designer/dev": {
-      "@ai-game-assets/core": "^0.11.9",
-      "@ai-game-assets/dev": "^0.11.9"
+      "@ai-game-assets/core": "^0.11.17",
+      "@ai-game-assets/dev": "^0.11.17"
     },
     "@dialog-designer/phaser": {
-      "@ai-game-assets/core": "^0.11.9",
-      "@ai-game-assets/phaser": "^0.11.9"
+      "@ai-game-assets/core": "^0.11.17",
+      "@ai-game-assets/phaser": "^0.11.17"
     }
   }
 }
