@@ -13,7 +13,8 @@ import { applyDialogChoice, combineItems, ending, finishGuardDrink, hint, intera
 import { createPixelActors, ForestMusic } from './sprites';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
-import { addGuardAnimations } from './guard-assets';
+import { addGuardAnimations, guardAnimationSize } from './guard-assets';
+import { addForestObjectAssets, updateForestInteractions } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import './style.css';
@@ -395,6 +396,8 @@ class ForestAdventure extends Phaser.Scene {
             autoUpdate: false, aiRuntime: this.aiRuntime, assetId: object.assetId,
             animations: () => actorName === 'guard' ? this.guardPatrol?.animations(readCharacterAnimations(current().properties)) ?? readCharacterAnimations(current().properties) : readCharacterAnimations(current().properties),
             baseScale: () => ({ x: current().scaleX, y: current().scaleY }),
+            ...(actorName === 'guard' ? { baseSize: () => guardAnimationSize(assets.assets[current().assetId], this.guardPatrol?.phase === 'collapse' || this.guardPatrol?.phase === 'asleep') } : {}),
+            areas: () => current().properties.ignoreScaling ? [] : this.resolved().areas,
             origin: () => ({ x: current().anchorX, y: 1 - current().anchorY }),
             angle: () => current().rotation,
           });
@@ -417,10 +420,8 @@ class ForestAdventure extends Phaser.Scene {
           this.guardPatrol = new GuardPatrol(npc.controller, npc.binding, () => ({
             home: resolvePointleshPoint(this.resolved(), GUARD_HOME_POINT).position,
             drink: resolvePointleshPoint(this.resolved(), GUARD_DRINK_POINT).position,
-          }), () => {
-            const asleep = finishGuardDrink(this.story);
-            if (asleep) this.render();
-            return asleep;
+          }), () => !!this.story.flags.stewSpiked && !this.story.flags.guardAsleep, () => {
+            if (finishGuardDrink(this.story)) this.render();
           });
           if (this.guardCheckpoint) this.guardPatrol.restore(this.guardCheckpoint);
           else this.guardPatrol.start(this.story.flags.guardAsleep);
@@ -662,7 +663,6 @@ class ForestAdventure extends Phaser.Scene {
         if (!paused && !this.talking) this.guardPatrol.update(Math.min(delta, 100));
         else npc.binding.sync();
         this.story.flags.guardDistracted = this.guardPatrol.distracted;
-        if (this.story.flags.guardAsleep) npc.sprite.setAngle(80);
         continue;
       }
       const speaking = this.talking && npc.actorName === this.speakingVoice;
@@ -739,11 +739,12 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
   const response = await fetch(`${import.meta.env.BASE_URL}authoring/${name}.json`);
   if (response.ok) {
     const value = await response.json(); validate(value);
-    if (name === 'scenes') authoredScenes = addForestPoints(value);
+    if (name === 'scenes') authoredScenes = addForestPoints(updateForestInteractions(value));
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }
 addGuardAnimations(assets);
+addForestObjectAssets(assets);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });

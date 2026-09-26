@@ -897,48 +897,6 @@
         "propertySchema": {}
       }
     },
-    "forest.object.mushroom": {
-      "id": "forest.object.mushroom",
-      "name": "Dreamcap mushroom",
-      "attributes": [
-        {
-          "id": "object",
-          "name": "Sprite",
-          "object": {
-            "tag": "pointlesh:object",
-            "assetId": "mushroom",
-            "x": 0,
-            "y": 0,
-            "scaleX": 2,
-            "scaleY": 2,
-            "rotation": 0,
-            "anchorX": 0.5,
-            "anchorY": 0,
-            "visible": true,
-            "locked": false
-          },
-          "kind": "object"
-        }
-      ],
-      "pointlesh": {
-        "kind": "object",
-        "properties": {
-          "enabled": true,
-          "label": "object",
-          "interactive": true,
-          "ignoreScaling": false,
-          "role": "pickup",
-          "pickupId": "mushroom",
-          "displayedScale": 2,
-          "targetId": "mushroom",
-          "description": "Violet caps with silver spots. Mara will know what they do."
-        },
-        "behaviors": [
-          "forest.interact"
-        ],
-        "propertySchema": {}
-      }
-    },
     "forest.character.guard": {
       "id": "forest.character.guard",
       "name": "Grub the guard",
@@ -1355,6 +1313,53 @@
           "enabled": true
         },
         "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.tool-chest": {
+      "id": "forest.object.tool-chest",
+      "name": "Runed tool chest",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "tool-chest",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Runed tool chest",
+          "walkPointId": "",
+          "walkThrough": false,
+          "interactive": true,
+          "ignoreScaling": false,
+          "role": "prop",
+          "targetId": "tool-chest",
+          "description": "The inscription reads: “What does the mountain remember?”"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
         "propertySchema": {}
       }
     }
@@ -2894,27 +2899,6 @@
               }
             },
             {
-              "id": "forest.pickup.mushroom",
-              "prefabId": "forest.object.mushroom",
-              "name": "Dreamcap mushroom",
-              "visible": true,
-              "locked": false,
-              "overrides": {
-                "object": {
-                  "x": 111,
-                  "y": 409
-                }
-              },
-              "pointlesh": {
-                "properties": {
-                  "approachOffsetX": 0,
-                  "approachOffsetY": 39,
-                  "walkPointId": "forest.walk.forest.pickup.mushroom"
-                },
-                "behaviors": []
-              }
-            },
-            {
               "id": "forest.entry.from-mine",
               "prefabId": "forest.point.entry",
               "name": "From The Goldroot Mine",
@@ -3420,6 +3404,105 @@
                 "name": "Bramblehollow",
                 "entityId": "forest-exit"
               }
+            },
+            {
+              "id": "mushroom::area",
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "dreamcap-0",
+                  "x": 35,
+                  "y": 394
+                },
+                {
+                  "id": "dreamcap-1",
+                  "x": 60,
+                  "y": 370
+                },
+                {
+                  "id": "dreamcap-2",
+                  "x": 105,
+                  "y": 369
+                },
+                {
+                  "id": "dreamcap-3",
+                  "x": 135,
+                  "y": 400
+                },
+                {
+                  "id": "dreamcap-4",
+                  "x": 164,
+                  "y": 416
+                },
+                {
+                  "id": "dreamcap-5",
+                  "x": 208,
+                  "y": 445
+                },
+                {
+                  "id": "dreamcap-6",
+                  "x": 208,
+                  "y": 479
+                },
+                {
+                  "id": "dreamcap-7",
+                  "x": 95,
+                  "y": 490
+                },
+                {
+                  "id": "dreamcap-8",
+                  "x": 40,
+                  "y": 462
+                }
+              ],
+              "pointlesh": {
+                "kind": "hotspot",
+                "name": "Dreamcap mushrooms",
+                "entityId": "mushroom",
+                "properties": {
+                  "enabled": true,
+                  "label": "Dreamcap mushrooms",
+                  "cursor": "interact",
+                  "walkPointId": "forest.walk.forest.pickup.mushroom",
+                  "interactive": true,
+                  "ignoreScaling": false,
+                  "role": "pickup",
+                  "pickupId": "mushroom",
+                  "displayedScale": 2,
+                  "targetId": "mushroom",
+                  "description": "Violet caps with silver spots. Mara will know what they do.",
+                  "approachOffsetX": 0,
+                  "approachOffsetY": 39,
+                  "walkThrough": false,
+                  "approachX": 0,
+                  "approachY": 0,
+                  "approachRadius": 10
+                },
+                "behaviors": [
+                  "forest.interact"
+                ],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                }
+              }
             }
           ]
         }
@@ -3497,6 +3580,37 @@
                 "y": {
                   "value": 484
                 }
+              }
+            },
+            {
+              "id": "tool-chest",
+              "prefabId": "forest.object.tool-chest",
+              "name": "Runed tool chest",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 258,
+                  "y": 429,
+                  "scaleX": 1,
+                  "scaleY": 1
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "enabled": true,
+                  "label": "Runed tool chest",
+                  "cursor": "interact",
+                  "exit": "",
+                  "description": "The inscription reads: “What does the mountain remember?”",
+                  "approachX": 258,
+                  "approachY": 425,
+                  "approachRadius": 10,
+                  "walkPointId": "mine.walk.tool-chest"
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             }
           ],
@@ -3727,72 +3841,6 @@
                 },
                 "name": "Foreground occlusion",
                 "entityId": "mine.foreground"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
-                  "x": 224,
-                  "y": 365
-                },
-                {
-                  "id": "b",
-                  "x": 292,
-                  "y": 365
-                },
-                {
-                  "id": "c",
-                  "x": 292,
-                  "y": 429
-                },
-                {
-                  "id": "d",
-                  "x": 224,
-                  "y": 429
-                }
-              ],
-              "id": "tool-chest::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "Runed tool chest",
-                  "cursor": "interact",
-                  "exit": "",
-                  "description": "The inscription reads: “What does the mountain remember?”",
-                  "approachX": 258,
-                  "approachY": 425,
-                  "approachRadius": 10,
-                  "walkPointId": "mine.walk.tool-chest"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "Runed tool chest",
-                "entityId": "tool-chest"
               }
             },
             {

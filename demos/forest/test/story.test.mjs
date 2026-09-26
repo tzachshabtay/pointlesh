@@ -77,14 +77,14 @@ test('authored scene prefabs provide reachable interactions, editable NPCs, and 
     }
   }
   assert.equal(npcCount, 5);
-  assert.deepEqual(pickups.sort(), ['coin', 'mushroom', 'rope']);
+  assert.deepEqual(pickups.sort(), ['coin', 'rope']);
 });
 
 test('seed and promoted pickups own their interactions without duplicate hotspot polygons', async () => {
   const { scenes } = await tsImport('../src/content.ts', import.meta.url);
   const promoted = JSON.parse(await readFile(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
   for (const manifest of [scenes, promoted]) {
-    for (const [roomId, pickupId, approach] of [['house', 'coin', { x: 516, y: 421 }], ['house', 'rope', { x: 127, y: 443 }], ['forest', 'mushroom', { x: 111, y: 448 }]]) {
+    for (const [roomId, pickupId, approach] of [['house', 'coin', { x: 516, y: 421 }], ['house', 'rope', { x: 127, y: 443 }]]) {
       const room = resolvePointleshScene(manifest, roomId);
       const object = room.objects.find(object => object.id === `${roomId}.pickup.${pickupId}`);
       assert.equal(object.kind, 'object');

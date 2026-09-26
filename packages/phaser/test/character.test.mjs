@@ -214,3 +214,15 @@ test('absolute poses share reversed holds, generated frame transforms, and live 
   f.runtime.designerCallbacks().onPreview('speak', 'after-destroy', f.manifest.assets.speak);
   assert.notEqual(f.sprite.textureKey, 'after-destroy');
 });
+
+test('one-shot poses hold their final authored frame, including reversed playback', () => {
+  const f = fixture();
+  const pose = { position: { x: 30, y: 45 }, activity: 'walking', facing: 'right' };
+  for (const elapsed of [599, 600, 100000]) {
+    f.view.renderPose(pose, elapsed, { loop: false }); assert.equal(f.sprite.frame, 5);
+  }
+  f.mapping.walk.right.reverse = true;
+  f.view.renderPose(pose, 100000, { loop: false }); assert.equal(f.sprite.frame, 0);
+  f.view.renderPose(pose, 0, { loop: false }); assert.equal(f.sprite.frame, 5);
+  f.view.destroy();
+});

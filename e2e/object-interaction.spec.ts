@@ -97,7 +97,7 @@ test('rope sprite follows authored transforms and its interactive toggle without
   expect(errors).toEqual([]);
 });
 
-test('coin and mushroom use direct sprite clicks and the same Nearby behavior', async ({ page }) => {
+test('coin sprite and painted mushroom hotspot share the same Nearby behavior', async ({ page }) => {
   await ready(page, 'house');
   const coinWalkPoint = await assignedWalkPoint(page, 'house.pickup.coin');
   const coin = await spritePoint(page, 'house.pickup.coin');
@@ -106,16 +106,21 @@ test('coin and mushroom use direct sprite clicks and the same Nearby behavior', 
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(coinWalkPoint);
   await dismiss(page);
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.resolved().areas.some((area: any) => area.id === 'mushroom'))).toBe(false);
-  const mushroom = await spritePoint(page, 'forest.pickup.mushroom');
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.resolved().areas.some((area: any) => area.id === 'mushroom'))).toBe(true);
+  const mushroom = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.cameras.main.setScroll(0, 0).setZoom(1);
+    const canvas = scene.game.canvas.getBoundingClientRect();
+    return { x: canvas.left + 100 * canvas.width / 960, y: canvas.top + 420 * canvas.height / 540 };
+  });
   await page.mouse.click(mushroom.x, mushroom.y);
   await expect(page.locator('#speech')).toContainText('ask someone');
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('forest.pickup.mushroom').visible)).toBe(true);
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.has('forest.pickup.mushroom'))).toBe(false);
   await dismiss(page);
   await page.evaluate(() => (window as any).pointleshDemo.scene.story.flags.knowsDreamcap = true);
   await page.getByRole('button', { name: 'Interact with Dreamcap mushrooms', exact: true }).click();
   await expect(page.locator('#speech')).toContainText('A dreamcap.');
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.entitySprites.get('forest.pickup.mushroom').visible)).toBe(false);
+  await expect(page.getByRole('button', { name: 'Interact with Dreamcap mushrooms', exact: true })).toHaveCount(0);
 });
 
 test('a generic object can render an AI Assets image and dispatch a client behavior', async ({ page }) => {

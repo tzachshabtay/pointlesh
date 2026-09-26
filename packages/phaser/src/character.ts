@@ -99,17 +99,17 @@ export class PhaserAdventureCharacter {
   }
 
   /**
-   * Sample an authored pose at absolute animation time (looping), for cutscenes
+   * Sample an authored pose at absolute animation time, for cutscenes
    * and previews. Does not advance or modify the gameplay controller or its path.
    * Call sync/update to resume displaying the controller afterward.
    */
-  renderPose(pose: PhaserCharacterPose, elapsedMs: number): void {
+  renderPose(pose: PhaserCharacterPose, elapsedMs: number, options: { loop?: boolean } = {}): void {
     if (this.destroyed) return;
     if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Animation time must be finite and nonnegative.');
     const effects = this.effects(pose.position);
     if (pose.scale !== undefined) effects.scale = pose.scale;
     const state = { ...this.controller.state, ...pose, scale: effects.scale };
-    this.render(effects, undefined, state, elapsedMs);
+    this.render(effects, undefined, state, elapsedMs, options.loop !== false);
   }
 
   /** Refresh after external asset changes; normal manifest/preview replacements are also detected automatically. */
@@ -138,7 +138,7 @@ export class PhaserAdventureCharacter {
     return evaluatePointleshAreaEffects(this.options.areas?.() ?? [], position, { defaultScale: this.options.defaultScale, defaultZoom: this.options.defaultZoom });
   }
 
-  private render(effects: PointleshAreaEffects, deltaMs?: number, state = this.controller.state, elapsedMs?: number): void {
+  private render(effects: PointleshAreaEffects, deltaMs?: number, state = this.controller.state, elapsedMs?: number, loop = true): void {
     this.prepareAnimation(state, elapsedMs === undefined);
     if (elapsedMs !== undefined) {
       const animation = this.playback?.animation;
@@ -146,7 +146,8 @@ export class PhaserAdventureCharacter {
         ? animation.frames.map((_frame, index) => animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate)
         : Array<number>(this.fallbackTiming.frameCount).fill(this.fallbackTiming.frameDurationMs);
       if (this.selectedAssignment?.reverse) durations.reverse();
-      let remaining = elapsedMs % durations.reduce((sum, duration) => sum + duration, 0);
+      const duration = durations.reduce((sum, duration) => sum + duration, 0);
+      let remaining = loop ? elapsedMs % duration : Math.min(elapsedMs, duration);
       let frame = 0;
       while (frame < durations.length - 1 && remaining >= durations[frame]!) remaining -= durations[frame++]!;
       state = { ...state, animationFrame: frame, animationElapsedMs: remaining };

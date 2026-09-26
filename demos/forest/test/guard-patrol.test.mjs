@@ -64,14 +64,24 @@ test('older saves from removed turns resume the next action without playing a tu
   }
 });
 
-test('only completing a drink triggers sleep, and sleeping freezes the patrol', () => {
+test('poison plays a full collapse before sleeping and freezes on the final frame', () => {
   let poisoned = false, drinks = 0;
   const { patrol, controller } = fixture(() => { drinks++; return poisoned; });
   patrol.update(800); assert.equal(patrol.phase, 'drink'); assert.equal(drinks, 0);
   poisoned = true; patrol.update(99); assert.equal(drinks, 0);
-  patrol.update(1); assert.equal(drinks, 1); assert.equal(patrol.phase, 'asleep');
+  patrol.update(1); assert.equal(drinks, 1); assert.equal(patrol.phase, 'collapse');
+  assert.equal(patrol.assignment.key, 'collapse');
+  patrol.update(50);
+  const restored = fixture(); restored.patrol.restore(JSON.parse(JSON.stringify(patrol.snapshot())));
+  assert.deepEqual(restored.patrol.snapshot(), patrol.snapshot());
+  patrol.update(49); restored.patrol.update(49); assert.equal(patrol.phase, 'collapse');
+  patrol.update(1); restored.patrol.update(1); assert.equal(patrol.phase, 'asleep');
+  assert.equal(controller.state.animationFrame, controller.config.frameCount - 1);
+  assert.deepEqual(restored.patrol.snapshot(), patrol.snapshot());
   assert.deepEqual(controller.state.position, { x: 20, y: 50 });
   const snapshot = patrol.snapshot(); patrol.update(10000); assert.deepEqual(patrol.snapshot(), snapshot);
+  restored.patrol.restore(JSON.parse(JSON.stringify(snapshot))); restored.patrol.update(10000);
+  assert.deepEqual(restored.patrol.snapshot(), snapshot);
 });
 
 test('guard clips have nonempty, foot-aligned frames and named walkable patrol points', async () => {
@@ -82,11 +92,13 @@ test('guard clips have nonempty, foot-aligned frames and named walkable patrol p
     const png = PNG.sync.read(await readFile(new URL('../public/' + asset.versions[asset.activeVersion].file, import.meta.url)));
     assert.deepEqual([png.width, png.height], [asset.dimensions.width, asset.dimensions.height]);
     const bottoms = [];
-    for (let frame = 0; frame < 8; frame++) {
+    const { frameWidth, frameHeight, columns, frameCount } = asset.frameGrid;
+    for (let frame = 0; frame < frameCount; frame++) {
       let bottom = -1;
-      for (let y = 0; y < 80; y++) for (let x = 0; x < 40; x++) if (png.data[((Math.floor(frame / 4) * 80 + y) * png.width + frame % 4 * 40 + x) * 4 + 3] >= 8) bottom = y;
+      for (let y = 0; y < frameHeight; y++) for (let x = 0; x < frameWidth; x++) if (png.data[((Math.floor(frame / columns) * frameHeight + y) * png.width + frame % columns * frameWidth + x) * 4 + 3] >= 16) bottom = y;
       bottoms.push(bottom);
     }
-    assert.ok(bottoms.every(bottom => Math.abs(bottom - 76) <= 1), `${asset.id}: boots remain on a stable baseline`);
+    const baseline = asset.id === 'guard.collapse' ? 195 : 76;
+    assert.ok(bottoms.every(bottom => Math.abs(bottom - baseline) <= 1), `${asset.id}: poses remain on a stable ground baseline`);
   }
 });
