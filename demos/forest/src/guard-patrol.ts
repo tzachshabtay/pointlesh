@@ -22,11 +22,12 @@ export class GuardPatrol {
   elapsedMs = 0;
   constructor(readonly controller: CharacterController, readonly playback: GuardPlayback,
     readonly points: () => { home: Point; drink: Point }, readonly afterDrink: () => boolean,
-    readonly afterCollapse: () => void = () => {}) {}
+    readonly afterCollapse: () => void = () => {}, readonly isBound: () => boolean = () => false) {}
 
   get distracted(): boolean { return this.phase === 'idle-back' || this.phase === 'walk-right'; }
   get assignment(): CharacterAnimationAssignment | undefined {
-    return this.phase === 'drink' ? { assetId: 'guard', key: 'drink' }
+    return this.phase === 'asleep' && this.isBound() ? { assetId: 'guard', key: 'bound' }
+      : this.phase === 'drink' ? { assetId: 'guard', key: 'drink' }
       : this.phase === 'collapse' || this.phase === 'asleep' ? { assetId: 'guard', key: 'collapse' } : undefined;
   }
   animations(base: CharacterAnimations | undefined): CharacterAnimations | undefined {

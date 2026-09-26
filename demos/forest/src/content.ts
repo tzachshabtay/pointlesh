@@ -10,13 +10,14 @@ import { specializeForestEntities } from './entity-prefabs';
 import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-assets';
 import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
+import { addRescueAssets } from './rescue-assets';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
 export const atlasRooms = {
   village: { asset: 'background.village-pub', row: 0 }, pub: { asset: 'background.village-pub', row: 1 },
   house: { asset: 'background.house-forest', row: 0 }, forest: { asset: 'background.forest-wide', row: null },
-  mine: { asset: 'background.mine-camp', row: 0 }, camp: { asset: 'background.mine-camp', row: 1 }
+  mine: { asset: 'background.mine-camp', row: 0 }, camp: { asset: 'background.camp', row: null }
 } as const;
 const definitions: Record<string, AiAssetDefinition> = {};
 for (const id of ['village-pub', 'house-forest', 'mine-camp']) {
@@ -129,6 +130,7 @@ export const assets = {
   },
 };
 addForestObjectAssets(assets);
+addRescueAssets(assets);
 
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');

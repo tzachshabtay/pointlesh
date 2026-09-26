@@ -2,6 +2,7 @@ import type { SceneDesignerManifest } from '@scene-designer/core';
 import type { AiAssetDefinition, AiAssetManifest } from '@ai-game-assets/core';
 import { createObjectPrefab, createPointleshArea, createPointleshInstance, isPointleshArea, resolvePointleshScene } from '@pointlesh/core';
 import { items, targets } from './story';
+import { CAGE_DOOR_ID, CAGE_DOOR_PLACEMENT, CAGE_DOOR_PREFAB } from './rescue-assets';
 
 const oldCageDescription = 'The king is imprisoned above a steep ledge. I need a safe way down.';
 const oldKingReply = 'East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock.';
@@ -81,6 +82,37 @@ export function updateForestInteractions(source: SceneDesignerManifest): SceneDe
         overrides: { object: { x: (Math.min(...xs) + Math.max(...xs)) / 2, y: Math.max(...ys), scaleX: 1, scaleY: 1 } } }));
     }
     layer.areas = layer.areas.filter(area => area !== chest);
+  }
+  const camp = manifest.scenes.camp;
+  if (camp && !camp.layers.some(layer => layer.prefabs?.some(instance => instance.id === CAGE_DOOR_ID))) {
+    const layer = camp.layers.find(layer => layer.areas.some(area => isPointleshArea(area) && area.pointlesh.entityId === 'cage')) ?? camp.layers[0]!;
+    const old = layer.areas.find(area => isPointleshArea(area) && area.pointlesh.entityId === 'cage');
+    const properties = old && isPointleshArea(old) ? old.pointlesh.properties : {};
+    (manifest.prefabs ??= {})[CAGE_DOOR_PREFAB] ??= createObjectPrefab({ id: CAGE_DOOR_PREFAB, name: 'Cage door', assetId: 'cage-door',
+      properties: { role: 'cage-door', targetId: 'cage', walkThrough: true, description: targets.camp.find(target => target.id === 'cage')!.description },
+      behaviors: ['forest.interact'], editor: { folderPath: ['Objects'] } });
+    (layer.prefabs ??= []).push(createPointleshInstance({ id: CAGE_DOOR_ID, prefabId: CAGE_DOOR_PREFAB, name: 'Cage door',
+      properties: { ...properties, targetId: 'cage', role: 'cage-door', walkThrough: true }, behaviors: ['forest.interact'],
+      overrides: { object: { ...CAGE_DOOR_PLACEMENT, anchorX: .5, anchorY: 0 } } }));
+    for (const current of camp.layers) {
+      // The extracted leaf now occludes the king. These old hand-traced strips
+      // described its bars, not the stationary walls left in the background.
+      current.areas = current.areas.filter(area => !isPointleshArea(area)
+        || area.pointlesh.entityId !== 'cage' && !/^cage occ/i.test(area.pointlesh.name ?? ''));
+      const king = current.prefabs?.find(instance => instance.id === 'camp.npc.king');
+      const placement = king?.overrides?.object;
+      if (placement && 'x' in placement && 'y' in placement && placement.x === 777 && placement.y === 344) {
+        placement.x = 658; placement.y = 332;
+      }
+    }
+    const frames = [
+      { id: 'left', name: 'Left post', vertices: [[608, 157], [622, 158], [622, 341], [607, 341]] },
+      { id: 'header', name: 'Header', vertices: [[608, 148], [823, 141], [823, 179], [608, 184]] },
+      { id: 'wall', name: 'Stationary wall', vertices: [[695, 178], [853, 179], [860, 338], [792, 355], [695, 341]] },
+    ];
+    for (const frame of frames) layer.areas.push(createPointleshArea({ id: `camp.cage.${frame.id}::area`, entityId: `camp.cage.${frame.id}`,
+      name: `Cage frame · ${frame.name}`, walkBehindEnabled: true, baseline: 350, closed: true,
+      vertices: frame.vertices.map(([x, y], index) => ({ id: `${frame.id}-${index}`, x: x!, y: y! })) }));
   }
   return manifest;
 }

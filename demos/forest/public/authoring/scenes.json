@@ -1362,6 +1362,53 @@
         ],
         "propertySchema": {}
       }
+    },
+    "forest.object.cage-door": {
+      "id": "forest.object.cage-door",
+      "name": "Cage door",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "cage-door",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Cage door",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": false,
+          "role": "cage-door",
+          "targetId": "cage",
+          "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
     }
   },
   "scenes": {
@@ -4036,8 +4083,8 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 777,
-                  "y": 344
+                  "x": 658,
+                  "y": 332
                 }
               },
               "pointlesh": {
@@ -4121,6 +4168,42 @@
                 "y": {
                   "value": 350
                 }
+              }
+            },
+            {
+              "id": "camp.cage-door",
+              "prefabId": "forest.object.cage-door",
+              "name": "Cage door",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 622.9441624365483,
+                  "y": 350,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928,
+                  "anchorX": 0.5,
+                  "anchorY": 0
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "enabled": true,
+                  "label": "King Aldric’s cage",
+                  "cursor": "interact",
+                  "exit": "",
+                  "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
+                  "approachX": 721,
+                  "approachY": 450,
+                  "approachRadius": 10,
+                  "walkPointId": "camp.walk.cage",
+                  "targetId": "cage",
+                  "role": "cage-door",
+                  "walkThrough": true
+                },
+                "behaviors": [
+                  "forest.interact"
+                ]
               }
             }
           ],
@@ -4417,72 +4500,6 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 743,
-                  "y": 309
-                },
-                {
-                  "id": "b",
-                  "x": 811,
-                  "y": 309
-                },
-                {
-                  "id": "c",
-                  "x": 811,
-                  "y": 373
-                },
-                {
-                  "id": "d",
-                  "x": 743,
-                  "y": 373
-                }
-              ],
-              "id": "cage::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "King Aldric’s cage",
-                  "cursor": "interact",
-                  "exit": "",
-                  "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
-                  "approachX": 721,
-                  "approachY": 450,
-                  "approachRadius": 10,
-                  "walkPointId": "camp.walk.cage"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "King Aldric’s cage",
-                "entityId": "cage"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
                   "x": 56,
                   "y": 439
                 },
@@ -4587,6 +4604,272 @@
                   "maxZoom": 1,
                   "smoothing": 5,
                   "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.cage.left::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "left-0",
+                  "x": 608,
+                  "y": 157
+                },
+                {
+                  "id": "left-1",
+                  "x": 622,
+                  "y": 158
+                },
+                {
+                  "id": "left-2",
+                  "x": 622,
+                  "y": 341
+                },
+                {
+                  "id": "left-3",
+                  "x": 607,
+                  "y": 341
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cage frame · Left post",
+                "entityId": "camp.cage.left",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 350
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.cage.header::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "header-0",
+                  "x": 608,
+                  "y": 148
+                },
+                {
+                  "id": "header-1",
+                  "x": 823,
+                  "y": 141
+                },
+                {
+                  "id": "header-2",
+                  "x": 823,
+                  "y": 179
+                },
+                {
+                  "id": "header-3",
+                  "x": 608,
+                  "y": 184
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cage frame · Header",
+                "entityId": "camp.cage.header",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 350
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.cage.wall::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "wall-0",
+                  "x": 695,
+                  "y": 178
+                },
+                {
+                  "id": "wall-1",
+                  "x": 853,
+                  "y": 179
+                },
+                {
+                  "id": "wall-2",
+                  "x": 860,
+                  "y": 338
+                },
+                {
+                  "id": "wall-3",
+                  "x": 792,
+                  "y": 355
+                },
+                {
+                  "id": "wall-4",
+                  "x": 695,
+                  "y": 341
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cage frame · Stationary wall",
+                "entityId": "camp.cage.wall",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 350
                 },
                 "behaviors": [],
                 "propertySchema": {

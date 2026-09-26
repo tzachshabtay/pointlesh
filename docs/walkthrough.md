@@ -26,9 +26,9 @@ Click an inventory item to select it, then click a target to use it. Click a sec
 
 7. **Put Grub to sleep.** Watch Grub's patrol: he turns his back at the cage, walks to the cauldron, drinks, and returns. Select **Dreamcap stout**, then use it on the **Stew cauldron** while he stands facing away or walks back to the cage. Borin approaches before performing the action, so the guard's state at arrival matters. If Grub is watching, Borin refuses and keeps the brew; dismiss the response and try again. It is easier to approach the cauldron first, then wait for the next safe window. After adding the brew, wait for Grub to finish his next drink and fall asleep. The cycle repeats without a failure limit.
 
-8. **Tie up the guard.** Once Grub has collapsed, use the **Climbing rope** on **Grub the guard**. Breaking the cage lock could wake him; secure him first so he cannot stop the escape.
+8. **Tie up the guard.** Once Grub has collapsed, use the **Climbing rope** on **Grub the guard**. Borin kneels facing away and ties the rope; Grub then uses his bound artwork. Breaking the cage lock could wake him; secure him first so he cannot stop the escape. Saving during the animation preserves its progress.
 
-9. **Break the lock.** Use the **Goldroot pickaxe** on the cage. Watch Borin break the lock, let Aldric walk out of the cage and escape through the forest to a village reunion. Borin and Aldric return to Bramblehollow.
+9. **Break the lock.** Use the **Goldroot pickaxe** on the cage. Borin plays his pickaxe animation and the original cage door's lock breaks before it swings open. Aldric walks through the doorway, escapes through the forest, and returns with Borin to a village reunion.
 
 Inventory and dialogue puzzles can be prepared in different orders. Failed combinations and mistimed cauldron attempts do not consume the required items. The journal records the important clues, and the hint button points to the next unmet requirement.
 

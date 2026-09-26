@@ -120,3 +120,59 @@ Use case: stylized-concept. Asset type: one isolated transparent PNG sprite for 
 Use case: identity-preserve. Create a production pixel-art ANIMATION SPRITESHEET of the EXACT green orc guard in the reference: same face, short dark hair, tusks, layered brown leather and iron shoulder armor, brown boots, belt skull and spear. He has just drunk a sleeping potion and collapses unconscious (nonviolent, no injury). Eight DIFFERENT sequential frames arranged in a strict 4-column by 2-row grid, reading left to right then next row. Transparent alpha background everywhere outside the characters; no black background, glow, scenery, numbers, labels or drawn grid. Sheet aspect ratio 2:1, ideally 2048x1024 with eight 512-square equal cells. Fixed camera, fixed anatomical proportions and pixel-art detail, absolutely no scale changes between frames. All frames have the same invisible ground baseline at 90% cell height; his planted feet initially are at 67% cell width, leaving space to fall to his LEFT. Every pose entirely inside its own cell with clear gutters. Frame 1: standing, three-quarter facing left, same guard, just finished drinking. Frame 2: drowsy, drooping eyes, knees soften, hand to stomach. Frame 3: staggering leaning left, knees bending, spear slips. Frame 4: down on one knee, torso leaning left. Frame 5: both knees down, hand reaching toward ground on left, falling. Frame 6: shoulder touching ground, legs folding behind. Frame 7: almost lying, head settles to left, body stretched toward right. Frame 8: completely unconscious lying on his SIDE, head LEFT and boots RIGHT, clearly horizontal on the ground, eyes shut, relaxed body with same armor, fallen spear resting beside him. Final two frames anatomically natural, not a rigid rotation of a standing pose. Standing body height approximately 65% of cell height, and lying body length approximately that same size; never enlarge fallen frames to fill the cell. Match the reference exactly in costume and character identity throughout.
 
 Final game files: `demos/forest/public/art/objects/runed-tool-chest.png` (120 × 80) and `demos/forest/public/art/characters/guard/collapse.png` (4 × 2 cells, each 240 × 200). `scripts/pack-rescue-art.mjs` detects actual transparent gutters and imports the poses with one uniform scale and a common ground baseline. Playback skips the initial drinking pose, then holds the last lying frame. The collapse uses a canvas twice the standing character's width, preserving body size while leaving room to fall.
+
+
+## Rescue action assets — 26 September 2026
+
+Mode: built-in image generation, with the current Borin base, Grub collapse frame, and original camp/door as references. All final files are copied into `demos/forest/public/art/`; no runtime asset relies on the generator output directory.
+
+| Asset | Final file |
+| --- | --- |
+| Bound Grub | `characters/guard/bound.png` |
+| Borin tying from behind | `characters/borin/tie-rope-back.png` |
+| Borin using the pickaxe | `characters/borin/pickaxe-back.png` |
+| Closed cage door | `objects/cage-door.png` |
+| Lock breaking / door opening | `objects/cage-door-open.png` |
+| Camp without the moving door | `camp-doorless.png` |
+
+`demos/forest/scripts/pack-rescue-actions.mjs` imports the generated sheets with nearest-neighbor resampling, one fixed scale per animation, and explicit foot/hinge anchors. It preserves alpha and uses frame zero as the closed door. Only the door-sized patch of the generated clean plate replaces the original background; every other pixel remains original.
+
+Reference inputs: promoted Borin `art/borin.promoted-1790377204354.png` (100×140); final 240×200 frame of `art/characters/guard/collapse.png`; camp crop (0,666,1182,664) and door crop (744,875,128,207) from `art/atlas-mine-camp.png`. The extracted door reference informed the final animation; the shipped still is its first frame.
+
+Final prompt set:
+
+### guard-bound
+
+```text
+Use case: identity-preserve. Edit target: the supplied transparent sprite of Grub, the sleeping green orc lying on his side, head left and boots right. Create the SAME pose, exact armor, face, spear, proportions and detailed pixel-art style, but now securely tied with real thick tan climbing rope. Several believable tight wraps around his torso trapping his arms at his sides, and rope around both ankles, with small convincing knots. His face remains visible, eyes shut. Rope must be painted naturally around the volume of his body, not flat straight lines. Keep his complete horizontal body and fallen spear in the same position and scale within the exact same wide transparent canvas; preserve all empty transparent space above him and the ground baseline near the bottom. Do not crop to the body or enlarge it. No extra figures, background, floor, text, injury, glow or shadows. Actual transparent alpha. This is one still game asset, not a sheet.
+```
+
+### borin-tie-back
+
+```text
+Use case: identity-preserve. Reference image is Borin's character identity: stout dwarf, metal conical helmet with nasal guard, orange braided beard, dark teal green tunic, brown belt and leather gloves and boots. Create a pixel-art animation SPRITESHEET of Borin TYING A ROPE while seen FROM BEHIND. Back of helmet, back of tunic and shoulders face the camera; face and beard are not front-facing. Eight sequential distinct poses, 4 columns by 2 rows, equal square cells, transparent gutters, actual transparent alpha. Frame1 standing facing away; frame2 bending and kneeling; frame3 both gloved hands reach forward/down holding tan rope; frame4 passes rope around something immediately ahead off-canvas; frame5 crosses the ends; frame6 pulls the knot tight; frame7 releases rope and starts to rise; frame8 standing facing away again. Show only Borin and the short rope in his hands, NOT the orc or environment. Same anatomical size and planted feet baseline in every cell, consistent costume, camera and lighting. Kneeling poses genuinely shorter, never enlarged to fill the cell. Use reference's detailed textured pixel art, no cartoon simplification, no labels/numbers/grid lines, no shadows, no scenery. Leave padding for arms. Sheet ratio2:1, preferably1600x800.
+```
+
+### borin-pickaxe-back
+
+```text
+Use case: identity-preserve. Reference image is Borin's exact character identity and textured pixel-art style: small stout dwarf, conical metal helmet, orange braids, dark teal-green tunic, brown belt, leather gloves and boots. Make a production animation SPRITESHEET of Borin striking a lock with a dwarven steel PICKAXE while viewed FROM BEHIND, slightly turned to his right. Eight distinct chronological frames in 4 columns x2 rows of equal square cells; transparent alpha and transparent gutters. Frame1 standing facing away holding wooden-handled steel pickaxe; frame2 lifts it; frame3 raises over shoulder; frame4 pickaxe fully above helmet at apex; frame5 powerful forward downswing toward an imaginary lock ahead at chest height; frame6 impact follow-through; frame7 recoils/lower weapon; frame8 settles standing. Only Borin and the pickaxe, absolutely no door, lock, wall, floor, particles, shadows or scenery. Same body dimensions, grounded feet and anatomical scale throughout, padding above for weapon, all poses within their cells, no independent zoom or crop. Back of helmet/tunic toward viewer, no front-facing face. Crisp detailed hand-painted pixel art matching reference, not low-detail cartoon. No text, numbers, watermarks or grid lines. Sheet aspect2:1 preferably1600x800.
+```
+
+### camp-doorless
+
+```text
+Use case: precise-object-edit. Image1 is the EDIT TARGET, the entire pixel-art orc camp background. Image2 is a close crop identifying the ONLY part to remove: the small narrow wooden barred hinged DOOR LEAF on the LEFT front face of the cage, including its iron padlock and the leaf's horizontal rails and vertical bars. Remove that entire moving door leaf and padlock, revealing the dark EMPTY cage interior behind this existing rectangular doorway. No character inside. KEEP the stationary cage frame/posts/header/threshold, the broad RIGHT cage wall and all its bars, roof beams, tent, cauldron, palisade, trees, barrel, rocks and lighting EXACTLY unchanged and in the same pixel positions. Do not draw the door in an open position anywhere: the door is entirely absent so the game can add an animated sprite. The opening should have naturally textured dark interior and dirt floor, not a flat black rectangle. This is a precise local background clean plate, absolutely not a redesigned scene. Keep original landscape framing/aspect; no crop, camera change, added props or text.
+```
+
+### cage-door-base
+
+```text
+Use case: background-extraction. Edit target: the provided close-up of the ORIGINAL cage door from our game's background. Extract ONLY its narrow moving wooden barred door leaf and iron padlock as one transparent PNG sprite. Preserve exact original weathered golden-brown timber, irregular shape, three narrow vertical timber bars, top/bottom frame and two intermediate horizontal rails, rope lashings, highlights, iron padlock at right edge, original front-on slight perspective. Do NOT redesign, straighten, simplify or replace it with an iron-bar gate. Remove all stationary cage posts, any cage wall, all ground and every dark background pixel seen THROUGH the bars, so gaps really are transparent. Same proportions and arrangement as reference. Full isolated CLOSED locked door with transparent padding, centered in original128x207 aspect ratio, actual transparent alpha. No environment, backdrop, new frame, labels, text or shadows.
+```
+
+### cage-door-open
+
+```text
+Use case: identity-preserve. Input image1 is the extracted ORIGINAL wooden cage DOOR LEAF from our game, including its iron padlock. Input image2 is the original close crop for material/perspective context only. Produce ONE spritesheet of this exact leaf's padlock breaking and the leaf swinging OPEN toward the viewer and to the LEFT, around a fixed hinge on its LEFT EDGE. Eight chronological frames, exactly4columns x2rows, square cells with transparent gutters, transparent alpha THROUGH all gaps between bars and outside the door. Same textured golden-brown timber, same bar and rail counts, knots, chipped highlights and proportions. No stationary cage frame, floor or scenery, no character or weapon. Fixed camera, fixed door height, fixed hinge position near cell center in every frame and fixed ground baseline; NEVER center the leaf separately per frame. Leave plenty of space to the LEFT of hinge for its swing. Frame1 closed locked leaf extends right from hinge. Frame2 same closed leaf, small impact with padlock shackle broken. Frame3 padlock falling, leaf still closed. Frame4 leaf swings30degrees outward. Frame5 swings60degrees. Frame6 swings90degrees, seen nearly edge-on at hinge. Frame7 swings120degrees outward toward left. Frame8 fully open about145degrees, leaf extends to LEFT of hinge and the doorway to its right is completely clear; padlock fallen out of sight. Keep panels all fully inside their own cells. No text, grid lines, labels, glow or watermarks. This must be usable animation of the reference door, not a redesigned gate. Wide2:1 sheet preferably2048x1024.
+```

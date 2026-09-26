@@ -33,6 +33,7 @@ test('full authored-dialog rescue walkthrough travels through all six room exits
   assert.equal(state.inventory.includes('sleepyStout'), true, 'Mistimed use preserves the only potion');
   state.flags.guardDistracted = true;
   interact('cauldron', 'sleepyStout'); story.finishGuardDrink(state); interact('guard', 'rope');
+  story.finishTyingGuard(state);
   assert.equal(interact('cage', 'pickaxe').ending, true);
   assert.equal(state.flags.won, true);
   assert.deepEqual([...visited].sort(), [...story.roomIds].sort());
@@ -86,5 +87,5 @@ test(`every ${catalog} hotspot and interactive sprite has a reachable approach f
       if (object.properties.actorName !== 'king') assert.equal(scene.areas.some(area => area.id === object.properties.targetId), false, `${object.id} must not have a duplicate hotspot`);
     }
   }
-  assert.ok(resolvePointleshScene(sceneManifest, 'camp').areas.some(area => area.id === 'cage'), 'The cage remains an environmental puzzle target');
+  assert.ok(resolvePointleshScene(sceneManifest, 'camp').objects.some(object => object.id === 'camp.cage-door' && object.properties.targetId === 'cage'), 'The moving door owns the cage interaction');
 });

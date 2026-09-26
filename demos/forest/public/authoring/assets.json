@@ -147,6 +147,14 @@
         "speak-left": {
           "label": "Speak · left",
           "assetId": "borin.speak-left"
+        },
+        "tie-rope-back": {
+          "label": "Tie rope · back",
+          "assetId": "borin.tie-rope-back"
+        },
+        "pickaxe-back": {
+          "label": "Pickaxe · back",
+          "assetId": "borin.pickaxe-back"
         }
       },
       "tags": [
@@ -532,6 +540,10 @@
         "collapse": {
           "label": "Collapse · asleep",
           "assetId": "guard.collapse"
+        },
+        "bound": {
+          "label": "Bound · asleep",
+          "assetId": "guard.bound"
         }
       },
       "tags": [
@@ -5138,6 +5150,350 @@
         "object",
         "mine"
       ]
+    },
+    "guard.bound": {
+      "id": "guard.bound",
+      "kind": "animation",
+      "prompt": "The exact sleeping orc from the final collapse frame, head left and boots right, securely tied with painted rope around his torso, arms and ankles. Preserve armor, pose, scale, spear and transparent canvas.",
+      "dimensions": {
+        "width": 240,
+        "height": 200
+      },
+      "frameGrid": {
+        "frameWidth": 240,
+        "frameHeight": 200,
+        "columns": 1,
+        "rows": 1,
+        "frameCount": 1
+      },
+      "animations": [
+        {
+          "key": "guard.bound",
+          "frames": [
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 1000
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/characters/guard/bound.png",
+          "prompt": "The exact sleeping orc from the final collapse frame, head left and boots right, securely tied with painted rope around his torso, arms and ankles. Preserve armor, pose, scale, spear and transparent canvas.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "rescue"
+      ]
+    },
+    "borin.tie-rope-back": {
+      "id": "borin.tie-rope-back",
+      "kind": "animation",
+      "prompt": "Borin viewed from behind: kneel, reach forward with rope, wrap, cross ends, pull knot tight, rise. Eight distinct frames, fixed anatomical scale and feet, transparent background. Only Borin and rope.",
+      "dimensions": {
+        "width": 800,
+        "height": 400
+      },
+      "frameGrid": {
+        "frameWidth": 200,
+        "frameHeight": 200,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "borin.tie-rope-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 200
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 300
+            },
+            {
+              "delayMs": 300
+            },
+            {
+              "delayMs": 300
+            },
+            {
+              "delayMs": 300
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 300
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/characters/borin/tie-rope-back.png",
+          "prompt": "Borin viewed from behind: kneel, reach forward with rope, wrap, cross ends, pull knot tight, rise. Eight distinct frames, fixed anatomical scale and feet, transparent background. Only Borin and rope.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "rescue"
+      ]
+    },
+    "borin.pickaxe-back": {
+      "id": "borin.pickaxe-back",
+      "kind": "animation",
+      "prompt": "The exact Borin viewed from behind slightly right: raise a wooden-handled steel pickaxe, strike a lock ahead at chest height, follow through, lower the weapon. Eight frames, fixed body size and feet; no door or scenery.",
+      "dimensions": {
+        "width": 800,
+        "height": 400
+      },
+      "frameGrid": {
+        "frameWidth": 200,
+        "frameHeight": 200,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "borin.pickaxe-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 180
+            },
+            {
+              "delayMs": 180
+            },
+            {
+              "delayMs": 240
+            },
+            {
+              "delayMs": 240
+            },
+            {
+              "delayMs": 120
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 240
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/characters/borin/pickaxe-back.png",
+          "prompt": "The exact Borin viewed from behind slightly right: raise a wooden-handled steel pickaxe, strike a lock ahead at chest height, follow through, lower the weapon. Eight frames, fixed body size and feet; no door or scenery.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "rescue"
+      ]
+    },
+    "cage-door.open": {
+      "id": "cage-door.open",
+      "kind": "animation",
+      "prompt": "The original narrow wooden barred cage door: padlock shackle breaks and falls, then the door swings outward left around its fixed left hinge. Eight frames. Preserve timber, bars, rails, knots and perspective. Transparent through the bars, no stationary cage or scenery.",
+      "dimensions": {
+        "width": 960,
+        "height": 460
+      },
+      "frameGrid": {
+        "frameWidth": 240,
+        "frameHeight": 230,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "cage-door.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 100
+            },
+            {
+              "delayMs": 100
+            },
+            {
+              "delayMs": 140
+            },
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 200
+            },
+            {
+              "delayMs": 500
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/objects/cage-door-open.png",
+          "prompt": "The original narrow wooden barred cage door: padlock shackle breaks and falls, then the door swings outward left around its fixed left hinge. Eight frames. Preserve timber, bars, rails, knots and perspective. Transparent through the bars, no stationary cage or scenery.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "rescue"
+      ]
+    },
+    "cage-door": {
+      "id": "cage-door",
+      "kind": "image",
+      "dimensions": {
+        "width": 240,
+        "height": 230
+      },
+      "prompt": "The original closed locked wooden cage door extracted from the orc camp; transparent through the bars. Fixed hinge with room to swing left.",
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/objects/cage-door.png",
+          "prompt": "Closed frame of the original cage door animation; no stationary frame or background.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "linkedAnimationAssets": {
+        "open": {
+          "label": "Break lock · open door",
+          "assetId": "cage-door.open"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "cage"
+      ]
+    },
+    "background.camp": {
+      "id": "background.camp",
+      "kind": "image",
+      "dimensions": {
+        "width": 1182,
+        "height": 664
+      },
+      "prompt": "Original orc camp with only the movable door leaf and padlock removed. Keep the stationary cage, all other scenery and lighting unchanged; a dark empty interior behind the door.",
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/camp-doorless.png",
+          "prompt": "Original camp background with a locally generated clean plate behind the extracted door. Every pixel outside the door patch is unchanged.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "background",
+        "camp"
+      ]
     }
   },
   "styleGuide": {
@@ -5486,6 +5842,30 @@
     "tool-chest": [
       "Graphics",
       "Objects"
+    ],
+    "guard.bound": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.tie-rope-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.pickaxe-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "cage-door.open": [
+      "Graphics",
+      "Objects"
+    ],
+    "cage-door": [
+      "Graphics",
+      "Objects"
+    ],
+    "background.camp": [
+      "Graphics",
+      "Backgrounds"
     ]
   }
 }

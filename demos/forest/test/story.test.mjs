@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, resolvePointleshScene, walkablePolygons, pointleshApproachTarget } from '@pointlesh/core';
-const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, targetVisible, hint, migrateRescueStory } = await tsImport('../src/story.ts', import.meta.url);
+const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, finishTyingGuard, targetVisible, hint, migrateRescueStory } = await tsImport('../src/story.ts', import.meta.url);
 
 test('the rescue puzzle has an achievable dependency chain and a recoverable timing failure', () => {
   const state = newStory();
@@ -36,7 +36,11 @@ test('the rescue puzzle has an achievable dependency chain and a recoverable tim
   assert.match(interact(state, 'cage', 'pickaxe').text, /tie up Grub/);
   assert.equal(state.flags.won, undefined);
   assert.match(hint(state), /rope on the sleeping Grub/);
-  interact(state, 'guard', 'rope');
+  assert.equal(interact(state, 'guard', 'rope').action, 'tie-guard');
+  assert.equal(state.flags.guardBound, undefined);
+  assert.ok(state.inventory.includes('rope'), 'The rope is consumed only after tying finishes');
+  assert.deepEqual(interact(state, 'cage', 'pickaxe'), {}, 'Other actions cannot interrupt tying');
+  finishTyingGuard(state);
   assert.equal(state.flags.guardBound, true);
   assert.ok(!state.inventory.includes('rope'));
   assert.match(interact(state, 'guard').text, /securely tied/);
@@ -102,7 +106,9 @@ test('seed and promoted pickups own their interactions without duplicate hotspot
       if (manifest === scenes) assert.deepEqual(standingPoint, approach);
       assert.equal(isWalkable(standingPoint, walkablePolygons(room)), true);
     }
-    assert.ok(resolvePointleshScene(manifest, 'camp').areas.some(area => area.id === 'cage'));
+    const camp = resolvePointleshScene(manifest, 'camp');
+    assert.ok(camp.objects.some(object => object.id === 'camp.cage-door' && object.properties.targetId === 'cage'));
+    assert.equal(camp.areas.some(area => area.id === 'cage'), false);
   }
 });
 
@@ -129,6 +135,7 @@ test('tying a sleeping guard consumes one rope and old cage-rope saves remain so
   assert.deepEqual(migrateRescueStory(restored), restored, 'Migration is idempotent');
   assert.match(interact(restored, 'cage', 'pickaxe').text, /tie up Grub/);
   interact(restored, 'guard', 'rope');
+  finishTyingGuard(restored);
   assert.equal(restored.flags.guardBound, true);
   assert.match(interact(restored, 'guard', 'rope').text, /no longer/);
   assert.deepEqual(migrateRescueStory(restored), restored, 'New bound-guard saves are unchanged');

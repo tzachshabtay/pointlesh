@@ -63,7 +63,7 @@ test('intro and ending use authored character clips, live previews, and determin
     expect(shot.length).toBeGreaterThan(0);
     for (const actor of shot) {
       expect(actor.texture).toBe(actor.animation);
-      expect(actor.animation).toMatch(/\.(collapse|(walk|idle|speak)-(front|left|back))$/);
+      expect(actor.animation).toMatch(/\.(collapse|bound|(walk|idle|speak)-(front|left|back))$/);
     }
   }
   const actor = (shot: any[], id: string) => shot.find(value => value.id === `cinematic-${id}`);

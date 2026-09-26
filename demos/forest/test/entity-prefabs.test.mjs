@@ -16,7 +16,7 @@ const normalized = value => {
 for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`${label} entities own named prefabs and Borin shares defaults across rooms`, () => {
   const characters = new Set(), objects = new Set();
   for (const scene of Object.values(manifest.scenes)) for (const entity of resolvePointleshScene(manifest, scene.id).objects) {
-    const identity = entity.properties.role === 'player' ? 'borin' : entity.properties.actorName ?? entity.properties.pickupId ?? entity.properties.targetId;
+    const identity = entity.kind === 'object' ? entity.assetId : entity.properties.role === 'player' ? 'borin' : entity.properties.actorName;
     assert.equal(entity.prefabId, `forest.${entity.kind}.${identity}`);
     const prefab = manifest.prefabs[entity.prefabId];
     const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(instance => instance.id === entity.id);
@@ -25,7 +25,7 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`
     assert.ok(prefab.name !== 'Character' && prefab.name !== 'Object');
     (entity.kind === 'character' ? characters : objects).add(identity);
   }
-  assert.equal(characters.size, 6); assert.equal(objects.size, 3);
+  assert.equal(characters.size, 6); assert.equal(objects.size, 4);
   for (const scene of Object.values(manifest.scenes)) for (const area of resolvePointleshScene(manifest, scene.id).areas) {
     assert.equal(area.prefabId, undefined);
     assert.ok(scene.layers.flatMap(layer => layer.areas).some(native => native.id === area.areaId));

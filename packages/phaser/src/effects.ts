@@ -88,7 +88,10 @@ export function createWalkBehindOverlay(
       mask.setStencil(true, gl.ALWAYS, 0x80, 0x80, gl.KEEP, gl.KEEP, gl.REPLACE, 0, 0x80);
       mask.clear(gl.STENCIL_BUFFER_BIT);
       const compositor = renderer.renderNodes.getNode("ListCompositor") as Phaser.Renderer.WebGL.RenderNodes.ListCompositor;
-      compositor.run(mask, [graphics]);
+      // The polygon uses the background's parent coordinate space. Forward the
+      // same accumulated container matrix as the textured quad (cutscene zooms
+      // and pans otherwise leave the stencil behind in untransformed space).
+      compositor.run(mask, [graphics], args[1]);
       renderer.renderNodes.finishBatch();
       const clipped = context.getClone();
       clipped.setStencil(true, gl.EQUAL, 0x80, 0x80);
@@ -103,7 +106,21 @@ export function createWalkBehindOverlay(
     customNodes.Submitter = masked;
   }
   const geometryMask = webgl ? undefined : graphics.createGeometryMask();
-  if (geometryMask) image.setMask(geometryMask);
+  if (geometryMask) {
+    // Phaser's GeometryMask calls this renderer internally without the parent
+    // matrix; the private method is omitted from its published declarations.
+    const shape = graphics as typeof graphics & { renderCanvas(
+      renderer: Phaser.Renderer.Canvas.CanvasRenderer, source: Phaser.GameObjects.Graphics,
+      camera: Phaser.Cameras.Scene2D.Camera, parent: Phaser.GameObjects.Components.TransformMatrix | undefined,
+      target: CanvasRenderingContext2D | undefined, clip: boolean,
+    ): void };
+    geometryMask.preRenderCanvas = (renderer, _masked, camera) => {
+      renderer.currentContext.save();
+      shape.renderCanvas(renderer, graphics, camera, image.parentContainer?.getWorldTransformMatrix(), undefined, true);
+      renderer.currentContext.clip();
+    };
+    image.setMask(geometryMask);
+  }
   let destroyed = false;
   const sync = (next: ResolvedPointleshArea) => {
     if (destroyed) return;

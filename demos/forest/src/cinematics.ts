@@ -1,11 +1,11 @@
 import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import type { SceneDesignerManifest } from '@scene-designer/core';
-import { CharacterController, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureCharacter } from '@pointlesh/phaser';
+import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject } from '@pointlesh/core';
+import { createWalkBehindOverlay, PhaserAdventureCharacter } from '@pointlesh/phaser';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
-import { drawGuardRope } from './guard-rope';
+import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
 
 export type CinematicKind = 'intro' | 'ending';
 export const CINEMATIC_DURATIONS = {
@@ -14,7 +14,7 @@ export const CINEMATIC_DURATIONS = {
 } as const;
 
 type CastId = 'borin' | 'king' | 'guard-front' | 'guard-rear' | 'elder' | 'innkeeper' | 'miner';
-type Pose = { x: number; y: number; walking?: boolean; speaking?: boolean; facingLeft?: boolean; alpha?: number; sleeping?: boolean };
+type Pose = { x: number; y: number; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: 'up' | 'down' | 'left' | 'right'; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back'; actionElapsedMs?: number };
 type CastActor = {
   sprite: Phaser.GameObjects.Sprite;
   shadow: Phaser.GameObjects.Ellipse;
@@ -22,6 +22,7 @@ type CastActor = {
   definition?: ResolvedPointleshObject;
   binding?: PhaserAdventureCharacter;
   sleeping: boolean;
+  action?: 'bound' | 'tie-rope-back' | 'pickaxe-back';
 };
 export type CinematicSnapshot = {
   kind: CinematicKind;
@@ -48,10 +49,12 @@ export class ForestCinematic {
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private readonly background: Phaser.GameObjects.Image;
   private readonly atmosphere: Phaser.GameObjects.Graphics;
-  private readonly scenery: Phaser.GameObjects.Graphics;
   private readonly props: Phaser.GameObjects.Graphics;
-  private readonly guardRope: Phaser.GameObjects.Graphics;
-  private readonly cageDoor: Phaser.GameObjects.Graphics;
+  private readonly cageDoor: Phaser.GameObjects.Sprite;
+  private doorBinding?: PhaserAdventureCharacter;
+  private doorDefinition?: ResolvedPointleshObject;
+  private overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
+  private overlayRoom?: string;
   private readonly foreground: Phaser.GameObjects.Graphics;
   private readonly frame: Phaser.GameObjects.Graphics;
   private readonly fade: Phaser.GameObjects.Rectangle;
@@ -72,13 +75,11 @@ export class ForestCinematic {
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
     this.background = scene.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000);
-    this.scenery = scene.add.graphics().setDepth(-10);
     this.atmosphere = scene.add.graphics().setDepth(0);
     this.props = scene.add.graphics().setDepth(850);
-    this.guardRope = scene.add.graphics().setName('guard-rope-cinematic').setVisible(false);
-    this.cageDoor = scene.add.graphics().setName('cage-door-cinematic').setDepth(350);
+    this.cageDoor = scene.add.sprite(0, 0, '__WHITE').setName('cage-door-cinematic').setVisible(false);
     this.foreground = scene.add.graphics().setDepth(900);
-    this.world.add([this.background, this.scenery, this.atmosphere, this.props, this.foreground, this.guardRope, this.cageDoor]);
+    this.world.add([this.background, this.atmosphere, this.props, this.foreground, this.cageDoor]);
     const actors: CastId[] = ['borin', 'king', 'guard-front', 'guard-rear', 'elder', 'innkeeper', 'miner'];
     for (const id of actors) {
       const shadow = scene.add.ellipse(0, 0, 40, 10, 0x07120e, 0.35);
@@ -111,12 +112,12 @@ export class ForestCinematic {
     if (manifest !== this.authoredManifest) {
       this.definitions = new Map(Object.keys(manifest.scenes).map(id => [id, resolvePointleshScene(manifest, id)]));
       this.authoredManifest = manifest;
+      this.overlayRoom = undefined;
     }
     this.excludeGameplayObjects();
     for (const { sprite, shadow } of this.cast.values()) { sprite.setVisible(false); shadow.setVisible(false); }
-    this.scenery.clear(); this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
-    this.guardRope.clear().setVisible(false);
-    this.cageDoor.clear();
+    this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
+    this.cageDoor.setVisible(false);
     const duration = CINEMATIC_DURATIONS[this.kind][stepIndex]!;
     const t = clamp(elapsedMs / duration);
     if (this.kind === 'intro') this.intro(stepIndex, t);
@@ -154,6 +155,8 @@ export class ForestCinematic {
     this.ignoredObjects.clear();
     this.scene.cameras.remove(this.camera, true);
     for (const { binding } of this.cast.values()) binding?.destroy();
+    this.doorBinding?.destroy();
+    for (const overlay of this.overlays) overlay.destroy();
     this.root.destroy(true);
     this.cast.clear();
   }
@@ -170,6 +173,19 @@ export class ForestCinematic {
 
   private shot(room: string, name: string, zoom: number, focusX = 480, focusY = 285, tint = 0xffffff): void {
     this.room = room;
+    if (this.overlayRoom !== room) {
+      for (const overlay of this.overlays) overlay.destroy();
+      this.overlays = [];
+      for (const area of this.definitions.get(room)?.areas ?? []) {
+        if (!area.enabled || !pointleshAreaCapabilities(area).walkBehind) continue;
+        const size = this.definitions.get(room)!;
+        const image = this.scene.add.image(0, 0, `room.${room}`).setOrigin(0).setDisplaySize(size.width, size.height);
+        this.world.add(image);
+        this.overlays.push(createWalkBehindOverlay(this.scene, area, image, { destroyImage: true }));
+      }
+      this.overlayRoom = room;
+    }
+    for (const overlay of this.overlays) overlay.image.setTint(tint);
     this.background.setTexture(`room.${room}`).setTint(tint);
     this.location.setText(name);
     const x = Math.max(W / (2 * zoom), Math.min(W - W / (2 * zoom), focusX));
@@ -180,6 +196,7 @@ export class ForestCinematic {
   private pose(id: CastId, pose: Pose): Phaser.GameObjects.Sprite {
     const actor = this.cast.get(id)!;
     actor.sleeping = pose.sleeping ?? false;
+    actor.action = actor.sleeping ? 'bound' : pose.action;
     const { sprite, shadow } = actor;
     const characterId = id.startsWith('guard') ? 'guard' : id;
     const matches = (object: ResolvedPointleshObject) => object.prefabId === `forest.character.${characterId}`;
@@ -196,17 +213,18 @@ export class ForestCinematic {
         new CharacterController({ id: `cinematic-${id}`, position: { x: pose.x, y: pose.y } }), sprite, {
           autoUpdate: false, aiRuntime: this.assets, assetId,
           baseScale: () => ({ x: actor.definition!.scaleX, y: actor.definition!.scaleY }),
-          ...(characterId === 'guard' ? { baseSize: () => guardAnimationSize(this.assets.manifest.assets[assetId], actor.sleeping) } : {}),
+          ...(characterId === 'guard' ? { baseSize: () => guardAnimationSize(this.assets.manifest.assets[assetId], actor.sleeping) }
+            : characterId === 'borin' ? { baseSize: () => borinActionSize(this.assets.manifest.assets[assetId], !!actor.action) } : {}),
           areas: () => actor.definition!.properties.ignoreScaling ? [] : this.definitions.get(this.room)?.areas ?? [],
           origin: () => ({ x: actor.definition!.anchorX, y: 1 - actor.definition!.anchorY }),
           angle: () => actor.definition!.rotation,
-          animations: () => actor.sleeping ? { idle: { front: { assetId, key: 'collapse' } } } : readCharacterAnimations(actor.definition!.properties),
+          animations: () => actor.action ? rescueAnimation(assetId, actor.action) : readCharacterAnimations(actor.definition!.properties),
         });
     }
     actor.binding.renderPose({ position: { x: pose.x, y: pose.y },
-      activity: pose.speaking ? 'speaking' : pose.walking ? 'walking' : 'idle',
-      facing: pose.facingLeft ? 'left' : pose.walking ? 'right' : 'down',
-    }, actor.sleeping ? Number.MAX_SAFE_INTEGER : this.elapsedMs, { loop: !actor.sleeping });
+      activity: actor.action ? 'idle' : pose.speaking ? 'speaking' : pose.walking ? 'walking' : 'idle',
+      facing: pose.facing ?? (pose.facingLeft ? 'left' : pose.walking ? 'right' : 'down'),
+    }, actor.sleeping ? Number.MAX_SAFE_INTEGER : pose.actionElapsedMs ?? this.elapsedMs, { loop: !actor.action });
     sprite.setVisible(true).setAlpha(pose.alpha ?? 1);
     shadow.setVisible(true).setPosition(pose.x, pose.y - 1).setDisplaySize(sprite.displayWidth * .7, 10).setDepth(pose.y - 0.5).setAlpha(0.33 * (pose.alpha ?? 1));
     return sprite;
@@ -232,36 +250,31 @@ export class ForestCinematic {
     }
   }
 
-  private cage(openness: number): void {
-    const open = clamp(openness);
-    // Actors inside stand behind the bars; once they step out they pass in front.
-    const door = this.cageDoor;
-    // The baked room has a closed cage. These timber rails and its dark interior
-    // provide an animated door without changing the original background artwork.
-    this.scenery.fillStyle(0x0d140e).fillRect(725, 243, 99, 108);
-    // Irregular, low-contrast pixel clusters echo the rough timber in the room.
-    for (let row = 0; row < 17; row++) for (let column = 0; column < 14; column++) {
-      const seed = (row * 29 + column * 47) % 11;
-      if (seed < 6) this.scenery.fillStyle([0x182015, 0x1e2518, 0x252a1b][seed % 3]!).fillRect(731 + column * 6, 247 + row * 6, seed % 2 ? 5 : 3, seed % 3 ? 3 : 5);
+  private cage(openness: number, elapsedMs?: number): void {
+    this.doorDefinition = this.definitions.get('camp')?.objects.find(object => object.id === CAGE_DOOR_ID);
+    const door = this.doorDefinition;
+    if (!door) return;
+    if (!this.doorBinding || this.doorBinding.options.assetId !== door.assetId) {
+      this.doorBinding?.destroy();
+      this.doorBinding = new PhaserAdventureCharacter(this.scene,
+        new CharacterController({ id: 'cinematic-cage-door', position: door.position }), this.cageDoor, {
+          autoUpdate: false, aiRuntime: this.assets, assetId: door.assetId,
+          baseScale: () => ({ x: this.doorDefinition!.scaleX, y: this.doorDefinition!.scaleY }),
+          origin: () => ({ x: this.doorDefinition!.anchorX, y: 1 - this.doorDefinition!.anchorY }),
+          angle: () => this.doorDefinition!.rotation,
+          animations: () => rescueAnimation(this.doorDefinition!.assetId, 'open'),
+        });
     }
-    this.scenery.fillStyle(0x10170f).fillRect(728, 244, 9, 104).fillRect(812, 244, 10, 104);
-    this.scenery.fillStyle(0x3b3420).fillRect(728, 340, 95, 9);
-    this.scenery.lineStyle(2, 0x5b4a2a).lineBetween(730, 344, 819, 344);
-    const width = lerp(97, 17, smooth(open));
-    const x = lerp(725, 708, smooth(open));
-    door.lineStyle(6, 0x463c23).strokeRect(x, 242, width, 110);
-    door.lineStyle(2, 0x9a7b41, 0.8).strokeRect(x + 2, 244, width - 4, 106);
-    for (let i = 1; i < 4; i++) {
-      const barX = x + width * i / 4;
-      door.lineStyle(5, 0x51452a).lineBetween(barX, 246, barX, 349);
-      door.lineStyle(1, 0xa7894f).lineBetween(barX - 1, 246, barX - 1, 349);
-    }
-    door.lineStyle(5, 0x665333).lineBetween(x, 286, x + width, 286);
-    for (let row = 0; row < 13; row++) {
-      door.fillStyle(row % 3 ? 0x8b713e : 0x352e1c).fillRect(x - 2, 248 + row * 8, 4, row % 2 ? 3 : 5);
-      door.fillStyle(row % 2 ? 0x9a7a42 : 0x3a321e).fillRect(x + width - 2, 249 + row * 8, 4, 3);
-      for (let bar = 1; bar < 4; bar++) door.fillStyle(row % 2 ? 0x8d723d : 0x3a301c).fillRect(x + width * bar / 4 - 2, 252 + row * 7, 3, 2);
-    }
+    this.doorBinding.renderPose({ position: door.position, activity: 'idle', facing: 'down' },
+      elapsedMs ?? clamp(openness) * this.doorBinding.animationDurationMs, { loop: false });
+    this.cageDoor.setVisible(door.enabled);
+  }
+
+  private cagePositions() {
+    const door = this.definitions.get('camp')!.objects.find(object => object.id === CAGE_DOOR_ID)!;
+    const king = this.definitions.get('camp')!.objects.find(object => object.properties.actorName === 'king')!;
+    return { king: king.position, strike: { x: door.position.x + 35, y: door.position.y + 24 },
+      outside: { x: door.position.x + 36, y: door.position.y + 66 } };
   }
 
   private rope(x1: number, y1: number, x2: number, y2: number): void {
@@ -296,17 +309,13 @@ export class ForestCinematic {
     } else if (step === 2) {
       this.shot('camp', 'THE ORC ENCAMPMENT · NO WAY OUT', lerp(1.12, 1.30, t), 588, 291, 0xa8b6bf);
       const entry = smooth(segment(t, 0, 0.70));
-      const kingX = lerp(536, 775, entry), kingY = lerp(427, 343, entry);
+      const cage = this.cagePositions();
+      const kingX = lerp(536, cage.king.x, entry), kingY = lerp(427, cage.king.y, entry);
       this.pose('king', { x: kingX, y: kingY, walking: t < 0.70, facingLeft: t > 0.74 });
       this.pose('guard-front', { x: lerp(651, 872, entry), y: 420, walking: t < 0.70, facingLeft: t > 0.7 });
       this.pose('guard-rear', { x: lerp(433, 616, entry), y: 437, walking: t < 0.70 });
       this.spear(lerp(433, 616, entry), 437);
       this.cage(1 - segment(t, 0.69, 0.87));
-      if (t > 0.87) {
-        this.foreground.fillStyle(0x9d9774).fillRect(770, 296, 12, 15);
-        this.foreground.lineStyle(3, 0xb4af8c).strokeRect(773, 289, 7, 11);
-        this.foreground.fillStyle(0x2f3326).fillRect(775, 301, 3, 5);
-      }
       this.mist(0x75928b, 0.045);
     } else {
       this.shot('village', 'BRAMBLEHOLLOW · A QUIETER HERO', lerp(1.07, 1.18, t), 487, 292);
@@ -326,40 +335,27 @@ export class ForestCinematic {
   private ending(step: number, t: number): void {
     if (step === 0) {
       this.shot('camp', 'THE ORC ENCAMPMENT · ONE GOOD STRIKE', lerp(1.18, 1.30, t), 585, 301);
-      this.pose('king', { x: 778, y: 343 });
-      const borinX = lerp(660, 704, smooth(segment(t, 0, 0.35)));
-      this.pose('borin', { x: borinX, y: 424, walking: t < 0.35 });
+      const cage = this.cagePositions();
+      this.pose('king', cage.king);
+      const approaching = this.elapsedMs < PICKAXE_START_MS;
+      const arrive = smooth(segment(this.elapsedMs, 0, PICKAXE_START_MS));
+      this.pose('borin', { x: lerp(cage.strike.x - 65, cage.strike.x, arrive), y: lerp(cage.strike.y + 45, cage.strike.y, arrive),
+        walking: approaching, ...(approaching ? {} : { action: 'pickaxe-back', actionElapsedMs: this.elapsedMs - PICKAXE_START_MS }) });
       this.sleepingGuard();
-      this.cage(segment(t, 0.61, 0.90));
-      const swing = segment(t, 0.23, 0.58);
-      const angle = lerp(-2.35, -0.89, smooth(swing)) + smooth(segment(t, 0.76, 1)) * 1.2;
-      const handX = borinX + 14, handY = 370;
-      const axeX = handX + Math.cos(angle) * 84, axeY = handY + Math.sin(angle) * 84;
-      this.props.lineStyle(6, 0x664b2e).lineBetween(handX, handY, axeX, axeY);
-      this.props.lineStyle(3, 0xc2a571).lineBetween(handX + 1, handY, axeX + 1, axeY);
-      this.props.lineStyle(9, 0xc8c5ae).lineBetween(axeX - Math.sin(angle) * 18, axeY + Math.cos(angle) * 18, axeX + Math.sin(angle) * 18, axeY - Math.cos(angle) * 18);
-      if (t < 0.58) {
-        this.foreground.fillStyle(0xb7b18b).fillRect(770, 296, 12, 15);
-      } else {
-        const fall = segment(t, 0.58, 0.92);
-        const lockY = 302 + fall * fall * 140;
-        this.props.fillStyle(0xc9c29c).fillRect(774 + Math.sin(fall * 8) * 7, lockY, 9, 12);
-        for (let i = 0; i < 9; i++) {
-          const age = segment(t, 0.55, 0.76), radius = age * 58;
-          this.foreground.fillStyle(i % 2 ? 0xf0da89 : 0xfff2b0, 1 - age).fillRect(770 + Math.cos(i * 2.4) * radius, 318 + Math.sin(i * 2.4) * radius + age * 18, 3, 3);
-        }
-      }
+      this.cage(0, Math.max(0, this.elapsedMs - PICKAXE_START_MS - PICKAXE_IMPACT_MS));
       this.mist(0xe5b05b, 0.025);
     } else if (step === 1) {
       this.shot('camp', 'GOOD KNOTS · AN OPEN DOOR', lerp(1.26, 1.16, t), 570, 298);
       this.cage(1);
-      // The cage is on the ground: Aldric walks toward the camera through its door.
-      const exit = smooth(segment(t, 0.04, 0.62));
-      const flee = smooth(segment(t, 0.69, 1));
-      const kingX = lerp(778, 722, exit) - flee * 146;
-      const kingY = lerp(343, 425, exit) + flee * 22;
-      this.pose('king', { x: kingX, y: kingY, walking: t > .04 && t < .62 || t > .69, facingLeft: true });
-      this.pose('borin', { x: lerp(704, 529, flee), y: lerp(424, 454, flee), walking: t > 0.69, facingLeft: t > 0.69 });
+      const cage = this.cagePositions();
+      const stepAside = smooth(segment(t, 0, .24));
+      const exit = smooth(segment(t, .20, .64));
+      const flee = smooth(segment(t, .72, 1));
+      this.pose('king', { x: lerp(cage.king.x, cage.outside.x, exit) - flee * 146, y: lerp(cage.king.y, cage.outside.y, exit) + flee * 22,
+        walking: t > .20 && t < .64 || t > .72, facing: t > .72 ? 'left' : 'down' });
+      this.pose('borin', { x: lerp(lerp(cage.strike.x, cage.strike.x - 75, stepAside), cage.outside.x - 193, flee),
+        y: lerp(lerp(cage.strike.y, cage.strike.y + 12, stepAside), cage.outside.y + 29, flee),
+        walking: t < .24 || t > .72, facingLeft: true });
       this.sleepingGuard();
       this.mist(0xb3c4a8, 0.025);
     } else if (step === 2) {
@@ -395,8 +391,7 @@ export class ForestCinematic {
 
   private sleepingGuard(): void {
     const position = this.definitions.get('camp')?.points.find(point => point.id === GUARD_DRINK_POINT)?.position ?? { x: 220, y: 350 };
-    const guard = this.pose('guard-front', { ...position, sleeping: true });
-    drawGuardRope(this.guardRope, guard, true);
+    this.pose('guard-front', { ...position, sleeping: true });
     const bob = Math.sin(this.elapsedMs / 340) * 3;
     for (let i = 0; i < 3; i++) {
       const x = position.x - 65 - i * 12, y = position.y - 45 - i * 17 + bob;

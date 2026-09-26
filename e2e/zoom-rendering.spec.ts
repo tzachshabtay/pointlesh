@@ -130,3 +130,52 @@ test('aligned foreground still occludes by polygon and depth, and responds to it
   expect(result.disabled).toBeGreaterThan(500);
   expect(result.visible).toBe(false);
 });
+
+for (const renderer of ['webgl', 'canvas']) test(`${renderer} walk-behind polygons follow nested cutscene containers as they pan and zoom`, async ({ page }) => {
+  if (renderer === 'canvas') await page.addInitScript(() => {
+    const getContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (name: string, ...args: any[]) {
+      return name.includes('webgl') ? null : Reflect.apply(getContext, this, [name, ...args]);
+    } as typeof getContext;
+  });
+  await page.goto('/');
+  await expect(page.locator('#loading')).toBeHidden();
+  await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
+  const results = await page.evaluate(async () => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.changeRoom('camp'); scene.story.endingStep = 0; scene.renderCutscene(); scene.sys.pause();
+    const cinematic = scene.cinematic, world = cinematic.world;
+    const overlay = cinematic.overlays[0];
+    for (const child of world.list) child.setVisible(child === cinematic.background || child === overlay.image);
+    overlay.sync({ ...scene.resolved().areas[0], enabled: true, closed: true,
+      polygon: [{ x: 400, y: 220 }, { x: 460, y: 220 }, { x: 460, y: 280 }, { x: 400, y: 280 }],
+      properties: { walkBehindEnabled: true, baseline: 505 } });
+    const probe = scene.add.rectangle(430, 250, 26, 26, 0xff00ff).setDepth(400);
+    world.add(probe); cinematic.fade.setAlpha(0);
+    const count = async () => {
+      world.sort('depth');
+      const image = await new Promise<HTMLImageElement>(resolve => scene.renderer.snapshot(resolve));
+      const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+      const context = canvas.getContext('2d')!; context.drawImage(image, 0, 0);
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      let magenta = 0;
+      for (let i = 0; i < pixels.length; i += 4) if (pixels[i] === 255 && pixels[i + 1] === 0 && pixels[i + 2] === 255) magenta++;
+      return magenta;
+    };
+    const samples = [];
+    for (const transform of [{ x: -135, y: -70, zoom: 1.3 }, { x: 155, y: 95, zoom: .72 }]) {
+      world.setPosition(transform.x, transform.y).setScale(transform.zoom);
+      probe.setPosition(430, 250).setDepth(400);
+      const behind = await count();
+      probe.setDepth(600); const front = await count();
+      probe.setDepth(400).setPosition(530, 250); const outside = await count();
+      samples.push({ behind, front, outside });
+    }
+    return samples;
+  });
+  for (const sample of results) {
+    expect(sample.behind).toBe(0);
+    expect(sample.front).toBeGreaterThan(100);
+    expect(sample.outside).toBeGreaterThan(100);
+  }
+});

@@ -18,6 +18,7 @@ export interface StoryState {
   guardClock: number;
   introStep: number;
   endingStep: number;
+  tyingGuard?: { elapsedMs: number };
 }
 export function newStory(): StoryState {
   return { roomId: 'village', inventory: [], flags: {}, journal: ['King Aldric was taken east. Find a way into the orc camp.'], guardClock: 0, introStep: 0, endingStep: -1 };
@@ -94,8 +95,16 @@ export const targets: Record<RoomId, Target[]> = {
 export function targetVisible(state: StoryState, id: string): boolean {
   return !(id === 'coin' && state.flags.tookCoin || id === 'rope' && state.flags.tookRope || id === 'mushroom' && state.flags.tookMushroom);
 }
-export type InteractionResult = { text?: string; dialog?: string; room?: RoomId; ending?: boolean };
+export type InteractionResult = { text?: string; dialog?: string; room?: RoomId; ending?: boolean; action?: 'tie-guard' };
+export function finishTyingGuard(state: StoryState): InteractionResult {
+  if (!state.tyingGuard || !state.flags.guardAsleep || !state.inventory.includes('rope')) return {};
+  delete state.tyingGuard;
+  state.inventory = state.inventory.filter(item => item !== 'rope');
+  addClue(state, 'guardBound', 'Grub is securely tied up. Even if the lock wakes him, he cannot stop us.');
+  return { text: 'The knots are secure. If the noise wakes you, Grub, you will have to complain from there.' };
+}
 export function interact(state: StoryState, targetId: string, item?: ItemId): InteractionResult {
+  if (state.tyingGuard) return {};
   const target = targets[state.roomId].find(target => target.id === targetId);
   if (!target || !targetVisible(state, targetId)) return { text: 'Nothing to do here.' };
   if (item && !state.inventory.includes(item)) return { text: 'That is no longer in my satchel.' };
@@ -113,9 +122,8 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
     }
     if (item === 'rope' && targetId === 'guard') {
       if (!state.flags.guardAsleep) return { text: 'He would never let me tie him up while he is awake. Sleep first, knots second.' };
-      state.inventory = state.inventory.filter(value => value !== item);
-      addClue(state, 'guardBound', 'Grub is securely tied up. Even if the lock wakes him, he cannot stop us.');
-      return { text: 'The knots are secure. If the noise wakes you, Grub, you will have to complain from there.' };
+      state.tyingGuard = { elapsedMs: 0 };
+      return { action: 'tie-guard' };
     }
     if (item === 'pickaxe' && targetId === 'cage') {
       if (!state.flags.guardAsleep) return { text: 'One clang and that guard will catch us. Quiet first, heroics second.' };

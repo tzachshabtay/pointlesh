@@ -4,11 +4,12 @@ import { assertSceneManifest } from '@scene-designer/core';
 import { addGuardAnimations } from '../src/guard-assets.js';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from '../src/scene-content-updates.js';
 import { addForestPoints } from '../src/points.js';
+import { addRescueAssets } from '../src/rescue-assets.js';
 
 const assetsFile = process.argv[2] ?? new URL('../public/authoring/assets.json', import.meta.url);
 const scenesFile = process.argv[3] ?? new URL('../public/authoring/scenes.json', import.meta.url);
 const assets = JSON.parse(await readFile(assetsFile, 'utf8'));
-addGuardAnimations(assets); addForestObjectAssets(assets); updateRescueAssetText(assets); assertManifest(assets);
+addGuardAnimations(assets); addForestObjectAssets(assets); addRescueAssets(assets); updateRescueAssetText(assets); assertManifest(assets);
 await writeFile(assetsFile, JSON.stringify(assets, null, 2) + '\n');
 const scenes = addForestPoints(updateForestInteractions(JSON.parse(await readFile(scenesFile, 'utf8'))));
 assertSceneManifest(scenes);
