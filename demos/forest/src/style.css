@@ -36,3 +36,6 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
   .cinematic-caption h2 { font-size:8px; margin:3px 0; }
   .cinematic-caption #cutscene-progress { font-size:6px; }
 }
+
+/* Fit the game and its header to the visible preview, including browser pinch zoom. */
+#app { width: var(--preview-width, 100%); margin-left: var(--preview-left, 0px); }

@@ -18,7 +18,11 @@ import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from 
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
+import { installViewportLayout } from './viewport-layout';
 import './style.css';
+
+const disposeViewportLayout = installViewportLayout(document.getElementById('app')!);
+if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const button = (text: string, action: () => void) => { const node = document.createElement('button'); node.textContent = text; node.onclick = action; return node; };
