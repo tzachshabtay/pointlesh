@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, resolvePointleshScene, walkablePolygons, pointleshApproachTarget } from '@pointlesh/core';
-const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, targetVisible, hint } = await tsImport('../src/story.ts', import.meta.url);
+const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, targetVisible, hint, migrateRescueStory } = await tsImport('../src/story.ts', import.meta.url);
 
 test('the rescue puzzle has an achievable dependency chain and a recoverable timing failure', () => {
   const state = newStory();
@@ -33,9 +33,13 @@ test('the rescue puzzle has an achievable dependency chain and a recoverable tim
   assert.equal(state.flags.stewSpiked, true);
   assert.equal(finishGuardDrink(state), true);
   assert.equal(state.flags.guardAsleep, true);
-  assert.match(interact(state, 'cage', 'pickaxe').text, /secure a rope/);
+  assert.match(interact(state, 'cage', 'pickaxe').text, /tie up Grub/);
   assert.equal(state.flags.won, undefined);
-  interact(state, 'cage', 'rope');
+  assert.match(hint(state), /rope on the sleeping Grub/);
+  interact(state, 'guard', 'rope');
+  assert.equal(state.flags.guardBound, true);
+  assert.ok(!state.inventory.includes('rope'));
+  assert.match(interact(state, 'guard').text, /securely tied/);
   assert.equal(interact(state, 'cage', 'pickaxe').ending, true);
   assert.equal(state.flags.won, true);
   assert.equal(state.endingStep, 0);
@@ -52,7 +56,8 @@ test('inventory and conversation prerequisites prevent premature puzzle solution
   state.roomId = 'camp';
   assert.match(interact(state, 'cage', 'pickaxe').text, /no longer/);
   state.inventory = ['rope', 'pickaxe'];
-  assert.match(interact(state, 'cage', 'rope').text, /guard would hear/);
+  assert.match(interact(state, 'guard', 'rope').text, /while he is awake/);
+  assert.match(interact(state, 'cage', 'rope').text, /cannot see how/);
   assert.match(interact(state, 'cage', 'pickaxe').text, /guard will catch/);
   assert.deepEqual(state.inventory, ['rope', 'pickaxe']);
   assert.match(combineItems(state, 'rope', 'pickaxe'), /inspiration is not enough/);
@@ -109,4 +114,26 @@ test('collected pickup targets cannot grant duplicate items', () => {
     assert.equal(state.inventory.filter(item => item === pickupId).length, 1);
     assert.equal(targetVisible(state, pickupId), false);
   }
+});
+
+
+test('tying a sleeping guard consumes one rope and old cage-rope saves remain solvable', () => {
+  const source = newStory(); source.roomId = 'camp'; source.introStep = 4;
+  source.inventory = ['pickaxe']; source.flags = { ropeTied: true, guardAsleep: true, tookRope: true };
+  source.journal.push('The rope is secured to the cage. Now break the lock.');
+  const before = structuredClone(source), restored = migrateRescueStory(source);
+  assert.deepEqual(source, before, 'Loading must not mutate the saved slot');
+  assert.deepEqual(restored.inventory, ['pickaxe', 'rope']);
+  assert.equal(restored.flags.ropeTied, undefined);
+  assert.equal(restored.flags.guardBound, undefined);
+  assert.deepEqual(migrateRescueStory(restored), restored, 'Migration is idempotent');
+  assert.match(interact(restored, 'cage', 'pickaxe').text, /tie up Grub/);
+  interact(restored, 'guard', 'rope');
+  assert.equal(restored.flags.guardBound, true);
+  assert.match(interact(restored, 'guard', 'rope').text, /no longer/);
+  assert.deepEqual(migrateRescueStory(restored), restored, 'New bound-guard saves are unchanged');
+  assert.equal(interact(restored, 'cage', 'pickaxe').ending, true);
+  const won = migrateRescueStory({ ...source, flags: { ...source.flags, won: true }, endingStep: 1 });
+  assert.equal(won.flags.guardBound, true); assert.equal(won.endingStep, 1);
+  assert.deepEqual(won.inventory, ['pickaxe'], 'Completed older rescues keep their consumed rope');
 });

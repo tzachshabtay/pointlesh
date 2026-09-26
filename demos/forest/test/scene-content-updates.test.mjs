@@ -5,7 +5,7 @@ import { tsImport } from 'tsx/esm/api';
 import { PNG } from 'pngjs';
 import { createObjectPrefab, createPointleshInstance, resolvePointleshScene } from '@pointlesh/core';
 const { scenes, assets } = await tsImport('../src/content.ts', import.meta.url);
-const { updateForestInteractions } = await tsImport('../src/scene-content-updates.ts', import.meta.url);
+const { updateForestInteractions, updateRescueAssetText, kingRescueReply } = await tsImport('../src/scene-content-updates.ts', import.meta.url);
 
 test('painted dreamcaps have one hotspot and the chest has one visible, interactive object', async () => {
   const authored = JSON.parse(await readFile(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
@@ -44,4 +44,22 @@ test('legacy mushroom conversion preserves custom properties and walk points wit
   assert.deepEqual(result.scenes.mine, source.scenes.mine);
   assert.deepEqual(result.scenes.camp, source.scenes.camp);
   assert.deepEqual(updateForestInteractions(result), result);
+});
+
+test('old cage copy migrates while custom descriptions and generated version history stay intact', () => {
+  const source = structuredClone(scenes);
+  const cage = source.scenes.camp.layers[0].areas.find(area => area.pointlesh?.entityId === 'cage');
+  cage.pointlesh.properties.description = 'The king is imprisoned above a steep ledge. I need a safe way down.';
+  const updated = updateForestInteractions(source);
+  assert.match(resolvePointleshScene(updated, 'camp').areas.find(area => area.id === 'cage').properties.description, /heavy lock/);
+  cage.pointlesh.properties.description = 'My custom cage description';
+  assert.equal(resolvePointleshScene(updateForestInteractions(source), 'camp').areas.find(area => area.id === 'cage').properties.description, 'My custom cage description');
+  const catalog = structuredClone(assets), line = catalog.assets['line.elder.king'];
+  line.prompt = line.voiceSettings.text = 'East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock.';
+  line.activeVersion = 'old'; line.versions.old = { name: 'old', file: 'old-speech.mp3', prompt: line.prompt };
+  updateRescueAssetText(catalog);
+  assert.equal(line.voiceSettings.text, kingRescueReply); assert.equal(line.prompt, kingRescueReply);
+  assert.equal(line.activeVersion, ''); assert.match(line.versions.old.prompt, /above a ledge/);
+  line.voiceSettings.text = 'Custom dialogue'; updateRescueAssetText(catalog);
+  assert.equal(line.voiceSettings.text, 'Custom dialogue');
 });

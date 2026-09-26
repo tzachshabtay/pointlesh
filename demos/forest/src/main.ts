@@ -9,12 +9,13 @@ import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
-import { applyDialogChoice, combineItems, ending, finishGuardDrink, hint, interact, intro, items, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { applyDialogChoice, combineItems, ending, finishGuardDrink, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
-import { addForestObjectAssets, updateForestInteractions } from './scene-content-updates';
+import { drawGuardRope } from './guard-rope';
+import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import './style.css';
@@ -55,6 +56,7 @@ class ForestAdventure extends Phaser.Scene {
   private roomTextureSources = new Map<RoomId, string>();
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
   guardPatrol?: GuardPatrol;
+  private guardRope!: Phaser.GameObjects.Graphics;
   private guardCheckpoint?: GuardPatrolSnapshot;
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
   objectTextureBindings = new Map<string, { assetId: string; binding: ReturnType<AiAssetRuntime['bindTexture']> }>();
@@ -113,6 +115,7 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.markers = this.add.graphics().setDepth(2000);
+    this.guardRope = this.add.graphics().setName('guard-rope').setVisible(false);
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
       assetId: 'cursor.walk',
       resolve: target => {
@@ -429,6 +432,11 @@ class ForestAdventure extends Phaser.Scene {
         npc.binding.sync();
       }
     }
+    this.drawGuardRope();
+  }
+  private drawGuardRope(): void {
+    const guard = [...this.npcActors.values()].find(npc => npc.actorName === 'guard')?.sprite;
+    drawGuardRope(this.guardRope, guard, !!this.story.flags.guardBound && !!this.story.flags.guardAsleep);
   }
   authoredFacing(object: ResolvedPointleshObject): Direction {
     const facing = object.properties.facing;
@@ -587,7 +595,7 @@ class ForestAdventure extends Phaser.Scene {
     }
     for (let i = this.story.inventory.length; i < 6; i++) { const slot = document.createElement('span'); slot.className = 'inventory-slot empty'; slot.textContent = '·'; el('inventory').append(slot); }
     el('clear-item').hidden = !this.selected; el('inventory-hint').textContent = this.selected ? `Use ${items[this.selected].name} with…` : 'A little courage goes a long way.';
-    el('objective').textContent = this.story.flags.won ? 'King Aldric is home. Well done, Borin.' : this.story.flags.guardAsleep ? 'Free the king from his cage.' : 'Find the king. Bring him home.';
+    el('objective').textContent = this.story.flags.won ? 'King Aldric is home. Well done, Borin.' : this.story.flags.guardAsleep ? this.story.flags.guardBound ? 'Free the king from his cage.' : 'Tie up Grub before breaking the lock.' : 'Find the king. Bring him home.';
     this.syncEntities();
     this.renderNearby(); this.drawHotspots();
   }
@@ -618,7 +626,7 @@ class ForestAdventure extends Phaser.Scene {
     const checkpoint = save.cutscene as ForestCheckpoint;
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
     this.cinematic?.destroy(); this.cinematic = undefined;
-    this.story = { roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep };
+    this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep });
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: checkpoint[`${kind}ElapsedMs`] ?? 0 });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.guardPatrol = undefined;
@@ -672,6 +680,7 @@ class ForestAdventure extends Phaser.Scene {
       if (!paused) npc.binding.update(Math.min(delta, 100));
     }
     this.drawRoomTexture(this.story.roomId);
+    this.drawGuardRope();
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
   }
 }
@@ -745,6 +754,7 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
 }
 addGuardAnimations(assets);
 addForestObjectAssets(assets);
+updateRescueAssetText(assets);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });

@@ -89,3 +89,47 @@ test('poisoned guard collapses, restores mid-fall, and stays on the lying frame 
   });
   await page.screenshot({ path: testInfo.outputPath('sleeping-guard-ending.png') });
 });
+
+test('rope binds the sleeping guard, survives save/load, and Aldric walks through the cage door', async ({ page }, testInfo) => {
+  const result = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.game.loop.sleep(); scene.story.flags.guardAsleep = true; scene.story.inventory = ['rope', 'pickaxe'];
+    scene.changeRoom('camp');
+    const rope = () => scene.children.getByName('guard-rope');
+    const unbound = rope().visible;
+    scene.applyInteraction('guard', 'rope'); scene.dismissSpeech();
+    const save = scene.snapshot(); scene.restore(save);
+    const bound = { visible: rope().visible, commands: rope().commandBuffer.length, flag: scene.story.flags.guardBound, inventory: [...scene.story.inventory] };
+    scene.changeRoom('forest'); const outsideCamp = rope().visible; scene.changeRoom('camp');
+    const returned = rope().visible;
+    scene.applyInteraction('cage', 'pickaxe');
+    const cast = scene.children.getByName('pointlesh-cinematic').list[0];
+    const king = cast.list.find((object: any) => object.name === 'cinematic-king');
+    const door = cast.list.find((object: any) => object.name === 'cage-door-cinematic');
+    const insideDoor = king.depth < door.depth;
+    scene.cinematic.render(1, 900);
+    const early = { x: king.x, y: king.y, key: king.texture.key };
+    scene.cinematic.render(1, 2600);
+    const later = { x: king.x, y: king.y, key: king.texture.key };
+    const outsideDoor = king.depth > door.depth;
+    const cinematicRope = cast.list.find((object: any) => object.name === 'guard-rope-cinematic');
+    const cinematicBound = cinematicRope.visible && cinematicRope.commandBuffer.length > 0;
+    scene.endingRunner.restore({ cutsceneId: 'forest.ending', version: 1, stepIndex: 1, elapsedMs: 2600 });
+    scene.story.endingStep = 1;
+    const checkpoint = scene.snapshot(); scene.restore(checkpoint);
+    const restoredKing = scene.children.getByName('pointlesh-cinematic').list[0].list.find((object: any) => object.name === 'cinematic-king');
+    const restored = { x: restoredKing.x, y: restoredKing.y, key: restoredKing.texture.key };
+    scene.scene.pause(); scene.game.loop.wake();
+    return { unbound, bound, outsideCamp, returned, early, later, insideDoor, outsideDoor, cinematicBound, restored };
+  });
+  expect(result.unbound).toBe(false);
+  expect(result.bound).toMatchObject({ visible: true, flag: true, inventory: ['pickaxe'] });
+  expect(result.bound.commands).toBeGreaterThan(0);
+  expect(result.outsideCamp).toBe(false); expect(result.returned).toBe(true);
+  expect(result.cinematicBound).toBe(true);
+  expect(result.insideDoor).toBe(true); expect(result.outsideDoor).toBe(true);
+  expect(result.later.x).toBeLessThan(result.early.x); expect(result.later.y).toBeGreaterThan(result.early.y);
+  expect(result.early.key).toMatch(/king\.walk-left/); expect(result.later.key).toMatch(/king\.walk-left/);
+  expect(result.restored).toEqual(result.later);
+  await page.screenshot({ path: testInfo.outputPath('bound-guard-king-walking-out.png') });
+});

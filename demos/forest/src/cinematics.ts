@@ -5,6 +5,7 @@ import { CharacterController, readCharacterAnimations, resolvePointleshScene, ty
 import { PhaserAdventureCharacter } from '@pointlesh/phaser';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
+import { drawGuardRope } from './guard-rope';
 
 export type CinematicKind = 'intro' | 'ending';
 export const CINEMATIC_DURATIONS = {
@@ -49,6 +50,8 @@ export class ForestCinematic {
   private readonly atmosphere: Phaser.GameObjects.Graphics;
   private readonly scenery: Phaser.GameObjects.Graphics;
   private readonly props: Phaser.GameObjects.Graphics;
+  private readonly guardRope: Phaser.GameObjects.Graphics;
+  private readonly cageDoor: Phaser.GameObjects.Graphics;
   private readonly foreground: Phaser.GameObjects.Graphics;
   private readonly frame: Phaser.GameObjects.Graphics;
   private readonly fade: Phaser.GameObjects.Rectangle;
@@ -72,8 +75,10 @@ export class ForestCinematic {
     this.scenery = scene.add.graphics().setDepth(-10);
     this.atmosphere = scene.add.graphics().setDepth(0);
     this.props = scene.add.graphics().setDepth(850);
+    this.guardRope = scene.add.graphics().setName('guard-rope-cinematic').setVisible(false);
+    this.cageDoor = scene.add.graphics().setName('cage-door-cinematic').setDepth(350);
     this.foreground = scene.add.graphics().setDepth(900);
-    this.world.add([this.background, this.scenery, this.atmosphere, this.props, this.foreground]);
+    this.world.add([this.background, this.scenery, this.atmosphere, this.props, this.foreground, this.guardRope, this.cageDoor]);
     const actors: CastId[] = ['borin', 'king', 'guard-front', 'guard-rear', 'elder', 'innkeeper', 'miner'];
     for (const id of actors) {
       const shadow = scene.add.ellipse(0, 0, 40, 10, 0x07120e, 0.35);
@@ -110,6 +115,8 @@ export class ForestCinematic {
     this.excludeGameplayObjects();
     for (const { sprite, shadow } of this.cast.values()) { sprite.setVisible(false); shadow.setVisible(false); }
     this.scenery.clear(); this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
+    this.guardRope.clear().setVisible(false);
+    this.cageDoor.clear();
     const duration = CINEMATIC_DURATIONS[this.kind][stepIndex]!;
     const t = clamp(elapsedMs / duration);
     if (this.kind === 'intro') this.intro(stepIndex, t);
@@ -227,6 +234,8 @@ export class ForestCinematic {
 
   private cage(openness: number): void {
     const open = clamp(openness);
+    // Actors inside stand behind the bars; once they step out they pass in front.
+    const door = this.cageDoor;
     // The baked room has a closed cage. These timber rails and its dark interior
     // provide an animated door without changing the original background artwork.
     this.scenery.fillStyle(0x0d140e).fillRect(725, 243, 99, 108);
@@ -240,18 +249,18 @@ export class ForestCinematic {
     this.scenery.lineStyle(2, 0x5b4a2a).lineBetween(730, 344, 819, 344);
     const width = lerp(97, 17, smooth(open));
     const x = lerp(725, 708, smooth(open));
-    this.foreground.lineStyle(6, 0x463c23).strokeRect(x, 242, width, 110);
-    this.foreground.lineStyle(2, 0x9a7b41, 0.8).strokeRect(x + 2, 244, width - 4, 106);
+    door.lineStyle(6, 0x463c23).strokeRect(x, 242, width, 110);
+    door.lineStyle(2, 0x9a7b41, 0.8).strokeRect(x + 2, 244, width - 4, 106);
     for (let i = 1; i < 4; i++) {
       const barX = x + width * i / 4;
-      this.foreground.lineStyle(5, 0x51452a).lineBetween(barX, 246, barX, 349);
-      this.foreground.lineStyle(1, 0xa7894f).lineBetween(barX - 1, 246, barX - 1, 349);
+      door.lineStyle(5, 0x51452a).lineBetween(barX, 246, barX, 349);
+      door.lineStyle(1, 0xa7894f).lineBetween(barX - 1, 246, barX - 1, 349);
     }
-    this.foreground.lineStyle(5, 0x665333).lineBetween(x, 286, x + width, 286);
+    door.lineStyle(5, 0x665333).lineBetween(x, 286, x + width, 286);
     for (let row = 0; row < 13; row++) {
-      this.foreground.fillStyle(row % 3 ? 0x8b713e : 0x352e1c).fillRect(x - 2, 248 + row * 8, 4, row % 2 ? 3 : 5);
-      this.foreground.fillStyle(row % 2 ? 0x9a7a42 : 0x3a321e).fillRect(x + width - 2, 249 + row * 8, 4, 3);
-      for (let bar = 1; bar < 4; bar++) this.foreground.fillStyle(row % 2 ? 0x8d723d : 0x3a301c).fillRect(x + width * bar / 4 - 2, 252 + row * 7, 3, 2);
+      door.fillStyle(row % 3 ? 0x8b713e : 0x352e1c).fillRect(x - 2, 248 + row * 8, 4, row % 2 ? 3 : 5);
+      door.fillStyle(row % 2 ? 0x9a7a42 : 0x3a321e).fillRect(x + width - 2, 249 + row * 8, 4, 3);
+      for (let bar = 1; bar < 4; bar++) door.fillStyle(row % 2 ? 0x8d723d : 0x3a301c).fillRect(x + width * bar / 4 - 2, 252 + row * 7, 3, 2);
     }
   }
 
@@ -329,7 +338,6 @@ export class ForestCinematic {
       this.props.lineStyle(6, 0x664b2e).lineBetween(handX, handY, axeX, axeY);
       this.props.lineStyle(3, 0xc2a571).lineBetween(handX + 1, handY, axeX + 1, axeY);
       this.props.lineStyle(9, 0xc8c5ae).lineBetween(axeX - Math.sin(angle) * 18, axeY + Math.cos(angle) * 18, axeX + Math.sin(angle) * 18, axeY - Math.cos(angle) * 18);
-      this.rope(826, 264, 817, 447);
       if (t < 0.58) {
         this.foreground.fillStyle(0xb7b18b).fillRect(770, 296, 12, 15);
       } else {
@@ -343,20 +351,16 @@ export class ForestCinematic {
       }
       this.mist(0xe5b05b, 0.025);
     } else if (step === 1) {
-      this.shot('camp', 'A STOUT ROPE · A KING SET FREE', lerp(1.26, 1.16, t), 570, 298);
+      this.shot('camp', 'GOOD KNOTS · AN OPEN DOOR', lerp(1.26, 1.16, t), 570, 298);
       this.cage(1);
-      this.rope(826, 259, 817 + Math.sin(t * 8) * 3, 460);
-      const down = smooth(segment(t, 0, 0.62));
+      // The cage is on the ground: Aldric walks toward the camera through its door.
+      const exit = smooth(segment(t, 0.04, 0.62));
       const flee = smooth(segment(t, 0.69, 1));
-      const kingX = lerp(796, 810, down) - flee * 230;
-      const kingY = lerp(339, 447, down);
-      this.pose('king', { x: kingX, y: kingY, walking: t > 0.69, facingLeft: true });
-      this.pose('borin', { x: lerp(742, 529, flee), y: 454, walking: t > 0.69, facingLeft: t > 0.69 });
+      const kingX = lerp(778, 722, exit) - flee * 146;
+      const kingY = lerp(343, 425, exit) + flee * 22;
+      this.pose('king', { x: kingX, y: kingY, walking: t > .04 && t < .62 || t > .69, facingLeft: true });
+      this.pose('borin', { x: lerp(704, 529, flee), y: lerp(424, 454, flee), walking: t > 0.69, facingLeft: t > 0.69 });
       this.sleepingGuard();
-      if (t < 0.65) {
-        this.props.lineStyle(6, 0x9b514e).lineBetween(kingX + 12, kingY - 40, 817, kingY - 48);
-        this.props.fillStyle(0xe8c293).fillRect(813, kingY - 53, 8, 8);
-      }
       this.mist(0xb3c4a8, 0.025);
     } else if (step === 2) {
       this.shot('forest', 'THE WHISPERING WOOD · RUN FOR HOME', lerp(1.13, 1.07, t), lerp(528, 451, t), 290);
@@ -391,7 +395,8 @@ export class ForestCinematic {
 
   private sleepingGuard(): void {
     const position = this.definitions.get('camp')?.points.find(point => point.id === GUARD_DRINK_POINT)?.position ?? { x: 220, y: 350 };
-    this.pose('guard-front', { ...position, sleeping: true });
+    const guard = this.pose('guard-front', { ...position, sleeping: true });
+    drawGuardRope(this.guardRope, guard, true);
     const bob = Math.sin(this.elapsedMs / 340) * 3;
     for (let i = 0; i < 3; i++) {
       const x = position.x - 65 - i * 12, y = position.y - 45 - i * 17 + bob;

@@ -102,11 +102,11 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
 
   await inventory(page, 'Goldroot pickaxe');
   await target(page, 'King Aldric’s cage');
-  await speech(page, 'secure a rope'); await dismiss(page);
+  await speech(page, 'tie up Grub'); await dismiss(page);
   await page.getByRole('button', { name: 'Put away ×', exact: true }).click();
   await inventory(page, 'Climbing rope');
-  await target(page, 'King Aldric’s cage');
-  await speech(page, 'The rope is secure'); await dismiss(page);
+  await target(page, 'Grub the guard');
+  await speech(page, 'The knots are secure'); await dismiss(page);
   await inventory(page, 'Goldroot pickaxe');
   await target(page, 'King Aldric’s cage');
   await expect(page.locator('#cutscene')).toBeVisible();

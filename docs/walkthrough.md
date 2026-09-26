@@ -26,9 +26,9 @@ Click an inventory item to select it, then click a target to use it. Click a sec
 
 7. **Put Grub to sleep.** Watch Grub's patrol: he turns his back at the cage, walks to the cauldron, drinks, and returns. Select **Dreamcap stout**, then use it on the **Stew cauldron** while he stands facing away or walks back to the cage. Borin approaches before performing the action, so the guard's state at arrival matters. If Grub is watching, Borin refuses and keeps the brew; dismiss the response and try again. It is easier to approach the cauldron first, then wait for the next safe window. After adding the brew, wait for Grub to finish his next drink and fall asleep. The cycle repeats without a failure limit.
 
-8. **Secure the king's escape.** Once Grub is asleep, use the **Climbing rope** on **King Aldric's cage**. Borin will not break the lock until the king has a safe way down.
+8. **Tie up the guard.** Once Grub has collapsed, use the **Climbing rope** on **Grub the guard**. Breaking the cage lock could wake him; secure him first so he cannot stop the escape.
 
-9. **Break the lock.** Use the **Goldroot pickaxe** on the cage. Watch Borin break the lock, help Aldric down the rope and escape through the forest to a village reunion. Borin and Aldric return to Bramblehollow.
+9. **Break the lock.** Use the **Goldroot pickaxe** on the cage. Watch Borin break the lock, let Aldric walk out of the cage and escape through the forest to a village reunion. Borin and Aldric return to Bramblehollow.
 
 Inventory and dialogue puzzles can be prepared in different orders. Failed combinations and mistimed cauldron attempts do not consume the required items. The journal records the important clues, and the hint button points to the next unmet requirement.
 
@@ -41,7 +41,7 @@ Open **Designer** to inspect the current room, or visit [the direct designer pre
 | Walkable areas | Select **Walkable ground & perspective**, keep **Walkable** enabled, and move its vertices. Close the editor, then walk across the changed area. Borin needs a continuous route to an interaction's approach point. |
 | Hotspots and approach | Select a hotspot or object and choose its **Walk point**. Drag that named point to change where Borin stands before interacting. The click target and standing point are independent. |
 | Named points and arrivals | Select a **Room entry** instance such as **From The Orc Encampment** in the forest. Drag its marker or edit X/Y, then revisit from that room. Choose a character in the point inspector to **Move character here** instantly or **Walk character here** along the floor. |
-| Sprite interactions | Move or scale the rope, coin, mushroom, or an NPC. Its opaque sprite pixels remain clickable without a separate hotspot polygon. Relative `approachOffsetX`/`approachOffsetY` properties move the standing point with the object; the `interactive` property also controls its Nearby action. |
+| Sprite interactions | Move or scale the rope, coin, chest, or an NPC. Its opaque sprite pixels remain clickable without a separate hotspot polygon. Relative `approachOffsetX`/`approachOffsetY` properties move the standing point with the object; the `interactive` property also controls its Nearby action. |
 | Directional character animations | Select the Borin prefab and expand **Directional animations**. Choose **Idle**, **Walk**, or **Speak**, then assign front/back/left/right asset and animation slots. Use **Flip** to mirror an assignment, or enable eight directions to configure diagonal slots. **Use prefab** restores an inherited slot. |
 | Movement linked to animation | Compare linked movement with the property disabled; tune pixels per animation frame and walking speed. Assigned clips use their actual AI Assets frames and timing. Legacy frame count/duration fields appear only when no animations are assigned. |
 | Perspective scale | On the same ground area, enable **Character scale** and edit its axis and endpoint multipliers. Walk across the area to see sprite size and movement distance change. |

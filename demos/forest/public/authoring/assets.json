@@ -765,10 +765,10 @@
     "line.elder.king": {
       "id": "line.elder.king",
       "kind": "voice-line",
-      "prompt": "East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock.",
+      "prompt": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.",
       "voiceSettings": {
         "voiceAssetId": "voice.elder",
-        "text": "East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock."
+        "text": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock."
       },
       "activeVersion": "",
       "versions": {}
@@ -4466,7 +4466,7 @@
     "inventory.rope": {
       "id": "inventory.rope",
       "kind": "image",
-      "prompt": "Climbing rope. Strong enough to lower a king. Probably.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "prompt": "Climbing rope. Strong dwarven rope. A few good knots should hold even an orc.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
       "dimensions": {
         "width": 32,
         "height": 32
@@ -4496,7 +4496,7 @@
     "inventory.rope.click": {
       "id": "inventory.rope.click",
       "kind": "animation",
-      "prompt": "Climbing rope. Strong enough to lower a king. Probably.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "prompt": "Climbing rope. Strong dwarven rope. A few good knots should hold even an orc.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
       "dimensions": {
         "width": 192,
         "height": 32

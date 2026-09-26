@@ -1,6 +1,26 @@
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import type { AiAssetDefinition, AiAssetManifest } from '@ai-game-assets/core';
 import { createObjectPrefab, createPointleshArea, createPointleshInstance, isPointleshArea, resolvePointleshScene } from '@pointlesh/core';
+import { items, targets } from './story';
+
+const oldCageDescription = 'The king is imprisoned above a steep ledge. I need a safe way down.';
+const oldKingReply = 'East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock.';
+export const kingRescueReply = 'East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.';
+
+/** Update only shipped copy; keep custom authoring and old generation provenance intact. */
+export function updateRescueAssetText(assets: AiAssetManifest): void {
+  const kingLine = assets.assets['line.elder.king'];
+  if (kingLine?.voiceSettings?.text === oldKingReply) {
+    kingLine.voiceSettings.text = kingRescueReply;
+    if (kingLine.prompt === oldKingReply) kingLine.prompt = kingRescueReply;
+    // Any previously generated speech describes the old puzzle.
+    kingLine.activeVersion = '';
+  }
+  for (const id of ['inventory.rope', 'inventory.rope.click']) {
+    const asset = assets.assets[id];
+    if (asset) asset.prompt = asset.prompt.replace('Strong enough to lower a king. Probably.', items.rope.description);
+  }
+}
 
 export const chestAsset: AiAssetDefinition = {
   id: 'tool-chest', kind: 'image', dimensions: { width: 120, height: 80 },
@@ -18,6 +38,15 @@ export function addForestObjectAssets(assets: AiAssetManifest): void {
 /** Upgrade existing authored rooms while retaining unrelated edits and walk points. */
 export function updateForestInteractions(source: SceneDesignerManifest): SceneDesignerManifest {
   const manifest = structuredClone(source);
+  const updateDescription = (value: unknown): void => {
+    if (!value || typeof value !== 'object') return;
+    for (const [key, child] of Object.entries(value)) {
+      if (key === 'description' && child === oldCageDescription) {
+        (value as Record<string, unknown>)[key] = targets.camp.find(target => target.id === 'cage')!.description;
+      } else updateDescription(child);
+    }
+  };
+  updateDescription(manifest);
   const forest = manifest.scenes.forest;
   if (forest) {
     const mushroom = resolvePointleshScene(manifest, 'forest').objects.find(object => object.properties.pickupId === 'mushroom');

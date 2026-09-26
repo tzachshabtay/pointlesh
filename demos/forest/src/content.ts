@@ -9,7 +9,7 @@ import { bramblehollowStyleGuide } from './art-style';
 import { specializeForestEntities } from './entity-prefabs';
 import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-assets';
 import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
-import { addForestObjectAssets, updateForestInteractions } from './scene-content-updates';
+import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -99,7 +99,7 @@ function dialog(id: string, speaker: string, greeting: string, options: { id: st
 }
 export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
   elder: dialog('elder', 'elder', 'Borin. You have your father’s stubborn look. Good. We will need it.', [
-    { id: 'king', text: 'Where did they take the king?', reply: 'East, through the wood. Aldric’s cage is above a ledge in the orc camp. Take a rope, and find a way to open the lock.' },
+    { id: 'king', text: 'Where did they take the king?', reply: kingRescueReply },
     { id: 'advice', text: 'I could use a little advice.', reply: 'Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.' },
     { id: 'goodbye', text: 'I will bring him home.', reply: 'I know, lad. I know.' }
   ]),

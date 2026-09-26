@@ -1197,7 +1197,7 @@
           "actorName": "king",
           "displayedScale": 2.1,
           "targetId": "cage",
-          "description": "The king is imprisoned above a steep ledge. I need a safe way down."
+          "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
         },
         "behaviors": [
           "forest.interact"
@@ -4444,7 +4444,7 @@
                   "label": "King Aldric’s cage",
                   "cursor": "interact",
                   "exit": "",
-                  "description": "The king is imprisoned above a steep ledge. I need a safe way down.",
+                  "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
                   "approachX": 721,
                   "approachY": 450,
                   "approachRadius": 10,
