@@ -1,4 +1,9 @@
 import type Phaser from 'phaser';
+import { resolveTargetAssetId } from '@ai-game-assets/core';
+import type { AiAssetRuntime } from '@ai-game-assets/phaser';
+import type { SceneDesignerManifest } from '@scene-designer/core';
+import { CharacterController, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject } from '@pointlesh/core';
+import { PhaserAdventureCharacter } from '@pointlesh/phaser';
 
 export type CinematicKind = 'intro' | 'ending';
 export const CINEMATIC_DURATIONS = {
@@ -7,7 +12,15 @@ export const CINEMATIC_DURATIONS = {
 } as const;
 
 type CastId = 'borin' | 'king' | 'guard-front' | 'guard-rear' | 'elder' | 'innkeeper' | 'miner';
-type Pose = { x: number; y: number; scale?: number; walking?: boolean; facingLeft?: boolean; angle?: number; alpha?: number; frame?: number };
+type Pose = { x: number; y: number; scale?: number; walking?: boolean; speaking?: boolean; facingLeft?: boolean; angle?: number; alpha?: number; frozen?: boolean };
+type CastActor = {
+  sprite: Phaser.GameObjects.Sprite;
+  shadow: Phaser.GameObjects.Ellipse;
+  assetId?: string;
+  definition?: ResolvedPointleshObject;
+  binding?: PhaserAdventureCharacter;
+  angle: number;
+};
 export type CinematicSnapshot = {
   kind: CinematicKind;
   stepIndex: number;
@@ -39,14 +52,18 @@ export class ForestCinematic {
   private readonly frame: Phaser.GameObjects.Graphics;
   private readonly fade: Phaser.GameObjects.Rectangle;
   private readonly location: Phaser.GameObjects.Text;
-  private readonly cast = new Map<CastId, { sprite: Phaser.GameObjects.Sprite; shadow: Phaser.GameObjects.Ellipse }>();
+  private readonly cast = new Map<CastId, CastActor>();
   private readonly ignoredObjects = new Map<Phaser.GameObjects.GameObject, number>();
+  private authoredManifest?: SceneDesignerManifest;
+  private definitions = new Map<string, ResolvedPointleshObject[]>();
+  private room = 'village';
   private stepIndex = 0;
   private elapsedMs = 0;
   private visible = true;
   private destroyed = false;
 
-  constructor(private readonly scene: Phaser.Scene, readonly kind: CinematicKind) {
+  constructor(private readonly scene: Phaser.Scene, readonly kind: CinematicKind,
+    private readonly assets: AiAssetRuntime, private readonly getManifest: () => SceneDesignerManifest) {
     this.root = scene.add.container(0, 0).setName('pointlesh-cinematic').setDepth(5000);
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
@@ -56,15 +73,12 @@ export class ForestCinematic {
     this.props = scene.add.graphics().setDepth(850);
     this.foreground = scene.add.graphics().setDepth(900);
     this.world.add([this.background, this.scenery, this.atmosphere, this.props, this.foreground]);
-    const actors: [CastId, string][] = [
-      ['borin', 'borin'], ['king', 'king'], ['guard-front', 'guard'],
-      ['guard-rear', 'guard'], ['elder', 'elder'], ['innkeeper', 'innkeeper'], ['miner', 'miner'],
-    ];
-    for (const [id, texture] of actors) {
+    const actors: CastId[] = ['borin', 'king', 'guard-front', 'guard-rear', 'elder', 'innkeeper', 'miner'];
+    for (const id of actors) {
       const shadow = scene.add.ellipse(0, 0, 40, 10, 0x07120e, 0.35);
-      const sprite = scene.add.sprite(0, 0, `actor.${texture}`, 4).setOrigin(0.5, 0.94).setName(`cinematic-${id}`);
+      const sprite = scene.add.sprite(0, 0, '__WHITE').setVisible(false).setName(`cinematic-${id}`);
       this.world.add([shadow, sprite]);
-      this.cast.set(id, { sprite, shadow });
+      this.cast.set(id, { sprite, shadow, angle: 0 });
     }
     this.frame = scene.add.graphics();
     this.frame.fillStyle(0x07100d, 1).fillRect(0, 0, W, 34).fillRect(0, H - 28, W, 28);
@@ -87,6 +101,11 @@ export class ForestCinematic {
     this.stepIndex = stepIndex;
     this.elapsedMs = elapsedMs;
     if (stepIndex === 4) { this.setVisible(false); return; }
+    const manifest = this.getManifest();
+    if (manifest !== this.authoredManifest) {
+      this.definitions = new Map(Object.keys(manifest.scenes).map(id => [id, resolvePointleshScene(manifest, id).objects]));
+      this.authoredManifest = manifest;
+    }
     this.excludeGameplayObjects();
     for (const { sprite, shadow } of this.cast.values()) { sprite.setVisible(false); shadow.setVisible(false); }
     this.scenery.clear(); this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
@@ -126,6 +145,7 @@ export class ForestCinematic {
     }
     this.ignoredObjects.clear();
     this.scene.cameras.remove(this.camera, true);
+    for (const { binding } of this.cast.values()) binding?.destroy();
     this.root.destroy(true);
     this.cast.clear();
   }
@@ -141,6 +161,7 @@ export class ForestCinematic {
   }
 
   private shot(room: string, name: string, zoom: number, focusX = 480, focusY = 285, tint = 0xffffff): void {
+    this.room = room;
     this.background.setTexture(`room.${room}`).setTint(tint);
     this.location.setText(name);
     const x = Math.max(W / (2 * zoom), Math.min(W - W / (2 * zoom), focusX));
@@ -149,28 +170,44 @@ export class ForestCinematic {
   }
 
   private pose(id: CastId, pose: Pose): Phaser.GameObjects.Sprite {
-    const { sprite, shadow } = this.cast.get(id)!;
-    const scale = pose.scale ?? (id.startsWith('guard') ? 3.8 : 3.05);
-    const animation = pose.walking ? Math.floor(this.elapsedMs / 105) % 4 : 4 + Math.floor(this.elapsedMs / 650) % 2;
-    const profile = pose.walking || pose.facingLeft;
-    sprite.setVisible(true).setAlpha(pose.alpha ?? 1).setPosition(pose.x, pose.y)
-      .setScale(scale).setFlipX(!!profile && !pose.facingLeft).setAngle(pose.angle ?? 0)
-      .setFrame(pose.frame ?? (profile ? 16 + animation : animation)).setDepth(pose.y);
-    shadow.setVisible(true).setPosition(pose.x, pose.y - 1).setScale(scale / 2.6, 1).setDepth(pose.y - 0.5).setAlpha(0.33 * (pose.alpha ?? 1));
-    if (id === 'king') {
-      const y = pose.y - 25 * scale;
-      const crown = [
-        { x: pose.x - 5 * scale, y }, { x: pose.x - 6 * scale, y: y - 4 * scale },
-        { x: pose.x - 2 * scale, y: y - 2 * scale }, { x: pose.x, y: y - 5 * scale },
-        { x: pose.x + 2 * scale, y: y - 2 * scale }, { x: pose.x + 6 * scale, y: y - 4 * scale },
-        { x: pose.x + 5 * scale, y },
-      ];
-      this.props.fillStyle(0xe4bc54).beginPath().moveTo(crown[0]!.x, crown[0]!.y);
-      for (const point of crown.slice(1)) this.props.lineTo(point.x, point.y);
-      this.props.closePath().fillPath();
-      this.props.fillStyle(0xffe08a).fillRect(pose.x - 5 * scale, y - scale, 10 * scale, scale);
-      this.props.fillStyle(0x9b4e41).fillRect(pose.x - scale, y - 3 * scale, 2 * scale, 2 * scale);
+    const actor = this.cast.get(id)!;
+    const { sprite, shadow } = actor;
+    const characterId = id.startsWith('guard') ? 'guard' : id;
+    const matches = (object: ResolvedPointleshObject) => object.prefabId === `forest.character.${characterId}`;
+    // Prefer the shot's scene overrides, then the character's home scene. Editor
+    // eye/lock flags never affect the cutscene cast.
+    actor.definition = this.definitions.get(this.room)?.find(matches)
+      ?? [...this.definitions.values()].flat().find(matches);
+    if (!actor.definition) throw new Error(`Missing cinematic character prefab: ${characterId}`);
+    const assetId = actor.definition.assetId;
+    if (!actor.binding || actor.assetId !== assetId) {
+      actor.binding?.destroy();
+      actor.assetId = assetId;
+      actor.binding = new PhaserAdventureCharacter(this.scene,
+        new CharacterController({ id: `cinematic-${id}`, position: { x: pose.x, y: pose.y } }), sprite, {
+          autoUpdate: false, aiRuntime: this.assets, assetId,
+          baseScale: 1,
+          // Shot sizes are art directed in logical pixels, independent of the
+          // promoted image/variant resolution. Preserve the authored aspect ratio.
+          baseSize: () => {
+            const asset = this.assets.manifest.assets[resolveTargetAssetId(this.assets.manifest, assetId, this.assets.targetId)];
+            const width = asset?.frameGrid?.frameWidth ?? asset?.dimensions?.width ?? 24;
+            const height = asset?.frameGrid?.frameHeight ?? asset?.dimensions?.height ?? 32;
+            return { width: 32 * width / height, height: 32 };
+          },
+          origin: () => ({ x: actor.definition!.anchorX, y: 1 - actor.definition!.anchorY }),
+          angle: () => actor.angle + actor.definition!.rotation,
+          animations: () => readCharacterAnimations(actor.definition!.properties),
+        });
     }
+    const scale = pose.scale ?? (id.startsWith('guard') ? 3.8 : 3.05);
+    actor.angle = pose.angle ?? 0;
+    actor.binding.renderPose({ position: { x: pose.x, y: pose.y }, scale,
+      activity: pose.speaking ? 'speaking' : pose.walking ? 'walking' : 'idle',
+      facing: pose.facingLeft ? 'left' : pose.walking ? 'right' : 'down',
+    }, pose.frozen ? 0 : this.elapsedMs);
+    sprite.setVisible(true).setAlpha(pose.alpha ?? 1);
+    shadow.setVisible(true).setPosition(pose.x, pose.y - 1).setScale(scale / 2.6, 1).setDepth(pose.y - 0.5).setAlpha(0.33 * (pose.alpha ?? 1));
     return sprite;
   }
 
@@ -271,7 +308,7 @@ export class ForestCinematic {
     } else {
       this.shot('village', 'BRAMBLEHOLLOW · A QUIETER HERO', lerp(1.07, 1.18, t), 487, 292);
       const arrive = smooth(segment(t, 0, 0.70));
-      this.pose('elder', { x: 385, y: 423, scale: 2.9, frame: 6 + Math.floor(this.elapsedMs / 190) % 2 });
+      this.pose('elder', { x: 385, y: 423, scale: 2.9, speaking: true });
       const borinX = lerp(749, 485, arrive), borinY = lerp(370, 437, arrive);
       this.pose('borin', { x: borinX, y: borinY, scale: lerp(2.5, 3.15, arrive), walking: t < 0.7, facingLeft: true });
       this.mist(0xa4bd8b, 0.035);
@@ -319,7 +356,7 @@ export class ForestCinematic {
       const flee = smooth(segment(t, 0.69, 1));
       const kingX = lerp(796, 810, down) - flee * 230;
       const kingY = lerp(339, 447, down);
-      this.pose('king', { x: kingX, y: kingY, scale: lerp(2.6, 3.05, down), frame: t < 0.62 ? Math.floor(this.elapsedMs / 140) % 4 : undefined, walking: t > 0.69, facingLeft: true });
+      this.pose('king', { x: kingX, y: kingY, scale: lerp(2.6, 3.05, down), walking: t > 0.69, facingLeft: true });
       this.pose('borin', { x: lerp(742, 529, flee), y: 454, scale: 3.15, walking: t > 0.69, facingLeft: t > 0.69 });
       this.sleepingGuard();
       if (t < 0.65) {
@@ -344,7 +381,7 @@ export class ForestCinematic {
       const arrive = smooth(segment(t, 0, 0.67));
       this.pose('borin', { x: lerp(584, 476, arrive), y: lerp(347, 435, arrive), scale: lerp(2.35, 3.1, arrive), walking: t < 0.67, facingLeft: true });
       this.pose('king', { x: lerp(661, 566, arrive), y: lerp(352, 436, arrive), scale: lerp(2.4, 3.1, arrive), walking: t < 0.67, facingLeft: true });
-      this.pose('elder', { x: 359, y: 433, scale: 3.0, frame: 6 + Math.floor(this.elapsedMs / 220) % 2 });
+      this.pose('elder', { x: 359, y: 433, scale: 3.0, speaking: true });
       this.pose('innkeeper', { x: 274, y: 438 - Math.max(0, Math.sin(this.elapsedMs / 300)) * segment(t, 0.36, 0.62) * 8, scale: 2.8 });
       this.pose('miner', { x: 690, y: 441 - Math.max(0, Math.sin(this.elapsedMs / 320 + 1)) * segment(t, 0.36, 0.62) * 8, scale: 2.8 });
       this.mist(0xd9d49b, 0.025);
@@ -359,7 +396,7 @@ export class ForestCinematic {
   }
 
   private sleepingGuard(): void {
-    this.pose('guard-front', { x: 548, y: 447, scale: 3.5, angle: 82, frame: 4 });
+    this.pose('guard-front', { x: 548, y: 447, scale: 3.5, angle: 82, frozen: true });
     const bob = Math.sin(this.elapsedMs / 340) * 3;
     for (let i = 0; i < 3; i++) {
       const x = 470 - i * 12, y = 391 - i * 17 + bob;

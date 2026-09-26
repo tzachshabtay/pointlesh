@@ -543,7 +543,7 @@ class ForestAdventure extends Phaser.Scene {
     }
     const kind = isEnding ? 'ending' : 'intro';
     if (this.cinematic?.snapshot().kind !== kind) {
-      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind);
+      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes);
       this.clearMovementKeys(); this.character.stop(); this.hover();
     }
     document.body.classList.add('cinematic-playing');

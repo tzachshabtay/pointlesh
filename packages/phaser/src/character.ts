@@ -8,6 +8,8 @@ import { evaluatePointleshAreaEffects, type PointleshAreaEffects } from "./effec
 // then let each paused actor attach to the same new Phaser animation object.
 const registeredDefinitions = new WeakMap<object, string>();
 
+export type PhaserCharacterPose = Pick<CharacterSnapshot, 'position' | 'activity' | 'facing'> & { scale?: number };
+
 export type PhaserAdventureCharacterOptions = {
   /** Read fresh resolved areas here to reflect designer edits without rebuilding the binding. */
   areas?: () => readonly ResolvedPointleshArea[];
@@ -96,6 +98,20 @@ export class PhaserAdventureCharacter {
     this.render(effects);
   }
 
+  /**
+   * Sample an authored pose at absolute animation time (looping), for cutscenes
+   * and previews. Does not advance or modify the gameplay controller or its path.
+   * Call sync/update to resume displaying the controller afterward.
+   */
+  renderPose(pose: PhaserCharacterPose, elapsedMs: number): void {
+    if (this.destroyed) return;
+    if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Animation time must be finite and nonnegative.');
+    const effects = this.effects(pose.position);
+    if (pose.scale !== undefined) effects.scale = pose.scale;
+    const state = { ...this.controller.state, ...pose, scale: effects.scale };
+    this.render(effects, undefined, state, elapsedMs);
+  }
+
   /** Refresh after external asset changes; normal manifest/preview replacements are also detected automatically. */
   refreshAnimation(): void { this.playbackSignature = undefined; this.sync(); }
 
@@ -118,19 +134,29 @@ export class PhaserAdventureCharacter {
     this.restoreTiming();
   }
 
-  private effects(): PointleshAreaEffects {
-    return evaluatePointleshAreaEffects(this.options.areas?.() ?? [], this.controller.state.position, { defaultScale: this.options.defaultScale, defaultZoom: this.options.defaultZoom });
+  private effects(position = this.controller.state.position): PointleshAreaEffects {
+    return evaluatePointleshAreaEffects(this.options.areas?.() ?? [], position, { defaultScale: this.options.defaultScale, defaultZoom: this.options.defaultZoom });
   }
 
-  private render(effects: PointleshAreaEffects, deltaMs?: number): void {
-    this.prepareAnimation();
-    const state = this.controller.state;
+  private render(effects: PointleshAreaEffects, deltaMs?: number, state = this.controller.state, elapsedMs?: number): void {
+    this.prepareAnimation(state, elapsedMs === undefined);
+    if (elapsedMs !== undefined) {
+      const animation = this.playback?.animation;
+      const durations = animation?.frames.length
+        ? animation.frames.map((_frame, index) => animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate)
+        : Array<number>(this.fallbackTiming.frameCount).fill(this.fallbackTiming.frameDurationMs);
+      if (this.selectedAssignment?.reverse) durations.reverse();
+      let remaining = elapsedMs % durations.reduce((sum, duration) => sum + duration, 0);
+      let frame = 0;
+      while (frame < durations.length - 1 && remaining >= durations[frame]!) remaining -= durations[frame++]!;
+      state = { ...state, animationFrame: frame, animationElapsedMs: remaining };
+    }
     const baseScale = this.scale();
     const baseSize = this.size();
     const displaySize = { width: baseSize.width * baseScale.x * effects.scale, height: baseSize.height * baseScale.y * effects.scale };
     const origin = this.origin();
     const angle = (typeof this.options.angle === 'function' ? this.options.angle() : this.options.angle) ?? this.initialAngle;
-    this.controller.setScale(effects.scale);
+    if (elapsedMs === undefined) this.controller.setScale(effects.scale);
     this.sprite.setPosition(state.position.x, state.position.y);
     this.sprite.setDepth((this.options.depthOffset ?? 0) + state.position.y);
     this.sprite.setScale(baseScale.x * effects.scale, baseScale.y * effects.scale);
@@ -190,8 +216,7 @@ export class PhaserAdventureCharacter {
     if (assetId && this.options.aiRuntime) this.binding = this.options.aiRuntime.bindTexture(this.sprite, assetId, { setInitialTexture: !this.playback });
   }
 
-  private prepareAnimation(): void {
-    const state = this.controller.state;
+  private prepareAnimation(state = this.controller.state, syncTiming = true): void {
     const animations = typeof this.options.animations === 'function' ? this.options.animations() : this.options.animations;
     const assignment = resolveCharacterAnimation(animations, state.activity, state.facing);
     const assetId = assignment?.assetId ?? this.options.assetId;
@@ -231,6 +256,7 @@ export class PhaserAdventureCharacter {
     }
     if (!assignment && this.selectedAssignment) this.sprite.setFlipX(false);
     this.selectedAssignment = assignment;
+    if (!syncTiming) return;
     const animation = assignment ? this.playback?.animation : undefined;
     if (animation?.frames.length) {
       const durations = animation.frames.map((_frame, index) => animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate);

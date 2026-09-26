@@ -62,6 +62,8 @@ Animation resolution does not define character size. With `assetId`, every linke
 
 Assignments, linked state changes, frame metadata changes and registered preview replacements update on `sync()` or the next `update()`. Texture bindings follow the resolved animation child, so ai-assets previews/promotions remain live. `refreshAnimation()` explicitly invalidates and synchronizes playback for external authoring integrations. Restoring a saved walk while currently showing idle preserves the saved frame and elapsed time; call `view.sync()` after `actor.restore()`.
 
+For cutscenes and animation previews, `view.renderPose({ position, activity, facing, scale? }, elapsedMs)` samples a looping clip at absolute time using the same assignments, frame holds, transforms, previews, and scaled variants. It leaves the gameplay controller and its movement path untouched. Use a separate sprite/binding with `autoUpdate: false` for a cinematic cast, and supply the cutscene checkpoint's elapsed time to restore the exact pose. Call `sync()` or `update()` to resume displaying the controller.
+
 Existing clients can still supply `aiRuntime`, `assetId` and `animation: state => ...`, or the simpler `frame` callback for custom sheets. These callbacks retain the configured clock when no directional assignment resolves. With legacy animation callbacks, keep the controller's frame count/duration aligned with the authored cycle yourself. A resolved directional assignment takes precedence over both callbacks.
 
 Destroying the scene or sprite detaches the binding and generated texture/animation bindings. Calling `view.destroy()` detaches it without destroying your sprite or controller.

@@ -160,3 +160,57 @@ test('an explicit logical size overrides asset resolution and remains live', () 
   assert.deepEqual([f.sprite.width * f.sprite.scaleX, f.sprite.height * f.sprite.scaleY], [80, 100]);
   f.view.destroy();
 });
+
+test('absolute poses seek authored holds without changing gameplay movement, speech, or timing', () => {
+  const f = fixture();
+  f.controller.walkTo({ x: 900, y: 100 }, floor); f.view.update(73);
+  const before = f.controller.snapshot(), config = { ...f.controller.config };
+  const pose = { position: { x: 300, y: 450 }, activity: 'speaking', facing: 'down', scale: 2 };
+  f.view.renderPose(pose, 250);
+  assert.equal(f.sprite.anims.currentAnim.key, 'speak-cycle');
+  assert.equal(f.sprite.frame, 1);
+  assert.deepEqual([f.sprite.x, f.sprite.y, f.sprite.scaleX, f.sprite.scaleY], [300, 450, 2, 2]);
+  assert.deepEqual(f.controller.snapshot(), before);
+  assert.deepEqual(f.controller.config, config);
+
+  const walk = { ...pose, activity: 'walking', facing: 'right' };
+  for (const [time, frame] of [[0, 0], [49, 0], [50, 1], [199, 1], [200, 2], [600, 0], [650, 1], [200, 2]]) {
+    f.view.renderPose(walk, time);
+    assert.equal(f.sprite.frame, frame);
+    assert.equal(f.sprite.flipX, true);
+  }
+  assert.deepEqual(f.controller.snapshot(), before);
+  f.view.sync();
+  assert.deepEqual([f.sprite.x, f.sprite.y], [before.position.x, before.position.y]);
+  assert.equal(f.sprite.frame, before.animationFrame);
+  assert.deepEqual(f.controller.snapshot(), before);
+  assert.throws(() => f.view.renderPose(pose, -1), /Animation time/);
+  assert.throws(() => f.view.renderPose(pose, NaN), /Animation time/);
+  f.view.destroy();
+});
+
+test('absolute poses share reversed holds, generated frame transforms, and live asset previews', () => {
+  const f = fixture({ angle: 10 });
+  f.mapping.walk.right.reverse = true;
+  f.manifest.assets.walk.animations[0].frameTimings[1] = { delayMs: 150, offsetX: 6, offsetY: -8, scaleX: .5, rotation: 20 };
+  const pose = { position: { x: 300, y: 450 }, activity: 'walking', facing: 'right', scale: 2 };
+  for (const [time, frame] of [[0, 5], [399, 2], [400, 1], [549, 1], [550, 0], [600, 5]]) {
+    f.view.renderPose(pose, time); assert.equal(f.sprite.frame, frame);
+  }
+  f.runtime.designerCallbacks().onPreview('walk', 'cutscene-preview', f.manifest.assets.walk);
+  f.view.renderPose(pose, 400);
+  assert.equal(f.sprite.textureKey, 'cutscene-preview');
+  assert.deepEqual([f.sprite.scaleX, f.sprite.scaleY], [1, 2]);
+  assert.equal(f.sprite.originX, .5 - 6 / 64);
+  assert.equal(f.sprite.originY, 1 + 8 / 80);
+  assert.equal(f.sprite.rotation, 30 * Math.PI / 180);
+
+  f.mapping.walk.right = { assetId: 'parent', key: 'speak' };
+  f.view.renderPose(pose, 250);
+  assert.equal(f.sprite.anims.currentAnim.key, 'speak-cycle');
+  assert.equal(f.sprite.frame, 1);
+  assert.equal(f.sprite.flipX, false);
+  f.view.destroy();
+  f.runtime.designerCallbacks().onPreview('speak', 'after-destroy', f.manifest.assets.speak);
+  assert.notEqual(f.sprite.textureKey, 'after-destroy');
+});
