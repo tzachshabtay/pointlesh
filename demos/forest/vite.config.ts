@@ -1,2 +1,9 @@
 import { defineConfig } from "vite";
-export default defineConfig({ base: "./", server: { port: 5186, strictPort: true }, build: { chunkSizeWarningLimit: 2200 } });
+import { stablePreview } from "./scripts/stable-preview";
+
+export default defineConfig({
+  base: "./",
+  plugins: [stablePreview()],
+  server: { port: 5186, strictPort: true },
+  build: { chunkSizeWarningLimit: 2200 },
+});

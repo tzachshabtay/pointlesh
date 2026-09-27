@@ -42,6 +42,10 @@ The local services use ports **4287** (AI Assets), **4288** (Scene Designer), an
 
 Keep the preview web server running while using the designer: Current images and version previews load from its public art files. Opening **Assets** keeps the game playing, including walking, speaking, and camera follow. Scene and prefab panels reserve canvas gestures and camera navigation for editing while animations and simulation keep running. Designer drawings appear above game UI without hiding it; typing in designer fields does not move the character.
 
+The authoring preview stays on the current game session when the computer sleeps, a development connection drops, or files are promoted. Source-code changes require an explicit browser refresh; designer edits still apply live through their normal callbacks. This prevents a development-server reconnect from silently returning to the title screen.
+
+AI Assets backs up the latest generated choices and pending selections per asset in browser IndexedDB. Return to the same asset after a refresh to recover them, including their animation geometry. These backups do not promote assets or save/load game progress. Promoted images remain project files; unfinished generations and failed browser backups warn before leaving the page.
+
 Drag a panel title or any designer toolbar button to move the tools. Resize panels from their edges or corners; the bottom border has a small grip and remains draggable after scrolling the panel contents. Switching tabs preserves each panel's chosen size.
 
 The authoring server loads `demos/forest/.env` and connects AI Assets' OpenAI image and ElevenLabs audio providers. Image generation defaults to GPT Image 2.5 Sunburst; the asset designer also offers GPT Image 2.5 Flare. Set `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` there, then restart `npm run dev:server`. Existing shell variables take precedence. `OPENAI_IMAGE_MODEL` and `ELEVENLABS_OUTPUT_FORMAT` optionally override provider defaults; an image model selected in the designer takes precedence over the server default. This local `.env` file is ignored by Git and stays outside the public assets; the browser receives no API keys.
