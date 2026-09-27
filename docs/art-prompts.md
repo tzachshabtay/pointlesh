@@ -198,3 +198,15 @@ Alpha refinement: Preserve this exact eight-frame sheet, its four-by-two layout,
 
 Unlit hearth: Edit the supplied hearth crop, removing only the flames and sparks. Reconstruct the soot-dark brown bricks behind them. Keep the existing grate, logs, arch, stone rim, brick positions, ambient lighting, pixel style and framing unchanged. No new objects. Keep the background opaque. This is a precise local clean plate, not a redesigned fireplace.
 ```
+
+## Borin’s cottage fireplace
+
+Mode: **built-in image generation** for a local clean plate; the existing fireplace animation and prefab are reused at a smaller scale. Saved background: `demos/forest/public/art/house-unlit.png` (1182×664). Reference: crop `(760,238,148,160)` from `atlas-house-forest.png`.
+
+`pack-cottage-hearth.mjs` imports only the flame patch at `(809,339)` through `(884,368)`, preserving the original pot’s lower contour and all other room pixels. The scene’s editable cooking-pot walk-behind keeps the flames beneath/behind the pot. The shared library’s reflected light illuminates that foreground copy as well as the stone surround and floor, below the actors.
+
+Final prompt:
+
+```text
+Use case: precise-object-edit. Edit target: the supplied close crop of the fireplace in Borin's cottage, a detailed pixel-art game background. Remove ONLY the small yellow/orange flames and luminous embers UNDER the hanging iron cooking pot, leaving a cold, dark bed of charred logs/coals there. Preserve the iron pot itself, its outline, highlights, rim, handle and hanging chain EXACTLY unchanged, together with the surrounding stone arch, bricks, hearth ledge, warm ambient lighting and every other object. Keep the exact composition, framing and pixel-art style; no redesign, camera movement, new props, text or transparency. The game will add animated flames behind the existing pot. This is a very small local clean-plate edit, not a new fireplace.
+```

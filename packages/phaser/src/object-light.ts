@@ -51,7 +51,7 @@ export class PhaserObjectLight {
     const frames = properties.lightFrameIntensities;
     const index = Math.max(0, (sprite.anims.currentFrame?.index ?? 1) - 1);
     const intensity = Array.isArray(frames) && typeof frames[index] === 'number' ? Number(frames[index]) : 1;
-    this.image?.setVisible(sprite.visible).setDepth(background.depth + .1)
+    this.image?.setVisible(sprite.visible).setDepth(number('lightDepth', background.depth + .1))
       .setAlpha(Math.max(0, Math.min(1, number('lightIntensity', .5) * intensity)));
   }
 

@@ -97,3 +97,35 @@ test('the fireplace keeps playing with the designer open and exposes object anim
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('copper-tankard-fireplace.png') });
 });
+
+test('the cottage fire loops behind its pot with synchronized light and survives room changes', async ({ page }, testInfo) => {
+  const result = await page.evaluate(() => {
+    const api = (window as any).pointleshDemo, scene = api.scene;
+    scene.game.loop.sleep(); scene.changeRoom('house');
+    const sprite = scene.entitySprites.get('house.fireplace'), binding = scene.objectAnimations.get('house.fireplace');
+    const light = () => scene.children.getByName('pointlesh-light:house.fireplace');
+    const fire = scene.resolved().objects.find((object: any) => object.id === 'house.fireplace');
+    const kettle = scene.resolved().areas.find((area: any) => area.id === 'house.hearth-kettle');
+    const poses = [];
+    for (let i = 0; i < 9; i++) {
+      poses.push({ frame: sprite.frame.name, light: light().alpha }); binding.update(125);
+    }
+    const result = { poses, key: sprite.texture.key, background: scene.background.texture.key,
+      width: sprite.displayWidth, potInFront: scene.overlays.some((overlay: any) => overlay.image.depth === kettle.properties.baseline && overlay.image.depth > sprite.depth),
+      potLit: light().depth > kettle.properties.baseline, lightBehindPlayer: light().depth < scene.actor.depth, linkedAsset: fire.assetId };
+    scene.changeRoom('pub');
+    const cleaned = !scene.children.getByName('pointlesh-light:house.fireplace') && !scene.objectAnimations.has('house.fireplace');
+    scene.changeRoom('house');
+    const restored = { key: scene.entitySprites.get('house.fireplace').texture.key, light: !!light() };
+    scene.game.loop.wake(); return { ...result, cleaned, restored };
+  });
+  expect(result.poses.map(pose => pose.frame)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 0]);
+  expect(result.poses[2].light).toBeCloseTo(.7); expect(result.poses[4].light).toBeCloseTo(.14);
+  expect(result.width).toBeCloseTo(80 * .72 * 960 / 1182);
+  expect(result).toMatchObject({ key: 'fireplace.burn', background: 'room.house', linkedAsset: 'fireplace', potInFront: true, potLit: true, lightBehindPlayer: true, cleaned: true,
+    restored: { key: 'fireplace.burn', light: true } });
+  await selectInstance(page, 'house.fireplace'); await expandProperties(page, 'Animation');
+  await expect(page.getByRole('combobox', { name: 'Object animation', exact: true })).toHaveValue('burn');
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
+  await page.screenshot({ path: testInfo.outputPath('cottage-fireplace.png') });
+});

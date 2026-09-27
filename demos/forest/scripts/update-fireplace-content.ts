@@ -11,4 +11,4 @@ const scenes = addFireplace(JSON.parse(await readFile(scenesFile, 'utf8')));
 assertSceneManifest(scenes);
 await writeFile(assetsFile, JSON.stringify(assets, null, 2) + '\n');
 await writeFile(scenesFile, JSON.stringify(scenes, null, 2) + '\n');
-console.log('Added the Copper Tankard fireplace and animation.');
+console.log('Updated the Copper Tankard and cottage fireplaces.');

@@ -17,7 +17,7 @@ export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width:
 
 export const atlasRooms = {
   village: { asset: 'background.village-pub', row: 0 }, pub: { asset: 'background.pub', row: null },
-  house: { asset: 'background.house-forest', row: 0 }, forest: { asset: 'background.forest-wide', row: null },
+  house: { asset: 'background.house', row: null }, forest: { asset: 'background.forest-wide', row: null },
   mine: { asset: 'background.mine-camp', row: 0 }, camp: { asset: 'background.camp', row: null }
 } as const;
 const definitions: Record<string, AiAssetDefinition> = {};

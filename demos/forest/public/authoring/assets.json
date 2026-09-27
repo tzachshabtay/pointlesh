@@ -5605,6 +5605,31 @@
         "background",
         "pub"
       ]
+    },
+    "background.house": {
+      "id": "background.house",
+      "kind": "image",
+      "dimensions": {
+        "width": 1182,
+        "height": 664
+      },
+      "prompt": "The original Borin cottage with only the small painted flames and luminous embers under the hanging cooking pot removed. Preserve the pot, chain, grate, stonework, lighting and every other part of the room.",
+      "activeVersion": "hearth",
+      "versions": {
+        "hearth": {
+          "name": "hearth",
+          "file": "art/house-unlit.png",
+          "prompt": "A local clean plate beneath the cottage cooking pot. Every pixel outside the firebox remains original.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "background",
+        "house"
+      ]
     }
   },
   "styleGuide": {
@@ -5987,6 +6012,10 @@
       "Objects"
     ],
     "background.pub": [
+      "Graphics",
+      "Backgrounds"
+    ],
+    "background.house": [
       "Graphics",
       "Backgrounds"
     ]

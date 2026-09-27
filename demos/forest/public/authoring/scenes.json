@@ -1504,6 +1504,11 @@
             "min": 0,
             "max": 1,
             "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
           }
         }
       }
@@ -2718,6 +2723,32 @@
                   "value": 472.4493661551733
                 }
               }
+            },
+            {
+              "id": "house.fireplace",
+              "prefabId": "forest.object.fireplace",
+              "name": "Cottage fireplace",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 685.4822335025381,
+                  "y": 302.5301204819277,
+                  "scaleX": 0.5847715736040608,
+                  "scaleY": 0.5855421686746988
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "description": "A small cooking fire warms Borin’s cottage.",
+                  "lightRadiusX": 103,
+                  "lightRadiusY": 91,
+                  "lightOffsetY": -12,
+                  "lightIntensity": 0.7,
+                  "lightDepth": 310.1
+                },
+                "behaviors": []
+              }
             }
           ],
           "objects": [],
@@ -3023,6 +3054,168 @@
                 },
                 "name": "Back to the village",
                 "entityId": "house-exit"
+              }
+            },
+            {
+              "id": "house.hearth-kettle::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "kettle-0",
+                  "x": 679.7969543147208,
+                  "y": 243.97590361445782
+                },
+                {
+                  "id": "kettle-1",
+                  "x": 688.730964467005,
+                  "y": 243.97590361445782
+                },
+                {
+                  "id": "kettle-2",
+                  "x": 697.6649746192893,
+                  "y": 247.2289156626506
+                },
+                {
+                  "id": "kettle-3",
+                  "x": 700.9137055837564,
+                  "y": 254.54819277108433
+                },
+                {
+                  "id": "kettle-4",
+                  "x": 705.7868020304569,
+                  "y": 255.36144578313252
+                },
+                {
+                  "id": "kettle-5",
+                  "x": 706.5989847715736,
+                  "y": 261.0542168674699
+                },
+                {
+                  "id": "kettle-6",
+                  "x": 703.3502538071066,
+                  "y": 264.3072289156627
+                },
+                {
+                  "id": "kettle-7",
+                  "x": 704.9746192893401,
+                  "y": 270.81325301204816
+                },
+                {
+                  "id": "kettle-8",
+                  "x": 703.3502538071066,
+                  "y": 277.3192771084337
+                },
+                {
+                  "id": "kettle-9",
+                  "x": 699.2893401015228,
+                  "y": 282.19879518072287
+                },
+                {
+                  "id": "kettle-10",
+                  "x": 689.5431472081218,
+                  "y": 284.6385542168675
+                },
+                {
+                  "id": "kettle-11",
+                  "x": 678.1725888324873,
+                  "y": 284.6385542168675
+                },
+                {
+                  "id": "kettle-12",
+                  "x": 670.8629441624365,
+                  "y": 280.5722891566265
+                },
+                {
+                  "id": "kettle-13",
+                  "x": 667.6142131979695,
+                  "y": 274.06626506024094
+                },
+                {
+                  "id": "kettle-14",
+                  "x": 668.4263959390863,
+                  "y": 264.3072289156627
+                },
+                {
+                  "id": "kettle-15",
+                  "x": 665.1776649746192,
+                  "y": 261.0542168674699
+                },
+                {
+                  "id": "kettle-16",
+                  "x": 665.989847715736,
+                  "y": 254.54819277108433
+                },
+                {
+                  "id": "kettle-17",
+                  "x": 670.0507614213197,
+                  "y": 254.54819277108433
+                },
+                {
+                  "id": "kettle-18",
+                  "x": 674.9238578680203,
+                  "y": 247.2289156626506
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cooking pot in front of fire",
+                "entityId": "house.hearth-kettle",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 310
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
               }
             }
           ]
