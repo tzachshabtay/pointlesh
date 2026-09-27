@@ -4511,6 +4511,33 @@
                   "forest.interact"
                 ]
               }
+            },
+            {
+              "id": "camp.fireplace",
+              "prefabId": "forest.object.fireplace",
+              "name": "Cauldron fire",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 200.60913705583755,
+                  "y": 341.56626506024094,
+                  "scaleX": 1.299492385786802,
+                  "scaleY": 0.6506024096385542,
+                  "anchorY": 0.12
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "description": "Crackling flames heat the orcs’ supper.",
+                  "lightRadiusX": 133,
+                  "lightRadiusY": 102,
+                  "lightOffsetY": -18,
+                  "lightIntensity": 0.8,
+                  "lightDepth": 345.1
+                },
+                "behaviors": []
+              }
             }
           ],
           "objects": [],
@@ -5176,6 +5203,148 @@
                   "maxZoom": 1,
                   "smoothing": 5,
                   "baseline": 350
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.hearth-cauldron::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "cauldron-0",
+                  "x": 165.68527918781726,
+                  "y": 248.85542168674698
+                },
+                {
+                  "id": "cauldron-1",
+                  "x": 230.65989847715736,
+                  "y": 248.85542168674698
+                },
+                {
+                  "id": "cauldron-2",
+                  "x": 228.2233502538071,
+                  "y": 262.6807228915663
+                },
+                {
+                  "id": "cauldron-3",
+                  "x": 238.78172588832487,
+                  "y": 274.87951807228916
+                },
+                {
+                  "id": "cauldron-4",
+                  "x": 242.03045685279187,
+                  "y": 287.89156626506025
+                },
+                {
+                  "id": "cauldron-5",
+                  "x": 238.78172588832487,
+                  "y": 300.0903614457831
+                },
+                {
+                  "id": "cauldron-6",
+                  "x": 229.8477157360406,
+                  "y": 310.66265060240966
+                },
+                {
+                  "id": "cauldron-7",
+                  "x": 218.4771573604061,
+                  "y": 317.1686746987952
+                },
+                {
+                  "id": "cauldron-8",
+                  "x": 198.17258883248732,
+                  "y": 322.04819277108436
+                },
+                {
+                  "id": "cauldron-9",
+                  "x": 178.6802030456853,
+                  "y": 317.98192771084337
+                },
+                {
+                  "id": "cauldron-10",
+                  "x": 165.68527918781726,
+                  "y": 310.66265060240966
+                },
+                {
+                  "id": "cauldron-11",
+                  "x": 157.56345177664974,
+                  "y": 298.46385542168673
+                },
+                {
+                  "id": "cauldron-12",
+                  "x": 155.12690355329948,
+                  "y": 283.82530120481925
+                },
+                {
+                  "id": "cauldron-13",
+                  "x": 159.18781725888326,
+                  "y": 272.43975903614455
+                },
+                {
+                  "id": "cauldron-14",
+                  "x": 170.55837563451777,
+                  "y": 264.3072289156627
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cauldron in front of fire",
+                "entityId": "camp.hearth-cauldron",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 345
                 },
                 "behaviors": [],
                 "propertySchema": {

@@ -129,3 +129,42 @@ test('the cottage fire loops behind its pot with synchronized light and survives
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('cottage-fireplace.png') });
 });
+
+test('the cauldron fire lights the pot and ground beneath the actors without intercepting the puzzle', async ({ page }, testInfo) => {
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
+  const result = await page.evaluate(() => {
+    const api = (window as any).pointleshDemo, scene = api.scene;
+    scene.game.loop.sleep(); scene.changeRoom('camp');
+    const sprite = scene.entitySprites.get('camp.fireplace'), binding = scene.objectAnimations.get('camp.fireplace');
+    const light = () => scene.children.getByName('pointlesh-light:camp.fireplace');
+    const cauldron = scene.resolved().areas.find((area: any) => area.id === 'camp.hearth-cauldron');
+    const frames = [], brightness = [];
+    for (let i = 0; i < 9; i++) {
+      frames.push(sprite.frame.name); brightness.push(light().alpha); binding.update(125);
+    }
+    const potInFront = scene.overlays.some((overlay: any) => overlay.image.depth === cauldron.properties.baseline && overlay.image.depth > sprite.depth);
+    const result = { frames, brightness, key: sprite.texture.key, width: sprite.displayWidth,
+      potInFront, potLit: light().depth > cauldron.properties.baseline, lightBelowGuard: light().depth < 350,
+      // Input remains registered so properties can change live. Its hit callback
+      // must reject the fire's opaque pixels during ordinary gameplay.
+      acceptsHits: Array.from({ length: sprite.frame.realWidth * sprite.frame.realHeight }, (_, i) =>
+        sprite.input.hitAreaCallback(sprite.input.hitArea, i % sprite.frame.realWidth, Math.floor(i / sprite.frame.realWidth), sprite)).some(Boolean),
+      hasDoor: scene.entitySprites.has('camp.cage-door'),
+      hasCauldronHotspot: scene.resolved().areas.some((area: any) => area.id === 'cauldron' && area.enabled),
+      backgroundFile: scene.aiRuntime.manifest.assets['background.camp'].versions[scene.aiRuntime.manifest.assets['background.camp'].activeVersion].file };
+    scene.changeRoom('forest');
+    const cleaned = !scene.children.getByName('pointlesh-light:camp.fireplace') && !scene.objectAnimations.has('camp.fireplace');
+    scene.changeRoom('camp'); scene.game.loop.wake();
+    return { ...result, cleaned };
+  });
+  expect(result.frames).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 0]);
+  expect(result.brightness[2]).toBeCloseTo(.8); expect(result.brightness[4]).toBeCloseTo(.16);
+  expect(result.width).toBeCloseTo(80 * 1.6 * 960 / 1182);
+  expect(result).toMatchObject({ key: 'fireplace.burn', potInFront: true, potLit: true, lightBelowGuard: true,
+    acceptsHits: false, hasDoor: true, hasCauldronHotspot: true, cleaned: true, backgroundFile: 'art/camp-unlit.png' });
+  await selectInstance(page, 'camp.fireplace'); await expandProperties(page, 'Animation');
+  await expect(page.getByRole('combobox', { name: 'Object animation', exact: true })).toHaveValue('burn');
+  await expect(page.getByRole('checkbox', { name: 'Loop animation', exact: true })).toBeChecked();
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
+  await page.screenshot({ path: testInfo.outputPath('camp-cauldron-fire.png') });
+});

@@ -210,3 +210,15 @@ Final prompt:
 ```text
 Use case: precise-object-edit. Edit target: the supplied close crop of the fireplace in Borin's cottage, a detailed pixel-art game background. Remove ONLY the small yellow/orange flames and luminous embers UNDER the hanging iron cooking pot, leaving a cold, dark bed of charred logs/coals there. Preserve the iron pot itself, its outline, highlights, rim, handle and hanging chain EXACTLY unchanged, together with the surrounding stone arch, bricks, hearth ledge, warm ambient lighting and every other object. Keep the exact composition, framing and pixel-art style; no redesign, camera movement, new props, text or transparency. The game will add animated flames behind the existing pot. This is a very small local clean-plate edit, not a new fireplace.
 ```
+
+## Orc camp cauldron fire
+
+Mode: **built-in image generation**, editing the 240×184 crop at `(132,280)` of `camp-doorless.png`. Final background: `demos/forest/public/art/camp-unlit.png` (1182×664). The original cage-door clean plate remains intact.
+
+`pack-camp-hearth.mjs` imports only the flame patch at `(185,369)` through `(307,434)`, including flames against the pot’s lower contour. All other pixels, including the upper cauldron, tripod, stone ring exterior and cage, remain original. `camp.fireplace` uses the shared eight-frame `fireplace.burn` asset, fitted to the wider coal bed. Its editable cauldron walk-behind masks the flames; synchronized reflected light reaches both the iron pot and surrounding ground, below the guard.
+
+Final edit prompt:
+
+```text
+Use case: precise-object-edit. Asset type: clean background plate for a pixel-art point-and-click game. Input image: edit target, an exact crop of the orc camp cauldron. Remove ONLY the bright orange/yellow flames, floating fire sparks and glowing coals beneath the hanging black iron cauldron. Replace those flames and embers with dark charcoal, charred logs and shaded earth. Preserve the EXACT composition, cauldron shape and texture, tripod legs, hook, surrounding stone ring, wooden table, every other object, existing pixel-art scale, palette, camera and crop. Preserve all cauldron pixels, including its original warm orange reflections; do not redraw or move it. Keep surrounding ground and stones as they are. This will be covered by animated flames and light in the game. No active flame or luminous ember remains. No new objects. Keep the original 240:184 aspect ratio and matching registration.
+```

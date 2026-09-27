@@ -9,8 +9,8 @@ const { assets, scenes, atlasRooms } = await tsImport('../src/content.ts', impor
 const { addFireplace, addFireplaceAssets } = await tsImport('../src/fireplace-assets.ts', import.meta.url);
 const png = async file => PNG.sync.read(await readFile(new URL('../public/art/' + file, import.meta.url)));
 
-test('both hearths share an editable looping prefab and repeat upgrades preserve authored changes', () => {
-  for (const id of ['pub', 'house']) {
+test('all three fires share an editable looping prefab and repeat upgrades preserve authored changes', () => {
+  for (const id of ['pub', 'house', 'camp']) {
     const object = resolvePointleshScene(scenes, id).objects.find(object => object.id === `${id}.fireplace`);
     assert.equal(object.kind, 'object'); assert.equal(object.properties.animationKey, 'burn');
     assert.equal(object.prefabId, 'forest.object.fireplace');
@@ -27,12 +27,41 @@ test('both hearths share an editable looping prefab and repeat upgrades preserve
   hearth.overrides.object.x = 680; hearth.pointlesh.properties.lightIntensity = .25;
   const kettle = cottage.areas.find(area => area.id === 'house.hearth-kettle::area');
   kettle.vertices[0].x += 2;
+  const camp = edited.scenes.camp.layers[0];
+  camp.prefabs.find(instance => instance.id === 'camp.fireplace').overrides.object.y += 5;
+  camp.areas.find(area => area.id === 'camp.hearth-cauldron::area').pointlesh.properties.baseline += 5;
   catalog.assets.fireplace.activeVersion = 'custom';
   catalog.assets.fireplace.linkedAnimationAssets.burn.assetId = 'custom-fire';
   const before = structuredClone(catalog); addFireplaceAssets(catalog);
   assert.deepEqual(catalog, before); assert.deepEqual(addFireplace(edited), edited);
   const houseOnly = structuredClone(scenes); delete houseOnly.scenes.pub;
   assert.deepEqual(addFireplace(houseOnly), houseOnly);
+  const campOnly = structuredClone(scenes); delete campOnly.scenes.pub; delete campOnly.scenes.house;
+  assert.deepEqual(addFireplace(campOnly), campOnly);
+});
+
+test('camp clean-plate migration retains previous versions and never replaces a custom promotion', () => {
+  const catalog = structuredClone(assets), camp = catalog.assets['background.camp'];
+  camp.activeVersion = 'rescue'; delete camp.versions.hearth;
+  const original = structuredClone(camp.versions.rescue);
+  addFireplaceAssets(catalog);
+  assert.equal(camp.versions[camp.activeVersion].file, 'art/camp-unlit.png');
+  assert.deepEqual(camp.versions.rescue, original);
+  camp.versions.custom = { ...original, name: 'custom', file: 'art/custom-camp.png' }; camp.activeVersion = 'custom';
+  const before = structuredClone(catalog); addFireplaceAssets(catalog); assert.deepEqual(catalog, before);
+});
+
+test('the camp cauldron masks the flames while leaving its coal bed and approach walkable', () => {
+  const room = resolvePointleshScene(scenes, 'camp');
+  const cauldron = room.areas.find(area => area.id === 'camp.hearth-cauldron');
+  const fire = room.objects.find(object => object.id === 'camp.fireplace');
+  assert.equal(pointleshAreaCapabilities(cauldron).walkBehind, true);
+  assert.equal(pointleshAreaCapabilities(cauldron).walkable, false);
+  assert.ok(cauldron.properties.baseline > fire.position.y);
+  assert.ok(fire.properties.lightDepth > cauldron.properties.baseline);
+  assert.ok(fire.properties.lightDepth < 350, 'Light stays below the guard at the drinking point');
+  assert.ok(pointInPolygon({ x: 247 * 960 / 1182, y: 375 * 540 / 664 }, cauldron.polygon));
+  assert.equal(pointInPolygon({ x: 247 * 960 / 1182, y: 414 * 540 / 664 }, cauldron.polygon), false);
 });
 
 test('the cottage pot masks the flames but does not obstruct movement or the flame bed below it', () => {
@@ -89,4 +118,17 @@ test('the cottage clean plate preserves its pot and all pixels outside the origi
     }
   }
   assert.ok(changed > 1000);
+});
+
+test('the camp clean plate preserves its cage, tripod and scenery outside the flame patch', async () => {
+  const original = await png('camp-doorless.png'), clean = await png('camp-unlit.png');
+  assert.deepEqual([clean.width, clean.height], [1182, 664]);
+  let changed = 0;
+  for (let y = 0; y < clean.height; y++) for (let x = 0; x < clean.width; x++) {
+    const offset = (y * clean.width + x) * 4;
+    if (!original.data.subarray(offset, offset + 4).equals(clean.data.subarray(offset, offset + 4))) {
+      changed++; assert.ok(x >= 185 && x < 307 && y >= 369 && y < 434, `Scenery changed at ${x},${y}`);
+    }
+  }
+  assert.ok(changed > 5000);
 });
