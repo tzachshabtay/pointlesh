@@ -11,6 +11,7 @@ import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-asse
 import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
 import { addRescueAssets } from './rescue-assets';
+import { addIntroAssets } from './intro-assets';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { withForestLighting } from './environment-lighting';
@@ -134,6 +135,7 @@ export const assets = {
 };
 addForestObjectAssets(assets);
 addRescueAssets(assets);
+addIntroAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 

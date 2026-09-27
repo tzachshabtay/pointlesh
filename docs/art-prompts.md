@@ -251,3 +251,32 @@ Final prompt (one built-in edit per room's contact sheet):
 ```text
 Use case: precise-object-edit. Asset type: registered lamp clean plates for an existing pixel-art game. The input is an EDIT TARGET contact sheet on a flat dark-gray canvas, with lamp crops placed in a fixed 3-column by 2-row layout. Preserve the EXACT canvas aspect ratio, all crop positions, crop sizes, empty space, original metal lantern housings, glass dividers, hanging brackets, background pixels, palette and pixel-art scale. In EVERY occupied crop remove ONLY the yellow-white flames / luminous cores inside the lantern glass, replacing them with dim warm brown translucent glass and dark unlit interiors. For the one exposed flame if present, remove only the flame and reconstruct its immediate background. Keep the existing warm reflections on the housings and surrounding scenery. No flame, sparks, brilliant white patches or glowing core inside any pane. Do not move, redraw, rescale or duplicate any fixture or crop, and do not fill empty cells. This is a carefully registered sprite preparation sheet, not an illustration. No text, new objects, borders or transparency.
 ```
+
+## Intro: spear threat and surrender
+
+Mode: **built-in image generation**, using the promoted guard base `guard.promoted-1790374400713.png`, guard left idle `guard.idle-left.promoted-1790537131877.png`, and king base `king.promoted-1790370274229.png` as identity references. No existing character animations were replaced.
+
+Saved sheets:
+
+- `demos/forest/public/art/characters/guard/point-spear.png`: eight 320×220 cells, four columns, two rows. The wider stage accommodates the existing spear as it lowers. The rear orc mirrors the same clip to face right.
+- `demos/forest/public/art/characters/king/hands-up.png`: eight 100×140 cells, four columns, two rows. Both hands rise above the crown, then remain raised.
+
+`pack-intro-actions.mjs` detects the four separate silhouettes in each generated row instead of cutting at assumed column boundaries. It preserves alpha and applies one nearest-neighbor scale to each entire animation, aligning the boots rather than the moving weapon/hands. The intro stops the approaching guards, starts the spear action at 3000 ms and the king's response at 3650 ms, then holds each final frame until the next shot. Procedural spears, ropes and Borin's drawn arm gesture were removed.
+
+Orc generation prompt:
+
+```text
+Use case: identity-preserve. Asset type: transparent pixel-art game animation spritesheet. Create an eight-frame orc SPEAR-POINTING animation using the exact green orc guard design in reference 1, with reference 2 for the existing side-facing armor and proportions. Eight frames arranged in exactly FOUR equal columns and TWO equal rows, read left-to-right top-to-bottom, on a true transparent background. Each cell has ample transparent margins. Character faces LEFT, mostly side-on three-quarter view. In frame 1 he is standing, feet planted, holding his EXISTING single spear upright. Frames 2–6 show him bringing that same spear down and forward toward the LEFT with both hands, ending with the spear aimed horizontally at an unseen captor at chest height. Frames 7–8 settle into that threatening pose. No stabbing/contact, no other characters. Preserve the exact dark hair/topknot, face, green skin, fur pauldrons, brown studded leather and steel armor, belt, boots and long wooden spear with steel leaf blade. Maintain ONE spear and two hands in every frame. Same anatomical body size, camera, lighting and planted boot locations in all cells, no zoom. End pose's entire long horizontal spear must fit inside its own cell. Body is centered at 55% of cell width; feet at 90% of cell height. Keep the same head height throughout, no shrinking to fit the lowered spear. Detailed crisp game pixel-art, matching the reference, no scenery, floor, glow, cast shadow, checkerboard, letters, borders, grid lines, numbering, or labels. True alpha transparency.
+```
+
+King generation prompt:
+
+```text
+Use case: identity-preserve. Asset type: transparent pixel-art adventure game animation spritesheet. Make an eight-frame HANDS-UP / SURRENDER animation for this exact dwarf king, full body in each frame. Layout exactly FOUR equal columns and TWO equal rows, eight consecutive frames read left-to-right top-to-bottom. True transparent background and generous transparent margins within each cell. Front-facing three-quarter view looking slightly to screen RIGHT. Start with arms at sides and EMPTY HANDS; he is not holding a weapon or sceptre. Frames 2–6: the startled king slowly raises BOTH arms, elbows bend outward, empty palms open and facing the viewer. Frames 7–8: both hands stay clearly ABOVE his crown in a surrender pose. Preserve the exact golden crown with colored jewels, long white moustache and beard, red cape with white ermine collar, ornate blue and gold tunic, gold belt and brown boots. Same head and body dimensions in every frame, feet planted on an identical baseline at 90% of each cell height; no walking, jumping, bobbing, zoom or change of camera. Give enough overhead room so raised hands fit; don't shrink the body to fit the gesture. Match the reference's crisp detailed pixel-art style and warm palette. Only the king; no other characters, ropes, weapons, throne, scenery, floor, halo/glow or cast shadow. No text, labels, borders, grid lines, checkerboard, or numbering. True alpha transparency.
+```
+
+King transparency refinement (the reference's actual beard color was retained):
+
+```text
+Precise background-extraction edit. Keep this exact eight-frame king hands-up spritesheet: preserve every pose, every crown, face, beard color, costume, body size, cell arrangement, planted foot position, full sheet aspect ratio. REMOVE ONLY the brown/black background and the diffuse orange/brown glow surrounding each king; make all pixels outside the actual king silhouettes fully transparent alpha (alpha zero). Keep all eight characters fully opaque, including the dark boots, dark outlines, cape, dark blue tunic and gold details. No background, checkerboard, shadow, halo or glow whatsoever. Do not redraw, recompose, resize, move, add or remove any character or limb. Output the clean transparent spritesheet with same four columns by two rows.
+```

@@ -645,6 +645,10 @@
         "bound": {
           "label": "Bound · asleep",
           "assetId": "guard.bound"
+        },
+        "point-spear": {
+          "assetId": "guard.point-spear",
+          "label": "Point spear"
         }
       },
       "tags": [
@@ -733,6 +737,10 @@
         "speak-left": {
           "label": "Speak · left",
           "assetId": "king.speak-left"
+        },
+        "hands-up": {
+          "assetId": "king.hands-up",
+          "label": "Raise hands"
         }
       },
       "tags": [
@@ -8296,6 +8304,114 @@
         "animation",
         "forest"
       ]
+    },
+    "guard.point-spear": {
+      "id": "guard.point-spear",
+      "kind": "animation",
+      "prompt": "The exact orc guard faces left and lowers his existing spear from upright to a horizontal threat, holding it with both hands. Eight consecutive frames with planted feet and stable body size. End holding the pose. One spear, no attack/contact, no other characters, ropes, scenery or glow; transparent background.",
+      "dimensions": {
+        "width": 1280,
+        "height": 440
+      },
+      "frameGrid": {
+        "frameWidth": 320,
+        "frameHeight": 220,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "guard.point-spear",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "intro",
+      "versions": {
+        "intro": {
+          "name": "intro",
+          "file": "art/characters/guard/point-spear.png",
+          "prompt": "The exact orc guard faces left and lowers his existing spear from upright to a horizontal threat, holding it with both hands. Eight consecutive frames with planted feet and stable body size. End holding the pose. One spear, no attack/contact, no other characters, ropes, scenery or glow; transparent background.",
+          "createdAt": "2026-09-28T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "intro"
+      ]
+    },
+    "king.hands-up": {
+      "id": "king.hands-up",
+      "kind": "animation",
+      "prompt": "The exact dwarf king raises both empty hands above his crown in surrender. Eight consecutive frames, fixed body size and planted feet; end holding both palms up. Preserve his crown, beard, red ermine cape and blue-gold tunic. No weapon, rope, scenery or glow; transparent background.",
+      "dimensions": {
+        "width": 400,
+        "height": 280
+      },
+      "frameGrid": {
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "king.hands-up",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "intro",
+      "versions": {
+        "intro": {
+          "name": "intro",
+          "file": "art/characters/king/hands-up.png",
+          "prompt": "The exact dwarf king raises both empty hands above his crown in surrender. Eight consecutive frames, fixed body size and planted feet; end holding both palms up. Preserve his crown, beard, red ermine cape and blue-gold tunic. No weapon, rope, scenery or glow; transparent background.",
+          "createdAt": "2026-09-28T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "intro"
+      ]
     }
   },
   "styleGuide": {
@@ -8844,6 +8960,14 @@
       "Graphics",
       "Objects",
       "Lamps"
+    ],
+    "guard.point-spear": [
+      "Graphics",
+      "Characters"
+    ],
+    "king.hands-up": [
+      "Graphics",
+      "Characters"
     ]
   }
 }

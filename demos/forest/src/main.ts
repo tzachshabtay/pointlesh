@@ -15,6 +15,7 @@ import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
+import { addIntroAssets } from './intro-assets';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
@@ -863,6 +864,7 @@ addGuardAnimations(assets);
 addForestObjectAssets(assets);
 updateRescueAssetText(assets);
 addRescueAssets(assets);
+addIntroAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
