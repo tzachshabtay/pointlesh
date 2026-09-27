@@ -11,6 +11,7 @@ import { releaseMirroredNormals } from './mirrored-normals.js';
 const registeredDefinitions = new WeakMap<object, string>();
 
 export type PhaserCharacterPose = Pick<CharacterSnapshot, 'position' | 'activity' | 'facing'> & { scale?: number };
+export type PhaserAuthoredCharacterPose = Pick<CharacterSnapshot, 'position' | 'facing'> & { id: string };
 
 export type PhaserAdventureCharacterOptions = {
   /** Read fresh resolved areas here to reflect designer edits without rebuilding the binding. */
@@ -40,6 +41,9 @@ export type PhaserAdventureCharacterOptions = {
   animations?: CharacterAnimations | (() => CharacterAnimations | undefined);
   /** Opt into native room lighting; authored normals take precedence over the silhouette fallback. */
   lighting?: boolean | CharacterLightingOptions | (() => boolean | CharacterLightingOptions);
+  /** Apply actual designer placement/facing edits, preserving runtime movement on other edits.
+   * The first value (and each new instance id) establishes a baseline without teleporting. */
+  authoredPose?: () => PhaserAuthoredCharacterPose | undefined;
   onSync?: (snapshot: CharacterSnapshot, effects: PointleshAreaEffects) => void;
 };
 
@@ -58,6 +62,7 @@ export class PhaserAdventureCharacter {
   private timingSignature?: string;
   private registeredAnimation?: Phaser.Animations.Animation;
   private destroyed = false;
+  private authoredPose?: PhaserAuthoredCharacterPose;
   private readonly onUpdate = (_time: number, delta: number) => this.update(delta);
 
   constructor(
@@ -82,6 +87,7 @@ export class PhaserAdventureCharacter {
   /** Apply perspective scale before ticking so the controller also scales walking distance. */
   update(deltaMs: number): void {
     if (this.destroyed) return;
+    this.syncAuthoredPose();
     const effects = this.effects();
     this.controller.setScale(effects.scale);
     this.prepareAnimation();
@@ -97,6 +103,7 @@ export class PhaserAdventureCharacter {
   /** Refresh after loading or a live designer edit without advancing simulation time. */
   sync(): void {
     if (this.destroyed) return;
+    this.syncAuthoredPose();
     const effects = this.effects();
     this.controller.setScale(effects.scale);
     this.render(effects);
@@ -141,6 +148,16 @@ export class PhaserAdventureCharacter {
 
   private effects(position = this.controller.state.position): PointleshAreaEffects {
     return evaluatePointleshAreaEffects(this.options.areas?.() ?? [], position, { defaultScale: this.options.defaultScale, defaultZoom: this.options.defaultZoom });
+  }
+
+  private syncAuthoredPose(): void {
+    const next = this.options.authoredPose?.(), previous = this.authoredPose;
+    this.authoredPose = next ? { ...next, position: { ...next.position } } : undefined;
+    if (!next || !previous || next.id !== previous.id) return;
+    if (next.position.x !== previous.position.x || next.position.y !== previous.position.y) {
+      this.controller.place(next.position);
+    }
+    if (next.facing !== previous.facing) this.controller.face(next.facing);
   }
 
   private render(effects: PointleshAreaEffects, deltaMs?: number, state = this.controller.state, elapsedMs?: number, loop = true): void {

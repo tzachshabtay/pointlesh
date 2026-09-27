@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 import { expandProperties, selectInstance } from './designer-helpers';
 
 test('areas and hotspots belong to scenes, retain edits and never appear in the prefab browser', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   const initial = await page.evaluate(() => (window as any).pointleshDemo.manifest);
   expect(Object.values(initial.prefabs).every((prefab: any) => ['character', 'object', 'point'].includes(prefab.pointlesh.kind))).toBe(true);
   await selectInstance(page, 'village.foreground');
@@ -30,7 +31,7 @@ test('areas and hotspots belong to scenes, retain edits and never appear in the 
 });
 
 for (const kind of ['area', 'hotspot'] as const) test(`draw a new scene ${kind}, extend it, delete it and undo without creating a prefab`, async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Expand layer', exact: true }).click();
   const prefabs = await page.evaluate(() => (window as any).pointleshDemo.manifest.prefabs);
   await page.getByRole('button', { name: `Add ${kind}`, exact: true }).click();

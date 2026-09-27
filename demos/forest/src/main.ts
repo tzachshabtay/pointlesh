@@ -24,7 +24,7 @@ import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
 import { installViewportLayout } from './viewport-layout';
 import './style.css';
 
-const disposeViewportLayout = installViewportLayout(document.getElementById('app')!);
+const disposeViewportLayout = installViewportLayout(document.documentElement);
 if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
@@ -42,8 +42,17 @@ let gameScene: ForestAdventure;
 let modalOpen = false;
 let toastTimer: ReturnType<typeof setTimeout>;
 function toast(text: string) { el('toast').textContent = text; el('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el('toast').hidden = true; }, 4100); }
-function closeModal() { el('modal-backdrop').hidden = true; modalOpen = false; }
-function modal(title: string) { gameScene?.clearMovementKeys(); el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false; modalOpen = true; el('modal-close').focus(); return el('modal-body'); }
+let modalReturnFocus: HTMLElement | null = null;
+function closeModal() {
+  el('modal-backdrop').hidden = true; modalOpen = false; el('start-screen').inert = false;
+  if (modalReturnFocus?.checkVisibility()) modalReturnFocus.focus();
+}
+function modal(title: string) {
+  modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  gameScene?.clearMovementKeys(); el('start-screen').inert = !gameScene?.started;
+  el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false;
+  modalOpen = true; el('modal-close').focus(); return el('modal-body');
+}
 
 const cutsceneDefinition = (kind: 'intro' | 'ending') => ({ id: `forest.${kind}`, version: 1, steps: (kind === 'intro' ? intro : ending).map((step, index) => ({ id: `${kind}-${index}`, ...step, durationMs: CINEMATIC_DURATIONS[kind][index] })) });
 type ForestCheckpoint = { introStep: number; endingStep: number; introElapsedMs?: number; endingElapsedMs?: number };
@@ -51,6 +60,7 @@ const arrowDirections: Record<string, { x: number; y: number }> = { ArrowLeft: {
 const editingText = (target: EventTarget | null) => target instanceof HTMLElement && !!target.closest('input,textarea,select,[contenteditable="true"],[role="textbox"]');
 
 class ForestAdventure extends Phaser.Scene {
+  started = false;
   story = newStory();
   selected?: ItemId;
   character!: CharacterController;
@@ -113,6 +123,7 @@ class ForestAdventure extends Phaser.Scene {
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
       autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'borin',
       lighting: () => this.playerDefinition()?.properties.receiveLighting !== false,
+      authoredPose: () => { const actor = this.playerDefinition(); return actor && { id: actor.id, position: actor.position, facing: this.authoredFacing(actor) }; },
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
@@ -131,7 +142,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
       assetId: 'cursor.walk',
       resolve: target => {
-        if (this.worldEditorOpen() || this.editing || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
+        if (!this.started || this.worldEditorOpen() || this.editing || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
         const inventory = target.closest('#inventory button, #nearby button');
         const dialog = target.closest('#dialog');
         if (target !== this.game.canvas && !inventory && !dialog) return undefined;
@@ -171,13 +182,15 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.changeRoom('village', false);
     this.installTools();
-    this.render(); this.renderCutscene();
+    this.render();
     el('loading').hidden = true;
     setupControls();
-    if (new URLSearchParams(location.search).get('designer') === '1') {
-      this.advanceCutscene(true);
-      el('designer').click();
-    }
+    const cover = this.textures.get('room.village').getSourceImage() as HTMLCanvasElement;
+    el('start-screen').style.setProperty('--start-art', `url("${cover.toDataURL()}")`);
+    el<HTMLButtonElement>('new-game').disabled = false;
+    el<HTMLButtonElement>('start-load').disabled = false;
+    el('start-status').textContent = 'A point-and-click adventure in the Elderwood';
+    this.showStartScreen();
     if (import.meta.env.DEV) Object.assign(window, { pointleshDemo: {
       snapshot: () => this.snapshot(),
       get manifest() { return structuredClone(authoredScenes); },
@@ -242,7 +255,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked() { return !this.started || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -342,7 +355,6 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera.setRoom(size);
     this.drawRoomTexture(this.story.roomId);
     this.background.setDisplaySize(size.width, size.height);
-    if (this.editing || this.worldEditorOpen()) { this.epoch++; this.character.stop(); }
     for (const overlay of this.overlays) overlay.destroy(); this.overlays = [];
     for (const area of this.resolved().areas.filter(area => pointleshAreaCapabilities(area).walkBehind && area.enabled)) {
       const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0).setDisplaySize(size.width, size.height);
@@ -353,8 +365,6 @@ class ForestAdventure extends Phaser.Scene {
       for (const key of ['speed', 'walkStep', 'frameDurationMs', 'frameCount'] as const) { const value = Number(actor.properties[key]); if (Number.isFinite(value) && value > 0) this.character.config[key] = key === 'frameCount' ? Math.floor(value) : value; }
       this.character.config.movementLinkedToAnimation = actor.properties.movementLinkedToAnimation !== false;
       this.character.config.directions = actor.properties.directions === 8 ? 8 : 4;
-      if (this.editing) this.character.place(actor.position, this.authoredFacing(actor));
-      else if (this.worldEditorOpen()) this.character.face(this.authoredFacing(actor));
       this.actor.setVisible(actor.enabled);
     }
     this.syncEntities(); this.binding.sync(); this.renderNearby();
@@ -428,6 +438,7 @@ class ForestAdventure extends Phaser.Scene {
           const binding = new PhaserAdventureCharacter(this, controller, sprite, {
             autoUpdate: false, aiRuntime: this.aiRuntime, assetId: object.assetId,
             lighting: () => current().properties.receiveLighting !== false,
+            authoredPose: () => ({ id: current().id, position: current().position, facing: this.authoredFacing(current()) }),
             animations: () => actorName === 'guard' ? this.guardPatrol?.animations(readCharacterAnimations(current().properties)) ?? readCharacterAnimations(current().properties) : readCharacterAnimations(current().properties),
             baseScale: () => ({ x: current().scaleX, y: current().scaleY }),
             ...(actorName === 'guard' ? { baseSize: () => guardAnimationSize(assets.assets[current().assetId], this.guardPatrol?.phase === 'collapse' || this.guardPatrol?.phase === 'asleep') } : {}),
@@ -443,7 +454,6 @@ class ForestAdventure extends Phaser.Scene {
           });
         }
         npc.actorName = actorName;
-        if (actorName !== 'guard' || !this.guardPatrol) npc.controller.state.position = { ...object.position };
         npc.controller.config.directions = object.properties.directions === 8 ? 8 : 4;
         for (const key of ['speed', 'walkStep'] as const) {
           const value = Number(object.properties[key]);
@@ -459,7 +469,7 @@ class ForestAdventure extends Phaser.Scene {
           }, () => !!this.story.flags.guardBound);
           if (this.guardCheckpoint) this.guardPatrol.restore(this.guardCheckpoint);
           else this.guardPatrol.start(this.story.flags.guardAsleep);
-        } else if (actorName !== 'guard') npc.controller.face(this.authoredFacing(object));
+        }
         npc.binding.sync();
       }
     }
@@ -657,6 +667,30 @@ class ForestAdventure extends Phaser.Scene {
     this.syncEntities();
     this.renderNearby(); this.drawHotspots();
   }
+  showStartScreen() {
+    this.started = false; this.epoch++; this.clearMovementKeys(); this.character.stop(); this.hover();
+    closeModal(); clearTimeout(toastTimer); el('toast').hidden = true;
+    if (document.body.classList.contains('tools-visible')) el('designer').click();
+    document.body.classList.add('menu-open');
+    el('game-header').inert = true; el('game-content').inert = true;
+    el('start-screen').hidden = false; el('new-game').focus({ preventScroll: true }); window.scrollTo(0, 0);
+  }
+  enterGame() {
+    this.started = true; el('start-screen').hidden = true; document.body.classList.remove('menu-open');
+    el('game-header').inert = false; el('game-content').inert = false;
+    this.game.canvas.setAttribute('tabindex', '-1'); this.game.canvas.focus({ preventScroll: true });
+  }
+  newGame() {
+    const story = newStory();
+    const actor = resolvePointleshScene(authoredScenes, story.roomId).objects.find(object => object.properties.role === 'player');
+    const controller = new CharacterController({ ...this.character.config,
+      position: actor?.position ?? { x: 471, y: 462 }, facing: actor ? this.authoredFacing(actor) : 'down' });
+    this.restore({ roomId: story.roomId, inventory: [], flags: {}, characters: { borin: controller.snapshot() }, selectedItem: null, dialog: null,
+      cutscene: { introStep: 0, endingStep: -1, introElapsedMs: 0, endingElapsedMs: 0 },
+      extensions: { journal: story.journal, guardClock: 0, speech: '' } });
+    this.showHotspots = false; el('hotspots').classList.remove('active'); this.drawHotspots();
+    this.enterGame();
+  }
   snapshot(): GameState {
     return { roomId: this.story.roomId, inventory: [...this.story.inventory], flags: { ...this.story.flags }, characters: { borin: this.character.snapshot() }, selectedItem: this.selected ?? null,
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
@@ -703,7 +737,7 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera.snap();
   }
   update(_time: number, delta: number) {
-    if (!this.binding) return;
+    if (!this.binding || !this.started) return;
     const cameraEditing = this.worldEditorOpen() || this.editing;
     this.roomCamera.setEnabled(!cameraEditing);
     if (this.cameraWasEditing && !cameraEditing) { this.binding.sync(); this.roomCamera.snap(); }
@@ -750,6 +784,9 @@ class ForestAdventure extends Phaser.Scene {
 }
 
 function setupControls() {
+  el('new-game').onclick = () => gameScene.newGame();
+  el('start-load').onclick = () => saveMenu('load');
+  el('menu').onclick = () => gameScene.showStartScreen();
   el('character-lighting').onclick = () => {
     const enabled = gameScene.characterLighting.enabled = !gameScene.characterLighting.enabled;
     el('character-lighting').setAttribute('aria-pressed', String(enabled));
@@ -780,7 +817,7 @@ function setupControls() {
     for (const slot of ['1', '2', '3']) {
       const existing = saves.find(save => save.slot === slot); const row = document.createElement('div'); row.className = 'slot-row'; const label = document.createElement('span'); label.textContent = `Slot ${slot}`; const date = document.createElement('small'); date.textContent = existing ? new Date(existing.savedAt).toLocaleString() : 'An unwritten adventure'; label.append(date);
       const action = button(mode === 'save' ? existing ? 'Overwrite' : 'Save here' : 'Load', () => {
-        try { if (mode === 'save') { gameScene.saves.save(slot, gameScene.snapshot()); toast(`Adventure saved in slot ${slot}.`); } else { const candidate = gameScene.saves.load(slot); if (!candidate) throw new Error('That slot is empty.'); gameScene.restore(candidate); toast('Welcome back, Borin.'); } closeModal(); }
+        try { if (mode === 'save') { gameScene.saves.save(slot, gameScene.snapshot()); toast(`Adventure saved in slot ${slot}.`); } else { const candidate = gameScene.saves.load(slot); if (!candidate) throw new Error('That slot is empty.'); gameScene.restore(candidate); gameScene.enterGame(); toast('Welcome back, Borin.'); } closeModal(); }
         catch (error) { toast(error instanceof Error ? error.message : String(error)); }
       }); action.setAttribute('aria-label', `${mode} slot ${slot}`); action.disabled = mode === 'load' && !existing; row.append(label, action); body.append(row);
     }
@@ -789,6 +826,7 @@ function setupControls() {
   el('modal-close').onclick = closeModal; el('modal-backdrop').onclick = event => { if (event.target === el('modal-backdrop')) closeModal(); };
   document.addEventListener('keydown', event => {
     if (editingText(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (!gameScene.started) { if (event.key === 'Escape' && modalOpen) closeModal(); return; }
     if (arrowDirections[event.key]) {
       if (gameScene.blocked()) return;
       event.preventDefault();

@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/authoring/*.json', route => route.fulfill({ status: 404, body: '' }));
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
 });

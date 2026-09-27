@@ -1,7 +1,8 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 async function ready(page: Page, room: string) {
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await page.evaluate(room => (window as any).pointleshDemo.scene.changeRoom(room), room);

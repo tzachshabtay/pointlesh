@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test.use({ viewport: { width: 626, height: 950 }, deviceScaleFactor: 2 });
@@ -5,7 +6,7 @@ test.use({ viewport: { width: 626, height: 950 }, deviceScaleFactor: 2 });
 test('high-DPI rendering keeps sprite detail, room framing, walking and designer coordinates stable through resize', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   const resolution = () => page.evaluate(() => {
@@ -35,7 +36,7 @@ test('high-DPI rendering keeps sprite detail, room framing, walking and designer
 });
 
 test('high-DPI walk-behind samples match the room through fractional camera transforms', async ({ page }) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const differences = await page.evaluate(async () => {
     const scene = (window as any).pointleshDemo.scene;

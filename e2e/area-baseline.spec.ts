@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 async function worldScreen(page: Page, x: number, y: number) {
@@ -22,7 +23,7 @@ async function dragBaseline(page: Page, from: number, to: number) {
 }
 
 test('native area selection exposes Walk-behind and a live baseline with one undo per drag', async ({ page }, testInfo) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
   await native.getByRole('button', { name: 'Expand layer', exact: true }).click();
@@ -83,7 +84,7 @@ test('native area selection exposes Walk-behind and a live baseline with one und
 });
 
 test('inline area undo restores the entire offscreen vertex drag', async ({ page }) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const before = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
@@ -110,7 +111,7 @@ test('inline area undo restores the entire offscreen vertex drag', async ({ page
 });
 
 test('inline area controls remain clickable while resize handles stay outside scrolled content', async ({ page }) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
   await native.getByRole('button', { name: 'Expand layer', exact: true }).click();

@@ -30,7 +30,7 @@ npm ci
 npm run dev
 ```
 
-Open [http://127.0.0.1:5186](http://127.0.0.1:5186). The game runs without API keys or authoring servers. Click anywhere to walk to the nearest reachable ground, or hold the arrow keys to walk. Click people or objects to interact. Select one inventory item, then another to combine them. The map, journal, hotspot display and hint button help you explore. Three browser-local save slots preserve progress, including conversations and the exact progress of animated cutscenes. The kidnapping and rescue sequences play automatically, with controls to advance or skip them.
+Open [http://127.0.0.1:5186](http://127.0.0.1:5186). Choose **New game** to start fresh with the animated kidnapping, or **Load** to choose a saved slot. Startup never automatically loads or saves progress; **Menu** returns to the title screen. The game runs without API keys or authoring servers. Click anywhere to walk to the nearest reachable ground, or hold the arrow keys to walk. Click people or objects to interact. Select one inventory item, then another to combine them. The map, journal, hotspot display and hint button help you explore. Three browser-local save slots preserve progress, including conversations and the exact progress of animated cutscenes. The kidnapping and rescue sequences play automatically, with controls to advance or skip them.
 
 To promote designer edits to project files, run this in a second terminal:
 
@@ -38,7 +38,7 @@ To promote designer edits to project files, run this in a second terminal:
 npm run dev:server
 ```
 
-The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Open [the designer directly](http://127.0.0.1:5186/?designer=1) to enter the village editor immediately. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
+The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Start or load a game, then click **Designer** to edit the scene. The older `?designer=1` URL also opens the title screen and no longer skips the intro. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
 
 Keep the preview web server running while using the designer: Current images and version previews load from its public art files. Opening **Assets** keeps the game playing, including walking, speaking, and camera follow. Scene and prefab panels reserve canvas gestures and camera navigation for editing while animations and simulation keep running. Designer drawings appear above game UI without hiding it; typing in designer fields does not move the character.
 

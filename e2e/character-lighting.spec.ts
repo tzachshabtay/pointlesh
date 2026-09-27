@@ -1,10 +1,11 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 import { PNG } from 'pngjs';
 test.use({ deviceScaleFactor: 2 });
 
 test.beforeEach(async ({ page }) => {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
 });
 
@@ -25,6 +26,8 @@ test('native per-pixel lighting changes pixels and keeps mirrored normals facing
   const canvas = page.locator('#game canvas');
   await page.waitForTimeout(100);
   const first = PNG.sync.read(await canvas.screenshot());
+  // Startup now plays the intro, whose shared character textures keep cached normals.
+  const existingMirrors = await page.evaluate(() => Object.keys((window as any).pointleshDemo.scene.textures.list).filter(key => key.startsWith('pointlesh-normal-mirror-')));
   await page.evaluate(() => { const p=(window as any).lightingProbe; p.sprite.setFlipX(true); p.binding.sync(); });
   await page.waitForTimeout(100);
   const flipped = PNG.sync.read(await canvas.screenshot());
@@ -35,7 +38,7 @@ test('native per-pixel lighting changes pixels and keeps mirrored normals facing
   await page.waitForTimeout(100);
   const off=PNG.sync.read(await canvas.screenshot()); expect(sample(off,480,260)).toBeGreaterThan(sample(first,480,260)+50);
   const removed=await page.evaluate(()=>{const s=(window as any).pointleshDemo.scene,p=(window as any).lightingProbe;p.binding.destroy();p.sprite.destroy();s.textures.remove('lighting-probe');return Object.keys(s.textures.list).filter(key=>key.startsWith('pointlesh-normal-mirror-'));});
-  expect(removed).toHaveLength(0);
+  expect(removed).toEqual(existingMirrors);
 });
 
 test('promoted animations and room/cutscene lighting stay in sync without lighting the background', async ({ page }, testInfo) => {

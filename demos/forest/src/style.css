@@ -39,3 +39,41 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 
 /* Fit the game and its header to the visible preview, including browser pinch zoom. */
 #app { width: var(--preview-width, 100%); margin-left: var(--preview-left, 0px); }
+#modal-backdrop { inset:auto; left:var(--preview-left,0px); top:var(--preview-top,0px); width:var(--preview-width,100%); height:var(--preview-height,100dvh); }
+.modal { max-width:100%; max-height:calc(var(--preview-height,100dvh) - 48px); }
+#toast { left:calc(var(--preview-left,0px) + var(--preview-width,100vw) / 2); top:calc(var(--preview-top,0px) + var(--preview-height,100dvh) - 25px); bottom:auto; transform:translate(-50%,-100%); }
+
+/* The title screen owns startup; the loaded game stays laid out but inactive behind it. */
+.menu-open #game-header,.menu-open #game-content { visibility:hidden; }
+.menu-open { overflow:hidden; }
+#start-screen { position:fixed; inset:0; z-index:50; width:var(--preview-width,100%); left:var(--preview-left,0px); top:var(--preview-top,0px); height:var(--preview-height,100dvh); min-height:0; container-type:size; display:grid; place-items:center; overflow:auto; isolation:isolate; background:#101b17; text-align:center; padding:60px 24px; }
+.start-art { position:absolute; inset:0; z-index:-1; background:linear-gradient(#09140db3,#0b171366 35%,#09140dec),var(--start-art) center/cover; image-rendering:pixelated; }
+.start-content { max-width:680px; padding:40px 28px; text-shadow:0 3px 24px #000; }
+#start-title { color:#f4e6c2; font-size:clamp(38px,min(8cqw,10cqh),84px); line-height:1.04; letter-spacing:-1.8px; }
+.start-content .eyebrow { font-size:10px; letter-spacing:3px; margin-bottom:26px; }
+.start-premise { font:18px/1.7 Georgia,'Times New Roman',serif; color:#d0d7bd; margin:24px 0 32px; }
+.start-actions { display:grid; gap:12px; width:230px; margin:auto; }
+#start-screen .start-actions button { padding:15px 24px; border:1px solid #9e9c6b; border-radius:4px; font-size:15px; background:#16271dea; box-shadow:0 5px 22px #0005; transition:background .15s,border-color .15s; }
+#start-screen #new-game { color:#17251a; background:#d4b77a; border-color:#e5cf95; font-weight:650; }
+#new-game span { margin-left:24px; }
+#start-screen .start-actions button:hover { background:#304331; border-color:#e5cf95; color:#fff0c6; }
+#start-screen #new-game:hover { background:#ead098; color:#142318; }
+#start-status { color:#a6b394; font-size:11px; margin:24px 0 0; }
+.start-credit { position:absolute; bottom:18px; left:0; right:0; margin:0; color:#81977f; font-size:10px; letter-spacing:1px; }
+.start-credit strong { color:#c0c7ab; font-weight:500; }
+@media(max-width:480px) { #start-screen { padding:32px 16px; } .start-content { padding:28px 8px; } .start-content .eyebrow { font-size:8px; letter-spacing:1.6px; } .start-premise { font-size:16px; } .game-tools { gap:7px; } .scene-bar { flex-wrap:wrap; height:auto; min-height:45px; gap:2px 12px; padding-block:5px; } }
+@media(max-height:540px) { #start-screen { padding:18px 12px 36px; } .start-content { padding:10px; } #start-title { font-size:38px; } .start-content .eyebrow { margin-bottom:14px; } .start-premise { margin:14px 0; font-size:14px; } .start-actions { grid-template-columns:1fr 1fr; width:300px; gap:10px; } #start-status { margin-top:16px; } }
+
+@container (max-height: 620px) {
+  .start-content { padding:12px 8px; }
+  .start-content .eyebrow { margin-bottom:16px; }
+  .start-premise { margin:16px 0 20px; font-size:16px; }
+  #start-status { margin-top:18px; }
+}
+@container (max-height: 450px) {
+  .start-content .eyebrow { margin-bottom:10px; }
+  #start-title { font-size:36px; }
+  .start-premise { margin:12px 0; font-size:14px; }
+  .start-actions { grid-template-columns:1fr 1fr; width:min(300px,100%); }
+  #start-status { margin-top:12px; }
+}

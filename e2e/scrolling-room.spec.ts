@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test('wide forest follows walking, restores saves, and uses camera coordinates for exits', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await page.evaluate(() => {
@@ -58,7 +59,7 @@ test('wide forest follows walking, restores saves, and uses camera coordinates f
 test('native minimap pans and fits the whole forest without live edits resetting its camera', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));

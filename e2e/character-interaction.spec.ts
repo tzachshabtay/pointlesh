@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
@@ -38,7 +39,7 @@ async function dismissElder(page: Page) {
 test('NPC sprite pixels are clickable and follow native authored movement, scale, and mirrored frames', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   const elder = 'village.npc.elder';

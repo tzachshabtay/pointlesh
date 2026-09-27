@@ -1,10 +1,11 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 import { selectInstance, expandProperties } from './designer-helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/authoring/*.json', route => route.fulfill({ status: 404, body: '' }));
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('pub'));
 });

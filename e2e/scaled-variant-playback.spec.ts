@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { PNG } from 'pngjs';
@@ -26,7 +27,7 @@ test('Current retains saved variants through walking and idle transitions', asyn
   const catalog = await variantCatalog();
   await page.route('**/authoring/assets.json', route => route.fulfill({ json: catalog }));
   await page.route('**/__ai-assets/manifest', route => route.fulfill({ json: catalog }));
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle AI asset designer', exact: true }).click();
   await page.getByRole('button', { name: /Graphics$/ }).click();
@@ -63,7 +64,7 @@ test('animated variants cannot redraw scenery outside the character', async ({ p
   for (const asset of Object.values(initial.assets) as any[]) delete asset.versions[asset.activeVersion]?.scaledVariants;
   await page.route('**/authoring/assets.json', route => route.fulfill({ json: initial }));
   await page.route('**/__ai-assets/manifest', route => route.fulfill({ json: initial }));
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.evaluate(catalog => (window as any).pointleshDemo.scene.aiRuntime.syncManifest(catalog), catalog);

@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 import { mkdtemp, readFile, writeFile, mkdir, copyFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -66,7 +67,7 @@ test('scaled variants CRUD uses the real server and keeps animated actors at the
       await route.fulfill({ response });
     });
     const openBorin = async () => {
-      await page.goto('/?designer=1');
+      await openAdventure(page, true);
       await expect(page.locator('#loading')).toBeHidden();
       await page.getByRole('button', { name: 'Toggle AI asset designer', exact: true }).click();
       await page.getByRole('button', { name: /Graphics$/ }).click();

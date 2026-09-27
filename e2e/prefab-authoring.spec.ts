@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { selectInstance, expandProperties } from './designer-helpers';
 import { readFile } from 'node:fs/promises';
@@ -31,7 +32,7 @@ async function dragPoint(page: Page, from: { x: number; y: number }, to: { x: nu
 }
 
 test('Pointlesh area shape action opens native vertex, insertion, deletion, and curve tools', async ({ page }, testInfo) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await selectInstance(page, 'village.floor');
   await page.getByRole('region', { name: 'Pointlesh properties' }).getByRole('button', { name: 'Edit shape', exact: true }).click();
@@ -69,7 +70,7 @@ test('Pointlesh area shape action opens native vertex, insertion, deletion, and 
 });
 
 test('one area keeps independent walk, scale, zoom, and walk-behind capabilities through undo and export', async ({ page }, testInfo) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await selectInstance(page, 'village.floor');
   const inspector = page.getByRole('region', { name: 'Pointlesh properties' });
@@ -112,7 +113,7 @@ test('one area keeps independent walk, scale, zoom, and walk-behind capabilities
 });
 
 test('direction animation pickers preserve sparse inheritance, flip overrides, undo, and JSON export', async ({ page }, testInfo) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await selectInstance(page, 'village.borin');
   await expandProperties(page, 'Directional animations');
@@ -157,7 +158,7 @@ test('direction animation pickers preserve sparse inheritance, flip overrides, u
 test('named character prefab edits reach every instance and share history with native placement edits', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await expect(page.getByRole('button', { name: 'Toggle Adventure', exact: true })).toHaveCount(0);
   await page.evaluate(() => {

@@ -1,8 +1,9 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test('game stays centered and every designer tab stays reachable after zoom and resize', async ({ page }) => {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const checkLayout = async () => {
     await expect.poll(() => page.evaluate(() => {

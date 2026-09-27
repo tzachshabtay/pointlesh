@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 import { selectInstance } from './designer-helpers';
 
 test('prefab folders hide templates, navigate with breadcrumbs and follow Edit prefab', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   const browser = page.getByRole('region', { name: 'Prefab browser', exact: true });
   for (const category of ['Characters', 'Objects']) await expect(browser.getByRole('button', { name: `Open ${category} folder` })).toBeVisible();
@@ -27,7 +28,7 @@ test('prefab folders hide templates, navigate with breadcrumbs and follow Edit p
 });
 
 test('create a named prefab from its hidden template, undo/redo, then place it using folders', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   const browser = page.getByRole('region', { name: 'Prefab browser', exact: true });
   await browser.getByRole('button', { name: 'Open Objects folder' }).click();

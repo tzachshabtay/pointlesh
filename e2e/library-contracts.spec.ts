@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test('asset thumbnails load from public game files without contacting a local authoring service', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', request => requests.push(request.url()));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await expect.poll(() => page.locator('img').evaluateAll(images => images.filter(image => image.src.includes('atlas-')).every(image => image.complete && image.naturalWidth > 0))).toBe(true);
   expect(requests.filter(url => /127\.0\.0\.1:428[789]\//.test(url))).toEqual([]);
@@ -11,7 +12,7 @@ test('asset thumbnails load from public game files without contacting a local au
 });
 
 test('adventure inspector commits and undo reach the live runtime and reject invalid nested extension data', async ({ page }) => {
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   const result = await page.evaluate(() => {
     const demo = (window as any).pointleshDemo;

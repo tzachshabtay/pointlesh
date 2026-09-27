@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 
 test('guard patrol animates its full loop, restores mid-walk, and sleeps only after drinking', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;

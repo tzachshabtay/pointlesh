@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 
@@ -7,7 +8,7 @@ const currentFile = (id: string) => { const asset = catalog.assets[id]; return a
 async function openAssets(page: Page) {
   // Authoring services are optional for viewing existing files and playing.
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle AI asset designer', exact: true }).click();
 }

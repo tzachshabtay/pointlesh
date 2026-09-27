@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 async function placePlayer(page: Page) {
@@ -21,7 +22,7 @@ for (const [room, entity] of [['village', 'village.npc.elder'], ['house', 'house
   test(`${entity}: native WalkThrough edits control detours, persist, and support undo`, async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('/?designer=1');
+    await openAdventure(page, true);
     await expect(page.locator('#loading')).toBeHidden();
     await page.evaluate(({ room, entity }) => {
       const scene = (window as any).pointleshDemo.scene;

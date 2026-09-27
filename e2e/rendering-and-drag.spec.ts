@@ -1,7 +1,8 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test('pixel-art textures preserve colors when enlarged, including textures loaded after startup', async ({ page }) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const result = await page.evaluate(async () => {
     const scene = (window as any).pointleshDemo.scene;
@@ -38,7 +39,7 @@ test('pixel-art textures preserve colors when enlarged, including textures loade
 });
 
 test('Mara can be dragged from inside her prefab rectangle after selection in the scene tree', async ({ page }) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('combobox').selectOption({ label: 'The Copper Tankard' });
   await page.getByRole('button', { name: 'Expand layer', exact: true }).click();

@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 
@@ -18,7 +19,7 @@ test('choosing an animation reference sends its source grid with the guard gener
         body: JSON.stringify({ type: 'done' }) + '\n' });
     } else await route.abort();
   });
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle AI asset designer', exact: true }).click();
   const panel = page.locator('.ai-game-assets-designer__panel');

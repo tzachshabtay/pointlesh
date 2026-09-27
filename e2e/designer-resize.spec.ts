@@ -1,7 +1,8 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 
 test('Scenes bottom edge expands a scrolled panel and retains its size after switching tabs', async ({ page }) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const panel = page.locator('.scene-designer__panel[data-panel="scenes"]');
   await panel.getByRole('button', { name: 'Expand layer', exact: true }).click();

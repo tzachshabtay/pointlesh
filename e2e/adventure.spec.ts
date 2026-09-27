@@ -1,10 +1,11 @@
+import { openAdventure } from './start-helpers';
 import { selectInstance, expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { expectCastMotion, expectCinematicCleanup } from './cinematic-helpers';
 
 async function ready(page: Page, skipIntro = true) {
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await expect(page.locator('canvas').first()).toBeVisible();
   if (skipIntro) await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
@@ -196,7 +197,7 @@ test('the player produces visible pixels above the room background with walk-beh
 });
 
 test('live prefab property edits reach the character controller and support undo', async ({ page }, testInfo) => {
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await expect(page.locator('#cutscene')).toBeHidden();
   await expect(page.locator('body')).toHaveClass(/tools-visible/);

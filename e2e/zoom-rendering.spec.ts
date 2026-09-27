@@ -1,7 +1,8 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test('small camera zoom steps move the background smoothly without high-contrast rows and columns', async ({ page }) => {
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   const changes = await page.evaluate(async () => {
@@ -43,7 +44,7 @@ test('small camera zoom steps move the background smoothly without high-contrast
 test('masked room foreground matches the background exactly through fractional camera transforms', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   const comparisons = await page.evaluate(async () => {
@@ -89,7 +90,7 @@ test('masked room foreground matches the background exactly through fractional c
 });
 
 test('aligned foreground still occludes by polygon and depth, and responds to its role toggle', async ({ page }) => {
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   const result = await page.evaluate(async () => {
@@ -138,7 +139,7 @@ for (const renderer of ['webgl', 'canvas']) test(`${renderer} walk-behind polygo
       return name.includes('webgl') ? null : Reflect.apply(getContext, this, [name, ...args]);
     } as typeof getContext;
   });
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   const results = await page.evaluate(async () => {

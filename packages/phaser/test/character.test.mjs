@@ -41,6 +41,30 @@ function fixture(overrides = {}) {
   return { scene, sprite, runtime, controller, view, manifest, get mapping() { return mapping; }, set mapping(value) { mapping = value; } };
 }
 
+test('authored pose edits preserve live movement and facing unless those authored fields change', () => {
+  let pose = { id: 'room.borin', position: { x: 20, y: 30 }, facing: 'down' };
+  const f = fixture({ authoredPose: () => pose });
+  assert.equal(f.controller.state.position.x, 100, 'initial authored pose must not override a spawn or save');
+  f.controller.walkTo({ x: 500, y: 100 }, floor); f.view.update(200);
+  const walking = f.controller.snapshot();
+  // A new resolved object after a lighting/property edit is still the same authored pose.
+  pose = structuredClone(pose); f.view.sync();
+  assert.deepEqual(f.controller.snapshot(), walking);
+  pose.facing = 'up'; f.view.sync();
+  assert.deepEqual(f.controller.state.position, walking.position);
+  assert.equal(f.controller.state.facing, 'up');
+  assert.deepEqual(f.controller.snapshot().path, walking.path);
+  pose.position.x = 60; f.view.sync();
+  assert.deepEqual(f.controller.state.position, { x: 60, y: 30 });
+  assert.equal(f.controller.isWalking, false);
+  // Undo is a real placement edit too; a room switch only establishes a new baseline.
+  pose.position.x = 20; f.view.sync(); assert.equal(f.sprite.x, 20);
+  f.controller.place({ x: 700, y: 800 }, 'right');
+  pose = { id: 'next-room.borin', position: { x: 1, y: 2 }, facing: 'down' }; f.view.sync();
+  assert.deepEqual(f.controller.state.position, { x: 700, y: 800 }); assert.equal(f.controller.state.facing, 'right');
+  f.view.destroy();
+});
+
 test('native linked animation states drive idle frames and frame-linked walking using actual frame delays', () => {
   const { view, controller, sprite } = fixture();
   assert.equal(controller.config.frameCount, 2); assert.equal(controller.config.frameDurationMs, 500);

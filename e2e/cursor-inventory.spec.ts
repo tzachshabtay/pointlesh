@@ -1,7 +1,8 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 async function ready(page: Page) {
-  await page.goto('/'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page); await expect(page.locator('#loading')).toBeHidden();
   // The short intro can already have ended on a slow or suspended test machine.
   await page.locator('#skip-intro').evaluate((button: HTMLButtonElement) => button.click());
   // Record frames in the page so a short click animation cannot finish between

@@ -1,8 +1,9 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 
 test('character logical size stays stable across differently sized animation sources', async ({ page }, testInfo) => {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const results = await page.evaluate(async () => {
     const scene = (window as any).pointleshDemo.scene;

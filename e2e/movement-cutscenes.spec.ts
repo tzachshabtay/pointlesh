@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { selectInstance, expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { cinematicView, expectCastMotion, expectCinematicCleanup } from './cinematic-helpers';
@@ -10,7 +11,7 @@ type DemoView = {
 };
 
 async function begin(page: Page) {
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await expect(page.locator('#cutscene')).toBeHidden();
@@ -104,7 +105,7 @@ test('arrow movement is suppressed while using designers and focused property in
 test('animated intro moves real sprites, restores a timed save checkpoint, and cleans up when skipped', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await expectCastMotion(page);
   await page.screenshot({ path: testInfo.outputPath('animated-abduction.png'), fullPage: true });

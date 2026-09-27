@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 
@@ -23,7 +24,7 @@ async function actor(page: Page) {
 test('gameplay renders distinct directional walk and speaking assets, including mirrored right movement', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await expect.poll(async () => (await actor(page)).animation).toContain('idle-front');
@@ -71,7 +72,7 @@ test('native Assets groups short names and exposes a static base image plus edit
   test.setTimeout(60_000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle AI asset designer', exact: true }).click();
   await page.getByRole('button', { name: /Graphics$/ }).click();

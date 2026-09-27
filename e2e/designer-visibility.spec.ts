@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 const toggle = (page: Page) => page.getByRole('button', { name: 'Toggle scene designer', exact: true });
@@ -24,7 +25,7 @@ async function start(page: Page) {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
   // The authored scene is exercised with small seed artwork; generated art is tested separately.
   await page.route('**/authoring/assets.json', route => route.fulfill({ status: 404, body: '' }));
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden({ timeout: 60000 });
   await page.getByRole('combobox').selectOption('camp');
   await page.getByRole('button', { name: 'Expand layer', exact: true }).click();

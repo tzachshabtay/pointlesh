@@ -1,10 +1,11 @@
+import { openAdventure } from './start-helpers';
 import { test, expect } from '@playwright/test';
 
 test.use({ viewport: { width: 1055, height: 1000 }, deviceScaleFactor: 2 });
 
 test('browser canvas sampling at a fractional Retina display size preserves source colors', async ({ page }, testInfo) => {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;

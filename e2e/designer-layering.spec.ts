@@ -1,8 +1,9 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 test('designer drawings sit above visible game controls, keep drag priority and leave simulation running', async ({ page }) => {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/?designer=1');
+  await openAdventure(page, true);
   const scenes = page.getByRole('button', { name: 'Toggle scene designer', exact: true });
   await expect(scenes).toHaveAttribute('aria-expanded', 'true');
   const hotspots = page.locator('#hotspots');
@@ -91,7 +92,7 @@ test('designer drawings sit above visible game controls, keep drag priority and 
 
 test('opening Scenes keeps the animated cutscene and its controls running', async ({ page }) => {
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#cutscene')).toBeVisible();
   await page.locator('#designer').click();
   await expect(page.getByRole('button', { name: 'Toggle scene designer', exact: true })).toHaveAttribute('aria-expanded', 'true');

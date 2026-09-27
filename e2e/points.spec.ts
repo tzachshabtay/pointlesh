@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 import { selectInstance } from './designer-helpers';
 import { findClosestReachablePath, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
@@ -25,7 +26,7 @@ test('hidden entry markers remain assigned walk points and support cottage and p
     }
     await route.fulfill({ response, json: manifest });
   });
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await selectInstance(page, 'home-door');
   const walkPoint = context(page).getByRole('combobox', { name: 'Walk point', exact: true });
   await expect(walkPoint).toHaveValue('village.entry.from-house');
@@ -46,7 +47,7 @@ test('hidden entry markers remain assigned walk points and support cottage and p
 });
 
 test('named points drag in world coordinates, rename without breaking references, and undo as one edit', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   const id = 'village.entry.from-pub';
   await selectInstance(page, id);
   const before = await position(page, id);
@@ -74,7 +75,7 @@ test('named points drag in world coordinates, rename without breaking references
 });
 
 test('Move and Walk act on the selected live character and preserve authored placements', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   const id = 'village.entry.from-pub'; await selectInstance(page, id);
   const point = await position(page, id);
   const authored = await page.evaluate(() => (window as any).pointleshDemo.manifest);
@@ -94,7 +95,7 @@ test('Move and Walk act on the selected live character and preserve authored pla
 });
 
 test('scene entry uses the point for the source room, including live edits and the scrolled forest', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   for (const from of ['village', 'mine', 'camp']) {
     const result = await page.evaluate(from => {
@@ -113,7 +114,7 @@ test('scene entry uses the point for the source room, including live edits and t
 });
 
 test('object interaction waits for the assigned point and snaps outside points to reachable ground', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('house'));
   await selectInstance(page, 'house.pickup.coin');
   const pointId = 'house.walk.house.pickup.coin';
@@ -143,7 +144,7 @@ test('object interaction waits for the assigned point and snaps outside points t
 });
 
 test('designer walks to the closest reachable position when the selected point is outside the floor', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   const id = 'village.entry.from-pub'; await selectInstance(page, id);
   await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).fill('-200');
   await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).press('Tab');
@@ -156,7 +157,7 @@ test('designer walks to the closest reachable position when the selected point i
 });
 
 test('create and place a Point through the prefab browser', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   const browser = page.getByRole('region', { name: 'Prefab browser', exact: true });
   await browser.getByRole('button', { name: 'Open Points folder' }).click();
@@ -176,7 +177,7 @@ test('create and place a Point through the prefab browser', async ({ page }) => 
 });
 
 test('point dragging follows a panned and zoomed camera and respects instance locks', async ({ page }) => {
-  await page.goto('/?designer=1'); await expect(page.locator('#loading')).toBeHidden();
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));
   const id = 'forest.entry.from-camp'; await selectInstance(page, id);
   await page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.setScroll(900, 0).setZoom(.8));

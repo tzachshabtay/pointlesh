@@ -1,13 +1,24 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#111b19"/><meta name="description" content="A pixel-art point-and-click adventure built with Pointlesh. Explore the forest, outwit the orcs, and bring your king home."/><link rel="icon" href="./favicon.svg" type="image/svg+xml"/><title>The King Under the Mountain · Pointlesh</title></head>
-<body>
+<body class="menu-open">
   <div id="app">
-    <header class="site-header"><a class="wordmark" href="https://github.com/tzachshabtay/pointlesh" target="_blank" rel="noreferrer"><span class="mark">✦</span> pointlesh<span class="badge">A PLAYABLE DEMO</span></a><nav><button id="character-lighting" title="Compare character lighting" aria-pressed="true">Lighting on</button><button id="sound" title="Toggle music" aria-pressed="false">♫ <span>Sound off</span></button><button id="help">How to play</button><a href="https://github.com/tzachshabtay/pointlesh" target="_blank" rel="noreferrer">Source ↗</a></nav></header>
-    <main>
+    <section id="start-screen" aria-labelledby="start-title">
+      <div class="start-art" aria-hidden="true"></div>
+      <div class="start-content">
+        <p class="eyebrow">A SMALL DWARF. A RATHER LARGE ADVENTURE.</p>
+        <h1 id="start-title">The King Under<br>the Mountain</h1>
+        <p class="start-premise">A stolen king. An ancient forest.<br>One dwarf with a long way to go.</p>
+        <div class="start-actions"><button id="new-game" disabled>New game <span aria-hidden="true">→</span></button><button id="start-load" disabled>Load</button></div>
+        <p id="start-status" role="status">Lighting the lanterns…</p>
+      </div>
+      <p class="start-credit">An adventure made with <strong>pointlesh</strong></p>
+    </section>
+    <header id="game-header" class="site-header" inert><a class="wordmark" href="https://github.com/tzachshabtay/pointlesh" target="_blank" rel="noreferrer"><span class="mark">✦</span> pointlesh<span class="badge">A PLAYABLE DEMO</span></a><nav><button id="character-lighting" title="Compare character lighting" aria-pressed="true">Lighting on</button><button id="sound" title="Toggle music" aria-pressed="false">♫ <span>Sound off</span></button><button id="help">How to play</button><a href="https://github.com/tzachshabtay/pointlesh" target="_blank" rel="noreferrer">Source ↗</a></nav></header>
+    <main id="game-content" inert>
       <div class="title-row"><div><p class="eyebrow">A SMALL DWARF. A RATHER LARGE ADVENTURE.</p><h1>The King Under the Mountain</h1></div><span class="chapter">CHAPTER I <span>·</span> THE RESCUE</span></div>
       <section class="game-shell" aria-label="The adventure">
-        <div class="scene-bar"><div><span class="location-dot"></span><span id="room-name">Bramblehollow</span><span class="region">THE ELDERWOOD</span></div><div class="game-tools"><button id="map">Map <kbd>M</kbd></button><button id="journal">Journal <kbd>J</kbd><i id="clue-dot"></i></button><button id="save">Save</button><button id="load">Load</button><button id="designer">Designer</button></div></div>
+        <div class="scene-bar"><div><span class="location-dot"></span><span id="room-name">Bramblehollow</span><span class="region">THE ELDERWOOD</span></div><div class="game-tools"><button id="menu">Menu</button><button id="map">Map <kbd>M</kbd></button><button id="journal">Journal <kbd>J</kbd><i id="clue-dot"></i></button><button id="save">Save</button><button id="load">Load</button><button id="designer">Designer</button></div></div>
         <div class="stage-wrap"><div id="game"></div><div id="loading">Lighting the lanterns…</div><div class="vignette"></div><div id="hover-label" aria-hidden="true"></div><button id="hotspots" title="Show interactive objects (Tab)">◇ <span>Show hotspots</span></button>
           <div id="cutscene" hidden aria-label="Animated cutscene"><div class="cutscene-inner"><div class="cutscene-top"><p id="cutscene-kicker" class="eyebrow">THE STORY BEGINS</p><div class="cutscene-controls"><button id="skip-intro" class="quiet">Skip introduction</button><button id="cutscene-next" class="primary">Next scene <span>→</span></button></div></div><div class="cinematic-caption"><span id="cutscene-progress" aria-hidden="true"></span><h2 id="cutscene-speaker"></h2><p id="cutscene-text"></p></div></div></div>
           <div id="dialog" hidden><div class="dialog-portrait">✦</div><div class="dialog-body"><span id="speaker" class="eyebrow">BORIN</span><p id="speech" aria-live="polite"></p><div id="choices"></div><button id="dialog-next" class="text-button">Continue →</button></div></div>

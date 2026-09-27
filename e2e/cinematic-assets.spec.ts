@@ -1,3 +1,4 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 import { expectCinematicCleanup } from './cinematic-helpers';
 
@@ -7,7 +8,7 @@ test('intro and ending use authored character clips, live previews, and determin
   // Keep this regression independent of unpublished artwork and local services.
   await page.route('**/authoring/*.json', route => route.fulfill({ status: 404, body: '' }));
   await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
 
   const result = await page.evaluate(() => {

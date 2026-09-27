@@ -1,9 +1,10 @@
+import { openAdventure } from './start-helpers';
 import { expect, test } from '@playwright/test';
 
 for (const farOutside of [false, true]) test(`${farOutside ? 'Distant' : 'Offscreen cottage'} vertices follow the visible grip only after dragging and use native undo`, async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   const before = await page.evaluate(farOutside => {
