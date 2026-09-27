@@ -13,7 +13,10 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     const framebuffer = {}, calls = [];
     const wrapper = { state: {}, update(...args) { calls.push(args); } };
     const original = wrapper.update;
-    const renderer = Object.assign(new EventEmitter(), { width: 960, height: 540, glWrapper: wrapper, baseDrawingContext: { state: { bindings: { framebuffer } } }, gl: { MAX_VIEWPORT_DIMS: 1, getParameter: () => [8192, 8192] } });
+    const uniforms = new Map(), programManager = { setUniform(name,value) { uniforms.set(name,value); } };
+    const setup = function () { this.programManager.setUniform('uLights[0].position',[480,270,40]); this.programManager.setUniform('uLights[0].radius',100); this.programManager.setUniform('uResolution',[960,540]); };
+    const quad = { programManager, setupUniforms: setup }, setUniform = programManager.setUniform;
+    const renderer = Object.assign(new EventEmitter(), { width: 960, height: 540, glWrapper: wrapper, renderNodes: { getNode: () => quad }, baseDrawingContext: { state: { bindings: { framebuffer } } }, gl: { MAX_VIEWPORT_DIMS: 1, getParameter: () => [8192, 8192] } });
     const scale = Object.assign(new EventEmitter(), { gameSize: { width: 960, height: 540 } });
     const game = { renderer, canvas, scale, events: new EventEmitter() };
     const handle = installPhaserDisplayResolution(game);
@@ -26,9 +29,15 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     assert.deepEqual(calls.at(-1)[0].viewport, [0, 0, 1180, 664]);
     assert.deepEqual(calls.at(-1)[0].scissor.box, [295, 166, 590, 332]);
     assert.deepEqual(draw, before);
+    quad.setupUniforms({state:draw});
+    assert.deepEqual(uniforms.get('uLights[0].position').slice(0,2),[590,332]);
+    assert.ok(Math.abs(uniforms.get('uLights[0].position')[2]-40*1180/960)<1e-10);
+    assert.ok(Math.abs(uniforms.get('uLights[0].radius')-100*1180/960)<1e-10);
+    assert.deepEqual(uniforms.get('uResolution'),[960,540]);assert.equal(programManager.setUniform,setUniform);
     const offscreen = { ...draw, bindings: { framebuffer: {} } };
     wrapper.update(offscreen);
     assert.equal(calls.at(-1)[0], offscreen);
+    quad.setupUniforms({state:offscreen});assert.deepEqual(uniforms.get('uLights[0].position'),[480,270,40]);assert.equal(uniforms.get('uLights[0].radius'),100);
     rect.width = 400; rect.height = 225; observerCallback(); renderer.emit('prerenderclear');
     assert.deepEqual([canvas.width, canvas.height], [800, 450]);
     view.devicePixelRatio = 1; renderer.emit('prerenderclear');
@@ -41,6 +50,7 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     assert.deepEqual([canvas.width, canvas.height], [400, 225], 'letterboxing keeps the logical aspect ratio');
     game.events.emit('destroy'); handle.destroy();
     assert.equal(wrapper.update, original);
+    assert.equal(quad.setupUniforms,setup);
     assert.deepEqual([canvas.width, canvas.height], [960, 540]);
     assert.equal(canvas.style.imageRendering, 'pixelated');
     assert.equal(disconnected, true);

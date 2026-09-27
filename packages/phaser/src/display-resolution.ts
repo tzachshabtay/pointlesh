@@ -50,6 +50,24 @@ export function installPhaserDisplayResolution(game: Phaser.Game, options: Phase
     originalUpdate.call(wrapper, state as typeof parameters, force, vaoLast);
   };
   wrapper.update = update;
+  // Native sprite lighting compares light coordinates to gl_FragCoord, which
+  // is now physical pixels. Keep scene/camera/culling coordinates logical and
+  // scale only the lighting uniforms submitted to the canvas framebuffer.
+  const quad = renderer.renderNodes.getNode('BatchHandlerQuad') as Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad;
+  const originalSetup = quad.setupUniforms;
+  const setup: typeof originalSetup = function (this: Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad, drawingContext) {
+    const draw = drawingContext.state as DrawState, base = renderer.baseDrawingContext.state as DrawState;
+    if (draw.bindings?.framebuffer !== base.bindings?.framebuffer) { originalSetup.call(this, drawingContext); return; }
+    const program = this.programManager, originalSetUniform = program.setUniform;
+    program.setUniform = (name, value) => {
+      if (/^uLights\[\d+\]\.position$/.test(name) && Array.isArray(value)) {
+        value = [value[0]! * scaleX, value[1]! * scaleY, value[2]! * Math.min(scaleX, scaleY)];
+      } else if (/^uLights\[\d+\]\.radius$/.test(name) && typeof value === 'number') value *= Math.min(scaleX, scaleY);
+      return originalSetUniform.call(program, name, value);
+    };
+    try { originalSetup.call(this, drawingContext); } finally { program.setUniform = originalSetUniform; }
+  };
+  quad.setupUniforms = setup;
   const sync = () => {
     const ratio = Math.min(maxPixelRatio, view.devicePixelRatio || 1);
     if (dirty || ratio !== lastRatio) {
@@ -86,6 +104,7 @@ export function installPhaserDisplayResolution(game: Phaser.Game, options: Phase
     game.scale.off("resize", resized);
     game.events.off("destroy", destroy);
     if (wrapper.update === update) wrapper.update = originalUpdate;
+    if (quad.setupUniforms === setup) quad.setupUniforms = originalSetup;
     canvas.width = renderer.width;
     canvas.height = renderer.height;
     if (canvas.style.imageRendering === "auto") canvas.style.imageRendering = previousRendering;

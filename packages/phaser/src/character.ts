@@ -3,6 +3,8 @@ import { resolveCharacterAnimation, type CharacterAnimations, type CharacterAnim
 import type Phaser from "phaser";
 import { resolveTargetAssetId } from '@ai-game-assets/core';
 import { evaluatePointleshAreaEffects, type PointleshAreaEffects } from "./effects.js";
+import { applyCharacterLighting, type CharacterLightingOptions } from './lighting.js';
+import { releaseMirroredNormals } from './mirrored-normals.js';
 
 // Multiple actors may share an authored clip. Rebuild a changed clip only once,
 // then let each paused actor attach to the same new Phaser animation object.
@@ -36,6 +38,8 @@ export type PhaserAdventureCharacterOptions = {
   animation?: (snapshot: CharacterSnapshot) => string | undefined;
   /** Live prefab assignments take precedence over animation/frame callbacks when a slot resolves. */
   animations?: CharacterAnimations | (() => CharacterAnimations | undefined);
+  /** Opt into native room lighting; authored normals take precedence over the silhouette fallback. */
+  lighting?: boolean | CharacterLightingOptions | (() => boolean | CharacterLightingOptions);
   onSync?: (snapshot: CharacterSnapshot, effects: PointleshAreaEffects) => void;
 };
 
@@ -132,6 +136,7 @@ export class PhaserAdventureCharacter {
     this.playback?.destroy();
     this.binding?.destroy();
     this.restoreTiming();
+    if (this.options.lighting !== undefined) { releaseMirroredNormals(this.sprite); this.sprite.setLighting(false); }
   }
 
   private effects(position = this.controller.state.position): PointleshAreaEffects {
@@ -188,6 +193,8 @@ export class PhaserAdventureCharacter {
       camera.setZoom(camera.zoom + (effects.zoom - camera.zoom) * amount);
     }
     this.options.onSync?.(state, effects);
+    const lighting = typeof this.options.lighting === 'function' ? this.options.lighting() : this.options.lighting;
+    if (lighting !== undefined) applyCharacterLighting(this.sprite, lighting);
   }
 
   private scale(): Point {

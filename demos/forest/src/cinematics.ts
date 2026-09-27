@@ -2,7 +2,8 @@ import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject } from '@pointlesh/core';
-import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject } from '@pointlesh/phaser';
+import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
+import { forestLighting } from './environment-lighting';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
 import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
@@ -71,7 +72,7 @@ export class ForestCinematic {
   private destroyed = false;
 
   constructor(private readonly scene: Phaser.Scene, readonly kind: CinematicKind,
-    private readonly assets: AiAssetRuntime, private readonly getManifest: () => SceneDesignerManifest) {
+    private readonly assets: AiAssetRuntime, private readonly getManifest: () => SceneDesignerManifest, private readonly lighting?: PhaserAdventureLighting) {
     this.root = scene.add.container(0, 0).setName('pointlesh-cinematic').setDepth(5000);
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
@@ -124,6 +125,8 @@ export class ForestCinematic {
     if (this.kind === 'intro') this.intro(stepIndex, t);
     else this.ending(stepIndex, t);
     this.world.sort('depth');
+    this.lighting?.sync(forestLighting(this.room, this.definitions.get(this.room)?.objects ?? [],
+      id => this.ambient.find(light => light.sprite.name === `ambient-${id}`)?.sprite), this.world);
     // Short cuts connect actual animated shots; the opening starts visibly in motion.
     const inFade = stepIndex === 0 ? 0 : 1 - clamp(elapsedMs / 220);
     const outFade = clamp((elapsedMs - duration + 280) / 280);
@@ -226,6 +229,7 @@ export class ForestCinematic {
       actor.binding = new PhaserAdventureCharacter(this.scene,
         new CharacterController({ id: `cinematic-${id}`, position: { x: pose.x, y: pose.y } }), sprite, {
           autoUpdate: false, aiRuntime: this.assets, assetId,
+          lighting: () => actor.definition!.properties.receiveLighting !== false,
           baseScale: () => ({ x: actor.definition!.scaleX, y: actor.definition!.scaleY }),
           ...(characterId === 'guard' ? { baseSize: () => guardAnimationSize(this.assets.manifest.assets[assetId], actor.sleeping) }
             : characterId === 'borin' ? { baseSize: () => borinActionSize(this.assets.manifest.assets[assetId], !!actor.action) } : {}),

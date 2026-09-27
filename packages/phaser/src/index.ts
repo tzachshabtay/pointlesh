@@ -1,4 +1,5 @@
 export * from "./character.js";
+export * from './lighting.js';
 export * from "./object.js";
 export * from "./navigation.js";
 export * from "./room-camera.js";

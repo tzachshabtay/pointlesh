@@ -77,14 +77,14 @@ test('native Assets groups short names and exposes a static base image plus edit
   await page.getByRole('button', { name: /Graphics$/ }).click();
   await page.locator('.ai-game-assets-designer__asset-folder').filter({ hasText: /^Objects$/ }).click();
   const assetItems = page.locator('.ai-game-assets-designer__asset-item');
-  await expect(assetItems).toHaveText(['Coin', 'Mushroom', 'Rope']);
+  await expect(assetItems).toHaveText(['Cage Door', 'Coin', 'Fireplace', 'Mushroom', 'Rope', 'Tool Chest']);
   await assetItems.filter({ hasText: /^Coin$/ }).click();
   await expect(page.locator('.ai-game-assets-designer__asset-item.is-selected')).toHaveText('Coin');
   await page.locator('.ai-game-assets-designer__asset-breadcrumb').filter({ hasText: /^Graphics$/ }).click();
   await page.locator('.ai-game-assets-designer__asset-folder').filter({ hasText: /^Characters$/ }).click();
   await page.getByRole('button', { name: 'Borin', exact: true }).click();
   const animation = page.locator('.ai-game-assets-designer__animation-select');
-  await expect(animation.locator('option')).toHaveCount(10);
+  await expect(animation.locator('option')).toHaveCount(12);
   await expect(animation).toHaveValue('borin');
   await expect(animation.locator('option:checked')).toHaveText('Base image');
   const current = page.locator('.ai-game-assets-designer__current');

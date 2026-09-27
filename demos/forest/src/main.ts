@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureLighting, PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
@@ -17,6 +17,7 @@ import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
+import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
@@ -55,6 +56,7 @@ class ForestAdventure extends Phaser.Scene {
   character!: CharacterController;
   actor!: Phaser.GameObjects.Sprite;
   binding!: PhaserAdventureCharacter;
+  characterLighting!: PhaserAdventureLighting;
   navigation!: PhaserAdventureNavigation;
   roomCamera!: PhaserRoomCamera;
   private cameraWasEditing = false;
@@ -96,6 +98,7 @@ class ForestAdventure extends Phaser.Scene {
   create() {
     gameScene = this;
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
+    this.characterLighting = new PhaserAdventureLighting(this);
     for (const room of roomIds) this.drawRoomTexture(room);
     createPixelActors(this);
     installPhaserTextureScaling(this, {
@@ -109,6 +112,7 @@ class ForestAdventure extends Phaser.Scene {
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
       autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'borin',
+      lighting: () => this.playerDefinition()?.properties.receiveLighting !== false,
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
@@ -423,6 +427,7 @@ class ForestAdventure extends Phaser.Scene {
           const controller = new CharacterController({ id: object.id, position: object.position, facing: this.authoredFacing(object), directions: object.properties.directions === 8 ? 8 : 4 });
           const binding = new PhaserAdventureCharacter(this, controller, sprite, {
             autoUpdate: false, aiRuntime: this.aiRuntime, assetId: object.assetId,
+            lighting: () => current().properties.receiveLighting !== false,
             animations: () => actorName === 'guard' ? this.guardPatrol?.animations(readCharacterAnimations(current().properties)) ?? readCharacterAnimations(current().properties) : readCharacterAnimations(current().properties),
             baseScale: () => ({ x: current().scaleX, y: current().scaleY }),
             ...(actorName === 'guard' ? { baseSize: () => guardAnimationSize(assets.assets[current().assetId], this.guardPatrol?.phase === 'collapse' || this.guardPatrol?.phase === 'asleep') } : {}),
@@ -605,7 +610,7 @@ class ForestAdventure extends Phaser.Scene {
     }
     const kind = isEnding ? 'ending' : 'intro';
     if (this.cinematic?.snapshot().kind !== kind) {
-      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes);
+      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes, this.characterLighting);
       this.clearMovementKeys(); this.character.stop(); this.hover();
     }
     document.body.classList.add('cinematic-playing');
@@ -739,11 +744,17 @@ class ForestAdventure extends Phaser.Scene {
     this.drawRoomTexture(this.story.roomId);
     this.syncDoor();
     this.renderTyingGuard();
+    if (!this.cinematic) this.characterLighting.sync(forestLighting(this.story.roomId, this.resolved().objects, id => this.entitySprites.get(id)));
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
   }
 }
 
 function setupControls() {
+  el('character-lighting').onclick = () => {
+    const enabled = gameScene.characterLighting.enabled = !gameScene.characterLighting.enabled;
+    el('character-lighting').setAttribute('aria-pressed', String(enabled));
+    el('character-lighting').textContent = `Lighting ${enabled ? 'on' : 'off'}`;
+  };
   el('dialog-next').onclick = () => gameScene.conversationActive ? gameScene.conversation.advance() : gameScene.dismissSpeech();
   el('cutscene-next').onclick = () => gameScene.advanceCutscene();
   el('skip-intro').onclick = () => gameScene.advanceCutscene(true);
@@ -806,7 +817,7 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
   const response = await fetch(`${import.meta.env.BASE_URL}authoring/${name}.json`);
   if (response.ok) {
     const value = await response.json(); validate(value);
-    if (name === 'scenes') authoredScenes = addLamps(addFireplace(addForestPoints(updateForestInteractions(value))));
+    if (name === 'scenes') authoredScenes = withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(value)))));
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }

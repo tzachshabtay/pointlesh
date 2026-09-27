@@ -1,15 +1,29 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { PNG } from 'pngjs';
 
 test.use({ deviceScaleFactor: 2 });
 
-test('Current retains saved variants through walking and idle transitions', async ({ page }) => {
+async function variantCatalog() {
   const catalog = JSON.parse(await readFile('demos/forest/public/authoring/assets.json', 'utf8'));
-  // Reuse a tracked sheet so this regression is independent of local generations.
   const idle = catalog.assets['borin.idle-front'];
-  const variant = Object.values(idle.versions[idle.activeVersion].scaledVariants)[0] as any;
+  // Promotions can select a newer source without any variants. Restore the
+  // tracked source that actually owns this fixture, including its native grid.
+  const [versionId, version] = Object.entries(idle.versions).find(([, version]: any) => Object.keys(version.scaledVariants ?? {}).length) as [string, any];
+  const variant = Object.values(version.scaledVariants)[0] as any;
+  const original = PNG.sync.read(await readFile('demos/forest/public/' + version.file));
+  idle.activeVersion = versionId;
+  idle.dimensions = { width: original.width, height: original.height };
+  idle.frameGrid = { ...variant.frameGrid, frameWidth: original.width / variant.frameGrid.columns, frameHeight: original.height / variant.frameGrid.rows };
   const walk = catalog.assets['borin.walk-front'];
-  walk.versions[walk.activeVersion].scaledVariants = { fixture: { ...variant, id: 'fixture' } };
+  walk.activeVersion = 'fixture';
+  walk.versions.fixture = { ...structuredClone(version), name: 'fixture', scaledVariants: { fixture: { ...structuredClone(variant), id: 'fixture' } } };
+  walk.dimensions = { ...idle.dimensions }; walk.frameGrid = { ...idle.frameGrid };
+  return catalog;
+}
+
+test('Current retains saved variants through walking and idle transitions', async ({ page }) => {
+  const catalog = await variantCatalog();
   await page.route('**/authoring/assets.json', route => route.fulfill({ json: catalog }));
   await page.route('**/__ai-assets/manifest', route => route.fulfill({ json: catalog }));
   await page.goto('/?designer=1');
@@ -37,10 +51,14 @@ test('Current retains saved variants through walking and idle transitions', asyn
   await page.keyboard.up('ArrowDown');
   await expect.poll(texture).toMatch(/^borin.idle-front::scaled::/);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.actor.frame.cutWidth)).toBe(96);
+  expect(await page.evaluate(() => {
+    const actor = (window as any).pointleshDemo.scene.actor, index = actor.frame.sourceIndex;
+    return actor.lighting && actor.texture.dataSource[index]?.width === actor.texture.source[index].width;
+  })).toBe(true);
 });
 
 test('animated variants cannot redraw scenery outside the character', async ({ page }) => {
-  const catalog = JSON.parse(await readFile('demos/forest/public/authoring/assets.json', 'utf8'));
+  const catalog = await variantCatalog();
   const initial = structuredClone(catalog);
   for (const asset of Object.values(initial.assets) as any[]) delete asset.versions[asset.activeVersion]?.scaledVariants;
   await page.route('**/authoring/assets.json', route => route.fulfill({ json: initial }));

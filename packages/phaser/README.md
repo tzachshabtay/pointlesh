@@ -87,6 +87,40 @@ This binding shares the character renderer's logical sizing, frame transforms, s
 
 Optional reflected light uses the object's extensible properties: `lightEnabled`, `lightColor` (`#rrggbb`), `lightRadiusX/Y` and `lightOffsetX/Y` (world pixels), `lightIntensity` (0–1), and `lightFrameIntensities` (one multiplier per animation frame). With `lightSurface`, it samples the actual room texture through a feathered light mask, keeping painted stone detail and dark mortar intact. It follows the object and frame, including pausing and one-shot playback. The light draws just above the axis-aligned room background by default. Set `lightDepth` when it must also illuminate a foreground scenery copy, such as a pot masking the flames; keep it below actors that should remain in front. Increment `revision` when repainting that background texture. This is a local scenery-light effect; it does not relight characters or calculate cast shadows.
 
+## Character lighting (Phaser 4 / WebGL)
+
+Lighting is opt-in and uses Phaser's native per-pixel lights. Keep one `PhaserAdventureLighting` per Scene and supply your room's ambient color and point lights. Only sprites with lighting enabled are affected; painted backgrounds and designer UI retain their appearance.
+
+```ts
+import { PhaserAdventureLighting, objectCharacterLight } from '@pointlesh/phaser';
+
+const lighting = new PhaserAdventureLighting(scene);
+const actorView = new PhaserAdventureCharacter(scene, actor, sprite, {
+  aiRuntime, assetId: 'dwarf',
+  lighting: () => currentCharacter().properties.receiveLighting !== false,
+});
+
+// After updating actors and scenery animations:
+lighting.sync({
+  ambientColor: 0xa0aaa0,
+  lights: room.objects.flatMap(object => {
+    const sprite = objectSprites.get(object.id);
+    const light = sprite && objectCharacterLight(object, sprite);
+    return light ? [light] : [];
+  }),
+});
+```
+
+`lighting: true` uses an existing texture normal map when one is supplied, otherwise derives and caches shallow relief from each frame's alpha silhouette. It does **not** infer height from the painted colors. This fallback gives soft volume/edge shading; accurate facial, armor and clothing relief requires authored normal maps. `{ normals: 'existing' }` skips generation and uses Phaser's flat normal when a map is absent. Load authored normal maps as the texture's data source with the exact same atlas layout. Frame selection, scaled variants and live preview textures retain their own matching normal maps. Mirrored sprites also reflect their normal vectors, keeping illumination on the side facing the light. Original color images and animation metadata are unchanged.
+
+`objectCharacterLight()` shares the scenery light's position, color and displayed-frame flicker. Its optional prefab controls are `lightAffectsCharacters`, `lightCharacterRadiusScale`, `lightCharacterIntensityScale` and `lightCharacterHeightRatio`. Exported `characterLightDefaults` and `characterLightSchema` provide designer defaults and labels. Explicit `lightCharacterRadius`, `lightCharacterIntensity` and `lightCharacterHeight` override the corresponding derived values. You can also supply arbitrary `{ id, x, y, radius, color, intensity, z? }` lights, such as daylight or window light. Coordinates, radius and elevation are in world pixels.
+
+Pass a world Container as `lighting.sync(environment, worldContainer)` for cinematic transforms. Lights themselves remain in the Scene, with their position, radius and elevation transformed to match the cast. `installPhaserDisplayResolution()` also adapts native sprite-light uniforms to physical canvas pixels, while keeping offscreen targets and world coordinates unchanged. Switching rooms removes obsolete lights. `lighting.enabled = false` gives neutral white ambient light and removes this controller's lights for comparison. `destroy()` removes its own lights and restores the previous ambient/enabled settings; Scene shutdown calls it automatically.
+
+The forest demo enables this for player/NPC/cutscene characters and exposes **Lighting on/off**, **Receive room lighting**, and light-prefab reach/intensity/elevation controls. This first version does not calculate cast shadows or light blocking by room geometry. Canvas rendering remains unlit. Phaser's configured `maxLights` limits simultaneous visible lights.
+
+References: [Phaser 4 lighting](https://docs.phaser.io/api-documentation/class/gameobjects-light), [Lights Manager](https://docs.phaser.io/api-documentation/4.0.0/class/gameobjects-lightsmanager), [normal maps and self-shadows](https://phaser.io/tutorials/phaser-4-rendering-concepts).
+
 ## Solid characters and objects
 
 Character and object prefabs expose **WalkThrough**, stored as `properties.walkThrough`, with a default of `false` even in older documents. Register rendered entities with a shared navigation world to connect this setting to walking:
