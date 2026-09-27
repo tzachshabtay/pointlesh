@@ -19,7 +19,7 @@ const fireplaceLight = {
   // Relative light output follows the luminous area of each generated flame.
   lightFrameIntensities: [.34, .77, 1, .40, .20, .97, .63, .33],
 };
-const fireplaceLightSchema: Record<string, PointleshPropertySchema> = {
+export const fireplaceLightSchema: Record<string, PointleshPropertySchema> = {
   lightEnabled: { type: 'boolean', label: 'Firelight' }, lightColor: { type: 'string', label: 'Light color' },
   lightRadiusX: { type: 'number', label: 'Light width radius', min: 1 }, lightRadiusY: { type: 'number', label: 'Light height radius', min: 1 },
   lightOffsetX: { type: 'number', label: 'Light offset X' }, lightOffsetY: { type: 'number', label: 'Light offset Y' },

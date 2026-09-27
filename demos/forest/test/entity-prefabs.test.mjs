@@ -25,7 +25,7 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`
     assert.ok(prefab.name !== 'Character' && prefab.name !== 'Object');
     (entity.kind === 'character' ? characters : objects).add(identity);
   }
-  assert.equal(characters.size, 6); assert.equal(objects.size, 5);
+  assert.equal(characters.size, 6); assert.equal(objects.size, 21);
   for (const scene of Object.values(manifest.scenes)) for (const area of resolvePointleshScene(manifest, scene.id).areas) {
     assert.equal(area.prefabId, undefined);
     assert.ok(scene.layers.flatMap(layer => layer.areas).some(native => native.id === area.areaId));

@@ -1512,6 +1512,1670 @@
           }
         }
       }
+    },
+    "forest.object.lamp.village.tavern": {
+      "id": "forest.object.lamp.village.tavern",
+      "name": "Tavern sign lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.village.tavern",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Tavern sign lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Tavern sign lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 105,
+          "lightRadiusY": 110,
+          "lightOffsetX": 0,
+          "lightOffsetY": -10.978915662650602,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.pub.left-wall": {
+      "id": "forest.object.lamp.pub.left-wall",
+      "name": "Left wall lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.pub.left-wall",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Left wall lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Left wall lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 90,
+          "lightRadiusY": 100,
+          "lightOffsetX": 0,
+          "lightOffsetY": -10.978915662650602,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.pub.bar": {
+      "id": "forest.object.lamp.pub.bar",
+      "name": "Hanging bar lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.pub.bar",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Hanging bar lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Hanging bar lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 125,
+          "lightRadiusY": 120,
+          "lightOffsetX": 0,
+          "lightOffsetY": -13.418674698795181,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.pub.barrels": {
+      "id": "forest.object.lamp.pub.barrels",
+      "name": "Barrel lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.pub.barrels",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Barrel lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Barrel lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 90,
+          "lightRadiusY": 105,
+          "lightOffsetX": 0,
+          "lightOffsetY": -8.539156626506024,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.pub.back-door": {
+      "id": "forest.object.lamp.pub.back-door",
+      "name": "Back door lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.pub.back-door",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Back door lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Back door lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 95,
+          "lightRadiusY": 105,
+          "lightOffsetX": 0,
+          "lightOffsetY": -8.94578313253012,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905,
+            0.89
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.pub.entrance": {
+      "id": "forest.object.lamp.pub.entrance",
+      "name": "Entrance lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.pub.entrance",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Entrance lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Entrance lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 110,
+          "lightRadiusY": 120,
+          "lightOffsetX": 0,
+          "lightOffsetY": -10.572289156626507,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.865,
+            0.985,
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1,
+            0.94
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.house.bed": {
+      "id": "forest.object.lamp.house.bed",
+      "name": "Bedside lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.house.bed",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Bedside lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Bedside lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 95,
+          "lightRadiusY": 115,
+          "lightOffsetX": 0,
+          "lightOffsetY": -16.265060240963855,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.house.workbench": {
+      "id": "forest.object.lamp.house.workbench",
+      "name": "Workbench lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.house.workbench",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Workbench lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Workbench lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 110,
+          "lightRadiusY": 115,
+          "lightOffsetX": 0,
+          "lightOffsetY": -9.352409638554217,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.house.door": {
+      "id": "forest.object.lamp.house.door",
+      "name": "Cottage door lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.house.door",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Cottage door lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Cottage door lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 100,
+          "lightRadiusY": 115,
+          "lightOffsetX": 0,
+          "lightOffsetY": -12.198795180722891,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.mine.entrance": {
+      "id": "forest.object.lamp.mine.entrance",
+      "name": "Mine entrance lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.mine.entrance",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Mine entrance lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Mine entrance lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 100,
+          "lightRadiusY": 115,
+          "lightOffsetX": 0,
+          "lightOffsetY": -6.912650602409639,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.mine.winch": {
+      "id": "forest.object.lamp.mine.winch",
+      "name": "Winch lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.mine.winch",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Winch lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Winch lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 125,
+          "lightRadiusY": 145,
+          "lightOffsetX": 0,
+          "lightOffsetY": -7.319277108433735,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.mine.tunnel": {
+      "id": "forest.object.lamp.mine.tunnel",
+      "name": "Distant tunnel lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.mine.tunnel",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Distant tunnel lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Distant tunnel lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 38,
+          "lightRadiusY": 48,
+          "lightOffsetX": 0,
+          "lightOffsetY": -3.6596385542168677,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.forest.mine": {
+      "id": "forest.object.lamp.forest.mine",
+      "name": "Mine doorway lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.forest.mine",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Mine doorway lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Mine doorway lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 80,
+          "lightRadiusY": 95,
+          "lightOffsetX": 0,
+          "lightOffsetY": -9.323204419889503,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.forest.gate-left": {
+      "id": "forest.object.lamp.forest.gate-left",
+      "name": "Left gate lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.forest.gate-left",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Left gate lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Left gate lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 45,
+          "lightRadiusY": 65,
+          "lightOffsetX": 0,
+          "lightOffsetY": -6.712707182320441,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.94,
+            0.865,
+            0.985,
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.forest.gate-right": {
+      "id": "forest.object.lamp.forest.gate-right",
+      "name": "Right gate lantern",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.forest.gate-right",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Right gate lantern",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Right gate lantern",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 45,
+          "lightRadiusY": 65,
+          "lightOffsetX": 0,
+          "lightOffsetY": -7.458563535911602,
+          "lightIntensity": 0.38,
+          "lightFrameIntensities": [
+            0.925,
+            0.905,
+            0.89,
+            0.965,
+            1,
+            0.94,
+            0.865,
+            0.985
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
+    },
+    "forest.object.lamp.forest.gate-torch": {
+      "id": "forest.object.lamp.forest.gate-torch",
+      "name": "Distant gate torch",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "lamp.forest.gate-torch",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Lamps"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Distant gate torch",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "Distant gate torch",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 50,
+          "lightRadiusY": 65,
+          "lightOffsetX": 0,
+          "lightOffsetY": -8.950276243093922,
+          "lightIntensity": 0.55,
+          "lightFrameIntensities": [
+            0.87,
+            1,
+            0.76,
+            0.58,
+            0.95,
+            0.82,
+            0.67,
+            0.68
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          },
+          "lightDepth": {
+            "type": "number",
+            "label": "Light depth",
+            "step": 0.1
+          }
+        }
+      }
     }
   },
   "scenes": {
@@ -1606,6 +3270,21 @@
                 },
                 "y": {
                   "value": 403
+                }
+              }
+            },
+            {
+              "id": "village.lamp.tavern",
+              "prefabId": "forest.object.lamp.village.tavern",
+              "name": "Tavern sign lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 296.8527918781726,
+                  "y": 286.26506024096386,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
                 }
               }
             }
@@ -2163,6 +3842,81 @@
                 "object": {
                   "x": 607.5126903553299,
                   "y": 256.9879518072289,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "pub.lamp.left-wall",
+              "prefabId": "forest.object.lamp.pub.left-wall",
+              "name": "Left wall lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 32.48730964467005,
+                  "y": 129.30722891566265,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "pub.lamp.bar",
+              "prefabId": "forest.object.lamp.pub.bar",
+              "name": "Hanging bar lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 99.49238578680203,
+                  "y": 122.8012048192771,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "pub.lamp.barrels",
+              "prefabId": "forest.object.lamp.pub.barrels",
+              "name": "Barrel lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 270.4568527918782,
+                  "y": 139.06626506024097,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "pub.lamp.back-door",
+              "prefabId": "forest.object.lamp.pub.back-door",
+              "name": "Back door lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 373.60406091370555,
+                  "y": 153.70481927710844,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "pub.lamp.entrance",
+              "prefabId": "forest.object.lamp.pub.entrance",
+              "name": "Entrance lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 741.1167512690355,
+                  "y": 157.7710843373494,
                   "scaleX": 0.8121827411167513,
                   "scaleY": 0.8132530120481928
                 }
@@ -2749,6 +4503,51 @@
                 },
                 "behaviors": []
               }
+            },
+            {
+              "id": "house.lamp.bed",
+              "prefabId": "forest.object.lamp.house.bed",
+              "name": "Bedside lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 36.954314720812185,
+                  "y": 233.40361445783134,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "house.lamp.workbench",
+              "prefabId": "forest.object.lamp.house.workbench",
+              "name": "Workbench lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 504.7715736040609,
+                  "y": 132.56024096385542,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "house.lamp.door",
+              "prefabId": "forest.object.lamp.house.door",
+              "name": "Cottage door lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 803.248730964467,
+                  "y": 174.03614457831324,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
             }
           ],
           "objects": [],
@@ -3308,6 +5107,66 @@
                 },
                 "y": {
                   "value": 448
+                }
+              }
+            },
+            {
+              "id": "forest.lamp.mine",
+              "prefabId": "forest.object.lamp.forest.mine",
+              "name": "Mine doorway lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 218.90883977900552,
+                  "y": 266.2707182320442,
+                  "scaleX": 0.7458563535911602,
+                  "scaleY": 0.7458563535911602
+                }
+              }
+            },
+            {
+              "id": "forest.lamp.gate-left",
+              "prefabId": "forest.object.lamp.forest.gate-left",
+              "name": "Left gate lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 1319.4198895027623,
+                  "y": 247.6243093922652,
+                  "scaleX": 0.7458563535911602,
+                  "scaleY": 0.7458563535911602
+                }
+              }
+            },
+            {
+              "id": "forest.lamp.gate-right",
+              "prefabId": "forest.object.lamp.forest.gate-right",
+              "name": "Right gate lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 1417.8729281767955,
+                  "y": 247.6243093922652,
+                  "scaleX": 0.7458563535911602,
+                  "scaleY": 0.7458563535911602
+                }
+              }
+            },
+            {
+              "id": "forest.lamp.gate-torch",
+              "prefabId": "forest.object.lamp.forest.gate-torch",
+              "name": "Distant gate torch",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 1341.0497237569061,
+                  "y": 194.6685082872928,
+                  "scaleX": 0.7458563535911602,
+                  "scaleY": 0.7458563535911602
                 }
               }
             }
@@ -3964,6 +5823,51 @@
                 "behaviors": [
                   "forest.interact"
                 ]
+              }
+            },
+            {
+              "id": "mine.lamp.entrance",
+              "prefabId": "forest.object.lamp.mine.entrance",
+              "name": "Mine entrance lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 241.6243654822335,
+                  "y": 181.35542168674698,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "mine.lamp.winch",
+              "prefabId": "forest.object.lamp.mine.winch",
+              "name": "Winch lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 529.9492385786803,
+                  "y": 153.70481927710844,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "mine.lamp.tunnel",
+              "prefabId": "forest.object.lamp.mine.tunnel",
+              "name": "Distant tunnel lantern",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 743.5532994923858,
+                  "y": 204.1265060240964,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
+                }
               }
             }
           ],

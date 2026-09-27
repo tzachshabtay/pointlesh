@@ -2,7 +2,7 @@ import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject } from '@pointlesh/core';
-import { createWalkBehindOverlay, PhaserAdventureCharacter } from '@pointlesh/phaser';
+import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject } from '@pointlesh/phaser';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
 import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
@@ -54,6 +54,7 @@ export class ForestCinematic {
   private doorBinding?: PhaserAdventureCharacter;
   private doorDefinition?: ResolvedPointleshObject;
   private overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
+  private ambient: { sprite: Phaser.GameObjects.Sprite; binding: PhaserAdventureObject; playing: boolean }[] = [];
   private overlayRoom?: string;
   private readonly foreground: Phaser.GameObjects.Graphics;
   private readonly frame: Phaser.GameObjects.Graphics;
@@ -156,6 +157,8 @@ export class ForestCinematic {
     this.scene.cameras.remove(this.camera, true);
     for (const { binding } of this.cast.values()) binding?.destroy();
     this.doorBinding?.destroy();
+    for (const light of this.ambient) { light.binding.destroy(); light.sprite.destroy(); }
+    this.ambient = [];
     for (const overlay of this.overlays) overlay.destroy();
     this.root.destroy(true);
     this.cast.clear();
@@ -173,7 +176,18 @@ export class ForestCinematic {
 
   private shot(room: string, name: string, zoom: number, focusX = 480, focusY = 285, tint = 0xffffff): void {
     this.room = room;
+    this.background.setTexture(`room.${room}`).setTint(tint);
     if (this.overlayRoom !== room) {
+      for (const light of this.ambient) { light.binding.destroy(); light.sprite.destroy(); }
+      this.ambient = [];
+      for (const object of this.definitions.get(room)?.objects ?? []) {
+        if (!object.enabled || object.properties.role !== 'scenery' || !object.properties.animationKey) continue;
+        const sprite = this.scene.add.sprite(object.position.x, object.position.y, this.assets.key(object.assetId)).setName(`ambient-${object.id}`);
+        this.world.add(sprite);
+        const binding = new PhaserAdventureObject(this.scene, sprite, { aiRuntime: this.assets, object: () => object, autoUpdate: false,
+          areas: () => this.definitions.get(room)?.areas ?? [], lightSurface: () => ({ image: this.background, container: this.world }) });
+        this.ambient.push({ sprite, binding, playing: object.properties.animationPlaying !== false });
+      }
       for (const overlay of this.overlays) overlay.destroy();
       this.overlays = [];
       for (const area of this.definitions.get(room)?.areas ?? []) {
@@ -186,7 +200,7 @@ export class ForestCinematic {
       this.overlayRoom = room;
     }
     for (const overlay of this.overlays) overlay.image.setTint(tint);
-    this.background.setTexture(`room.${room}`).setTint(tint);
+    for (const light of this.ambient) light.binding.seek(light.playing ? this.elapsedMs : 0);
     this.location.setText(name);
     const x = Math.max(W / (2 * zoom), Math.min(W - W / (2 * zoom), focusX));
     const y = Math.max(H / (2 * zoom), Math.min(H - H / (2 * zoom), focusY));

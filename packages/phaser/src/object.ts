@@ -50,6 +50,15 @@ export class PhaserAdventureObject {
     this.render(object);
   }
 
+  /** Sample a cutscene/save checkpoint without depending on the game's clock. */
+  seek(elapsedMs: number): void {
+    if (this.destroyed) return;
+    if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Animation time must be finite and nonnegative.');
+    const object = this.options.object();
+    this.prepare(object); this.elapsedMs = elapsedMs;
+    this.render(object);
+  }
+
   private prepare(object: ResolvedPointleshObject): void {
     const selection = JSON.stringify([object.assetId, object.properties.animationKey ?? '']);
     if (selection !== this.selection) { this.selection = selection; this.elapsedMs = 0; }

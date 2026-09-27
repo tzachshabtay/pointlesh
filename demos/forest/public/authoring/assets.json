@@ -9,7 +9,7 @@
         "width": 1182,
         "height": 1330
       },
-      "activeVersion": "original",
+      "activeVersion": "lamps",
       "versions": {
         "original": {
           "name": "original",
@@ -17,6 +17,14 @@
           "prompt": "Pixel-art village-pub room atlas",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "imagegen"
+        },
+        "lamps": {
+          "name": "lamps",
+          "file": "art/atlas-village-pub-lamps.png",
+          "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
         }
       }
     },
@@ -47,7 +55,7 @@
         "width": 1182,
         "height": 1330
       },
-      "activeVersion": "original",
+      "activeVersion": "lamps",
       "versions": {
         "original": {
           "name": "original",
@@ -55,6 +63,14 @@
           "prompt": "Pixel-art mine-camp room atlas",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "imagegen"
+        },
+        "lamps": {
+          "name": "lamps",
+          "file": "art/atlas-mine-camp-lamps.png",
+          "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
         }
       }
     },
@@ -4231,7 +4247,7 @@
         "width": 2172,
         "height": 724
       },
-      "activeVersion": "original",
+      "activeVersion": "lamps",
       "tags": [
         "forest",
         "background",
@@ -4244,6 +4260,14 @@
           "prompt": "Horizontally extended Whispering Wood panorama; full prompt in docs/art-prompts.md.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "imagegen"
+        },
+        "lamps": {
+          "name": "lamps",
+          "file": "art/forest-lamps.png",
+          "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
         }
       }
     },
@@ -5605,7 +5629,7 @@
         "height": 664
       },
       "prompt": "The original Copper Tankard with only the static flames removed from the firebox; preserve the stonework, grate, logs, ambient lighting and every other part of the room.",
-      "activeVersion": "hearth",
+      "activeVersion": "lamps",
       "versions": {
         "hearth": {
           "name": "hearth",
@@ -5614,6 +5638,14 @@
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
           "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+        },
+        "lamps": {
+          "name": "lamps",
+          "file": "art/pub-lamps.png",
+          "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
         }
       },
       "tags": [
@@ -5630,7 +5662,7 @@
         "height": 664
       },
       "prompt": "The original Borin cottage with only the small painted flames and luminous embers under the hanging cooking pot removed. Preserve the pot, chain, grate, stonework, lighting and every other part of the room.",
-      "activeVersion": "hearth",
+      "activeVersion": "lamps",
       "versions": {
         "hearth": {
           "name": "hearth",
@@ -5639,12 +5671,1428 @@
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
           "notes": "Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in docs/art-prompts.md."
+        },
+        "lamps": {
+          "name": "lamps",
+          "file": "art/house-lamps.png",
+          "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
         }
       },
       "tags": [
         "forest",
         "background",
         "house"
+      ]
+    },
+    "lamp.village.tavern": {
+      "id": "lamp.village.tavern",
+      "kind": "image",
+      "prompt": "Tavern sign lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 29,
+        "height": 27
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/village-tavern.png",
+          "prompt": "Tavern sign lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.village.tavern.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "village"
+      ]
+    },
+    "lamp.village.tavern.burn": {
+      "id": "lamp.village.tavern.burn",
+      "kind": "animation",
+      "prompt": "Tavern sign lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 116,
+        "height": 54
+      },
+      "frameGrid": {
+        "frameWidth": 29,
+        "frameHeight": 27,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.village.tavern.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/village-tavern-burn.png",
+          "prompt": "Tavern sign lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "village"
+      ]
+    },
+    "lamp.pub.left-wall": {
+      "id": "lamp.pub.left-wall",
+      "kind": "image",
+      "prompt": "Left wall lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 32,
+        "height": 27
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-left-wall.png",
+          "prompt": "Left wall lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.pub.left-wall.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "pub"
+      ]
+    },
+    "lamp.pub.left-wall.burn": {
+      "id": "lamp.pub.left-wall.burn",
+      "kind": "animation",
+      "prompt": "Left wall lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 128,
+        "height": 54
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 27,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.pub.left-wall.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-left-wall-burn.png",
+          "prompt": "Left wall lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "pub"
+      ]
+    },
+    "lamp.pub.bar": {
+      "id": "lamp.pub.bar",
+      "kind": "image",
+      "prompt": "Hanging bar lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 45,
+        "height": 33
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-bar.png",
+          "prompt": "Hanging bar lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.pub.bar.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "pub"
+      ]
+    },
+    "lamp.pub.bar.burn": {
+      "id": "lamp.pub.bar.burn",
+      "kind": "animation",
+      "prompt": "Hanging bar lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 180,
+        "height": 66
+      },
+      "frameGrid": {
+        "frameWidth": 45,
+        "frameHeight": 33,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.pub.bar.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-bar-burn.png",
+          "prompt": "Hanging bar lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "pub"
+      ]
+    },
+    "lamp.pub.barrels": {
+      "id": "lamp.pub.barrels",
+      "kind": "image",
+      "prompt": "Barrel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 26,
+        "height": 21
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-barrels.png",
+          "prompt": "Barrel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.pub.barrels.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "pub"
+      ]
+    },
+    "lamp.pub.barrels.burn": {
+      "id": "lamp.pub.barrels.burn",
+      "kind": "animation",
+      "prompt": "Barrel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 104,
+        "height": 42
+      },
+      "frameGrid": {
+        "frameWidth": 26,
+        "frameHeight": 21,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.pub.barrels.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 9,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-barrels-burn.png",
+          "prompt": "Barrel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "pub"
+      ]
+    },
+    "lamp.pub.back-door": {
+      "id": "lamp.pub.back-door",
+      "kind": "image",
+      "prompt": "Back door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 24,
+        "height": 22
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-back-door.png",
+          "prompt": "Back door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.pub.back-door.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "pub"
+      ]
+    },
+    "lamp.pub.back-door.burn": {
+      "id": "lamp.pub.back-door.burn",
+      "kind": "animation",
+      "prompt": "Back door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 96,
+        "height": 44
+      },
+      "frameGrid": {
+        "frameWidth": 24,
+        "frameHeight": 22,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.pub.back-door.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-back-door-burn.png",
+          "prompt": "Back door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "pub"
+      ]
+    },
+    "lamp.pub.entrance": {
+      "id": "lamp.pub.entrance",
+      "kind": "image",
+      "prompt": "Entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 29,
+        "height": 26
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-entrance.png",
+          "prompt": "Entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.pub.entrance.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "pub"
+      ]
+    },
+    "lamp.pub.entrance.burn": {
+      "id": "lamp.pub.entrance.burn",
+      "kind": "animation",
+      "prompt": "Entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 116,
+        "height": 52
+      },
+      "frameGrid": {
+        "frameWidth": 29,
+        "frameHeight": 26,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.pub.entrance.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/pub-entrance-burn.png",
+          "prompt": "Entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "pub"
+      ]
+    },
+    "lamp.house.bed": {
+      "id": "lamp.house.bed",
+      "kind": "image",
+      "prompt": "Bedside lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 35,
+        "height": 40
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/house-bed.png",
+          "prompt": "Bedside lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.house.bed.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "house"
+      ]
+    },
+    "lamp.house.bed.burn": {
+      "id": "lamp.house.bed.burn",
+      "kind": "animation",
+      "prompt": "Bedside lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 140,
+        "height": 80
+      },
+      "frameGrid": {
+        "frameWidth": 35,
+        "frameHeight": 40,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.house.bed.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/house-bed-burn.png",
+          "prompt": "Bedside lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "house"
+      ]
+    },
+    "lamp.house.workbench": {
+      "id": "lamp.house.workbench",
+      "kind": "image",
+      "prompt": "Workbench lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 15,
+        "height": 23
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/house-workbench.png",
+          "prompt": "Workbench lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.house.workbench.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "house"
+      ]
+    },
+    "lamp.house.workbench.burn": {
+      "id": "lamp.house.workbench.burn",
+      "kind": "animation",
+      "prompt": "Workbench lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 60,
+        "height": 46
+      },
+      "frameGrid": {
+        "frameWidth": 15,
+        "frameHeight": 23,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.house.workbench.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/house-workbench-burn.png",
+          "prompt": "Workbench lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "house"
+      ]
+    },
+    "lamp.house.door": {
+      "id": "lamp.house.door",
+      "kind": "image",
+      "prompt": "Cottage door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 28,
+        "height": 30
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/house-door.png",
+          "prompt": "Cottage door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.house.door.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "house"
+      ]
+    },
+    "lamp.house.door.burn": {
+      "id": "lamp.house.door.burn",
+      "kind": "animation",
+      "prompt": "Cottage door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 112,
+        "height": 60
+      },
+      "frameGrid": {
+        "frameWidth": 28,
+        "frameHeight": 30,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.house.door.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 9,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/house-door-burn.png",
+          "prompt": "Cottage door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "house"
+      ]
+    },
+    "lamp.mine.entrance": {
+      "id": "lamp.mine.entrance",
+      "kind": "image",
+      "prompt": "Mine entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 23,
+        "height": 17
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/mine-entrance.png",
+          "prompt": "Mine entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.mine.entrance.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "mine"
+      ]
+    },
+    "lamp.mine.entrance.burn": {
+      "id": "lamp.mine.entrance.burn",
+      "kind": "animation",
+      "prompt": "Mine entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 92,
+        "height": 34
+      },
+      "frameGrid": {
+        "frameWidth": 23,
+        "frameHeight": 17,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.mine.entrance.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/mine-entrance-burn.png",
+          "prompt": "Mine entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "mine"
+      ]
+    },
+    "lamp.mine.winch": {
+      "id": "lamp.mine.winch",
+      "kind": "image",
+      "prompt": "Winch lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 25,
+        "height": 18
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/mine-winch.png",
+          "prompt": "Winch lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.mine.winch.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "mine"
+      ]
+    },
+    "lamp.mine.winch.burn": {
+      "id": "lamp.mine.winch.burn",
+      "kind": "animation",
+      "prompt": "Winch lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 100,
+        "height": 36
+      },
+      "frameGrid": {
+        "frameWidth": 25,
+        "frameHeight": 18,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.mine.winch.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/mine-winch-burn.png",
+          "prompt": "Winch lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "mine"
+      ]
+    },
+    "lamp.mine.tunnel": {
+      "id": "lamp.mine.tunnel",
+      "kind": "image",
+      "prompt": "Distant tunnel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 7,
+        "height": 9
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/mine-tunnel.png",
+          "prompt": "Distant tunnel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.mine.tunnel.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "mine"
+      ]
+    },
+    "lamp.mine.tunnel.burn": {
+      "id": "lamp.mine.tunnel.burn",
+      "kind": "animation",
+      "prompt": "Distant tunnel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 28,
+        "height": 18
+      },
+      "frameGrid": {
+        "frameWidth": 7,
+        "frameHeight": 9,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.mine.tunnel.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 9,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/mine-tunnel-burn.png",
+          "prompt": "Distant tunnel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "mine"
+      ]
+    },
+    "lamp.forest.mine": {
+      "id": "lamp.forest.mine",
+      "kind": "image",
+      "prompt": "Mine doorway lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 25,
+        "height": 25
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-mine.png",
+          "prompt": "Mine doorway lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.forest.mine.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "forest"
+      ]
+    },
+    "lamp.forest.mine.burn": {
+      "id": "lamp.forest.mine.burn",
+      "kind": "animation",
+      "prompt": "Mine doorway lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 100,
+        "height": 50
+      },
+      "frameGrid": {
+        "frameWidth": 25,
+        "frameHeight": 25,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.forest.mine.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-mine-burn.png",
+          "prompt": "Mine doorway lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "forest"
+      ]
+    },
+    "lamp.forest.gate-left": {
+      "id": "lamp.forest.gate-left",
+      "kind": "image",
+      "prompt": "Left gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 8,
+        "height": 18
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-gate-left.png",
+          "prompt": "Left gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.forest.gate-left.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "forest"
+      ]
+    },
+    "lamp.forest.gate-left.burn": {
+      "id": "lamp.forest.gate-left.burn",
+      "kind": "animation",
+      "prompt": "Left gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 32,
+        "height": 36
+      },
+      "frameGrid": {
+        "frameWidth": 8,
+        "frameHeight": 18,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.forest.gate-left.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-gate-left-burn.png",
+          "prompt": "Left gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "forest"
+      ]
+    },
+    "lamp.forest.gate-right": {
+      "id": "lamp.forest.gate-right",
+      "kind": "image",
+      "prompt": "Right gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 8,
+        "height": 20
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-gate-right.png",
+          "prompt": "Right gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.forest.gate-right.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "forest"
+      ]
+    },
+    "lamp.forest.gate-right.burn": {
+      "id": "lamp.forest.gate-right.burn",
+      "kind": "animation",
+      "prompt": "Right gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 32,
+        "height": 40
+      },
+      "frameGrid": {
+        "frameWidth": 8,
+        "frameHeight": 20,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.forest.gate-right.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 9,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-gate-right-burn.png",
+          "prompt": "Right gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "forest"
+      ]
+    },
+    "lamp.forest.gate-torch": {
+      "id": "lamp.forest.gate-torch",
+      "kind": "image",
+      "prompt": "Distant gate torch: a small exposed torch flame. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 10,
+        "height": 24
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-gate-torch.png",
+          "prompt": "Distant gate torch: a small exposed torch flame. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · lamp flicker",
+          "assetId": "lamp.forest.gate-torch.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "forest"
+      ]
+    },
+    "lamp.forest.gate-torch.burn": {
+      "id": "lamp.forest.gate-torch.burn",
+      "kind": "animation",
+      "prompt": "Distant gate torch: a small exposed torch flame. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+      "dimensions": {
+        "width": 40,
+        "height": 48
+      },
+      "frameGrid": {
+        "frameWidth": 10,
+        "frameHeight": 24,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "lamp.forest.gate-torch.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 7,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "lamps",
+      "versions": {
+        "lamps": {
+          "name": "lamps",
+          "file": "art/objects/lamps/forest-gate-torch-burn.png",
+          "prompt": "Distant gate torch: a small exposed torch flame. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "lamp",
+        "animation",
+        "forest"
       ]
     }
   },
@@ -6034,6 +7482,166 @@
     "background.house": [
       "Graphics",
       "Backgrounds"
+    ],
+    "lamp.village.tavern": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.village.tavern.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.left-wall": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.left-wall.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.bar": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.bar.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.barrels": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.barrels.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.back-door": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.back-door.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.entrance": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.pub.entrance.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.house.bed": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.house.bed.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.house.workbench": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.house.workbench.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.house.door": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.house.door.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.mine.entrance": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.mine.entrance.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.mine.winch": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.mine.winch.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.mine.tunnel": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.mine.tunnel.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.mine": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.mine.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.gate-left": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.gate-left.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.gate-right": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.gate-right.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.gate-torch": [
+      "Graphics",
+      "Objects",
+      "Lamps"
+    ],
+    "lamp.forest.gate-torch.burn": [
+      "Graphics",
+      "Objects",
+      "Lamps"
     ]
   }
 }

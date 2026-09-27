@@ -48,7 +48,7 @@ test('ambient objects loop every frame, pause, hold one-shot endings, update pre
     edit({ animationKey: '' }); const base = sprite.texture.key, lightRemoved = !light();
     const listeners = scene.events.listenerCount('update');
     scene.changeRoom('village');
-    const removed = scene.objectAnimations.size;
+    const removed = !scene.objectAnimations.has('pub.fireplace');
     scene.changeRoom('pub');
     const returned = scene.entitySprites.get('pub.fireplace').texture.key;
     const afterListeners = scene.events.listenerCount('update');
@@ -67,7 +67,7 @@ test('ambient objects loop every frame, pause, hold one-shot endings, update pre
   expect(result.originalWidth).toBeCloseTo(80 * 960 / 1182);
   expect(result.placement.slice(0, 3)).toEqual([620, 265, 96]); expect(result.placement[3]).toBeCloseTo(135.2);
   expect(result.previewPose.frame).toBe(5); expect(result.previewPose.width).toBeCloseTo(48); expect(result.previewPose.angle).toBeCloseTo(8);
-  expect(result.base).toBe('fireplace'); expect(result.removed).toBe(0); expect(result.returned).toBe('fireplace');
+  expect(result.base).toBe('fireplace'); expect(result.removed).toBe(true); expect(result.returned).toBe('fireplace');
   expect(result.afterListeners).toBe(result.listeners);
 });
 

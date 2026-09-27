@@ -12,6 +12,7 @@ import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
 import { addRescueAssets } from './rescue-assets';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
+import { addLampAssets, addLamps } from './lamp-assets';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -133,6 +134,7 @@ export const assets = {
 addForestObjectAssets(assets);
 addRescueAssets(assets);
 addFireplaceAssets(assets);
+addLampAssets(assets);
 
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');
@@ -179,7 +181,7 @@ const roomPickups: Partial<Record<typeof roomIds[number], { pickupId: string; na
   ],
   forest: [{ pickupId: 'mushroom', name: 'Dreamcap mushroom', x: 111, y: 409 }],
 };
-export const scenes = addFireplace(addForestPoints(updateForestInteractions(specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
+export const scenes = addLamps(addFireplace(addForestPoints(updateForestInteractions(specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
   const instances: ScenePrefabInstance[] = [
     createPointleshInstance({ id: `${roomId}.borin`, prefabId: 'forest.rescue-character', name: 'Borin', overrides: { object: { x: 471, y: 462, scaleX: 2.4, scaleY: 2.4 }, speed: { value: 165 }, walkStep: { value: 16 }, frameDurationMs: { value: 100 } } }),
     ...(roomCharacters[roomId] ?? []).map(npc => {
@@ -219,4 +221,4 @@ export const scenes = addFireplace(addForestPoints(updateForestInteractions(spec
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure' }), prefabs: instances, areas };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
-})) })))));
+})) }))))));

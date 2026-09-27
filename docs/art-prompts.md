@@ -234,3 +234,20 @@ Final edit prompt:
 ```text
 Use case: precise-object-edit. Asset type: clean background plate for a pixel-art point-and-click game. Input image: edit target, an exact 80:120 crop of the torch on the palisade beside the orc camp gate. Remove ONLY the bright yellow/orange torch flame and floating fire sparks above its iron bowl. Reconstruct the original dark vertical wooden palisade slats behind the flame, matching their grain, straight vertical position and existing warm ambient lighting. Preserve the iron torch bowl, rim, wall bracket, support shaft, adjacent gate, all other pixels, original composition, camera and pixel-art style. Do not extinguish or recolor existing reflected light on the wood: dynamic lighting will be added in the game. No flame, sparks or luminous embers remain. No new objects, text, border or transparency. Keep the exact original 80:120 aspect ratio and registration.
 ```
+
+## Lamps throughout the rooms
+
+Mode: **built-in image generation**, editing five registered contact sheets of the original fixtures. Sixteen light sources: one village lantern, five pub lanterns, three cottage lanterns, three mine lanterns, and three forest lanterns plus the small torch above the distant gate.
+
+Saved files under `demos/forest/public/art/`:
+
+- `objects/lamps/{room}-{lamp}.png` and `{room}-{lamp}-burn.png` — base images and eight-frame 4×2 sheets. Dimensions match each original fixture's pane bounds; the base is frame zero.
+- `atlas-village-pub-lamps.png`, `pub-lamps.png`, `house-lamps.png`, `atlas-mine-camp-lamps.png`, and `forest-lamps.png` — room backgrounds with only the authored pane/flame interiors replaced. Earlier hearth edits remain intact.
+
+`lamp-layout.ts` records native crop/pane coordinates and light radii. `prepare-lamp-references.mjs` lays out each room's crops at 2× in a 576×384 contact sheet: three columns, two rows, 192×192 cells and a 16-pixel inset. `pack-lamp-art.mjs` imports the generated dim glass only inside those pane masks, preserving every original housing/bar and all other background pixels. Enclosed lanterns retain their original painted amber glass and wick detail: eight frames blend 86.5–100% of that light over the dim glass, without introducing fire silhouettes, sparks or coals. Their brightest frames exactly reproduce the original artwork. Only the exposed gate torch uses the earlier generated flame sheet. Fixtures vary their playback rate and starting phase; restrained reflected light follows each frame's brightness. All instances are editable under **Objects / Lamps** and render in both gameplay and cutscenes.
+
+Final prompt (one built-in edit per room's contact sheet):
+
+```text
+Use case: precise-object-edit. Asset type: registered lamp clean plates for an existing pixel-art game. The input is an EDIT TARGET contact sheet on a flat dark-gray canvas, with lamp crops placed in a fixed 3-column by 2-row layout. Preserve the EXACT canvas aspect ratio, all crop positions, crop sizes, empty space, original metal lantern housings, glass dividers, hanging brackets, background pixels, palette and pixel-art scale. In EVERY occupied crop remove ONLY the yellow-white flames / luminous cores inside the lantern glass, replacing them with dim warm brown translucent glass and dark unlit interiors. For the one exposed flame if present, remove only the flame and reconstruct its immediate background. Keep the existing warm reflections on the housings and surrounding scenery. No flame, sparks, brilliant white patches or glowing core inside any pane. Do not move, redraw, rescale or duplicate any fixture or crop, and do not fill empty cells. This is a carefully registered sprite preparation sheet, not an illustration. No text, new objects, borders or transparency.
+```

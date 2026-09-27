@@ -1,7 +1,12 @@
 import type Phaser from 'phaser';
 import type { ResolvedPointleshObject } from '@pointlesh/core';
 
-export type ObjectLightSurface = { image: Phaser.GameObjects.Image; revision?: unknown };
+export type ObjectLightSurface = {
+  image: Phaser.GameObjects.Image;
+  revision?: unknown;
+  /** Keep reflected light in the same transformed world/camera as its scenery. */
+  container?: Phaser.GameObjects.Container;
+};
 let nextLightId = 0;
 
 /** A warm reflected-light layer, preserving the room's painted surface detail and shadows. */
@@ -48,6 +53,7 @@ export class PhaserObjectLight {
       this.image ??= this.scene.add.image(x, y, this.key).setName(`pointlesh-light:${object.id}`).setBlendMode('ADD');
       this.image.setPosition(x, y).setDisplaySize(rx * 2, ry * 2);
     }
+    if (surface.container && this.image?.parentContainer !== surface.container) surface.container.add(this.image!);
     const frames = properties.lightFrameIntensities;
     const index = Math.max(0, (sprite.anims.currentFrame?.index ?? 1) - 1);
     const intensity = Array.isArray(frames) && typeof frames[index] === 'number' ? Number(frames[index]) : 1;
