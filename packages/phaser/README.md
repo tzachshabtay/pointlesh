@@ -68,6 +68,25 @@ Existing clients can still supply `aiRuntime`, `assetId` and `animation: state =
 
 Destroying the scene or sprite detaches the binding and generated texture/animation bindings. Calling `view.destroy()` detaches it without destroying your sprite or controller.
 
+## Animated scenery
+
+`createObjectPrefab({ assetId: 'fireplace', animationKey: 'burn', animationPlaying: true, animationLoop: true })` assigns a named clip or linked ai-assets state. The object inspector exposes **Animation**, **Play animation**, and **Loop animation**. An empty key shows the base image; a non-looping clip holds its last frame.
+
+```ts
+import { PhaserAdventureObject } from '@pointlesh/phaser';
+
+const view = new PhaserAdventureObject(scene, sprite, {
+  aiRuntime,
+  object: () => room.objects.find(object => object.id === 'pub.fireplace')!,
+  areas: () => room.areas,
+  lightSurface: () => ({ image: roomBackground, revision: backgroundRevision }),
+});
+```
+
+This binding shares the character renderer's logical sizing, frame transforms, scaled variants and live asset previews. It ticks on scene updates, including while the designer is open. Set `autoUpdate: false` to call `update(deltaMs)` yourself. `sync()` applies placement/property edits without restarting the current clip; pause preserves its frame and elapsed time. Changing the asset or animation key restarts playback. Destroying the sprite or scene releases both animation and light textures.
+
+Optional reflected light uses the object's extensible properties: `lightEnabled`, `lightColor` (`#rrggbb`), `lightRadiusX/Y` and `lightOffsetX/Y` (world pixels), `lightIntensity` (0–1), and `lightFrameIntensities` (one multiplier per animation frame). With `lightSurface`, it samples the actual room texture through a feathered light mask, keeping painted stone detail and dark mortar intact. It follows the object and frame, including pausing and one-shot playback. The light draws just above the axis-aligned room background, behind actors. Increment `revision` when repainting that background texture. This is a local scenery-light effect; it does not relight characters or calculate cast shadows.
+
 ## Solid characters and objects
 
 Character and object prefabs expose **WalkThrough**, stored as `properties.walkThrough`, with a default of `false` even in older documents. Register rendered entities with a shared navigation world to connect this setting to walking:

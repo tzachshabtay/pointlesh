@@ -5494,6 +5494,117 @@
         "background",
         "camp"
       ]
+    },
+    "fireplace": {
+      "id": "fireplace",
+      "kind": "image",
+      "dimensions": {
+        "width": 80,
+        "height": 104
+      },
+      "prompt": "Warm yellow-white and orange pixel-art flames and glowing embers from the Copper Tankard hearth. Transparent background, no masonry. Fixed position and scale.",
+      "activeVersion": "hearth",
+      "versions": {
+        "hearth": {
+          "name": "hearth",
+          "file": "art/objects/fireplace.png",
+          "prompt": "First frame of the Copper Tankard fire loop.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+        }
+      },
+      "linkedAnimationAssets": {
+        "burn": {
+          "label": "Burn · looping fire",
+          "assetId": "fireplace.burn"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "pub"
+      ]
+    },
+    "fireplace.burn": {
+      "id": "fireplace.burn",
+      "kind": "animation",
+      "dimensions": {
+        "width": 320,
+        "height": 208
+      },
+      "prompt": "Eight successive frames of a gently flickering hearth fire. Vary the tongues of flame and rising sparks, retain the same coal bed, scale and baseline. Seamless loop. Transparent background, no stonework, no scenery.",
+      "frameGrid": {
+        "frameWidth": 80,
+        "frameHeight": 104,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "fireplace.burn",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "hearth",
+      "versions": {
+        "hearth": {
+          "name": "hearth",
+          "file": "art/objects/fireplace-burn.png",
+          "prompt": "Eight-frame pixel-art hearth fire, fixed cells and alpha extraction; full prompts in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "pub",
+        "animation"
+      ]
+    },
+    "background.pub": {
+      "id": "background.pub",
+      "kind": "image",
+      "dimensions": {
+        "width": 1182,
+        "height": 664
+      },
+      "prompt": "The original Copper Tankard with only the static flames removed from the firebox; preserve the stonework, grate, logs, ambient lighting and every other part of the room.",
+      "activeVersion": "hearth",
+      "versions": {
+        "hearth": {
+          "name": "hearth",
+          "file": "art/pub-unlit.png",
+          "prompt": "Copper Tankard clean plate. The original background is unchanged outside a small patch inside the hearth.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+        }
+      },
+      "tags": [
+        "forest",
+        "background",
+        "pub"
+      ]
     }
   },
   "styleGuide": {
@@ -5864,6 +5975,18 @@
       "Objects"
     ],
     "background.camp": [
+      "Graphics",
+      "Backgrounds"
+    ],
+    "fireplace": [
+      "Graphics",
+      "Objects"
+    ],
+    "fireplace.burn": [
+      "Graphics",
+      "Objects"
+    ],
+    "background.pub": [
       "Graphics",
       "Backgrounds"
     ]

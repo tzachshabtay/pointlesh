@@ -35,7 +35,7 @@ export function addForestPoints(source: SceneDesignerManifest): SceneDesignerMan
       }
     }
     for (const entity of [...room.areas.filter(area => area.kind === 'hotspot'), ...room.objects.filter(object => object.kind === 'object')]) {
-      if (entity.properties.walkPointId) continue;
+      if (entity.properties.walkPointId || entity.properties.interactive === false) continue;
       const position = onGround(pointleshApproachTarget(room, entity).walkPoint ?? ('position' in entity ? entity.position : { x: 471, y: 465 }));
       const exit = targets[roomId].find(target => target.id === entity.id)?.exit;
       const pointId = exit ? roomEntryPointId(roomId, exit) : `${scene.id}.walk.${entity.id}`;

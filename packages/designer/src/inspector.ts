@@ -323,6 +323,28 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     return section;
   }
 
+  function objectAnimationEditor(target: Target, values: PointleshProperties, edit: (key: string, value: PointleshProperty) => void) {
+    const group = element(document, 'div', 'pointlesh-property-group');
+    const attribute = target.attributes.find(attribute => attribute.kind === 'object');
+    const override = attribute && target.instance?.overrides?.[attribute.id] as { assetId?: string } | undefined;
+    const assetId = override?.assetId ?? (attribute?.kind === 'object' ? attribute.object.assetId : '');
+    const field = element(document, 'label', 'pointlesh-inspector-field');
+    field.append(element(document, 'span', '', 'Animation'));
+    const select = document.createElement('select'); select.setAttribute('aria-label', 'Object animation');
+    addOption(select, '', 'None (base image)');
+    const choices = animationChoices(assetId);
+    for (const choice of choices) addOption(select, choice.key, choice.label);
+    const key = typeof values.animationKey === 'string' ? values.animationKey : '';
+    if (key && !choices.some(choice => choice.key === key)) addOption(select, key, `${key} · unavailable`);
+    select.value = key; select.addEventListener('change', () => edit('animationKey', select.value));
+    field.append(select); group.append(inheritedField(target, 'animationKey', field));
+    for (const [property, label] of [['animationPlaying', 'Play animation'], ['animationLoop', 'Loop animation']]) {
+      group.append(inheritedField(target, property!, propertyField(document, property!, values[property!] !== false, { type: 'boolean', label: label! }, edit, status)));
+    }
+    group.append(element(document, 'p', 'pointlesh-inspector-help', 'Add linked animations and edit their frames and timing in Assets.'));
+    return group;
+  }
+
   function animationChoices(assetId: string): { key: string; label: string }[] {
     const asset = aiAssets.assets[assetId];
     if (!asset) return [];
@@ -577,6 +599,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     }
     if (isBody || target.metadata.kind === 'hotspot') body.append(walkPointControl(target, values, edit));
     if (isCharacter) body.append(section('Directional animations', animationEditor(target, values, edit)));
+    if (target.metadata.kind === 'object') body.append(section('Animation', objectAnimationEditor(target, values, edit)));
     const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.metadata.kind);
     if (isArea) body.append(areaEditor(target, values, schemas, edit));
     const movement = element(document, 'div', 'pointlesh-property-group');
@@ -589,6 +612,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       if (isBody && key === 'walkThrough') continue;
       if (isArea && areaPropertyKeys.has(key)) continue;
       if (isCharacter && ['animations', 'directions', 'facing'].includes(key)) continue;
+      if (target.metadata.kind === 'object' && ['animationKey', 'animationPlaying', 'animationLoop'].includes(key)) continue;
       if (isCharacter && hasAnimationAssignments && ['frameCount', 'frameDurationMs'].includes(key)) continue;
       const schema = { ...schemas[key], label: schemas[key]?.label ?? propertyLabel(key) };
       const field = inheritedField(target, key, propertyField(document, key, value, schema as PointleshPropertySchema, edit, status));

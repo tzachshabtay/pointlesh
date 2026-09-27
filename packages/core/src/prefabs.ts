@@ -224,8 +224,14 @@ function objectPrefab(kind: "object" | "character", input: PointleshObjectPrefab
   };
 }
 
-export function createObjectPrefab(input: PointleshObjectPrefabInput = {}): PointleshPrefabDefinition {
-  return objectPrefab("object", input, { interactive: true, ignoreScaling: false }, []);
+export function createObjectPrefab(input: PointleshObjectPrefabInput & {
+  /** Linked animation state or named clip on the object's asset; empty means its base image. */
+  animationKey?: string;
+  animationPlaying?: boolean;
+  animationLoop?: boolean;
+} = {}): PointleshPrefabDefinition {
+  return objectPrefab("object", input, { interactive: true, ignoreScaling: false,
+    animationKey: input.animationKey ?? '', animationPlaying: input.animationPlaying ?? true, animationLoop: input.animationLoop ?? true }, []);
 }
 
 export function createCharacterPrefab(input: PointleshObjectPrefabInput & { speed?: number; walkStep?: number; frameDurationMs?: number; frameCount?: number; movementLinkedToAnimation?: boolean; directions?: 4 | 8; animations?: CharacterAnimations } = {}): PointleshPrefabDefinition {

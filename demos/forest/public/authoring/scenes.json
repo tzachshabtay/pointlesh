@@ -1409,6 +1409,104 @@
         ],
         "propertySchema": {}
       }
+    },
+    "forest.object.fireplace": {
+      "id": "forest.object.fireplace",
+      "name": "Fireplace",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "fireplace",
+            "x": 0,
+            "y": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "anchorX": 0.5,
+            "anchorY": 0,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Fireplace",
+          "walkPointId": "",
+          "walkThrough": true,
+          "interactive": false,
+          "ignoreScaling": true,
+          "animationKey": "burn",
+          "animationPlaying": true,
+          "animationLoop": true,
+          "role": "scenery",
+          "description": "A welcoming fire in the Copper Tankard.",
+          "lightEnabled": true,
+          "lightColor": "#ffa34d",
+          "lightRadiusX": 132,
+          "lightRadiusY": 119,
+          "lightOffsetX": 0,
+          "lightOffsetY": -7,
+          "lightIntensity": 0.8,
+          "lightFrameIntensities": [
+            0.34,
+            0.77,
+            1,
+            0.4,
+            0.2,
+            0.97,
+            0.63,
+            0.33
+          ]
+        },
+        "behaviors": [],
+        "propertySchema": {
+          "lightEnabled": {
+            "type": "boolean",
+            "label": "Firelight"
+          },
+          "lightColor": {
+            "type": "string",
+            "label": "Light color"
+          },
+          "lightRadiusX": {
+            "type": "number",
+            "label": "Light width radius",
+            "min": 1
+          },
+          "lightRadiusY": {
+            "type": "number",
+            "label": "Light height radius",
+            "min": 1
+          },
+          "lightOffsetX": {
+            "type": "number",
+            "label": "Light offset X"
+          },
+          "lightOffsetY": {
+            "type": "number",
+            "label": "Light offset Y"
+          },
+          "lightIntensity": {
+            "type": "number",
+            "label": "Light intensity",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
+          }
+        }
+      }
     }
   },
   "scenes": {
@@ -2047,6 +2145,21 @@
                 },
                 "y": {
                   "value": 440
+                }
+              }
+            },
+            {
+              "id": "pub.fireplace",
+              "prefabId": "forest.object.fireplace",
+              "name": "Fireplace",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 607.5126903553299,
+                  "y": 256.9879518072289,
+                  "scaleX": 0.8121827411167513,
+                  "scaleY": 0.8132530120481928
                 }
               }
             }

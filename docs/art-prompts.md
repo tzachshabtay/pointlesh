@@ -176,3 +176,25 @@ Use case: background-extraction. Edit target: the provided close-up of the ORIGI
 ```text
 Use case: identity-preserve. Input image1 is the extracted ORIGINAL wooden cage DOOR LEAF from our game, including its iron padlock. Input image2 is the original close crop for material/perspective context only. Produce ONE spritesheet of this exact leaf's padlock breaking and the leaf swinging OPEN toward the viewer and to the LEFT, around a fixed hinge on its LEFT EDGE. Eight chronological frames, exactly4columns x2rows, square cells with transparent gutters, transparent alpha THROUGH all gaps between bars and outside the door. Same textured golden-brown timber, same bar and rail counts, knots, chipped highlights and proportions. No stationary cage frame, floor or scenery, no character or weapon. Fixed camera, fixed door height, fixed hinge position near cell center in every frame and fixed ground baseline; NEVER center the leaf separately per frame. Leave plenty of space to the LEFT of hinge for its swing. Frame1 closed locked leaf extends right from hinge. Frame2 same closed leaf, small impact with padlock shackle broken. Frame3 padlock falling, leaf still closed. Frame4 leaf swings30degrees outward. Frame5 swings60degrees. Frame6 swings90degrees, seen nearly edge-on at hinge. Frame7 swings120degrees outward toward left. Frame8 fully open about145degrees, leaf extends to LEFT of hinge and the doorway to its right is completely clear; padlock fallen out of sight. Keep panels all fully inside their own cells. No text, grid lines, labels, glow or watermarks. This must be usable animation of the reference door, not a redesigned gate. Wide2:1 sheet preferably2048x1024.
 ```
+
+## Copper Tankard fireplace
+
+Mode: **built-in image generation** with the original hearth as a reference. Runtime reflected light is a separate library effect synchronized with these frames; it samples the existing room texture so the bricks never move or change shape. Color, radius, offset, intensity and per-frame brightness belong to the fireplace prefab.
+
+Saved files under `demos/forest/public/art/`:
+
+- `objects/fireplace.png` — 80×104 base image, identical to frame zero.
+- `objects/fireplace-burn.png` — eight 80×104 frames, 4 columns × 2 rows, 8 fps, looping.
+- `pub-unlit.png` — 1182×664 original pub with only the flames inside the hearth removed.
+
+Reference: `atlas-village-pub.png`, crop `(665,874,150,132)`. The pub occupies `(0,666,1182,664)` in that atlas. `pack-fireplace-art.mjs` imports the fixed cells with one uniform nearest-neighbor scale and composites the clean plate only inside the original firebox. All pixels outside that patch remain unchanged.
+
+Prompt set, normalized for reuse:
+
+```text
+Fire loop: Use the supplied Copper Tankard hearth as the color and pixel-art reference. Create eight successive frames of warm yellow-white and orange flames with glowing coals and rising sparks, in exactly four columns and two rows of equal cells. Keep the same coal bed, scale, camera and baseline in every cell. Vary the flame silhouettes naturally and make the last frame flow into the first. Actual transparent alpha. No bricks, stone arch, grate, logs, scenery, text or grid lines. Crisp pixel art matching the reference.
+
+Alpha refinement: Preserve this exact eight-frame sheet, its four-by-two layout, positions, scale, flames, sparks and glowing coals. Remove dark brown/black background and diffuse glow, leaving actual transparency around the crisp flames. Do not redraw, rearrange or independently resize frames.
+
+Unlit hearth: Edit the supplied hearth crop, removing only the flames and sparks. Reconstruct the soot-dark brown bricks behind them. Keep the existing grate, logs, arch, stone rim, brick positions, ambient lighting, pixel style and framing unchanged. No new objects. Keep the background opaque. This is a precise local clean plate, not a redesigned fireplace.
+```

@@ -4,7 +4,7 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
@@ -15,6 +15,7 @@ import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
+import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
 import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
@@ -58,12 +59,14 @@ class ForestAdventure extends Phaser.Scene {
   private cameraWasEditing = false;
   background!: Phaser.GameObjects.Image;
   private roomTextureSources = new Map<RoomId, string>();
+  private roomTextureRevision = 0;
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
   guardPatrol?: GuardPatrol;
   private doorBinding?: PhaserAdventureCharacter;
   private guardCheckpoint?: GuardPatrolSnapshot;
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
   objectTextureBindings = new Map<string, { assetId: string; binding: ReturnType<AiAssetRuntime['bindTexture']> }>();
+  objectAnimations = new Map<string, PhaserAdventureObject>();
   private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
   speakingVoice = 'borin';
   labels: Phaser.GameObjects.Text[] = [];
@@ -213,6 +216,7 @@ class ForestAdventure extends Phaser.Scene {
     texture.context.clearRect(0, 0, pixels.width, pixels.height);
     texture.context.drawImage(source, 0, spec.row === null ? 0 : spec.row * (frameHeight + divider), source.width, frameHeight, 0, 0, pixels.width, pixels.height);
     texture.refresh();
+    this.roomTextureRevision++;
     this.roomTextureSources.set(room, signature);
     if (this.background && this.story.roomId === room) {
       this.background.setTexture(roomKey).setDisplaySize(size.width, size.height);
@@ -387,19 +391,31 @@ class ForestAdventure extends Phaser.Scene {
         sprite.once('destroy', () => {
           this.objectTextureBindings.get(object.id)?.binding.destroy();
           this.objectTextureBindings.delete(object.id);
+          this.objectAnimations.get(object.id)?.destroy();
+          this.objectAnimations.delete(object.id);
         });
       }
       if (object.kind === 'object') {
-        sprite.setTexture(texture, hasAssetTexture && asset.frameGrid ? 0 : undefined);
-        const previous = this.objectTextureBindings.get(object.id);
-        if (previous?.assetId !== object.assetId) {
-          previous?.binding.destroy(); this.objectTextureBindings.delete(object.id);
-          if (asset) this.objectTextureBindings.set(object.id, { assetId: object.assetId, binding: this.aiRuntime.bindTexture(sprite, object.assetId, { setInitialTexture: false, ...(asset.frameGrid ? { frame: 0 } : {}) }) });
+        if (hasAssetTexture && typeof object.properties.animationKey === 'string' && object.properties.animationKey) {
+          this.objectTextureBindings.get(object.id)?.binding.destroy(); this.objectTextureBindings.delete(object.id);
+          if (!this.objectAnimations.has(object.id)) this.objectAnimations.set(object.id,
+            new PhaserAdventureObject(this, sprite, { aiRuntime: this.aiRuntime, object: current, areas: () => this.resolved().areas,
+              lightSurface: () => ({ image: this.background, revision: this.roomTextureRevision }) }));
+        } else {
+          this.objectAnimations.get(object.id)?.destroy(); this.objectAnimations.delete(object.id);
+          sprite.anims.stop();
+          sprite.setTexture(texture, hasAssetTexture && asset.frameGrid ? 0 : undefined);
+          const previous = this.objectTextureBindings.get(object.id);
+          if (previous?.assetId !== object.assetId) {
+            previous?.binding.destroy(); this.objectTextureBindings.delete(object.id);
+            if (asset) this.objectTextureBindings.set(object.id, { assetId: object.assetId, binding: this.aiRuntime.bindTexture(sprite, object.assetId, { setInitialTexture: false, ...(asset.frameGrid ? { frame: 0 } : {}) }) });
+          }
         }
       }
       sprite.setPosition(object.position.x, object.position.y).setScale(object.scaleX, object.scaleY).setOrigin(object.anchorX, 1 - object.anchorY).setAngle(object.rotation).setDepth(object.position.y);
       const visibilityTarget = typeof object.properties.targetId === 'string' ? object.properties.targetId : pickupId;
       sprite.setVisible(object.enabled && (!visibilityTarget || targetVisible(this.story, visibilityTarget)));
+      this.objectAnimations.get(object.id)?.sync();
       if (object.kind === 'character') {
         let npc = this.npcActors.get(object.id);
         if (!npc) {
@@ -789,7 +805,7 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
   const response = await fetch(`${import.meta.env.BASE_URL}authoring/${name}.json`);
   if (response.ok) {
     const value = await response.json(); validate(value);
-    if (name === 'scenes') authoredScenes = addForestPoints(updateForestInteractions(value));
+    if (name === 'scenes') authoredScenes = addFireplace(addForestPoints(updateForestInteractions(value)));
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }
@@ -797,6 +813,7 @@ addGuardAnimations(assets);
 addForestObjectAssets(assets);
 updateRescueAssetText(assets);
 addRescueAssets(assets);
+addFireplaceAssets(assets);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });
