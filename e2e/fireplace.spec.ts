@@ -161,10 +161,47 @@ test('the cauldron fire lights the pot and ground beneath the actors without int
   expect(result.brightness[2]).toBeCloseTo(.8); expect(result.brightness[4]).toBeCloseTo(.16);
   expect(result.width).toBeCloseTo(80 * 1.6 * 960 / 1182);
   expect(result).toMatchObject({ key: 'fireplace.burn', potInFront: true, potLit: true, lightBelowGuard: true,
-    acceptsHits: false, hasDoor: true, hasCauldronHotspot: true, cleaned: true, backgroundFile: 'art/camp-unlit.png' });
+    acceptsHits: false, hasDoor: true, hasCauldronHotspot: true, cleaned: true, backgroundFile: 'art/camp-ambient.png' });
   await selectInstance(page, 'camp.fireplace'); await expandProperties(page, 'Animation');
   await expect(page.getByRole('combobox', { name: 'Object animation', exact: true })).toHaveValue('burn');
   await expect(page.getByRole('checkbox', { name: 'Loop animation', exact: true })).toBeChecked();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('camp-cauldron-fire.png') });
+});
+
+test('the torch lights the gate, loops independently of the cauldron, and exposes designer controls', async ({ page }, testInfo) => {
+  const result = await page.evaluate(() => {
+    const api = (window as any).pointleshDemo, scene = api.scene;
+    scene.game.loop.sleep(); scene.changeRoom('camp');
+    const sprite = scene.entitySprites.get('camp.torch'), binding = scene.objectAnimations.get('camp.torch');
+    const cauldron = scene.entitySprites.get('camp.fireplace'), cauldronBinding = scene.objectAnimations.get('camp.fireplace');
+    const light = () => scene.children.getByName('pointlesh-light:camp.torch');
+    const poses = [];
+    for (let i = 0; i < 9; i++) {
+      poses.push({ frame: sprite.frame.name, light: light().alpha }); binding.update(125); cauldronBinding.update(125);
+    }
+    const manifest = api.manifest, torch = manifest.scenes.camp.layers[0].prefabs.find((entry: any) => entry.id === 'camp.torch');
+    torch.pointlesh.properties.animationPlaying = false; api.setManifest(manifest);
+    const frozen = { frame: sprite.frame.name, light: light().alpha }, cauldronBefore = cauldron.frame.name;
+    binding.update(500); cauldronBinding.update(125);
+    const paused = sprite.frame.name === frozen.frame && light().alpha === frozen.light;
+    const cauldronContinues = cauldron.frame.name !== cauldronBefore;
+    torch.pointlesh.properties.animationPlaying = true; api.setManifest(manifest);
+    const result = { poses, paused, cauldronContinues, width: sprite.displayWidth, height: sprite.displayHeight,
+      lightBehindFlame: light().depth < sprite.depth, lightAtTorch: Math.abs(light().x - sprite.x) < .01 && light().y === sprite.y - 15 };
+    scene.changeRoom('village');
+    const cleaned = !scene.children.getByName('pointlesh-light:camp.torch') && !scene.objectAnimations.has('camp.torch');
+    scene.changeRoom('camp'); scene.game.loop.wake();
+    return { ...result, cleaned };
+  });
+  expect(result.poses.map(pose => pose.frame)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 0]);
+  expect(result.poses[2].light).toBeCloseTo(.7); expect(result.poses[4].light).toBeCloseTo(.14);
+  expect(result.width).toBeCloseTo(80 * .37 * 960 / 1182);
+  expect(result.height).toBeCloseTo(104 * .63 * 540 / 664);
+  expect(result).toMatchObject({ paused: true, cauldronContinues: true, lightBehindFlame: true, lightAtTorch: true, cleaned: true });
+  await selectInstance(page, 'camp.torch'); await expandProperties(page, 'Animation');
+  await expect(page.getByRole('combobox', { name: 'Object animation', exact: true })).toHaveValue('burn');
+  await expect(page.getByRole('checkbox', { name: 'Loop animation', exact: true })).toBeChecked();
+  await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
+  await page.screenshot({ path: testInfo.outputPath('camp-torch.png') });
 });

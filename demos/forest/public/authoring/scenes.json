@@ -4538,6 +4538,31 @@
                 },
                 "behaviors": []
               }
+            },
+            {
+              "id": "camp.torch",
+              "prefabId": "forest.object.fireplace",
+              "name": "Camp torch",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 40.609137055837564,
+                  "y": 223.64457831325302,
+                  "scaleX": 0.30050761421319794,
+                  "scaleY": 0.5123493975903615
+                }
+              },
+              "pointlesh": {
+                "properties": {
+                  "description": "A guttering torch lights the camp gate.",
+                  "lightRadiusX": 95,
+                  "lightRadiusY": 110,
+                  "lightOffsetY": -15,
+                  "lightIntensity": 0.7
+                },
+                "behaviors": []
+              }
             }
           ],
           "objects": [],

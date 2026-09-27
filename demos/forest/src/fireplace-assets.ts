@@ -10,6 +10,9 @@ export const COTTAGE_FIREPLACE_PLACEMENT = { x: 844 * 960 / 1182, y: 372 * 540 /
 export const CAMP_FIREPLACE_ID = 'camp.fireplace';
 export const CAMP_FIREPLACE_PLACEMENT = { x: 247 * 960 / 1182, y: 420 * 540 / 664,
   scaleX: 1.6 * 960 / 1182, scaleY: .8 * 540 / 664, anchorY: .12 };
+export const CAMP_TORCH_ID = 'camp.torch';
+export const CAMP_TORCH_PLACEMENT = { x: 50 * 960 / 1182, y: 275 * 540 / 664,
+  scaleX: .37 * 960 / 1182, scaleY: .63 * 540 / 664 };
 const fireplaceLight = {
   lightEnabled: true, lightColor: '#ffa34d', lightRadiusX: 132, lightRadiusY: 119,
   lightOffsetX: 0, lightOffsetY: -7, lightIntensity: .8,
@@ -47,9 +50,12 @@ export const fireplaceAssetDefinitions: Record<string, AiAssetDefinition> = {
       notes: 'Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in docs/art-prompts.md.' } },
     tags: ['forest', 'background', 'house'] },
   'background.camp': { id: 'background.camp', kind: 'image', dimensions: { width: 1182, height: 664 },
-    prompt: 'The original orc camp with its extracted cage door and only the painted flames beneath the cauldron removed. Preserve the cauldron, tripod, stone ring, cage and all other scenery.',
-    activeVersion: 'hearth', versions: { hearth: { ...version('art/camp-unlit.png', 'Local clean plate beneath the camp cauldron, retaining the extracted cage-door background.'),
-      notes: 'Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in docs/art-prompts.md.' } },
+    prompt: 'The original orc camp with its extracted cage door and painted cauldron and torch flames removed. Preserve the torch holder, cauldron, tripod, stone ring, cage and all other scenery.',
+    activeVersion: 'torch', versions: { hearth: { ...version('art/camp-unlit.png', 'Local clean plate beneath the camp cauldron, retaining the extracted cage-door background.'),
+      notes: 'Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in docs/art-prompts.md.' },
+    torch: { ...version('art/camp-ambient.png', 'The camp clean plate with only the remaining torch flame removed, preserving the holder, cauldron patch and extracted cage door.'),
+      name: 'torch', createdAt: '2026-09-27T00:00:00.000Z',
+      notes: 'Built-in image generation from the original torch crop. Only the small flame patch is imported; full prompt in docs/art-prompts.md.' } },
     tags: ['forest', 'background', 'camp'] },
 };
 
@@ -57,9 +63,11 @@ export function addFireplaceAssets(manifest: AiAssetManifest): void {
   // Upgrade only the shipped camp plate, retaining its old version and any
   // unrelated asset edits. A user-promoted background must stay selected.
   const camp = manifest.assets['background.camp'];
-  if (camp?.versions[camp.activeVersion ?? '']?.file === 'art/camp-doorless.png') {
-    camp.versions.hearth ??= structuredClone(fireplaceAssetDefinitions['background.camp']!.versions.hearth!);
-    camp.activeVersion = 'hearth';
+  if (camp && ['art/camp-doorless.png', 'art/camp-unlit.png'].includes(camp.versions[camp.activeVersion ?? '']?.file ?? '')) {
+    for (const [name, value] of Object.entries(fireplaceAssetDefinitions['background.camp']!.versions)) {
+      camp.versions[name] ??= structuredClone(value);
+    }
+    camp.activeVersion = 'torch';
   }
   for (const [id, asset] of Object.entries(fireplaceAssetDefinitions)) {
     manifest.assets[id] ??= structuredClone(asset);
@@ -107,6 +115,12 @@ export function addFireplace(source: SceneDesignerManifest): SceneDesignerManife
     }
   }
   if (camp?.layers.length) {
+    if (!camp.layers.some(layer => layer.prefabs?.some(instance => instance.id === CAMP_TORCH_ID))) {
+      (camp.layers[0]!.prefabs ??= []).push(createPointleshInstance({ id: CAMP_TORCH_ID, prefabId: FIREPLACE_PREFAB, name: 'Camp torch',
+        properties: { description: 'A guttering torch lights the camp gate.', lightRadiusX: 95, lightRadiusY: 110,
+          lightOffsetY: -15, lightIntensity: .7 },
+        overrides: { object: CAMP_TORCH_PLACEMENT } }));
+    }
     if (!camp.layers.some(layer => layer.prefabs?.some(instance => instance.id === CAMP_FIREPLACE_ID))) {
       (camp.layers[0]!.prefabs ??= []).push(createPointleshInstance({ id: CAMP_FIREPLACE_ID, prefabId: FIREPLACE_PREFAB, name: 'Cauldron fire',
         properties: { description: 'Crackling flames heat the orcs’ supper.', lightRadiusX: 133, lightRadiusY: 102,

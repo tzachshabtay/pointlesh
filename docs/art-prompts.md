@@ -222,3 +222,15 @@ Final edit prompt:
 ```text
 Use case: precise-object-edit. Asset type: clean background plate for a pixel-art point-and-click game. Input image: edit target, an exact crop of the orc camp cauldron. Remove ONLY the bright orange/yellow flames, floating fire sparks and glowing coals beneath the hanging black iron cauldron. Replace those flames and embers with dark charcoal, charred logs and shaded earth. Preserve the EXACT composition, cauldron shape and texture, tripod legs, hook, surrounding stone ring, wooden table, every other object, existing pixel-art scale, palette, camera and crop. Preserve all cauldron pixels, including its original warm orange reflections; do not redraw or move it. Keep surrounding ground and stones as they are. This will be covered by animated flames and light in the game. No active flame or luminous ember remains. No new objects. Keep the original 240:184 aspect ratio and matching registration.
 ```
+
+## Orc camp torch
+
+Mode: **built-in image generation**, editing the 80×120 crop at `(16,184)` of `camp-unlit.png`. Final background: `demos/forest/public/art/camp-ambient.png` (1182×664), retaining both earlier cauldron and cage-door clean plates.
+
+`pack-camp-torch.mjs` registers the generated wooden clean plate 12 source pixels lower so its replacement holder never enters the patch, and imports only `(37,214)` through `(64,267)`. The original iron holder and all surrounding scenery remain untouched. `camp.torch` reuses `fireplace.burn` at a narrow torch scale, with independently editable playback and synchronized reflected light on the gate and palisade.
+
+Final edit prompt:
+
+```text
+Use case: precise-object-edit. Asset type: clean background plate for a pixel-art point-and-click game. Input image: edit target, an exact 80:120 crop of the torch on the palisade beside the orc camp gate. Remove ONLY the bright yellow/orange torch flame and floating fire sparks above its iron bowl. Reconstruct the original dark vertical wooden palisade slats behind the flame, matching their grain, straight vertical position and existing warm ambient lighting. Preserve the iron torch bowl, rim, wall bracket, support shaft, adjacent gate, all other pixels, original composition, camera and pixel-art style. Do not extinguish or recolor existing reflected light on the wood: dynamic lighting will be added in the game. No flame, sparks or luminous embers remain. No new objects, text, border or transparency. Keep the exact original 80:120 aspect ratio and registration.
+```

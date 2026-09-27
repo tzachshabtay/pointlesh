@@ -5478,7 +5478,7 @@
         "height": 664
       },
       "prompt": "Original orc camp with only the movable door leaf and padlock removed. Keep the stationary cage, all other scenery and lighting unchanged; a dark empty interior behind the door.",
-      "activeVersion": "hearth",
+      "activeVersion": "torch",
       "versions": {
         "rescue": {
           "name": "rescue",
@@ -5495,6 +5495,14 @@
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
           "notes": "Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in docs/art-prompts.md."
+        },
+        "torch": {
+          "name": "torch",
+          "file": "art/camp-ambient.png",
+          "prompt": "The camp clean plate with only the remaining torch flame removed, preserving the holder, cauldron patch and extracted cage door.",
+          "model": "imagegen",
+          "createdAt": "2026-09-27T00:00:00.000Z",
+          "notes": "Built-in image generation from the original torch crop. Only the small flame patch is imported; full prompt in docs/art-prompts.md."
         }
       },
       "tags": [

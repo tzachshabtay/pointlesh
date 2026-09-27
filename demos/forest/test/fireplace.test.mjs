@@ -9,9 +9,9 @@ const { assets, scenes, atlasRooms } = await tsImport('../src/content.ts', impor
 const { addFireplace, addFireplaceAssets } = await tsImport('../src/fireplace-assets.ts', import.meta.url);
 const png = async file => PNG.sync.read(await readFile(new URL('../public/art/' + file, import.meta.url)));
 
-test('all three fires share an editable looping prefab and repeat upgrades preserve authored changes', () => {
-  for (const id of ['pub', 'house', 'camp']) {
-    const object = resolvePointleshScene(scenes, id).objects.find(object => object.id === `${id}.fireplace`);
+test('all four fires share an editable looping prefab and repeat upgrades preserve authored changes', () => {
+  for (const [id, instance] of [['pub', 'pub.fireplace'], ['house', 'house.fireplace'], ['camp', 'camp.fireplace'], ['camp', 'camp.torch']]) {
+    const object = resolvePointleshScene(scenes, id).objects.find(object => object.id === instance);
     assert.equal(object.kind, 'object'); assert.equal(object.properties.animationKey, 'burn');
     assert.equal(object.prefabId, 'forest.object.fireplace');
     assert.equal(object.properties.animationLoop, true); assert.equal(object.properties.ignoreScaling, true);
@@ -29,6 +29,8 @@ test('all three fires share an editable looping prefab and repeat upgrades prese
   kettle.vertices[0].x += 2;
   const camp = edited.scenes.camp.layers[0];
   camp.prefabs.find(instance => instance.id === 'camp.fireplace').overrides.object.y += 5;
+  camp.prefabs.find(instance => instance.id === 'camp.torch').overrides.object.x += 5;
+  camp.prefabs.find(instance => instance.id === 'camp.torch').pointlesh.properties.lightIntensity = .4;
   camp.areas.find(area => area.id === 'camp.hearth-cauldron::area').pointlesh.properties.baseline += 5;
   catalog.assets.fireplace.activeVersion = 'custom';
   catalog.assets.fireplace.linkedAnimationAssets.burn.assetId = 'custom-fire';
@@ -42,11 +44,16 @@ test('all three fires share an editable looping prefab and repeat upgrades prese
 
 test('camp clean-plate migration retains previous versions and never replaces a custom promotion', () => {
   const catalog = structuredClone(assets), camp = catalog.assets['background.camp'];
-  camp.activeVersion = 'rescue'; delete camp.versions.hearth;
+  camp.activeVersion = 'rescue'; delete camp.versions.hearth; delete camp.versions.torch;
   const original = structuredClone(camp.versions.rescue);
   addFireplaceAssets(catalog);
-  assert.equal(camp.versions[camp.activeVersion].file, 'art/camp-unlit.png');
+  assert.equal(camp.versions[camp.activeVersion].file, 'art/camp-ambient.png');
   assert.deepEqual(camp.versions.rescue, original);
+  camp.activeVersion = 'hearth'; delete camp.versions.torch;
+  const hearth = structuredClone(camp.versions.hearth);
+  addFireplaceAssets(catalog);
+  assert.equal(camp.versions[camp.activeVersion].file, 'art/camp-ambient.png');
+  assert.deepEqual(camp.versions.hearth, hearth);
   camp.versions.custom = { ...original, name: 'custom', file: 'art/custom-camp.png' }; camp.activeVersion = 'custom';
   const before = structuredClone(catalog); addFireplaceAssets(catalog); assert.deepEqual(catalog, before);
 });
@@ -131,4 +138,17 @@ test('the camp clean plate preserves its cage, tripod and scenery outside the fl
     }
   }
   assert.ok(changed > 5000);
+});
+
+test('the torch clean plate preserves its holder and all previous camp artwork', async () => {
+  const original = await png('camp-unlit.png'), clean = await png('camp-ambient.png');
+  assert.deepEqual([clean.width, clean.height], [1182, 664]);
+  let changed = 0;
+  for (let y = 0; y < clean.height; y++) for (let x = 0; x < clean.width; x++) {
+    const offset = (y * clean.width + x) * 4;
+    if (!original.data.subarray(offset, offset + 4).equals(clean.data.subarray(offset, offset + 4))) {
+      changed++; assert.ok(x >= 37 && x < 64 && y >= 214 && y < 267, `Scenery changed at ${x},${y}`);
+    }
+  }
+  assert.ok(changed > 1000);
 });
