@@ -3199,8 +3199,10 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 471,
-                  "y": 462
+                  "x": 475.0421052631579,
+                  "y": 515.5578947368422,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -3217,7 +3219,9 @@
               "overrides": {
                 "object": {
                   "x": 387,
-                  "y": 418
+                  "y": 418,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -3232,14 +3236,14 @@
               "id": "village.entry.from-pub",
               "prefabId": "forest.point.entry",
               "name": "From The Copper Tankard",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 221
+                  "value": 212.99471490340403
                 },
                 "y": {
-                  "value": 403
+                  "value": 437.17436460354213
                 }
               }
             },
@@ -3247,14 +3251,14 @@
               "id": "village.entry.from-house",
               "prefabId": "forest.point.entry",
               "name": "From Borin’s Cottage",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 752
+                  "value": 705.4569382619167
                 },
                 "y": {
-                  "value": 403
+                  "value": 460.0471502471843
                 }
               }
             },
@@ -3266,10 +3270,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 508
+                  "value": 463.3367371816581
                 },
                 "y": {
-                  "value": 403
+                  "value": 394.0794996717723
                 }
               }
             },
@@ -3299,43 +3303,58 @@
               "vertices": [
                 {
                   "id": "floor-0",
-                  "x": 35,
-                  "y": 403
+                  "x": 129.37594687168107,
+                  "y": 491.14149124486
                 },
                 {
                   "id": "floor-1",
-                  "x": 124,
-                  "y": 371
+                  "x": 263.9995088177978,
+                  "y": 429.85763095595615
                 },
                 {
                   "id": "floor-2",
-                  "x": 360,
-                  "y": 355
+                  "x": 318.4909567095184,
+                  "y": 412.44813715605324
+                },
+                {
+                  "id": "vertex-mu96tr5b-a8iv8q",
+                  "x": 422.46240332776597,
+                  "y": 456.8631240609356
+                },
+                {
+                  "id": "vertex-mu96tiss-yfa73n",
+                  "x": 460.8208011092553,
+                  "y": 351.8822459221226
+                },
+                {
+                  "id": "vertex-mu96u2pf-av513z",
+                  "x": 516.7222780777605,
+                  "y": 455.71268628387713
                 },
                 {
                   "id": "floor-3",
-                  "x": 710,
-                  "y": 355
+                  "x": 645.7464983509732,
+                  "y": 459.6826622922837
                 },
                 {
                   "id": "floor-4",
-                  "x": 835,
-                  "y": 381
+                  "x": 739.1270268380265,
+                  "y": 464.4620641610489
                 },
                 {
                   "id": "floor-5",
-                  "x": 925,
-                  "y": 403
+                  "x": 739.1052807264542,
+                  "y": 494.97114872868065
                 },
                 {
                   "id": "floor-6",
-                  "x": 925,
-                  "y": 494
+                  "x": 730.3220508713202,
+                  "y": 518.3930950090381
                 },
                 {
                   "id": "floor-7",
-                  "x": 850,
-                  "y": 515
+                  "x": 643.8468833219015,
+                  "y": 531.5641276260035
                 },
                 {
                   "id": "floor-8",
@@ -3416,22 +3435,22 @@
               "vertices": [
                 {
                   "id": "foreground-0",
-                  "x": 0,
-                  "y": 160
+                  "x": 6.97123268771696,
+                  "y": 422.1118653956154
                 },
                 {
                   "id": "foreground-1",
-                  "x": 57,
-                  "y": 162,
+                  "x": 25.323146049306466,
+                  "y": 420.34099237098326,
                   "curve": {
-                    "cx": 90,
-                    "cy": 248
+                    "cx": 55.36787208129063,
+                    "cy": 428.3529193128457
                   }
                 },
                 {
                   "id": "foreground-2",
-                  "x": 65,
-                  "y": 338,
+                  "x": 52.363399478092205,
+                  "y": 433.36037365150975,
                   "curve": {
                     "cx": 60,
                     "cy": 435
@@ -3439,17 +3458,17 @@
                 },
                 {
                   "id": "foreground-3",
-                  "x": 102,
-                  "y": 504,
+                  "x": 52.144604047305705,
+                  "y": 436.84069256422646,
                   "curve": {
-                    "cx": 83,
-                    "cy": 525
+                    "cx": 133.49739060169125,
+                    "cy": 481.0323297048803
                   }
                 },
                 {
                   "id": "foreground-4",
-                  "x": 149,
-                  "y": 540
+                  "x": 113.41028281048494,
+                  "y": 480.02797431532
                 },
                 {
                   "id": "foreground-5",
@@ -3473,7 +3492,7 @@
                   "minZoom": 1.2,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 505
+                  "baseline": 535
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -3769,7 +3788,9 @@
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462
+                  "y": 462,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -3786,7 +3807,9 @@
               "overrides": {
                 "object": {
                   "x": 215.76127786040843,
-                  "y": 291.2076656192551
+                  "y": 291.2076656192551,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -3805,8 +3828,10 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 245,
-                  "y": 420
+                  "x": 279.37938142375793,
+                  "y": 419.99999999999994,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -4003,9 +4028,9 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
+                  "minScale": 1,
+                  "maxScale": 1.5,
+                  "minZoom": 1.1,
                   "maxZoom": 1,
                   "smoothing": 5,
                   "baseline": 160
@@ -4383,7 +4408,9 @@
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462
+                  "y": 462,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -4399,8 +4426,8 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 516,
-                  "y": 297
+                  "x": 525.715440134528,
+                  "y": 269.7967676233218
                 }
               },
               "pointlesh": {
@@ -4420,8 +4447,8 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 127,
-                  "y": 375
+                  "x": 134.7671090757514,
+                  "y": 401.21399313066075
                 }
               },
               "pointlesh": {
@@ -4560,58 +4587,63 @@
               "vertices": [
                 {
                   "id": "floor-0",
-                  "x": 74.69876719568336,
-                  "y": 458.47115488785016
+                  "x": 113.72816083660008,
+                  "y": 481.57183017189953
                 },
                 {
                   "id": "vertex-mtrw9d9p-l3rbvq",
-                  "x": 189.7738562591219,
-                  "y": 395.0106278308068
+                  "x": 233.11272379729104,
+                  "y": 432.8629284839376
                 },
                 {
                   "id": "vertex-mtrw97fz-3mkiw5",
-                  "x": 127.15946956283915,
-                  "y": 362.8572941219049
+                  "x": 97.47610628407848,
+                  "y": 369.70511069557125
                 },
                 {
                   "id": "vertex-mtrw924b-9yg1zu",
-                  "x": 144.00777062093644,
-                  "y": 349.3366412216503
+                  "x": 93.28545395646336,
+                  "y": 361.21531822760045
                 },
                 {
                   "id": "floor-1",
-                  "x": 266.77262908833444,
-                  "y": 416.1641368498213
+                  "x": 246.41075970384102,
+                  "y": 428.51242712294476
                 },
                 {
                   "id": "floor-2",
-                  "x": 373.3863145441672,
-                  "y": 368.78027664722896
+                  "x": 365.8683578095794,
+                  "y": 397.5250978475731
                 },
                 {
                   "id": "floor-3",
-                  "x": 698.5865569054505,
-                  "y": 368.1812803074733
+                  "x": 656.2116149299799,
+                  "y": 394.6598683365165
                 },
                 {
                   "id": "floor-4",
-                  "x": 819,
-                  "y": 390
+                  "x": 746.5640396993189,
+                  "y": 427.42720294742395
                 },
                 {
                   "id": "floor-5",
-                  "x": 925,
-                  "y": 403
+                  "x": 764.3059020723605,
+                  "y": 469.4758847114153
                 },
                 {
                   "id": "floor-6",
-                  "x": 925,
-                  "y": 494
+                  "x": 783.0293165682544,
+                  "y": 506.90125468371446
+                },
+                {
+                  "id": "vertex-mu8tl3ez-9dlay6",
+                  "x": 848.2873906446744,
+                  "y": 506.88425186792836
                 },
                 {
                   "id": "floor-7",
-                  "x": 850,
-                  "y": 515
+                  "x": 905.1545273303328,
+                  "y": 514.1565457494876
                 },
                 {
                   "id": "floor-8",
@@ -4620,8 +4652,8 @@
                 },
                 {
                   "id": "floor-9",
-                  "x": 35,
-                  "y": 494
+                  "x": 54.513417608097356,
+                  "y": 511.1792017861508
                 }
               ],
               "id": "house.floor::area",
@@ -4636,7 +4668,7 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "minScale": 1.22,
-                  "maxScale": 2,
+                  "maxScale": 1.5,
                   "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
@@ -4797,23 +4829,40 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 840,
-                  "y": 301
+                  "x": 859.7391493540888,
+                  "y": 161.45594859685943,
+                  "curve": {
+                    "cx": 869.5642243697185,
+                    "cy": 136.8932610577851
+                  }
+                },
+                {
+                  "id": "vertex-mu8tt853-iwmtmx",
+                  "x": 897.0744344134818,
+                  "y": 127.0681860421554,
+                  "curve": {
+                    "cx": 922.619629454119,
+                    "cy": 134.92824605465916
+                  }
                 },
                 {
                   "id": "b",
-                  "x": 908,
-                  "y": 301
+                  "x": 928.5146744634968,
+                  "y": 158.5084260921705,
+                  "curve": {
+                    "cx": 958.972407011949,
+                    "cy": 170.2985161109262
+                  }
                 },
                 {
                   "id": "c",
-                  "x": 908,
-                  "y": 365
+                  "x": 930.4796894666229,
+                  "y": 363.8524939188318
                 },
                 {
                   "id": "d",
-                  "x": 840,
-                  "y": 365
+                  "x": 850.8965818400221,
+                  "y": 341.2548213828834
                 }
               ],
               "id": "house-exit::area",
@@ -5042,7 +5091,9 @@
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462
+                  "y": 462,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -5088,10 +5139,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 471
+                  "value": 706.0180350034552
                 },
                 "y": {
-                  "value": 494
+                  "value": 531.0160645608051
                 }
               }
             },
@@ -5103,10 +5154,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 111
+                  "value": 181.33256468484416
                 },
                 "y": {
-                  "value": 448
+                  "value": 499.03185533846556
                 }
               }
             },
@@ -5190,14 +5241,49 @@
                   "y": 448
                 },
                 {
+                  "id": "vertex-muhqfy7y-dii2w9",
+                  "x": 409.4582342324769,
+                  "y": 445.8831236917847
+                },
+                {
+                  "id": "vertex-muhqfxcg-ebn3bi",
+                  "x": 306.66807926799936,
+                  "y": 351.07667008377143
+                },
+                {
                   "id": "floor-2",
-                  "x": 274,
-                  "y": 371
+                  "x": 318.6436313026958,
+                  "y": 345.0888940664232
                 },
                 {
                   "id": "floor-3",
-                  "x": 360,
-                  "y": 398
+                  "x": 364.5499141023654,
+                  "y": 387.00332618786064
+                },
+                {
+                  "id": "vertex-muhqg8ju-u2scog",
+                  "x": 429.41748762363756,
+                  "y": 410.9544302572535
+                },
+                {
+                  "id": "vertex-muhqh0c3-jdqk46",
+                  "x": 475.66532427159177,
+                  "y": 394.6800970907811
+                },
+                {
+                  "id": "vertex-muhqhm7u-2q2pr1",
+                  "x": 489.5294689830696,
+                  "y": 390.87907545274
+                },
+                {
+                  "id": "vertex-muhqgc87-23ln7a",
+                  "x": 563.4703938016137,
+                  "y": 347.8338983933212
+                },
+                {
+                  "id": "vertex-muhqg5jg-0mq5ge",
+                  "x": 576.2393582261918,
+                  "y": 351.76281052396064
                 },
                 {
                   "id": "floor-4",
@@ -5215,34 +5301,54 @@
                   "y": 438
                 },
                 {
+                  "id": "vertex-muhqfab0-fd9lsy",
+                  "x": 1137.663816905008,
+                  "y": 392.327448525751
+                },
+                {
+                  "id": "vertex-muhqf515-e4ib65",
+                  "x": 988.5598929398309,
+                  "y": 353.30024695097313
+                },
+                {
+                  "id": "vertex-muhqezy7-3b8iwz",
+                  "x": 994.5640777974891,
+                  "y": 343.29327218820964
+                },
+                {
                   "id": "floor-7",
-                  "x": 1170,
-                  "y": 419
+                  "x": 1166.0698598774325,
+                  "y": 390.95710384894517
                 },
                 {
                   "id": "floor-8",
-                  "x": 1365,
-                  "y": 365
+                  "x": 1350.6348588556543,
+                  "y": 331.09818526141385
                 },
                 {
                   "id": "floor-9",
-                  "x": 1450,
-                  "y": 389
+                  "x": 1367.594885788788,
+                  "y": 339.07937440641797
+                },
+                {
+                  "id": "vertex-muhqe50i-dmo0d1",
+                  "x": 1175.0486976655623,
+                  "y": 399.93594163707485
                 },
                 {
                   "id": "floor-10",
-                  "x": 1585,
-                  "y": 443
+                  "x": 1271.820616048738,
+                  "y": 479.74783308711665
                 },
                 {
                   "id": "floor-11",
-                  "x": 1585,
-                  "y": 515
+                  "x": 1339.8605219362373,
+                  "y": 536.6864557163859
                 },
                 {
                   "id": "floor-12",
-                  "x": 35,
-                  "y": 515
+                  "x": 228.64051730303976,
+                  "y": 539.0100045431417
                 }
               ],
               "id": "forest.floor::area",
@@ -5559,23 +5665,23 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 437,
-                  "y": 455
+                  "x": 250.83644911744514,
+                  "y": 507.67729606776527
                 },
                 {
                   "id": "b",
-                  "x": 505,
-                  "y": 455
+                  "x": 1235.8399144498217,
+                  "y": 505.11338012100043
                 },
                 {
                   "id": "c",
-                  "x": 505,
-                  "y": 519
+                  "x": 1237.9498036143468,
+                  "y": 535.2694383854886
                 },
                 {
                   "id": "d",
-                  "x": 437,
-                  "y": 519
+                  "x": 250.39243763187255,
+                  "y": 534.9355951632535
                 }
               ],
               "id": "forest-exit::area",
@@ -5741,7 +5847,9 @@
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462
+                  "y": 462,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -5787,10 +5895,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 68
+                  "value": 436.57328783947673
                 },
                 "y": {
-                  "value": 484
+                  "value": 497.2888893523861
                 }
               }
             },
@@ -6174,23 +6282,23 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 34,
-                  "y": 424
+                  "x": 164.6175698545159,
+                  "y": 462.76392395682404
                 },
                 {
                   "id": "b",
-                  "x": 102,
-                  "y": 424
+                  "x": 655.7016988043003,
+                  "y": 467.8158327327943
                 },
                 {
                   "id": "c",
-                  "x": 102,
-                  "y": 488
+                  "x": 659.9151687996074,
+                  "y": 525.9617186680305
                 },
                 {
                   "id": "d",
-                  "x": 34,
-                  "y": 488
+                  "x": 164.6175698545159,
+                  "y": 526.7639239568241
                 }
               ],
               "id": "mine-exit::area",
@@ -6257,7 +6365,9 @@
               "overrides": {
                 "object": {
                   "x": 471,
-                  "y": 462
+                  "y": 462,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -6269,12 +6379,14 @@
               "id": "camp.npc.guard",
               "prefabId": "forest.character.guard",
               "name": "Grub the guard",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "object": {
                   "x": 568,
-                  "y": 412
+                  "y": 412,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -6289,12 +6401,14 @@
               "id": "camp.npc.king",
               "prefabId": "forest.character.king",
               "name": "King Aldric",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 658,
-                  "y": 332
+                  "x": 673.3755381387163,
+                  "y": 336.41772230283294,
+                  "scaleX": 1,
+                  "scaleY": 1
                 }
               },
               "pointlesh": {
@@ -6309,7 +6423,7 @@
               "id": "camp.walk.cauldron",
               "prefabId": "forest.point.interaction",
               "name": "Walk to Stew cauldron",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -6324,7 +6438,7 @@
               "id": "camp.walk.cage",
               "prefabId": "forest.point.interaction",
               "name": "Walk to King Aldric’s cage",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -6343,10 +6457,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 90
+                  "value": 473.48902342802154
                 },
                 "y": {
-                  "value": 494
+                  "value": 503.51511366656666
                 }
               }
             },
@@ -6354,7 +6468,7 @@
               "id": "camp.guard.cage",
               "prefabId": "forest.point.interaction",
               "name": "Grub · cage post",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -6369,14 +6483,14 @@
               "id": "camp.guard.cauldron",
               "prefabId": "forest.point.interaction",
               "name": "Grub · drink at cauldron",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 220
+                  "value": 207.29229239519333
                 },
                 "y": {
-                  "value": 350
+                  "value": 409.7926256404054
                 }
               }
             },
@@ -6473,7 +6587,7 @@
           "areas": [
             {
               "tag": "pointlesh:area",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [
@@ -6589,106 +6703,6 @@
               }
             },
             {
-              "tag": "pointlesh:area",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "foreground-0",
-                  "x": 0,
-                  "y": 465,
-                  "curve": {
-                    "cx": 62,
-                    "cy": 458
-                  }
-                },
-                {
-                  "id": "foreground-1",
-                  "x": 143,
-                  "y": 471
-                },
-                {
-                  "id": "foreground-2",
-                  "x": 172,
-                  "y": 493,
-                  "curve": {
-                    "cx": 105,
-                    "cy": 500
-                  }
-                },
-                {
-                  "id": "foreground-3",
-                  "x": 132,
-                  "y": 540
-                },
-                {
-                  "id": "foreground-4",
-                  "x": 0,
-                  "y": 540
-                }
-              ],
-              "id": "camp.foreground::area",
-              "pointlesh": {
-                "kind": "area",
-                "properties": {
-                  "enabled": true,
-                  "walkable": false,
-                  "scaleEnabled": false,
-                  "zoomEnabled": false,
-                  "walkBehindEnabled": true,
-                  "scaleAxis": "y",
-                  "zoomAxis": "y",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
-                  "maxZoom": 1,
-                  "smoothing": 5,
-                  "baseline": 505
-                },
-                "behaviors": [],
-                "propertySchema": {
-                  "minScale": {
-                    "type": "number",
-                    "label": "Scale at start",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "maxScale": {
-                    "type": "number",
-                    "label": "Scale at end",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "minZoom": {
-                    "type": "number",
-                    "label": "Zoom at start",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "maxZoom": {
-                    "type": "number",
-                    "label": "Zoom at end",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "smoothing": {
-                    "type": "number",
-                    "label": "Camera response",
-                    "min": 0,
-                    "step": 0.5
-                  },
-                  "baseline": {
-                    "type": "number",
-                    "label": "Baseline",
-                    "step": 1
-                  }
-                },
-                "name": "Foreground occlusion",
-                "entityId": "camp.foreground"
-              }
-            },
-            {
               "tag": "pointlesh:hotspot",
               "visible": true,
               "locked": false,
@@ -6696,23 +6710,23 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 272,
-                  "y": 363
+                  "x": 167.3919769416319,
+                  "y": 253.36274506382574
                 },
                 {
                   "id": "b",
-                  "x": 340,
-                  "y": 363
+                  "x": 235.3919769416319,
+                  "y": 253.36274506382574
                 },
                 {
                   "id": "c",
-                  "x": 340,
-                  "y": 427
+                  "x": 235.3919769416319,
+                  "y": 317.36274506382574
                 },
                 {
                   "id": "d",
-                  "x": 272,
-                  "y": 427
+                  "x": 167.3919769416319,
+                  "y": 317.36274506382574
                 }
               ],
               "id": "cauldron::area",
@@ -6762,23 +6776,23 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 56,
-                  "y": 439
+                  "x": 262.74501394893815,
+                  "y": 467.9272859023206
                 },
                 {
                   "id": "b",
-                  "x": 124,
-                  "y": 439
+                  "x": 664.198746995659,
+                  "y": 462.91282599794346
                 },
                 {
                   "id": "c",
-                  "x": 124,
-                  "y": 503
+                  "x": 665.9003520487365,
+                  "y": 530.1262255945119
                 },
                 {
                   "id": "d",
-                  "x": 56,
-                  "y": 503
+                  "x": 262.74501394893815,
+                  "y": 531.9272859023206
                 }
               ],
               "id": "camp-exit::area",
@@ -6823,7 +6837,7 @@
             {
               "id": "camp.cauldron-ground::area",
               "tag": "pointlesh:area",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [

@@ -79,10 +79,10 @@
       "kind": "image",
       "prompt": "A small pixel-art dwarf named borin, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 48,
-        "height": 64
+        "width": 100,
+        "height": 140
       },
-      "activeVersion": "promoted-1788920961726",
+      "activeVersion": "promoted-1790377204354",
       "versions": {
         "original": {
           "name": "original",
@@ -124,6 +124,23 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "promoted-1788920660742",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790377204354": {
+          "name": "promoted-1790377204354",
+          "file": "art/borin.promoted-1790377204354.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-25T23:00:04.403Z",
+          "model": "gpt-image-2.5-flare",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-flare",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788920961726",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -192,10 +209,10 @@
       "kind": "image",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 48,
-        "height": 64
+        "width": 100,
+        "height": 140
       },
-      "activeVersion": "promoted-1789163947172",
+      "activeVersion": "promoted-1790380194398",
       "versions": {
         "original": {
           "name": "original",
@@ -220,6 +237,23 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790380194398": {
+          "name": "promoted-1790380194398",
+          "file": "art/elder.promoted-1790380194398.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-25T23:49:54.438Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789163947172",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -280,10 +314,10 @@
       "kind": "image",
       "prompt": "A small pixel-art girl dwarf named innkeeper, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 48,
-        "height": 64
+        "width": 100,
+        "height": 140
       },
-      "activeVersion": "promoted-1789164458842",
+      "activeVersion": "promoted-1790380618845",
       "versions": {
         "original": {
           "name": "original",
@@ -308,6 +342,23 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790380618845": {
+          "name": "promoted-1790380618845",
+          "file": "art/innkeeper.promoted-1790380618845.png",
+          "prompt": "A small pixel-art girl dwarf named innkeeper, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-25T23:56:58.885Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789164458842",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -366,12 +417,12 @@
     "miner": {
       "id": "miner",
       "kind": "image",
-      "prompt": "A small pixel-art dwarf miner, full body, transparent background. One standing, front-facing idle pose.",
+      "prompt": "A small pixel-art dwarf miner, full body, transparent background. One standing, front-facing idle pose holding a glass of beer.",
       "dimensions": {
-        "width": 48,
-        "height": 64
+        "width": 100,
+        "height": 140
       },
-      "activeVersion": "promoted-1789164733318",
+      "activeVersion": "promoted-1790385888596",
       "versions": {
         "original": {
           "name": "original",
@@ -396,6 +447,23 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790385888596": {
+          "name": "promoted-1790385888596",
+          "file": "art/miner.promoted-1790385888596.png",
+          "prompt": "A small pixel-art dwarf miner, full body, transparent background. One standing, front-facing idle pose holding a glass of beer.",
+          "createdAt": "2026-09-26T01:24:48.617Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789164733318",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -456,10 +524,10 @@
       "kind": "image",
       "prompt": "A big pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 40,
-        "height": 80
+        "width": 120,
+        "height": 200
       },
-      "activeVersion": "promoted-1790287059346",
+      "activeVersion": "promoted-1790374400713",
       "versions": {
         "original": {
           "name": "original",
@@ -501,6 +569,23 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "promoted-1790286869709",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790374400713": {
+          "name": "promoted-1790374400713",
+          "file": "art/guard.promoted-1790374400713.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-25T22:13:20.752Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790287059346",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -579,12 +664,12 @@
     "king": {
       "id": "king",
       "kind": "image",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background. One standing, front-facing idle pose.",
+      "prompt": "A small pixel-art dwarf king with its crown, full body, transparent background. One standing, front-facing idle pose.",
       "dimensions": {
-        "width": 24,
-        "height": 32
+        "width": 100,
+        "height": 140
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790370274229",
       "versions": {
         "original": {
           "name": "original",
@@ -593,6 +678,23 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790370274229": {
+          "name": "promoted-1790370274229",
+          "file": "art/king.promoted-1790370274229.png",
+          "prompt": "A small pixel-art dwarf king with its crown, full body, transparent background. One standing, front-facing idle pose.",
+          "createdAt": "2026-09-25T21:04:34.342Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -637,7 +739,15 @@
         "forest",
         "character",
         "king"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "coin": {
       "id": "coin",
@@ -647,19 +757,69 @@
         "width": 16,
         "height": 16
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "promoted-1789849092913",
+      "versions": {
+        "promoted-1789849092913": {
+          "name": "promoted-1789849092913",
+          "file": "art/coin.promoted-1789849092913.png",
+          "prompt": "A small gleaming copper coin, pixel art, transparent background.",
+          "createdAt": "2026-09-19T20:18:12.945Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "notes": "Promoted from the AI asset designer."
+        }
+      },
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "rope": {
       "id": "rope",
       "kind": "image",
       "prompt": "A coil of sturdy dwarven climbing rope, pixel art, transparent background.",
       "dimensions": {
-        "width": 16,
-        "height": 16
+        "width": 32,
+        "height": 32
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "promoted-1789849208228",
+      "versions": {
+        "promoted-1789849208228": {
+          "name": "promoted-1789849208228",
+          "file": "art/rope.promoted-1789849208228.png",
+          "prompt": "A coil of sturdy dwarven climbing rope, pixel art, transparent background.",
+          "createdAt": "2026-09-19T20:20:08.262Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "notes": "Promoted from the AI asset designer."
+        }
+      },
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "mushroom": {
       "id": "mushroom",
@@ -960,12 +1120,12 @@
       "kind": "animation",
       "prompt": "idle animation of our dwarf, front facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -984,76 +1144,10 @@
             5,
             6,
             7
-          ],
-          "frameTimings": [
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 500,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            }
           ]
         }
       ],
-      "activeVersion": "promoted-1789163812890",
+      "activeVersion": "promoted-1790377313249",
       "versions": {
         "original": {
           "name": "original",
@@ -1133,6 +1227,24 @@
               "createdAt": "2026-09-13T22:30:03.643Z"
             }
           }
+        },
+        "promoted-1790377313249": {
+          "name": "promoted-1790377313249",
+          "file": "art/borin.idle-front.promoted-1790377313249.png",
+          "prompt": "idle animation of our dwarf, front facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-25T23:01:53.285Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789163812890",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1157,12 +1269,12 @@
       "kind": "animation",
       "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -1184,7 +1296,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1789163750111",
+      "activeVersion": "promoted-1790377473998",
       "versions": {
         "original": {
           "name": "original",
@@ -1229,6 +1341,24 @@
           "voiceSettings": {},
           "parentVersion": "promoted-1788921262685",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790377473998": {
+          "name": "promoted-1790377473998",
+          "file": "art/borin.idle-back.promoted-1790377473998.png",
+          "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-25T23:04:34.041Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789163750111",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1253,12 +1383,12 @@
       "kind": "animation",
       "prompt": "idle animation of our dwarf, left facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -1280,7 +1410,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1788921949417",
+      "activeVersion": "promoted-1790377563289",
       "versions": {
         "original": {
           "name": "original",
@@ -1325,6 +1455,24 @@
           "voiceSettings": {},
           "parentVersion": "promoted-1788921358155",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790377563289": {
+          "name": "promoted-1790377563289",
+          "file": "art/borin.idle-left.promoted-1790377563289.png",
+          "prompt": "idle animation of our dwarf, left facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-09-25T23:06:03.314Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921949417",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1349,12 +1497,12 @@
       "kind": "animation",
       "prompt": "Walking down/front animation for our dwarf.",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -1373,76 +1521,10 @@
             5,
             6,
             7
-          ],
-          "frameTimings": [
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            },
-            {
-              "delayMs": 100,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 0.95,
-              "scaleY": 0.95,
-              "rotation": 0
-            }
           ]
         }
       ],
-      "activeVersion": "promoted-1789163851662",
+      "activeVersion": "promoted-1790377646048",
       "versions": {
         "original": {
           "name": "original",
@@ -1486,6 +1568,59 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "promoted-1788921476620",
+          "notes": "Promoted from the AI asset designer.",
+          "scaledVariantSource": {
+            "dimensions": {
+              "width": 144,
+              "height": 192
+            },
+            "frameGrid": {
+              "frameWidth": 48,
+              "frameHeight": 64,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 8
+            }
+          },
+          "scaledVariants": {
+            "532dc6ee-892f-4497-a536-77f6c00b0c8e": {
+              "id": "532dc6ee-892f-4497-a536-77f6c00b0c8e",
+              "dimensions": {
+                "width": 288,
+                "height": 384
+              },
+              "frameGrid": {
+                "frameWidth": 96,
+                "frameHeight": 128,
+                "columns": 3,
+                "rows": 3,
+                "frameCount": 8,
+                "margin": 0,
+                "spacing": 0
+              },
+              "method": "ai-upscale",
+              "file": "art/scaled-532dc6ee-892f-4497-a536-77f6c00b0c8e-8034b4aa-3ecd-4649-8a51-a850db0bd961.png",
+              "sourceFile": "art/borin.walk-front.promoted-1789163851662.png",
+              "createdAt": "2026-09-13T23:41:02.385Z"
+            }
+          }
+        },
+        "promoted-1790377646048": {
+          "name": "promoted-1790377646048",
+          "file": "art/borin.walk-front.promoted-1790377646048.png",
+          "prompt": "Walking down/front animation for our dwarf.",
+          "createdAt": "2026-09-25T23:07:26.094Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789163851662",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -1511,12 +1646,12 @@
       "kind": "animation",
       "prompt": "Walking up/back animation for our dwarf.",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -1538,7 +1673,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1788921701953",
+      "activeVersion": "promoted-1790377732351",
       "versions": {
         "original": {
           "name": "original",
@@ -1565,6 +1700,24 @@
           "voiceSettings": {},
           "parentVersion": "original",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790377732351": {
+          "name": "promoted-1790377732351",
+          "file": "art/borin.walk-back.promoted-1790377732351.png",
+          "prompt": "Walking up/back animation for our dwarf.",
+          "createdAt": "2026-09-25T23:08:52.383Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1788921701953",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1589,12 +1742,12 @@
       "kind": "animation",
       "prompt": "Walking left animation for our dwarf.",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -1616,7 +1769,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1789163510860",
+      "activeVersion": "promoted-1790377807996",
       "versions": {
         "original": {
           "name": "original",
@@ -1661,6 +1814,24 @@
           "voiceSettings": {},
           "parentVersion": "promoted-1788921782745",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790377807996": {
+          "name": "promoted-1790377807996",
+          "file": "art/borin.walk-left.promoted-1790377807996.png",
+          "prompt": "Walking left animation for our dwarf.",
+          "createdAt": "2026-09-25T23:10:08.033Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789163510860",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1683,30 +1854,36 @@
     "borin.speak-front": {
       "id": "borin.speak-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing front, his hands should not move a lot",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.speak-front",
+          "frameRate": 6,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 6,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790454633996",
       "versions": {
         "original": {
           "name": "original",
@@ -1715,6 +1892,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790454633996": {
+          "name": "promoted-1790454633996",
+          "file": "art/borin.speak-front.promoted-1790454633996.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing front, his hands should not move a lot",
+          "createdAt": "2026-09-26T20:30:34.032Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1723,35 +1918,50 @@
         "borin",
         "speak",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.speak-back": {
       "id": "borin.speak-back",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing back; 2 horizontal frames.",
+      "prompt": "An animation for a small pixel-art dwarf named borin, full body, transparent background. he's facing back the entire time (face not visible), and picking something up at a little below his height level, meaning he should not bend, just reach forward (his forward) with his hands.",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.speak-back",
+          "frameRate": 6,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 6,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790475721109",
       "versions": {
         "original": {
           "name": "original",
@@ -1760,6 +1970,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790386631413": {
+          "name": "promoted-1790386631413",
+          "file": "art/borin.speak-back.promoted-1790386631413.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing back the entire time (he's talking to somebody in front of him), hands should not move a lot;",
+          "createdAt": "2026-09-26T01:37:11.440Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790475721109": {
+          "name": "promoted-1790475721109",
+          "file": "art/borin.speak-back.promoted-1790475721109.png",
+          "prompt": "An animation for a small pixel-art dwarf named borin, full body, transparent background. he's facing back the entire time (face not visible), and picking something up at a little below his height level, meaning he should not bend, just reach forward (his forward) with his hands.",
+          "createdAt": "2026-09-27T02:22:01.176Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790386631413",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1768,35 +2014,50 @@
         "borin",
         "speak",
         "back"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "borin.speak-left": {
       "id": "borin.speak-left",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing left; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing left, hands should not move a lot",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "borin.speak-left",
+          "frameRate": 6,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 6,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790454550433",
       "versions": {
         "original": {
           "name": "original",
@@ -1805,6 +2066,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790454550433": {
+          "name": "promoted-1790454550433",
+          "file": "art/borin.speak-left.promoted-1790454550433.png",
+          "prompt": "A small pixel-art dwarf named borin, full body, transparent background. speak animation, facing left, hands should not move a lot",
+          "createdAt": "2026-09-26T20:29:10.465Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -1813,19 +2092,28 @@
         "borin",
         "speak",
         "left"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "elder.idle-front": {
       "id": "elder.idle-front",
       "kind": "animation",
       "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front;",
       "dimensions": {
-        "width": 144,
-        "height": 192
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -1847,7 +2135,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1789164049819",
+      "activeVersion": "promoted-1790380340608",
       "versions": {
         "original": {
           "name": "original",
@@ -1873,6 +2161,24 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790380340608": {
+          "name": "promoted-1790380340608",
+          "file": "art/elder.idle-front.promoted-1790380340608.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. idle animation, facing front;",
+          "createdAt": "2026-09-25T23:52:20.689Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789164049819",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -2127,30 +2433,36 @@
     "elder.speak-front": {
       "id": "elder.speak-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing front, his hands should stay down;",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "elder.speak-front",
+          "frameRate": 6,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 6,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790380495592",
       "versions": {
         "original": {
           "name": "original",
@@ -2159,6 +2471,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790214735717": {
+          "name": "promoted-1790214735717",
+          "file": "art/elder.speak-front.promoted-1790214735717.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing front, his right hand should stay down;",
+          "createdAt": "2026-09-24T01:52:15.750Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790380495592": {
+          "name": "promoted-1790380495592",
+          "file": "art/elder.speak-front.promoted-1790380495592.png",
+          "prompt": "A small pixel-art dwarf named elder, full body, transparent background. speak animation, facing front, his hands should stay down;",
+          "createdAt": "2026-09-25T23:54:55.620Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790214735717",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -2167,7 +2515,16 @@
         "elder",
         "speak",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "elder.speak-back": {
       "id": "elder.speak-back",
@@ -2262,14 +2619,14 @@
     "innkeeper.idle-front": {
       "id": "innkeeper.idle-front",
       "kind": "animation",
-      "prompt": "idle animation for the inn keeper dwarf girl, facing front",
+      "prompt": "idle animation for the inn keeper dwarf girl, facing front, without the beer, holding a handkerchief and wiping an imaginary bar table in front of her (at the height of her pelvis)",
       "dimensions": {
-        "width": 192,
-        "height": 256
+        "width": 400,
+        "height": 560
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 4,
         "rows": 4,
         "frameCount": 16
@@ -2299,7 +2656,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1789164641239",
+      "activeVersion": "promoted-1790381023739",
       "versions": {
         "original": {
           "name": "original",
@@ -2325,6 +2682,60 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790380726722": {
+          "name": "promoted-1790380726722",
+          "file": "art/innkeeper.idle-front.promoted-1790380726722.png",
+          "prompt": "idle animation for the inn keeper dwarf girl, facing front",
+          "createdAt": "2026-09-25T23:58:46.768Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789164641239",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790380900740": {
+          "name": "promoted-1790380900740",
+          "file": "art/innkeeper.idle-front.promoted-1790380900740.png",
+          "prompt": "idle animation for the inn keeper dwarf girl, facing front, without the beer, holding a handkerchief and wiping imaginary objects (not her face)",
+          "createdAt": "2026-09-26T00:01:40.773Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790380726722",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790381023739": {
+          "name": "promoted-1790381023739",
+          "file": "art/innkeeper.idle-front.promoted-1790381023739.png",
+          "prompt": "idle animation for the inn keeper dwarf girl, facing front, without the beer, holding a handkerchief and wiping an imaginary bar table in front of her (at the height of her pelvis)",
+          "createdAt": "2026-09-26T00:03:43.793Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790380900740",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -2579,30 +2990,36 @@
     "innkeeper.speak-front": {
       "id": "innkeeper.speak-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing front; hands should not move a lot, should not hold a beer glass",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "innkeeper.speak-front",
+          "frameRate": 6,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 6,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790385806659",
       "versions": {
         "original": {
           "name": "original",
@@ -2611,6 +3028,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790218237043": {
+          "name": "promoted-1790218237043",
+          "file": "art/innkeeper.speak-front.promoted-1790218237043.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing front; hands should not move a lot",
+          "createdAt": "2026-09-24T02:50:37.086Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790385806659": {
+          "name": "promoted-1790385806659",
+          "file": "art/innkeeper.speak-front.promoted-1790385806659.png",
+          "prompt": "A small pixel-art dwarf named innkeeper, full body, transparent background. speak animation, facing front; hands should not move a lot, should not hold a beer glass",
+          "createdAt": "2026-09-26T01:23:26.687Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790218237043",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -2619,7 +3072,16 @@
         "innkeeper",
         "speak",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "innkeeper.speak-back": {
       "id": "innkeeper.speak-back",
@@ -2714,14 +3176,14 @@
     "miner.idle-front": {
       "id": "miner.idle-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front;",
       "dimensions": {
-        "width": 192,
-        "height": 256
+        "width": 400,
+        "height": 560
       },
       "frameGrid": {
-        "frameWidth": 48,
-        "frameHeight": 64,
+        "frameWidth": 100,
+        "frameHeight": 140,
         "columns": 4,
         "rows": 4,
         "frameCount": 16
@@ -2748,140 +3210,10 @@
             13,
             14,
             15
-          ],
-          "frameTimings": [
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            },
-            {
-              "delayMs": 200,
-              "offsetX": 0,
-              "offsetY": 0,
-              "scaleX": 1,
-              "scaleY": 1,
-              "rotation": 0
-            }
           ]
         }
       ],
-      "activeVersion": "promoted-1789164917770",
+      "activeVersion": "promoted-1790385986296",
       "versions": {
         "original": {
           "name": "original",
@@ -2925,6 +3257,24 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "promoted-1789164847121",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790385986296": {
+          "name": "promoted-1790385986296",
+          "file": "art/miner.idle-front.promoted-1790385986296.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. idle animation, facing front;",
+          "createdAt": "2026-09-26T01:26:26.330Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789164917770",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -3179,30 +3529,36 @@
     "miner.speak-front": {
       "id": "miner.speak-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing front;",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "miner.speak-front",
+          "frameRate": 6,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 6,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790386148103",
       "versions": {
         "original": {
           "name": "original",
@@ -3211,6 +3567,42 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790214837130": {
+          "name": "promoted-1790214837130",
+          "file": "art/miner.speak-front.promoted-1790214837130.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing front;",
+          "createdAt": "2026-09-24T01:53:57.153Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790386148103": {
+          "name": "promoted-1790386148103",
+          "file": "art/miner.speak-front.promoted-1790386148103.png",
+          "prompt": "A small pixel-art dwarf named miner, full body, transparent background. speak animation, facing front;",
+          "createdAt": "2026-09-26T01:29:08.118Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790214837130",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3219,7 +3611,16 @@
         "miner",
         "speak",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "miner.speak-back": {
       "id": "miner.speak-back",
@@ -3314,14 +3715,14 @@
     "guard.idle-front": {
       "id": "guard.idle-front",
       "kind": "animation",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "prompt": "A big pixel-art orc guard, full body, transparent background. idle animation, facing front;",
       "dimensions": {
-        "width": 120,
-        "height": 240
+        "width": 360,
+        "height": 600
       },
       "frameGrid": {
-        "frameWidth": 40,
-        "frameHeight": 80,
+        "frameWidth": 120,
+        "frameHeight": 200,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -3343,7 +3744,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790287002312",
+      "activeVersion": "promoted-1790374573705",
       "versions": {
         "original": {
           "name": "original",
@@ -3370,6 +3771,24 @@
           "voiceSettings": {},
           "parentVersion": "original",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790374573705": {
+          "name": "promoted-1790374573705",
+          "file": "art/guard.idle-front.promoted-1790374573705.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. idle animation, facing front;",
+          "createdAt": "2026-09-25T22:16:13.801Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790287002312",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3394,12 +3813,12 @@
       "kind": "animation",
       "prompt": "The same armored orc seen fully from behind, breathing gently with his boots planted. Transparent background.",
       "dimensions": {
-        "width": 120,
-        "height": 240
+        "width": 360,
+        "height": 600
       },
       "frameGrid": {
-        "frameWidth": 40,
-        "frameHeight": 80,
+        "frameWidth": 120,
+        "frameHeight": 200,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -3407,6 +3826,8 @@
       "animations": [
         {
           "key": "guard.idle-back",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
             1,
@@ -3416,12 +3837,10 @@
             5,
             6,
             7
-          ],
-          "frameRate": 2,
-          "repeat": -1
+          ]
         }
       ],
-      "activeVersion": "patrol-back-idle",
+      "activeVersion": "promoted-1790374656470",
       "versions": {
         "original": {
           "name": "original",
@@ -3457,6 +3876,24 @@
           "model": "imagegen",
           "parentVersion": "promoted-1790287163060",
           "notes": "Back-facing poses from the new face-back animation. Earlier promoted idle-back artwork is preserved."
+        },
+        "promoted-1790374656470": {
+          "name": "promoted-1790374656470",
+          "file": "art/guard.idle-back.promoted-1790374656470.png",
+          "prompt": "The same armored orc seen fully from behind, breathing gently with his boots planted. Transparent background.",
+          "createdAt": "2026-09-25T22:17:36.522Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "patrol-back-idle",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3524,32 +3961,36 @@
     "guard.walk-front": {
       "id": "guard.walk-front",
       "kind": "animation",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "prompt": "A big pixel-art orc guard, full body, transparent background. walk animation, facing front;",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 360,
+        "height": 600
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 120,
+        "frameHeight": 200,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.walk-front",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790454927075",
       "versions": {
         "original": {
           "name": "original",
@@ -3558,6 +3999,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790454927075": {
+          "name": "promoted-1790454927075",
+          "file": "art/guard.walk-front.promoted-1790454927075.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. walk animation, facing front;",
+          "createdAt": "2026-09-26T20:35:27.089Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3566,37 +4025,50 @@
         "guard",
         "walk",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.walk-back": {
       "id": "guard.walk-back",
       "kind": "animation",
-      "prompt": "A small pixel-art orc guard, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "prompt": "A big pixel-art orc guard, full body, transparent background. walk animation, facing back;",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 360,
+        "height": 600
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 120,
+        "frameHeight": 200,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.walk-back",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790455000868",
       "versions": {
         "original": {
           "name": "original",
@@ -3605,6 +4077,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790455000868": {
+          "name": "promoted-1790455000868",
+          "file": "art/guard.walk-back.promoted-1790455000868.png",
+          "prompt": "A big pixel-art orc guard, full body, transparent background. walk animation, facing back;",
+          "createdAt": "2026-09-26T20:36:40.896Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3613,19 +4103,28 @@
         "guard",
         "walk",
         "back"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.walk-left": {
       "id": "guard.walk-left",
       "kind": "animation",
-      "prompt": "walk left animation for the orc",
+      "prompt": "walk left animation for the orc:\n\nFrame 1 (Contact - Left Foot Forward): Legs are at their maximum spread. The left heel touches the ground, and the right toe is about to leave it. The body is at its lowest point of the contact phase. Arms swing opposite to the legs (right arm forward, left arm back).Frame 2 (Down / Recoil): The body dips to its lowest vertical position as the front knee bends slightly to absorb the weight. Both feet are flat or planted on the ground.Frame 3 (Passing): The passing position. The right leg swings past the stationary left leg, knees pass each other, and the body rises back to neutral height.Frame 4 (Up / High Point): The body reaches its highest vertical point as the character pushes off the back foot, with the passing leg extending forward.Frame 5 (Contact - Right Foot Forward): Mirror of Frame 1. The right heel makes contact ahead, and the left toe prepares to lift. Legs are at maximum width again.Frame 6 (Down / Recoil): Mirror of Frame 2. The body dips as weight shifts onto the right leg, with the right knee bending to cushion the impact.Frame 7 (Passing): Mirror of Frame 3. The left leg swings past the right leg moving forward, and the body rises back up.Frame 8 (Up / High Point): Mirror of Frame 4. The body reaches its peak height on the right foot before transitioning smoothly back into Frame 1.",
       "dimensions": {
-        "width": 120,
-        "height": 240
+        "width": 360,
+        "height": 600
       },
       "frameGrid": {
-        "frameWidth": 40,
-        "frameHeight": 80,
+        "frameWidth": 120,
+        "frameHeight": 200,
         "columns": 3,
         "rows": 3,
         "frameCount": 8
@@ -3647,7 +4146,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790287258801",
+      "activeVersion": "promoted-1790375225298",
       "versions": {
         "original": {
           "name": "original",
@@ -3673,6 +4172,42 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790302424665": {
+          "name": "promoted-1790302424665",
+          "file": "art/guard.walk-left.promoted-1790302424665.png",
+          "prompt": "walk left animation for the orc",
+          "createdAt": "2026-09-25T02:13:44.713Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790287258801",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790375225298": {
+          "name": "promoted-1790375225298",
+          "file": "art/guard.walk-left.promoted-1790375225298.png",
+          "prompt": "walk left animation for the orc:\n\nFrame 1 (Contact - Left Foot Forward): Legs are at their maximum spread. The left heel touches the ground, and the right toe is about to leave it. The body is at its lowest point of the contact phase. Arms swing opposite to the legs (right arm forward, left arm back).Frame 2 (Down / Recoil): The body dips to its lowest vertical position as the front knee bends slightly to absorb the weight. Both feet are flat or planted on the ground.Frame 3 (Passing): The passing position. The right leg swings past the stationary left leg, knees pass each other, and the body rises back to neutral height.Frame 4 (Up / High Point): The body reaches its highest vertical point as the character pushes off the back foot, with the passing leg extending forward.Frame 5 (Contact - Right Foot Forward): Mirror of Frame 1. The right heel makes contact ahead, and the left toe prepares to lift. Legs are at maximum width again.Frame 6 (Down / Recoil): Mirror of Frame 2. The body dips as weight shifts onto the right leg, with the right knee bending to cushion the impact.Frame 7 (Passing): Mirror of Frame 3. The left leg swings past the right leg moving forward, and the body rises back up.Frame 8 (Up / High Point): Mirror of Frame 4. The body reaches its peak height on the right foot before transitioning smoothly back into Frame 1.",
+          "createdAt": "2026-09-25T22:27:05.334Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790302424665",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -3831,30 +4366,36 @@
     "king.idle-front": {
       "id": "king.idle-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background. idle animation, facing front; 2 horizontal frames.",
+      "prompt": "A small pixel-art dwarf king, full body, transparent background. idle animation, facing front;",
       "dimensions": {
-        "width": 48,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 2,
-        "rows": 1,
-        "frameCount": 2
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "king.idle-front",
+          "frameRate": 2,
+          "repeat": -1,
           "frames": [
             0,
-            1
-          ],
-          "frameRate": 2,
-          "repeat": -1
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790370386743",
       "versions": {
         "original": {
           "name": "original",
@@ -3863,6 +4404,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790370386743": {
+          "name": "promoted-1790370386743",
+          "file": "art/king.idle-front.promoted-1790370386743.png",
+          "prompt": "A small pixel-art dwarf king, full body, transparent background. idle animation, facing front;",
+          "createdAt": "2026-09-25T21:06:48.772Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -3871,7 +4430,16 @@
         "king",
         "idle",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "king.idle-back": {
       "id": "king.idle-back",
@@ -3966,32 +4534,36 @@
     "king.walk-front": {
       "id": "king.walk-front",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing front; 4 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing front;",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "king.walk-front",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790454713817",
       "versions": {
         "original": {
           "name": "original",
@@ -4000,6 +4572,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790454713817": {
+          "name": "promoted-1790454713817",
+          "file": "art/king.walk-front.promoted-1790454713817.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing front;",
+          "createdAt": "2026-09-26T20:31:53.876Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -4008,37 +4598,50 @@
         "king",
         "walk",
         "front"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "king.walk-back": {
       "id": "king.walk-back",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing back; 4 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing back;",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "king.walk-back",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790454852008",
       "versions": {
         "original": {
           "name": "original",
@@ -4047,6 +4650,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790454852008": {
+          "name": "promoted-1790454852008",
+          "file": "art/king.walk-back.promoted-1790454852008.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing back;",
+          "createdAt": "2026-09-26T20:34:12.033Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -4055,37 +4676,50 @@
         "king",
         "walk",
         "back"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "king.walk-left": {
       "id": "king.walk-left",
       "kind": "animation",
-      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing left; 4 horizontal frames.",
+      "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing left;",
       "dimensions": {
-        "width": 96,
-        "height": 32
+        "width": 300,
+        "height": 420
       },
       "frameGrid": {
-        "frameWidth": 24,
-        "frameHeight": 32,
-        "columns": 4,
-        "rows": 1,
-        "frameCount": 4
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "king.walk-left",
+          "frameRate": 10,
+          "repeat": -1,
           "frames": [
             0,
             1,
             2,
-            3
-          ],
-          "frameRate": 10,
-          "repeat": -1
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1790454776286",
       "versions": {
         "original": {
           "name": "original",
@@ -4094,6 +4728,24 @@
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original code-authored pixel art. Regenerate with demos/forest/scripts/generate-character-art.ts."
+        },
+        "promoted-1790454776286": {
+          "name": "promoted-1790454776286",
+          "file": "art/king.walk-left.promoted-1790454776286.png",
+          "prompt": "A small pixel-art dwarf named king, full body, transparent background. walk animation, facing left;",
+          "createdAt": "2026-09-26T20:32:56.311Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -4102,7 +4754,16 @@
         "king",
         "walk",
         "left"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "king.speak-front": {
       "id": "king.speak-front",
@@ -4274,12 +4935,12 @@
     "cursor.walk": {
       "id": "cursor.walk",
       "kind": "image",
-      "prompt": "A pair of small dwarven boot prints, a clear walking cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "prompt": "A pair of foot prints, a clear walking cursor. adventure UI icon, transparent background, warm white and cream colors with a wide dark outline, Bramblehollow forest palette. No text or background.",
       "dimensions": {
-        "width": 32,
-        "height": 32
+        "width": 48,
+        "height": 48
       },
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789913880821",
       "versions": {
         "original": {
           "name": "original",
@@ -4288,6 +4949,23 @@
           "createdAt": "2026-09-20T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        },
+        "promoted-1789913880821": {
+          "name": "promoted-1789913880821",
+          "file": "art/cursor.walk.promoted-1789913880821.png",
+          "prompt": "A pair of foot prints, a clear walking cursor. adventure UI icon, transparent background, warm white and cream colors with a wide dark outline, Bramblehollow forest palette. No text or background.",
+          "createdAt": "2026-09-20T14:18:00.854Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "linkedAnimationAssets": {
@@ -4299,39 +4977,57 @@
       "tags": [
         "forest",
         "cursor"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "cursor.walk.click": {
       "id": "cursor.walk.click",
       "kind": "animation",
-      "prompt": "A pair of small dwarven boot prints, a clear walking cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "prompt": "Animate the footprints walking, maintain exact footprints from the base image, just move them up and down alternating",
       "dimensions": {
         "width": 192,
-        "height": 32
+        "height": 192
       },
       "frameGrid": {
-        "frameWidth": 32,
-        "frameHeight": 32,
-        "columns": 6,
-        "rows": 1,
-        "frameCount": 6
+        "frameWidth": 48,
+        "frameHeight": 48,
+        "columns": 4,
+        "rows": 4,
+        "frameCount": 16
       },
       "animations": [
         {
           "key": "cursor.walk.click",
+          "frameRate": 12,
+          "repeat": 0,
           "frames": [
             0,
             1,
             2,
             3,
             4,
-            5
-          ],
-          "frameRate": 12,
-          "repeat": 0
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789961393962",
       "versions": {
         "original": {
           "name": "original",
@@ -4340,12 +5036,75 @@
           "createdAt": "2026-09-20T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        },
+        "promoted-1789914076574": {
+          "name": "promoted-1789914076574",
+          "file": "art/cursor.walk.click.promoted-1789914076574.png",
+          "prompt": "Animate the footprints walking, maintain exact footprints from the base image, just move them back and forth",
+          "createdAt": "2026-09-20T14:21:16.613Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789915619368": {
+          "name": "promoted-1789915619368",
+          "file": "art/cursor.walk.click.promoted-1789915619368.png",
+          "prompt": "Animate the footprints walking, maintain exact footprints from the base image, just move them back and forth",
+          "createdAt": "2026-09-20T14:46:59.390Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789914076574",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1789961393962": {
+          "name": "promoted-1789961393962",
+          "file": "art/cursor.walk.click.promoted-1789961393962.png",
+          "prompt": "Animate the footprints walking, maintain exact footprints from the base image, just move them up and down alternating",
+          "createdAt": "2026-09-21T03:29:53.982Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1789915619368",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
         "forest",
         "click"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "cursor.interact": {
       "id": "cursor.interact",
@@ -4380,34 +5139,36 @@
     "cursor.interact.click": {
       "id": "cursor.interact.click",
       "kind": "animation",
-      "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
       "dimensions": {
-        "width": 192,
-        "height": 32
+        "width": 96,
+        "height": 96
       },
       "frameGrid": {
         "frameWidth": 32,
         "frameHeight": 32,
-        "columns": 6,
-        "rows": 1,
-        "frameCount": 6
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
       },
       "animations": [
         {
           "key": "cursor.interact.click",
+          "frameRate": 12,
+          "repeat": 0,
           "frames": [
             0,
             1,
             2,
             3,
             4,
-            5
-          ],
-          "frameRate": 12,
-          "repeat": 0
+            5,
+            6,
+            7
+          ]
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "promoted-1789961179528",
       "versions": {
         "original": {
           "name": "original",
@@ -4416,12 +5177,39 @@
           "createdAt": "2026-09-20T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        },
+        "promoted-1789961179528": {
+          "name": "promoted-1789961179528",
+          "file": "art/cursor.interact.click.promoted-1789961179528.png",
+          "prompt": "A warm ivory pointing hand with a green cuff, a clear interaction cursor. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+          "createdAt": "2026-09-21T03:26:19.554Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "original",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
         "forest",
         "click"
-      ]
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "inventory.coin": {
       "id": "inventory.coin",
@@ -4882,21 +5670,23 @@
     "guard.face-back": {
       "id": "guard.face-back",
       "kind": "animation",
-      "prompt": "The exact guard from the base image turns smoothly in place from front-facing through a side view to fully back-facing. Eight consecutive frames, stable scale and planted feet; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.",
+      "prompt": "The guard turns around from front-facing through a side view to fully back-facing. He needs to use his legs to turn around, if the legs are planted in the ground in all frames it doesn't look natural. Eight consecutive frames, stable scale; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.",
       "dimensions": {
-        "width": 160,
-        "height": 160
+        "width": 120,
+        "height": 240
       },
       "frameGrid": {
         "frameWidth": 40,
         "frameHeight": 80,
-        "columns": 4,
-        "rows": 2,
+        "columns": 3,
+        "rows": 3,
         "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.face-back",
+          "frameRate": 8,
+          "repeat": 0,
           "frames": [
             0,
             1,
@@ -4906,17 +5696,16 @@
             5,
             6,
             7
-          ],
-          "frameRate": 8,
-          "repeat": 0
+          ]
         }
       ],
       "settings": {
         "format": "png",
         "background": "transparent",
-        "frameAlignment": "none"
+        "frameAlignment": "none",
+        "model": "gpt-image-2.5-sunburst"
       },
-      "activeVersion": "patrol",
+      "activeVersion": "promoted-1790303629873",
       "versions": {
         "patrol": {
           "name": "patrol",
@@ -4925,6 +5714,24 @@
           "createdAt": "2026-09-24T00:00:00.000Z",
           "model": "imagegen",
           "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+        },
+        "promoted-1790303629873": {
+          "name": "promoted-1790303629873",
+          "file": "art/guard.face-back.promoted-1790303629873.png",
+          "prompt": "The guard turns around from front-facing through a side view to fully back-facing. He needs to use his legs to turn around, if the legs are planted in the ground in all frames it doesn't look natural. Eight consecutive frames, stable scale; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.",
+          "createdAt": "2026-09-25T02:33:49.942Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "background": "transparent",
+            "frameAlignment": "none",
+            "model": "gpt-image-2.5-sunburst"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "patrol",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -4933,7 +5740,10 @@
         "guard",
         "patrol",
         "face-back"
-      ]
+      ],
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.face-back-left": {
       "id": "guard.face-back-left",
@@ -4994,21 +5804,23 @@
     "guard.drink": {
       "id": "guard.drink",
       "kind": "animation",
-      "prompt": "The exact guard from the base image bends toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean down, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+      "prompt": "The guard, visible from behind, slightly leans toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean left slightly, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
       "dimensions": {
-        "width": 160,
-        "height": 160
+        "width": 360,
+        "height": 600
       },
       "frameGrid": {
-        "frameWidth": 40,
-        "frameHeight": 80,
-        "columns": 4,
-        "rows": 2,
+        "frameWidth": 120,
+        "frameHeight": 200,
+        "columns": 3,
+        "rows": 3,
         "frameCount": 8
       },
       "animations": [
         {
           "key": "guard.drink",
+          "frameRate": 8,
+          "repeat": 0,
           "frames": [
             0,
             1,
@@ -5019,32 +5831,70 @@
             6,
             7
           ],
-          "frameRate": 8,
-          "repeat": 0,
           "frameTimings": [
             {
-              "delayMs": 125
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 180
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 250
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 700
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 700
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 700
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 180
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             },
             {
-              "delayMs": 200
+              "delayMs": 125,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
             }
           ]
         }
@@ -5052,9 +5902,10 @@
       "settings": {
         "format": "png",
         "background": "transparent",
-        "frameAlignment": "none"
+        "frameAlignment": "none",
+        "model": "gpt-image-2.5-sunburst"
       },
-      "activeVersion": "patrol",
+      "activeVersion": "promoted-1790375355835",
       "versions": {
         "patrol": {
           "name": "patrol",
@@ -5063,6 +5914,78 @@
           "createdAt": "2026-09-24T00:00:00.000Z",
           "model": "imagegen",
           "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+        },
+        "promoted-1790302566750": {
+          "name": "promoted-1790302566750",
+          "file": "art/guard.drink.promoted-1790302566750.png",
+          "prompt": "The guard, visible from behind, bends toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean down, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+          "createdAt": "2026-09-25T02:16:06.774Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "background": "transparent",
+            "frameAlignment": "none",
+            "model": "gpt-image-2.5-sunburst"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "patrol",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790303201886": {
+          "name": "promoted-1790303201886",
+          "file": "art/guard.drink.promoted-1790303201886.png",
+          "prompt": "The guard, visible from behind, slightly leans toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean left slightly, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+          "createdAt": "2026-09-25T02:26:41.915Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "background": "transparent",
+            "frameAlignment": "none",
+            "model": "gpt-image-2.5-sunburst"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790302566750",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790375311727": {
+          "name": "promoted-1790375311727",
+          "file": "art/guard.drink.promoted-1790375311727.png",
+          "prompt": "The guard, visible from behind, slightly leans toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean left slightly, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+          "createdAt": "2026-09-25T22:28:31.746Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "background": "transparent",
+            "frameAlignment": "none",
+            "model": "gpt-image-2.5-sunburst"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790303201886",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1790375355835": {
+          "name": "promoted-1790375355835",
+          "file": "art/guard.drink.promoted-1790375355835.png",
+          "prompt": "The guard, visible from behind, slightly leans toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean left slightly, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
+          "createdAt": "2026-09-25T22:29:15.869Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "background": "transparent",
+            "frameAlignment": "none",
+            "model": "gpt-image-2.5-sunburst"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790375311727",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -5071,7 +5994,10 @@
         "guard",
         "patrol",
         "drink"
-      ]
+      ],
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     },
     "guard.collapse": {
       "id": "guard.collapse",
