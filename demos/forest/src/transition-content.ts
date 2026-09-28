@@ -11,6 +11,18 @@ export const transitionOutsideId = (room: RoomId, to: RoomId) => `${room}.outsid
 export const transitionThresholdId = (room: RoomId, to: RoomId) => `${room}.threshold.to-${to}`;
 export const CAGE_APPROACH_AREA = 'camp.cage-approach';
 
+function continueWalkLine(inside: Point, threshold: Point): Point {
+  const dx = threshold.x - inside.x, dy = threshold.y - inside.y;
+  const length = Math.hypot(dx, dy);
+  // Just a few steps into the passage, along the approach line. Doorway depth
+  // is not the height of its image: walking up to the arch makes actors levitate.
+  return length > 0 ? { x: threshold.x + dx / length * 24, y: threshold.y + dy / length * 24 }
+    : { x: threshold.x, y: threshold.y - 24 };
+}
+const samePoint = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y) < 1e-6;
+const rectangle = (left: number, top: number, right: number, bottom: number): Point[] =>
+  [{ x: left, y: top }, { x: right, y: top }, { x: right, y: bottom }, { x: left, y: bottom }];
+
 export function addDoorAssets(manifest: AiAssetManifest): void {
   for (const door of forestDoors) {
     const id = `door.${door.id}`, { width, height } = door.crop;
@@ -50,19 +62,36 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       const minY = aperture ? Math.min(...aperture.map(p => p.y)) : 0;
       const maxY = aperture ? Math.max(...aperture.map(p => p.y)) : 0;
       const centerX = aperture ? (Math.min(...aperture.map(p => p.x)) + Math.max(...aperture.map(p => p.x))) / 2 : entry.position.x;
-      const threshold = aperture ? { x: centerX, y: maxY + 4 } : roomId === 'village' ? { x: 481, y: 342 } : { x: entry.position.x, y: scene.height + 10 };
-      const outside = aperture ? { x: centerX, y: minY - 24 } : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + 230 };
+      const defaultThreshold = aperture ? { x: centerX, y: maxY + 4 } : roomId === 'village' ? { x: 481, y: 342 } : { x: entry.position.x, y: scene.height + 10 };
+      const threshold = room.points.find(point => point.id === transitionThresholdId(roomId, to))?.position ?? defaultThreshold;
+      const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entry.position;
+      const inside = findClosestReachablePath(spawn, entry.position, walkablePolygons(room))?.at(-1) ?? entry.position;
+      const legacyOutside = { x: centerX, y: minY - 24 };
+      const defaultOutside = aperture ? continueWalkLine(inside, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + 230 };
+      const previousOutside = room.points.find(point => point.id === transitionOutsideId(roomId, to))?.position;
+      const migrateOutside = !!aperture && !!previousOutside && samePoint(previousOutside, legacyOutside);
+      const outside = !previousOutside || migrateOutside ? defaultOutside : previousOutside;
       addPoint(transitionThresholdId(roomId, to), `Threshold · ${target.name}`, threshold);
       addPoint(transitionOutsideId(roomId, to), `Offscreen / behind doorway · ${target.name}`, outside);
+      if (migrateOutside) {
+        // Upgrade only the old generated rooftop endpoint; preserve edited points.
+        const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === transitionOutsideId(roomId, to))!;
+        instance.overrides = { ...instance.overrides, x: { value: outside.x }, y: { value: outside.y } };
+      }
       const areaId = transitionAreaId(roomId, to);
-      if (!scene.layers.some(layer => layer.areas.some(area => isPointleshArea(area) && area.pointlesh.entityId === areaId))) {
-        const left = Math.min(entry.position.x, threshold.x) - 44, right = Math.max(entry.position.x, threshold.x) + 44;
-        const top = aperture || roomId === 'village' ? -180 : Math.min(entry.position.y, threshold.y) - 45;
-        const bottom = aperture || roomId === 'village' ? entry.position.y + 45 : outside.y + 45;
+      const legacyBounds = rectangle(Math.min(entry.position.x, defaultThreshold.x) - 44, aperture || roomId === 'village' ? -180 : Math.min(entry.position.y, defaultThreshold.y) - 45,
+        Math.max(entry.position.x, defaultThreshold.x) + 44, aperture || roomId === 'village' ? entry.position.y + 45 : outside.y + 45);
+      const route = [entry.position, inside, threshold, outside];
+      const vertices = aperture ? rectangle(Math.min(...route.map(p => p.x)) - 44, Math.min(...route.map(p => p.y)) - 45,
+        Math.max(...route.map(p => p.x)) + 44, Math.max(...route.map(p => p.y)) + 45) : legacyBounds;
+      const corridor = scene.layers.flatMap(layer => layer.areas).find(area => isPointleshArea(area) && area.pointlesh.entityId === areaId);
+      if (!corridor) {
         layer.areas.push(createPointleshArea({ id: `${areaId}::area`, entityId: areaId, name: `Transition · ${target.name}`,
           closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, perspectiveSourceAreaId: `${roomId}.floor`,
           properties: { enabled: false, transitionTo: to },
-          vertices: [{ x: left, y: top }, { x: right, y: top }, { x: right, y: bottom }, { x: left, y: bottom }] }));
+          vertices }));
+      } else if (migrateOutside && corridor.vertices.length === 4 && corridor.vertices.every((point, i) => samePoint(point, legacyBounds[i]!))) {
+        corridor.vertices = vertices.map((point, i) => ({ ...corridor.vertices[i]!, ...point }));
       }
       if (door && aperture) {
         const id = doorObjectId(door), prefabId = `forest.object.door.${door.id}`;
@@ -115,5 +144,6 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   const door = forestDoors.find(door => door.room === roomId && door.to === to);
   return { roomId, areaId: transitionAreaId(roomId, to),
     path: [inside, point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
+    ...(door || roomId === 'mine' ? { fadeOnLastSegment: true } : {}),
     ...(door ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
 }

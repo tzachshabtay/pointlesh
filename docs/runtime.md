@@ -35,6 +35,8 @@ Keep corridor areas authored with `enabled: false`. Supply the character's navig
 
 Save `transition.snapshot()` together with the character snapshot. Restore both before continuing updates. All door and walking phases resume in place; restore does not restart the route. Use `cancel()` when deliberately switching rooms through editor controls or starting another game.
 
+For a doorway, keep the last segment short and continue the approach line through the sill. Set `fadeOnLastSegment: true` and apply `transition.characterOpacity` to the character sprite to conceal it inside the passage, reversing that fade on arrival. Opacity is derived from the saved position, stays zero while closing the outgoing/opening the incoming door, and returns to one on completion or cancellation. Do not use the top of the door image as a walking destination. Open screen-edge exits can omit this option and walk fully offscreen.
+
 An area's optional `perspectiveSourceAreaId` shares another area's scale/zoom settings **and coordinate range**, so overlapping floor and corridor values match exactly. Beyond that range the nearest endpoint value is held. It follows later edits to the source, including its scale/zoom capability switches. The designer exposes this as **Match perspective to area**. The source's walkability and enabled flag are not inherited: only the corridor decides where and when those effects apply.
 
 The forest demo stores editable inside, threshold and concealed/offscreen points for every connection, temporary corridors, and seven animated door objects. The mine uses its open tunnel entrance. The cage has a separate temporary approach region sharing the camp floor's perspective for cinematic actors and the king in the cage.

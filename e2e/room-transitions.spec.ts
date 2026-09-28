@@ -16,6 +16,7 @@ test('all room connections walk out and in with temporary corridors, animated do
       scene.changeRoom(from); scene.character.place(forestPortal(manifest, from, to).path[0]); scene.binding.sync();
       scene.applyInteraction(target);
       const phases = new Set<string>(), frames = new Set<number>(), checkpoints = new Set<string>();
+      const faded = new Set<string>();
       let sourceLast: any, destinationFirst: any;
       for (let i = 0; i < 1500 && scene.roomTransition.active; i++) {
         const phase = scene.roomTransition.phase; phases.add(phase);
@@ -26,11 +27,25 @@ test('all room connections walk out and in with temporary corridors, animated do
           if (JSON.stringify(scene.snapshot()) !== JSON.stringify(saved)) throw new Error(`Changed checkpoint ${from}/${phase}`);
           checkpoints.add(phase);
         }
+        if (portal.fadeOnLastSegment) {
+          const position = scene.character.state.position, alpha = scene.actor.alpha;
+          if (alpha !== scene.roomTransition.characterOpacity) throw new Error(`Wrong rendered opacity ${from}/${phase}`);
+          if (phase === 'open-entry' || phase === 'close-exit') {
+            if (alpha !== 0) throw new Error(`Visible behind a closing/closed door ${from}/${phase}`);
+          }
+          if (position.y < Math.min(...portal.path.map((p: any) => p.y)) - 1e-6) throw new Error(`Walking above doorway floor ${from}/${phase}`);
+          if (alpha > 0 && alpha < 1) {
+            faded.add(phase);
+            const [inside, threshold] = portal.path;
+            const cross = (position.x - threshold.x) * (threshold.y - inside.y) - (position.y - threshold.y) * (threshold.x - inside.x);
+            if (Math.abs(cross) > 1e-5) throw new Error(`Turned away from approach line ${from}/${phase}`);
+          }
+        }
         const oldRoom = scene.story.roomId, oldPosition = { ...scene.character.state.position };
         scene.update(0, 50);
         if (oldRoom !== scene.story.roomId) { sourceLast = oldPosition; destinationFirst = { ...scene.character.state.position }; }
       }
-      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], sourceLast, destinationFirst,
+      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], faded: [...faded], alpha: scene.actor.alpha, sourceLast, destinationFirst,
         position: { ...scene.character.state.position }, expected: forestPortal(manifest, to, from).path[0],
         enabled: scene.resolved().areas.filter((area: any) => area.id.includes('.transition.') && area.enabled).length });
     }
@@ -41,10 +56,11 @@ test('all room connections walk out and in with temporary corridors, animated do
     return results;
   });
   for (const route of result) {
-    expect(route, `${route.from} → ${route.to}`).toMatchObject({ active: false, room: route.to, enabled: 0, position: route.expected });
+    expect(route, `${route.from} → ${route.to}`).toMatchObject({ active: false, room: route.to, enabled: 0, position: route.expected, alpha: 1 });
     expect(route.phases).toEqual(['open-exit','exit','close-exit','open-entry','entry','close-entry']);
     expect(route.sourceLast).toBeTruthy(); expect(route.destinationFirst).toBeTruthy();
     if (route.frames.length) expect(route.frames.length).toBeGreaterThan(3);
+    if (![route.from, route.to].every(room => ['village', 'forest'].includes(room))) expect(route.faded).toEqual(['exit', 'entry']);
   }
   expect(errors).toEqual([]);
   await page.screenshot({ path: testInfo.outputPath('cottage-door-exit.png') });
