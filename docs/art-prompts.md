@@ -280,3 +280,55 @@ King transparency refinement (the reference's actual beard color was retained):
 ```text
 Precise background-extraction edit. Keep this exact eight-frame king hands-up spritesheet: preserve every pose, every crown, face, beard color, costume, body size, cell arrangement, planted foot position, full sheet aspect ratio. REMOVE ONLY the brown/black background and the diffuse orange/brown glow surrounding each king; make all pixels outside the actual king silhouettes fully transparent alpha (alpha zero). Keep all eight characters fully opaque, including the dark boots, dark outlines, cape, dark blue tunic and gold details. No background, checkerboard, shadow, halo or glow whatsoever. Do not redraw, recompose, resize, move, add or remove any character or limb. Output the clean transparent spritesheet with same four columns by two rows.
 ```
+
+## Room entrances and doors
+
+Mode: **built-in image generation**, editing exact cropped doorway references from the current room backgrounds. Seven matching doors: the pub and cottage on both sides, the Goldroot Mine gate, and both sides of the orc camp gate.
+
+Saved images: `demos/forest/public/art/objects/doors/{village-pub,village-house,pub,house,forest-mine,forest-camp,camp}.png` (base poses) and the corresponding `-open.png` spritesheets (eight frames, four columns by two rows). Closing plays the same poses in reverse. All twenty-one asset definitions are available in **Graphics / Objects / Doors**.
+
+`door-layout.ts` records each reference crop and the original aperture polygon. `pack-door-art.ts` registers each generated frame to that aperture, composites its interior over a dark passage so the old painted door cannot show through, and keeps all surrounding original background pixels unchanged with transparent margins. Except for the originally open exterior pub entrance, the closed pose uses the original painted door. Door-frame walk-behind areas conceal the character behind the existing arch and jambs as they pass through.
+
+Final prompts:
+
+### village-pub
+
+```text
+Precise object animation for an existing pixel-art game. Reference is the exact cropped exterior pub doorway. Produce a FOUR-column TWO-row spritesheet, 8 equal cells, each cell the exact same framing/aspect ratio as the reference crop. Animate only its wooden door leaf swinging INWARD, from fully CLOSED at frame 1 to fully OPEN at frame 8; intermediate angles evenly spaced. It closes by playing these frames in reverse. Keep the stone arch, sill, hinges, camera, lighting and original pixel texture at the same pixel coordinates in every frame. In the closed frame extend the existing wood-and-iron door across the opening. The open view reveals the existing dim pub entrance with its warm distant little window. Door retreats into the doorway, does not extend outside the stone arch. NO characters, labels, grid lines, gaps between cells, extra objects, or new doorway design. This is an opaque registered animation patch, not isolated props. Preserve architecture exactly. Every tile fills its cell edge-to-edge. Overall sheet aspect is twice the reference crop aspect.
+```
+
+### village-house
+
+```text
+Create an exact registered pixel-art animation of the provided cottage door crop. FOUR equal columns by TWO equal rows, EXACTLY EIGHT frames, each tile fills its full cell. Every frame preserves the entire crop framing, door arch and stone jambs in precisely the same positions. Frame 1 is the original CLOSED wooden door. Frames 2–7 swing only this existing door INWARD on its left hinge, progressively 15,30,45,60,75,85 degrees, revealing a dim warm empty cottage interior; frame 8 holds fully open. The same old golden-brown wood, round iron ring on right and existing iron fittings. Preserve the source pixel style, camera and arch shape. No new door, no characters, text, labels, grid lines, empty gutters or extra frames. Opaque background, seamless fixed architecture, no moving sill or wall. Door retreats inside the aperture, never outside the stone frame. Closing uses these frames in reverse.
+```
+
+### pub
+
+```text
+Precise registered pixel-art animation of this exact pub interior wooden door. Spritesheet with EXACTLY FOUR columns and TWO rows, eight equal cells, no gaps or separators, each cell preserves the complete reference crop framing. Frame 1: original fully closed oak door with black iron strap hinges and pull ring. Frames 2 through 8: door pivots inward on its LEFT hinge, slowly opening into a dim empty passage, final position nearly edge-on at left. Preserve the same arch, stone, wood frame, sill, lighting, texture, perspective and pixel scale, stationary in every frame. Only door leaf moves. No characters, text, labels, decorations, new architecture, other doors, sunlight blast, transparent background or grid lines. Make the final frame fully open and clear enough for a dwarf to walk through. Every cell is the same size and camera registration; each tile fills its cell edge to edge. The reverse playback closes the door.
+```
+
+### house
+
+```text
+Exact pixel-art game spritesheet based on this existing cottage interior doorway crop. Eight sequential opening frames in FOUR COLUMNS and TWO ROWS, all EIGHT rectangles fully visible, no extra partial columns. Each cell has identical camera framing/aspect ratio and the entire original doorway fills it. The original dark-brown wooden door with two broad iron straps and latch opens INWARD on its left hinges, closed in frame 1, gradually moving to edge-on at left in frame 8. Reveal a dark empty passage. Keep the arch, tree-root jamb, sill, steps, hinges and surrounding wall unchanged and in exactly the same position across frames. Do not redesign or enlarge the doorway. Only the door leaf moves. Reference color palette and coarse crisp pixels. No people, text, borders, numbering, white margins, gutters or unrelated props. No transparency. Final opening wide enough to walk through; reverse playback is closing.
+```
+
+### forest-mine
+
+```text
+Registered pixel-art sprite animation for this EXACT little wooden mine gate in its existing stone mine entrance. Eight consecutive frames in precisely FOUR columns and TWO rows; exactly 8 complete equal tiles, no extra partial tile. In every tile reproduce the original crop framing, arch, rock, tunnel and path in the same positions. The low wooden barred gate is closed in frame 1, then swings inward on the left hinge into the dark mine through frames 2–7, fully open at frame 8. Keep the gate LOW and barred, exactly like the reference; never turn it into a tall solid door. Preserve worn wood, lantern lighting, old mine stone and crisp original pixel-art. No characters, changes to stone, new objects, labels, text, borders or gutters. Opaque spritesheet. Each tile edge-to-edge identical background/camera. Reverse frames for closing.
+```
+
+### forest-camp
+
+```text
+Exact cropped orc-palisade double gate opening animation, pixel-art spritesheet. Use this reference unchanged for gate identity, dimensions, wood texture, black iron crossbars, tall spikes and surrounding palisade/ground. Eight equal complete frames: FOUR columns by TWO rows, no extra partial columns. Frame 1 both wooden leaves closed; frames 2–7 both leaves pivot inward around the outer left/right hinges, opening a central gap; frame 8 wide open into a dark empty camp passage. Every tile preserves original crop framing and fixed posts/ground at the same coordinates; only two gate leaves move. No people, floating bars, additional gates, new scenery, labels, text, borders or gutters. Same crisp pixel-art, greenish timber and warm torch light. Opaque patches fill each tile edge-to-edge. Keep both gate leaves visible receding into the opening, no leaf crosses outside the jambs. Reverse playback closes the gate.
+```
+
+### camp
+
+```text
+Precise object animation edit for an existing pixel-art game. This reference is the exact cropped INSIDE of the orc camp gate. Produce an 8-frame opening animation, exactly FOUR equal columns and TWO equal rows, read left to right top to bottom, with no gutters. Every cell has the same framing and 118:195 aspect ratio as the reference. Keep the gateposts, surrounding dark wooden palisade, little rope at the bottom right, camera, warm lighting and pixel texture absolutely stationary. Animate ONLY this exact wooden gate leaf with its riveted iron horizontal straps and diagonal braces swinging INWARD on its left hinges. Frame1 EXACT original CLOSED pose, frames2-7 smooth increasingly open angles, frame8 fully OPEN revealing a dim empty green forest passage. The leaf recedes into the doorway without protruding outside the posts. Preserve the exact existing weathered wood, diagonal Z brace, iron studs and single door leaf identity. Closing will play these poses backward. No characters, new props, text, labels, grid lines, numbering, margins, borders or redesign. Opaque full-crop registered background patches, not isolated transparent doors. Overall sheet aspect ratio 236:195.
+```

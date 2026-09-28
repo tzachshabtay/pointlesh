@@ -39,8 +39,7 @@ test('wide forest follows walking, restores saves, and uses camera coordinates f
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.worldView.right)).toBeCloseTo(1620, 4);
   const point = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    const gate = scene.resolved().areas.find((area: any) => area.id === 'camp-path');
-    const center = gate.polygon.reduce((sum: any, point: any) => ({ x: sum.x + point.x / gate.polygon.length, y: sum.y + point.y / gate.polygon.length }), { x: 0, y: 0 });
+    const center = scene.entitySprites.get('forest.door.forest-camp').getCenter();
     const screen = scene.cameras.main.matrixCombined.transformPoint(center.x, center.y);
     const canvas = scene.game.canvas, rect = canvas.getBoundingClientRect();
     return { x: rect.left + screen.x * rect.width / scene.scale.gameSize.width, y: rect.top + screen.y * rect.height / scene.scale.gameSize.height };
@@ -49,6 +48,7 @@ test('wide forest follows walking, restores saves, and uses camera coordinates f
   await expect(page.locator('#hover-label')).toHaveText('Orc encampment');
   await page.mouse.click(point.x, point.y);
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.roomId)).toBe('camp');
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.roomTransition.active)).toBe(false);
   expect(await page.evaluate(() => ({ x: (window as any).pointleshDemo.scene.cameras.main.scrollX, y: (window as any).pointleshDemo.scene.cameras.main.scrollY }))).toEqual({ x: 0, y: 0 });
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBe(1385);
@@ -62,7 +62,11 @@ test('native minimap pans and fits the whole forest without live edits resetting
   await openAdventure(page);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
-  await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));
+  const gameCameraX = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.changeRoom('forest'); scene.binding.sync(); scene.roomCamera.snap();
+    return scene.cameras.main.scrollX;
+  });
   await page.locator('#designer').click();
   await page.getByRole('button', { name: 'Toggle scene minimap', exact: true }).click();
   await page.getByRole('button', { name: 'Fit the whole world', exact: true }).click();
@@ -94,7 +98,7 @@ test('native minimap pans and fits the whole forest without live edits resetting
   })).toEqual(edited);
   await page.getByRole('button', { name: 'Toggle scene minimap', exact: true }).click();
   await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.close());
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.scrollX)).toBeLessThan(100);
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.scrollX)).toBeCloseTo(gameCameraX, 1);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.zoom)).toBeGreaterThan(1);
   expect(errors).toEqual([]);
 });

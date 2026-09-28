@@ -45,3 +45,20 @@ test('legacy scale and zoom definitions retain their endpoint axes and support r
   room.areas[0].properties.scaleEnabled = false;
   assert.equal(evaluatePointleshAreaEffects(room.areas, { x: 25, y: 75 }).scale, 1);
 });
+
+test('transition corridors inherit the floor coordinate range without an overlap seam or edge jump', () => {
+  const floor = createAreaPrefab({ vertices, walkable: true, scaleEnabled: true, zoomEnabled: true, minScale: .5, maxScale: 1.4, minZoom: 1.2, maxZoom: 1 });
+  const corridor = createAreaPrefab({ id: 'corridor', vertices: [{x:40,y:-150},{x:60,y:-150},{x:60,y:150},{x:40,y:150}],
+    walkable: true, scaleEnabled: true, zoomEnabled: true, perspectiveSourceAreaId: 'floor' });
+  const room = roomFor([floor, corridor], [createPointleshInstance({ id: 'floor', prefabId: floor.id }), createPointleshInstance({ id: 'exit', prefabId: corridor.id })]);
+  for (const y of [0, 1, 25, 50, 99, 100]) {
+    const a = evaluatePointleshAreaEffects([room.areas[0]], {x:50,y}), b = evaluatePointleshAreaEffects(room.areas, {x:50,y});
+    assert.equal(a.scale, b.scale); assert.equal(a.zoom, b.zoom);
+  }
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, .5);
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:140}).scale, 1.4);
+  room.areas[0].properties.minScale = .8;
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, .8, 'Source edits propagate immediately');
+  room.areas[1].enabled = false;
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, 1);
+});

@@ -8,6 +8,8 @@ import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
 import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
 import { INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
+import { activatePointleshAreas } from '@pointlesh/core';
+import { CAGE_APPROACH_AREA } from './transition-content';
 
 export type CinematicKind = 'intro' | 'ending';
 export const CINEMATIC_DURATIONS = {
@@ -236,7 +238,7 @@ export class ForestCinematic {
             ? introActionSize(this.assets.manifest.assets[assetId], actor.action)
             : characterId === 'borin' ? borinActionSize(this.assets.manifest.assets[assetId], !!actor.action)
               : guardAnimationSize(this.assets.manifest.assets[assetId], actor.sleeping),
-          areas: () => actor.definition!.properties.ignoreScaling ? [] : this.definitions.get(this.room)?.areas ?? [],
+          areas: () => actor.definition!.properties.ignoreScaling ? [] : activatePointleshAreas(this.definitions.get(this.room)?.areas ?? [], this.room === 'camp' ? [CAGE_APPROACH_AREA] : []),
           origin: () => ({ x: actor.definition!.anchorX, y: 1 - actor.definition!.anchorY }),
           angle: () => actor.definition!.rotation,
           animations: () => actor.action === 'point-spear' || actor.action === 'hands-up' ? introAnimation(assetId, actor.action)

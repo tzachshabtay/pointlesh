@@ -8412,6 +8412,965 @@
         "character",
         "intro"
       ]
+    },
+    "door.village-pub": {
+      "id": "door.village-pub",
+      "kind": "image",
+      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 105,
+        "height": 185
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/village-pub.png",
+          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.village-pub.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.village-pub.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.village-pub.open": {
+      "id": "door.village-pub.open",
+      "kind": "animation",
+      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 420,
+        "height": 370
+      },
+      "frameGrid": {
+        "frameWidth": 105,
+        "frameHeight": 185,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.village-pub.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/village-pub-open.png",
+          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.village-pub.close": {
+      "id": "door.village-pub.close",
+      "kind": "animation",
+      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 420,
+        "height": 370
+      },
+      "frameGrid": {
+        "frameWidth": 105,
+        "frameHeight": 185,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.village-pub.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/village-pub-open.png",
+          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.village-house": {
+      "id": "door.village-house",
+      "kind": "image",
+      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 110,
+        "height": 150
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/village-house.png",
+          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.village-house.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.village-house.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.village-house.open": {
+      "id": "door.village-house.open",
+      "kind": "animation",
+      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 440,
+        "height": 300
+      },
+      "frameGrid": {
+        "frameWidth": 110,
+        "frameHeight": 150,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.village-house.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/village-house-open.png",
+          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.village-house.close": {
+      "id": "door.village-house.close",
+      "kind": "animation",
+      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 440,
+        "height": 300
+      },
+      "frameGrid": {
+        "frameWidth": 110,
+        "frameHeight": 150,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.village-house.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/village-house-open.png",
+          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.pub": {
+      "id": "door.pub",
+      "kind": "image",
+      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 159,
+        "height": 275
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/pub.png",
+          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.pub.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.pub.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.pub.open": {
+      "id": "door.pub.open",
+      "kind": "animation",
+      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 636,
+        "height": 550
+      },
+      "frameGrid": {
+        "frameWidth": 159,
+        "frameHeight": 275,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.pub.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/pub-open.png",
+          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.pub.close": {
+      "id": "door.pub.close",
+      "kind": "animation",
+      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 636,
+        "height": 550
+      },
+      "frameGrid": {
+        "frameWidth": 159,
+        "frameHeight": 275,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.pub.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/pub-open.png",
+          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.house": {
+      "id": "door.house",
+      "kind": "image",
+      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 128,
+        "height": 300
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/house.png",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.house.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.house.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.house.open": {
+      "id": "door.house.open",
+      "kind": "animation",
+      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 512,
+        "height": 600
+      },
+      "frameGrid": {
+        "frameWidth": 128,
+        "frameHeight": 300,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.house.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/house-open.png",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.house.close": {
+      "id": "door.house.close",
+      "kind": "animation",
+      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 512,
+        "height": 600
+      },
+      "frameGrid": {
+        "frameWidth": 128,
+        "frameHeight": 300,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.house.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/house-open.png",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.forest-mine": {
+      "id": "door.forest-mine",
+      "kind": "image",
+      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 120,
+        "height": 145
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/forest-mine.png",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.forest-mine.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.forest-mine.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.forest-mine.open": {
+      "id": "door.forest-mine.open",
+      "kind": "animation",
+      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 480,
+        "height": 290
+      },
+      "frameGrid": {
+        "frameWidth": 120,
+        "frameHeight": 145,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.forest-mine.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/forest-mine-open.png",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.forest-mine.close": {
+      "id": "door.forest-mine.close",
+      "kind": "animation",
+      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 480,
+        "height": 290
+      },
+      "frameGrid": {
+        "frameWidth": 120,
+        "frameHeight": 145,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.forest-mine.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/forest-mine-open.png",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.forest-camp": {
+      "id": "door.forest-camp",
+      "kind": "image",
+      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 142,
+        "height": 170
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/forest-camp.png",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.forest-camp.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.forest-camp.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.forest-camp.open": {
+      "id": "door.forest-camp.open",
+      "kind": "animation",
+      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 568,
+        "height": 340
+      },
+      "frameGrid": {
+        "frameWidth": 142,
+        "frameHeight": 170,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.forest-camp.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/forest-camp-open.png",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.forest-camp.close": {
+      "id": "door.forest-camp.close",
+      "kind": "animation",
+      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 568,
+        "height": 340
+      },
+      "frameGrid": {
+        "frameWidth": 142,
+        "frameHeight": 170,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.forest-camp.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/forest-camp-open.png",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.camp": {
+      "id": "door.camp",
+      "kind": "image",
+      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 118,
+        "height": 195
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/camp.png",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "door.camp.open",
+          "label": "Open"
+        },
+        "close": {
+          "assetId": "door.camp.close",
+          "label": "Close"
+        }
+      }
+    },
+    "door.camp.open": {
+      "id": "door.camp.open",
+      "kind": "animation",
+      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 472,
+        "height": 390
+      },
+      "frameGrid": {
+        "frameWidth": 118,
+        "frameHeight": 195,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.camp.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/camp-open.png",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
+    },
+    "door.camp.close": {
+      "id": "door.camp.close",
+      "kind": "animation",
+      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 472,
+        "height": 390
+      },
+      "frameGrid": {
+        "frameWidth": 118,
+        "frameHeight": 195,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "door.camp.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "frameAlignment": "none",
+        "background": "transparent"
+      },
+      "activeVersion": "doors",
+      "versions": {
+        "doors": {
+          "name": "doors",
+          "file": "art/objects/doors/camp-open.png",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-09-28T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "door"
+      ]
     }
   },
   "styleGuide": {
@@ -8968,6 +9927,111 @@
     "king.hands-up": [
       "Graphics",
       "Characters"
+    ],
+    "door.village-pub": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.village-pub.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.village-pub.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.village-house": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.village-house.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.village-house.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.pub": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.pub.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.pub.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.house": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.house.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.house.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.forest-mine": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.forest-mine.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.forest-mine.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.forest-camp": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.forest-camp.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.forest-camp.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.camp": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.camp.open": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "door.camp.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
     ]
   }
 }

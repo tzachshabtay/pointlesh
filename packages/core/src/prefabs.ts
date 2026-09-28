@@ -81,6 +81,8 @@ export type PointleshRegionPrefabInput = PointleshAreaPrefabInput & {
   maxZoom?: number;
   smoothing?: number;
   baseline?: number;
+  /** Inherit the named scene area's perspective curve, including its coordinate range. */
+  perspectiveSourceAreaId?: string;
 };
 export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults> & { walkThrough?: boolean; walkPointId?: string };
 
@@ -159,6 +161,7 @@ export function createAreaPrefab(input: PointleshRegionPrefabInput = {}): Pointl
     walkBehindEnabled: input.walkBehindEnabled ?? false,
     scaleAxis: input.scaleAxis ?? "y",
     zoomAxis: input.zoomAxis ?? "y",
+    ...(input.perspectiveSourceAreaId ? { perspectiveSourceAreaId: input.perspectiveSourceAreaId } : {}),
   }, [
     number("minScale", "Scale at start", input.minScale ?? 0.65, { min: 0.01, step: 0.05, unit: "multiplier" }),
     number("maxScale", "Scale at end", input.maxScale ?? 1, { min: 0.01, step: 0.05, unit: "multiplier" }),

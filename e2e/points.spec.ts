@@ -27,7 +27,7 @@ test('hidden entry markers remain assigned walk points and support cottage and p
     await route.fulfill({ response, json: manifest });
   });
   await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
-  await selectInstance(page, 'home-door');
+  await selectInstance(page, 'village.door.village-house');
   const walkPoint = context(page).getByRole('combobox', { name: 'Walk point', exact: true });
   await expect(walkPoint).toHaveValue('village.entry.from-house');
   await expect(walkPoint.locator('option:checked')).toHaveText('From Borin’s Cottage');
@@ -37,9 +37,11 @@ test('hidden entry markers remain assigned walk points and support cottage and p
     await page.evaluate(from => (window as any).pointleshDemo.scene.changeRoom(from), from);
     await page.getByRole('button', { name: 'Interact with Back to the village', exact: true }).click();
     await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.roomId)).toBe('village');
+    await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.roomTransition.active)).toBe(false);
     expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(arrivals[from]);
     await page.getByRole('button', { name: `Interact with ${entrance}`, exact: true }).click();
     await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.roomId)).toBe(from);
+    await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.roomTransition.active)).toBe(false);
   }
   await expect(page.locator('#toast')).not.toContainText('missing or disabled');
   expect(await page.evaluate(() => (window as any).pointleshDemo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs ?? []).find((point: any) => point.id === 'village.entry.from-house').overrides.y.value)).toBe(-200);
@@ -47,6 +49,11 @@ test('hidden entry markers remain assigned walk points and support cottage and p
 });
 
 test('named points drag in world coordinates, rename without breaking references, and undo as one edit', async ({ page }) => {
+  await page.route('**/authoring/scenes.json', async route => {
+    const response = await route.fetch(), manifest = await response.json();
+    for (const layer of manifest.scenes.village.layers) for (const point of layer.prefabs ?? []) if (point.id === 'village.entry.from-pub') point.visible = true;
+    await route.fulfill({ response, json: manifest });
+  });
   await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   const id = 'village.entry.from-pub';
   await selectInstance(page, id);
@@ -63,7 +70,7 @@ test('named points drag in world coordinates, rename without breaking references
   const name = context(page).getByRole('textbox', { name: 'Point name', exact: true });
   await name.fill('Pub arrival'); await name.press('Tab');
   await expect(handle).toHaveAttribute('aria-label', 'Point: Pub arrival');
-  await selectInstance(page, 'pub-door');
+  await selectInstance(page, 'village.door.village-pub');
   const walkPoint = context(page).getByRole('combobox', { name: 'Walk point', exact: true });
   await expect(walkPoint).toHaveValue(id);
   await expect(walkPoint.locator(`option[value="${id}"]`)).toHaveText('Pub arrival');
@@ -86,11 +93,14 @@ test('Move and Walk act on the selected live character and preserve authored pla
   // Put Borin safely away so he doesn't occupy Rowan's destination.
   await page.evaluate(() => (window as any).pointleshDemo.scene.character.place({ x: 471, y: 470 }));
   await character.selectOption('village.npc.elder');
+  // Rowan's authored pose is off the main path; start the walking test on ground.
+  await page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.place({ x: 420, y: 480 }));
   const before = await page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.state.position);
   await context(page).getByRole('button', { name: 'Walk character here', exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.isWalking)).toBe(true);
+  const destination = await page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.destination);
   expect(before).not.toEqual(point);
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.state.position), { timeout: 20000 }).toEqual(point);
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.state.position), { timeout: 20000 }).toEqual(destination);
   expect(await page.evaluate(() => (window as any).pointleshDemo.manifest)).toEqual(authored);
 });
 
@@ -101,16 +111,19 @@ test('scene entry uses the point for the source room, including live edits and t
     const result = await page.evaluate(from => {
       const scene = (window as any).pointleshDemo.scene;
       scene.changeRoom(from); scene.changeRoom('forest');
-      return { actual: scene.character.state.position, expected: scene.resolved().points.find((point: any) => point.id === `forest.entry.from-${from}`).position };
+      const point = scene.resolved().points.find((point: any) => point.id === `forest.entry.from-${from}`).position;
+      return { actual: scene.character.state.position, point, spawn: scene.playerDefinition().position, floors: scene.walkables() };
     }, from);
-    expect(result.actual).toEqual(result.expected);
+    expect(result.actual).toEqual(findClosestReachablePath(result.spawn, result.point, result.floors)!.at(-1));
   }
   await selectInstance(page, 'forest.entry.from-camp');
   await context(page).getByRole('spinbutton', { name: 'X', exact: true }).fill('1300');
   await context(page).getByRole('spinbutton', { name: 'X', exact: true }).press('Tab');
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.changeRoom('camp'); scene.changeRoom('forest'); });
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBe(1300);
+  const result = await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; return { actual: scene.character.state.position, point: scene.resolved().points.find((point: any) => point.id === 'forest.entry.from-camp').position, spawn: scene.playerDefinition().position, floors: scene.walkables() }; });
+  expect(result.point.x).toBe(1300);
+  expect(result.actual).toEqual(findClosestReachablePath(result.spawn, result.point, result.floors)!.at(-1));
 });
 
 test('object interaction waits for the assigned point and snaps outside points to reachable ground', async ({ page }) => {
@@ -120,11 +133,10 @@ test('object interaction waits for the assigned point and snaps outside points t
   const pointId = 'house.walk.house.pickup.coin';
   await expect(context(page).getByRole('combobox', { name: 'Walk point', exact: true })).toHaveValue(pointId);
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
-  const goal = await position(page, pointId);
-  await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.character.place({ x: 450, y: 470 }); void scene.act('coin'); });
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.story.inventory)).not.toContain('coin');
+  const pending = await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.character.place({ x: 450, y: 470 }); void scene.act('coin'); return { inventory: [...scene.story.inventory], destination: scene.character.destination }; });
+  expect(pending.inventory).not.toContain('coin');
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.inventory)).toContain('coin');
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(goal);
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(pending.destination);
   await page.evaluate(() => (window as any).pointleshDemo.scene.dismissSpeech());
   await selectInstance(page, 'house.walk.house.pickup.rope');
   await context(page).getByRole('spinbutton', { name: 'Y', exact: true }).fill('-200');

@@ -24,6 +24,7 @@ async function dismiss(page: Page) {
 async function travel(page: Page, name: string, room: string) {
   await target(page, name);
   await expect(page.locator('#room-name')).toHaveText(room);
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.roomTransition.active)).toBe(false);
 }
 async function converse(page: Page, name: string, option: string) {
   await target(page, name);

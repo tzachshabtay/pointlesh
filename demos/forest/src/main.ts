@@ -16,6 +16,8 @@ import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_P
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
 import { addIntroAssets } from './intro-assets';
+import { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint, type RoomTransitionCheckpoint } from '@pointlesh/core';
+import { addDoorAssets, addForestTransitions, forestPortal, CAGE_APPROACH_AREA } from './transition-content';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
@@ -94,6 +96,7 @@ class ForestAdventure extends Phaser.Scene {
   introRunner = new CutsceneRunner(cutsceneDefinition('intro'));
   endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
   cinematic?: ForestCinematic;
+  roomTransition!: RoomTransitionController;
   movementKeys = new Set<string>();
   talking = false;
   showHotspots = false;
@@ -120,6 +123,11 @@ class ForestAdventure extends Phaser.Scene {
     installPhaserDisplayResolution(this.game);
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000).setDisplaySize(this.roomSize('village').width, this.roomSize('village').height);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
+    this.roomTransition = new RoomTransitionController(this.character, {
+      enterRoom: portal => this.changeRoom(portal.roomId as RoomId, false, true),
+      onComplete: () => { this.binding.sync(); this.render(); },
+      onBlocked: () => { this.syncTransitionDoors(); this.renderNearby(); toast('That entrance is blocked. Check its transition points and corridor.'); },
+    });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
       autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'borin',
@@ -130,7 +138,7 @@ class ForestAdventure extends Phaser.Scene {
       angle: () => this.playerDefinition()?.rotation ?? 0,
       animations: () => this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
       baseSize: () => borinActionSize(assets.assets.borin, !!this.story.tyingGuard),
-      areas: () => this.resolved().areas, camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
+      areas: () => this.playerAreas(), camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
     this.navigation = new PhaserAdventureNavigation(this, () => this.walkables());
     this.navigation.register(this.actor, {
@@ -243,7 +251,11 @@ class ForestAdventure extends Phaser.Scene {
     }
   }
   playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
-  walkables() { return walkablePolygons(this.resolved()); }
+  playerAreas() {
+    const portal = this.roomTransition?.portal;
+    return activatePointleshAreas(this.resolved().areas, portal?.roomId === this.story.roomId ? [portal.areaId] : []);
+  }
+  walkables() { return walkablePolygons({ ...this.resolved(), areas: this.playerAreas() }); }
   navigationFootprint(object?: ResolvedPointleshObject) {
     const asset = assets.assets[object?.assetId ?? 'borin'];
     // Ground dimensions use authored world scale, independently of animation
@@ -256,7 +268,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return !this.started || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked() { return !this.started || this.roomTransition?.active || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -309,6 +321,14 @@ class ForestAdventure extends Phaser.Scene {
     catch (error) { toast(error instanceof Error ? error.message : String(error)); }
   }
   applyInteraction(targetId: string, selected?: ItemId) {
+    const exit = targets[this.story.roomId].find(target => target.id === targetId)?.exit;
+    if (exit) {
+      if (this.roomTransition.active) return;
+      this.epoch++; this.clearMovementKeys(); this.hover();
+      this.roomTransition.begin(forestPortal(authoredScenes, this.story.roomId, exit), forestPortal(authoredScenes, exit, this.story.roomId));
+      this.renderNearby();
+      return;
+    }
     const result = interact(this.story, targetId, selected);
     if (selected && !this.story.inventory.includes(selected)) this.selected = undefined;
     if (result.room) this.changeRoom(result.room);
@@ -318,7 +338,8 @@ class ForestAdventure extends Phaser.Scene {
     if (result.ending) { this.epoch++; this.character.stop(); this.renderCutscene(); }
     this.render();
   }
-  changeRoom(room: RoomId, move = true) {
+  changeRoom(room: RoomId, move = true, transitioning = false) {
+    if (!transitioning) this.roomTransition?.cancel();
     // A designer scene switch can bypass gameplay input blocking. Cancel safely;
     // the rope has not been consumed until the animation finishes.
     if (room !== 'camp') delete this.story.tyingGuard;
@@ -415,7 +436,11 @@ class ForestAdventure extends Phaser.Scene {
         if (hasAssetTexture && typeof object.properties.animationKey === 'string' && object.properties.animationKey) {
           this.objectTextureBindings.get(object.id)?.binding.destroy(); this.objectTextureBindings.delete(object.id);
           if (!this.objectAnimations.has(object.id)) this.objectAnimations.set(object.id,
-            new PhaserAdventureObject(this, sprite, { aiRuntime: this.aiRuntime, object: current, areas: () => this.resolved().areas,
+            new PhaserAdventureObject(this, sprite, { aiRuntime: this.aiRuntime, object: () => {
+              const object = current();
+              return object.properties.role === 'door' ? { ...object, properties: { ...object.properties,
+                animationKey: this.transitionDoorKey(object.id), animationPlaying: false, animationLoop: false } } : object;
+            }, areas: () => this.resolved().areas,
               lightSurface: () => ({ image: this.background, revision: this.roomTextureRevision }) }));
         } else {
           this.objectAnimations.get(object.id)?.destroy(); this.objectAnimations.delete(object.id);
@@ -443,7 +468,7 @@ class ForestAdventure extends Phaser.Scene {
             animations: () => actorName === 'guard' ? this.guardPatrol?.animations(readCharacterAnimations(current().properties)) ?? readCharacterAnimations(current().properties) : readCharacterAnimations(current().properties),
             baseScale: () => ({ x: current().scaleX, y: current().scaleY }),
             ...(actorName === 'guard' ? { baseSize: () => guardAnimationSize(assets.assets[current().assetId], this.guardPatrol?.phase === 'collapse' || this.guardPatrol?.phase === 'asleep') } : {}),
-            areas: () => current().properties.ignoreScaling ? [] : this.resolved().areas,
+            areas: () => current().properties.ignoreScaling ? [] : activatePointleshAreas(this.resolved().areas, actorName === 'king' ? [CAGE_APPROACH_AREA] : []),
             origin: () => ({ x: current().anchorX, y: 1 - current().anchorY }),
             angle: () => current().rotation,
           });
@@ -475,6 +500,7 @@ class ForestAdventure extends Phaser.Scene {
       }
     }
     this.syncDoor();
+    this.syncTransitionDoors();
     this.renderTyingGuard();
   }
   private syncDoor(): void {
@@ -492,6 +518,22 @@ class ForestAdventure extends Phaser.Scene {
       });
     }
     this.doorBinding.renderPose({ position: door.position, activity: 'idle', facing: 'down' }, this.story.flags.won ? Number.MAX_SAFE_INTEGER : 0, { loop: false });
+  }
+  private transitionDoorKey(id: string): 'open' | 'close' {
+    return this.roomTransition.portal?.doorId === id && this.roomTransition.phase?.startsWith('close') ? 'close' : 'open';
+  }
+  private syncTransitionDoors(): void {
+    for (const object of this.resolved().objects.filter(object => object.properties.role === 'door')) {
+      const sprite = this.entitySprites.get(object.id), animation = this.objectAnimations.get(object.id);
+      const progress = this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress : 0;
+      // Seeking shares the normal object renderer and supports live previews.
+      const key = this.transitionDoorKey(object.id);
+      const linked = assets.assets[object.assetId]?.linkedAnimationAssets?.[key]?.assetId;
+      const clip = linked && assets.assets[linked]?.animations?.[0];
+      const duration = clip ? clip.frames.reduce((sum, _frame, i) => sum + (clip.frameTimings?.[i]?.delayMs ?? 1000 / clip.frameRate), 0) : 1000;
+      animation?.seek((key === 'close' ? 1 - progress : progress) * duration);
+      sprite?.setDepth(-900);
+    }
   }
   private renderTyingGuard(): void {
     if (!this.story.tyingGuard) return;
@@ -579,7 +621,7 @@ class ForestAdventure extends Phaser.Scene {
     for (const target of targets[this.story.roomId].filter(target => targetVisible(this.story, target.id))) {
       const node = button(target.name + (target.exit ? ' ↗' : ''), () => void this.act(target.id));
       node.setAttribute('aria-label', `Interact with ${target.name}`);
-      node.disabled = !this.interactionEntity(target.id);
+      node.disabled = this.roomTransition.active || !this.interactionEntity(target.id);
       el('nearby').append(node);
     }
   }
@@ -669,7 +711,8 @@ class ForestAdventure extends Phaser.Scene {
     this.renderNearby(); this.drawHotspots();
   }
   showStartScreen() {
-    this.started = false; this.epoch++; this.clearMovementKeys(); this.character.stop(); this.hover();
+    this.started = false; this.epoch++; this.clearMovementKeys(); this.hover();
+    if (!this.roomTransition.active) this.character.stop();
     closeModal(); clearTimeout(toastTimer); el('toast').hidden = true;
     if (document.body.classList.contains('tools-visible')) el('designer').click();
     document.body.classList.add('menu-open');
@@ -697,6 +740,7 @@ class ForestAdventure extends Phaser.Scene {
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
       cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
+        ...(this.roomTransition.active ? { roomTransition: this.roomTransition.snapshot() as unknown as JSONValue } : {}),
         ...(this.story.tyingGuard ? { tyingGuard: { ...this.story.tyingGuard } } : {}),
         ...(this.guardPatrol || this.guardCheckpoint ? { guardPatrol: (this.guardPatrol?.snapshot() ?? this.guardCheckpoint) as unknown as JSONValue } : {}),
         speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '' } };
@@ -711,6 +755,15 @@ class ForestAdventure extends Phaser.Scene {
     }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
     if (save.extensions.guardPatrol !== undefined) assertGuardPatrolSnapshot(save.extensions.guardPatrol);
+    if (save.extensions.roomTransition !== undefined) {
+      assertRoomTransitionCheckpoint(save.extensions.roomTransition);
+      const transition = save.extensions.roomTransition;
+      const portal = transition.phase.includes('entry') ? transition.to : transition.from;
+      if (portal.roomId !== save.roomId) throw new Error('Transition checkpoint is in a different room');
+      for (const portal of [transition.from, transition.to]) {
+        if (!roomIds.includes(portal.roomId as RoomId) || !resolvePointleshScene(authoredScenes, portal.roomId).areas.some(area => area.id === portal.areaId)) throw new Error('Transition references missing room geometry');
+      }
+    }
     const tying = save.extensions.tyingGuard as { elapsedMs: number } | undefined;
     if (tying !== undefined && (!tying || !Number.isFinite(tying.elapsedMs) || tying.elapsedMs < 0 || save.roomId !== 'camp' || !save.flags.guardAsleep || save.flags.guardBound || !save.inventory.includes('rope'))) throw new Error('Invalid rope-tying checkpoint');
     const checkDialog = new AdventureDialog(dialogs, assets); checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
@@ -734,6 +787,8 @@ class ForestAdventure extends Phaser.Scene {
     // Rebuilding dialog UI may start speech. Adopt the saved pose and animation
     // phase last, then let the binding select that activity's authored clip.
     this.character.restore(save.characters.borin);
+    this.roomTransition.restore((save.extensions.roomTransition ?? null) as RoomTransitionCheckpoint | null);
+    this.syncTransitionDoors();
     this.binding.sync(); this.render(); this.renderCutscene(); this.renderTyingGuard();
     this.roomCamera.snap();
   }
@@ -760,6 +815,9 @@ class ForestAdventure extends Phaser.Scene {
     const paused = modalOpen || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0;
     if (!paused) {
       this.binding.update(Math.min(delta, 100));
+      const previousRoom = this.story.roomId;
+      this.roomTransition.update(Math.min(delta, 100));
+      if (previousRoom !== this.story.roomId) { this.binding.sync(); this.roomCamera.snap(); }
       this.roomCamera.update(Math.min(delta, 100));
       if (!this.talking && this.story.roomId === 'camp' && !this.story.flags.guardAsleep) this.story.guardClock += Math.min(delta, 100);
     }
@@ -778,6 +836,7 @@ class ForestAdventure extends Phaser.Scene {
     }
     this.drawRoomTexture(this.story.roomId);
     this.syncDoor();
+    this.syncTransitionDoors();
     this.renderTyingGuard();
     if (!this.cinematic) this.characterLighting.sync(forestLighting(this.story.roomId, this.resolved().objects, id => this.entitySprites.get(id)));
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
@@ -856,7 +915,7 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
   const response = await fetch(`${import.meta.env.BASE_URL}authoring/${name}.json`);
   if (response.ok) {
     const value = await response.json(); validate(value);
-    if (name === 'scenes') authoredScenes = withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(value)))));
+    if (name === 'scenes') authoredScenes = addForestTransitions(withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(value))))));
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }
@@ -865,6 +924,7 @@ addForestObjectAssets(assets);
 updateRescueAssetText(assets);
 addRescueAssets(assets);
 addIntroAssets(assets);
+addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 // Use smooth texture sampling during continuous zoom, without multisampling quad

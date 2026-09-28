@@ -12,6 +12,7 @@ import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
 import { addRescueAssets } from './rescue-assets';
 import { addIntroAssets } from './intro-assets';
+import { addDoorAssets, addForestTransitions } from './transition-content';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { withForestLighting } from './environment-lighting';
@@ -136,6 +137,7 @@ export const assets = {
 addForestObjectAssets(assets);
 addRescueAssets(assets);
 addIntroAssets(assets);
+addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 
@@ -184,7 +186,7 @@ const roomPickups: Partial<Record<typeof roomIds[number], { pickupId: string; na
   ],
   forest: [{ pickupId: 'mushroom', name: 'Dreamcap mushroom', x: 111, y: 409 }],
 };
-export const scenes = withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
+export const scenes = addForestTransitions(withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(specializeForestEntities(defineSceneManifest({ schemaVersion: 2, prefabs: base, scenes: Object.fromEntries(roomIds.map(roomId => {
   const instances: ScenePrefabInstance[] = [
     createPointleshInstance({ id: `${roomId}.borin`, prefabId: 'forest.rescue-character', name: 'Borin', overrides: { object: { x: 471, y: 462, scaleX: 2.4, scaleY: 2.4 }, speed: { value: 165 }, walkStep: { value: 16 }, frameDurationMs: { value: 100 } } }),
     ...(roomCharacters[roomId] ?? []).map(npc => {
@@ -224,4 +226,4 @@ export const scenes = withForestLighting(addLamps(addFireplace(addForestPoints(u
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure' }), prefabs: instances, areas };
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
-})) })))))));
+})) }))))))));

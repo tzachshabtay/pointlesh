@@ -27,6 +27,18 @@ Boundary points are allowed, including obstacle edges. The low-level algorithm u
 
 Restored paths also validate against the bound source and replan to their saved endpoint if necessary. If the actor starts inside a newly placed solid obstacle or no route remains, walking stops with failure. The low-level `findPath` stays exact. Authored approach points snap to the closest reachable walkable position, while an implicit approach to a solid entity stops at its closest reachable boundary. There is no fallback that moves straight through walls.
 
+## Room entrances and exits
+
+`RoomTransitionController` sequences a character through an outgoing portal and an incoming one: open the outgoing door, walk out, close it, change rooms, open the incoming door, walk in, and close it. A `RoomPortal` has a `roomId`, temporary `areaId`, and a path ordered from ordinary floor through the threshold to an offscreen or fully concealed position. Optional `doorId` and `doorDurationMs` enable the door phases. Paths are followed exactly; blocked navigation cancels the transition without changing rooms.
+
+Keep corridor areas authored with `enabled: false`. Supply the character's navigation and perspective renderer with `activatePointleshAreas(room.areas, [transition.portal.areaId])` only while that portal is active. This returns runtime copies and never alters designer visibility, locks, or authored enabled flags. The host continues ticking its normal character binding, then calls `transition.update(deltaMs)`. Its `enterRoom` callback loads the destination room; the controller places the character at the concealed end and walks the path in reverse. `doorProgress` runs from zero (closed) to one (open), allowing the renderer to seek a normal animation. Disable new player movement/interactions while `active` is true.
+
+Save `transition.snapshot()` together with the character snapshot. Restore both before continuing updates. All door and walking phases resume in place; restore does not restart the route. Use `cancel()` when deliberately switching rooms through editor controls or starting another game.
+
+An area's optional `perspectiveSourceAreaId` shares another area's scale/zoom settings **and coordinate range**, so overlapping floor and corridor values match exactly. Beyond that range the nearest endpoint value is held. It follows later edits to the source, including its scale/zoom capability switches. The designer exposes this as **Match perspective to area**. The source's walkability and enabled flag are not inherited: only the corridor decides where and when those effects apply.
+
+The forest demo stores editable inside, threshold and concealed/offscreen points for every connection, temporary corridors, and seven animated door objects. The mine uses its open tunnel entrance. The cage has a separate temporary approach region sharing the camp floor's perspective for cinematic actors and the king in the cage.
+
 ## Characters
 
 ```ts

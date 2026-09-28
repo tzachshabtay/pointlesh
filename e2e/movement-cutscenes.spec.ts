@@ -2,6 +2,7 @@ import { openAdventure } from './start-helpers';
 import { selectInstance, expandProperties } from './designer-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { cinematicView, expectCastMotion, expectCinematicCleanup } from './cinematic-helpers';
+import { clipMovementToWalkable, findClosestReachablePath } from '@pointlesh/core';
 
 type DemoView = {
   scene: {
@@ -39,14 +40,16 @@ async function worldClick(page: Page, x: number, y: number) {
 test('clicking above walkable ground walks to the nearest reachable boundary', async ({ page }, testInfo) => {
   await begin(page);
   const before = await player(page);
+  const geometry = await page.evaluate(() => { const s = (window as any).pointleshDemo.scene; return { floors: s.walkables(), obstacles: s.navigation.obstaclesFor(s.actor) }; });
+  const expected = findClosestReachablePath(before, { x: 600, y: 200 }, geometry.floors, geometry.obstacles)!.at(-1)!;
   await worldClick(page, 600, 200);
   await expect.poll(async () => (await player(page)).activity).toBe('walking');
   await expect.poll(async () => (await player(page)).y).toBeLessThan(before.y - 40);
   await expect.poll(async () => (await player(page)).activity).toBe('idle');
   const after = await player(page);
   // CSS-scaled pointer rounding and the settling camera can shift the click by a pixel.
-  expect(Math.abs(after.x - 600)).toBeLessThan(2);
-  expect(after.y).toBeCloseTo(355, 0);
+  expect(Math.abs(after.x - expected.x)).toBeLessThan(2);
+  expect(Math.abs(after.y - expected.y)).toBeLessThan(2);
   await expect(page.locator('#toast')).not.toContainText('clear path');
   await expect(page.locator('#dialog')).toBeHidden();
   await page.screenshot({ path: testInfo.outputPath('nearest-walkable-boundary.png'), fullPage: true });
@@ -68,12 +71,13 @@ test('held arrows move continuously, stop at the floor edge, and stop on release
   expect(stopped.x).toBeCloseTo(released.x, 3);
   expect(stopped.y).toBeCloseTo(released.y, 3);
 
+  const geometry = await page.evaluate(() => { const s = (window as any).pointleshDemo.scene; return { floors: s.walkables(), obstacles: s.navigation.obstaclesFor(s.actor) }; });
+  const expected = clipMovementToWalkable(released, { x: released.x, y: -1000 }, geometry.floors, geometry.obstacles);
   await page.keyboard.down('ArrowUp');
-  await expect.poll(async () => (await player(page)).y).toBeLessThan(357);
+  await expect.poll(async () => (await player(page)).y).toBeCloseTo(expected.y, 1);
   await page.waitForTimeout(300);
   const boundary = await player(page);
-  expect(boundary.y).toBeGreaterThanOrEqual(354.9);
-  expect(boundary.y).toBeLessThanOrEqual(356.9);
+  expect(boundary.y).toBeCloseTo(expected.y, 1);
   await page.keyboard.up('ArrowUp');
   await expect.poll(async () => (await player(page)).activity).toBe('idle');
   expect((await player(page)).facing).toBe('up');

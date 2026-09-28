@@ -16,7 +16,9 @@ for (const [name, manifest] of [['seed', scenes], ['authored', authored]]) test(
       const floors = walkablePolygons(room), spawn = room.objects.find(object => object.properties.role === 'player').position;
       const path = findClosestReachablePath(spawn, point.position, floors);
       assert.ok(path?.length && isWalkable(path.at(-1), floors), `${roomId}/${point.id} has reachable ground`);
-      assert.deepEqual(resolvePointleshWalkPoint(room, room.areas.find(area => area.id === exit.id)), point.position);
+      const entrance = room.entities.find(entity => entity.id === exit.id || entity.properties.targetId === exit.id);
+      assert.ok(entrance, `${roomId}/${exit.id} has an interactive entrance`);
+      assert.deepEqual(resolvePointleshWalkPoint(room, entrance), point.position);
     }
   }
   const forest = resolvePointleshScene(manifest, 'forest');

@@ -3176,6 +3176,356 @@
           }
         }
       }
+    },
+    "forest.object.door.village-pub": {
+      "id": "forest.object.door.village-pub",
+      "name": "Copper Tankard door · outside",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.village-pub",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.8121827411167513,
+            "scaleY": 0.8132530120481928,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Copper Tankard door · outside",
+          "walkPointId": "village.entry.from-pub",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "pub-door"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.door.village-house": {
+      "id": "forest.object.door.village-house",
+      "name": "Cottage door · outside",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.village-house",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.8121827411167513,
+            "scaleY": 0.8132530120481928,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Cottage door · outside",
+          "walkPointId": "village.entry.from-house",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "home-door"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.door.pub": {
+      "id": "forest.object.door.pub",
+      "name": "Copper Tankard door · inside",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.pub",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.8121827411167513,
+            "scaleY": 0.8132530120481928,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Copper Tankard door · inside",
+          "walkPointId": "pub.entry.from-village",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "pub-exit"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.door.house": {
+      "id": "forest.object.door.house",
+      "name": "Cottage door · inside",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.house",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.8121827411167513,
+            "scaleY": 0.8132530120481928,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Cottage door · inside",
+          "walkPointId": "house.entry.from-village",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "house-exit"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.door.forest-mine": {
+      "id": "forest.object.door.forest-mine",
+      "name": "Goldroot Mine gate",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.forest-mine",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.7458563535911602,
+            "scaleY": 0.7458563535911602,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Goldroot Mine gate",
+          "walkPointId": "forest.entry.from-mine",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "mine-path"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.door.forest-camp": {
+      "id": "forest.object.door.forest-camp",
+      "name": "Orc camp gate",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.forest-camp",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.7458563535911602,
+            "scaleY": 0.7458563535911602,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Orc camp gate",
+          "walkPointId": "forest.entry.from-camp",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "camp-path"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
+    },
+    "forest.object.door.camp": {
+      "id": "forest.object.door.camp",
+      "name": "Orc camp gate · inside",
+      "attributes": [
+        {
+          "id": "object",
+          "name": "Sprite",
+          "object": {
+            "tag": "pointlesh:object",
+            "assetId": "door.camp",
+            "x": 0,
+            "y": 0,
+            "scaleX": 0.8121827411167513,
+            "scaleY": 0.8132530120481928,
+            "rotation": 0,
+            "anchorX": 0,
+            "anchorY": 1,
+            "visible": true,
+            "locked": false
+          },
+          "kind": "object"
+        }
+      ],
+      "pointlesh": {
+        "kind": "object",
+        "editor": {
+          "folderPath": [
+            "Objects",
+            "Doors"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "label": "Orc camp gate · inside",
+          "walkPointId": "camp.entry.from-forest",
+          "walkThrough": true,
+          "interactive": true,
+          "ignoreScaling": true,
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false,
+          "role": "door",
+          "targetId": "camp-exit"
+        },
+        "behaviors": [
+          "forest.interact"
+        ],
+        "propertySchema": {}
+      }
     }
   },
   "scenes": {
@@ -3289,6 +3639,122 @@
                   "y": 286.26506024096386,
                   "scaleX": 0.8121827411167513,
                   "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "village.threshold.to-pub",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · The Copper Tankard",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 160.81218274111674
+                },
+                "y": {
+                  "value": 378.09638554216866
+                }
+              }
+            },
+            {
+              "id": "village.outside.to-pub",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · The Copper Tankard",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 160.81218274111674
+                },
+                "y": {
+                  "value": 224.85542168674698
+                }
+              }
+            },
+            {
+              "id": "village.door.village-pub",
+              "prefabId": "forest.object.door.village-pub",
+              "name": "Copper Tankard door · outside",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 121.8274111675127,
+                  "y": 231.77710843373495
+                }
+              }
+            },
+            {
+              "id": "village.threshold.to-house",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · My cottage",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 769.9492385786803
+                },
+                "y": {
+                  "value": 373.2168674698795
+                }
+              }
+            },
+            {
+              "id": "village.outside.to-house",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · My cottage",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 769.9492385786803
+                },
+                "y": {
+                  "value": 245.18674698795184
+                }
+              }
+            },
+            {
+              "id": "village.door.village-house",
+              "prefabId": "forest.object.door.village-house",
+              "name": "Cottage door · outside",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 725.2791878172588,
+                  "y": 256.17469879518075
+                }
+              }
+            },
+            {
+              "id": "village.threshold.to-forest",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Forest path",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 481
+                },
+                "y": {
+                  "value": 342
+                }
+              }
+            },
+            {
+              "id": "village.outside.to-forest",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Forest path",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 481
+                },
+                "y": {
+                  "value": 247
                 }
               }
             }
@@ -3544,167 +4010,6 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 127.79337567978689,
-                  "y": 300.770955405699
-                },
-                {
-                  "id": "vertex-mtroczsc-gp9y8z",
-                  "x": 139.13900569934438,
-                  "y": 254.55737934862296
-                },
-                {
-                  "id": "vertex-mtrocn7s-5ygdg3",
-                  "x": 161.97584650856945,
-                  "y": 247.79090799774147,
-                  "curve": {
-                    "cx": 206.80371920815938,
-                    "cy": 250.32833475432201
-                  }
-                },
-                {
-                  "id": "b",
-                  "x": 195.7933756797869,
-                  "y": 300.770955405699
-                },
-                {
-                  "id": "c",
-                  "x": 195.7933756797869,
-                  "y": 364.770955405699
-                },
-                {
-                  "id": "d",
-                  "x": 127.79337567978689,
-                  "y": 364.770955405699
-                }
-              ],
-              "id": "pub-door::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "The Copper Tankard",
-                  "cursor": "interact",
-                  "exit": "pub",
-                  "description": "The windows glow with breakfast, gossip, and questionable decisions.",
-                  "approachX": 221,
-                  "approachY": 403,
-                  "approachRadius": 10,
-                  "walkPointId": "village.entry.from-pub"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "The Copper Tankard",
-                "entityId": "pub-door"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
-                  "x": 739.9910318903649,
-                  "y": 299.00896810963513
-                },
-                {
-                  "id": "vertex-mtrodpa6-wpfdg3",
-                  "x": 750.65885403526,
-                  "y": 272.31936664468685
-                },
-                {
-                  "id": "vertex-mtrodijj-ydj0qq",
-                  "x": 775.1873126822055,
-                  "y": 264.7070863749452
-                },
-                {
-                  "id": "vertex-mtrodl2a-4dcopd",
-                  "x": 800.5615802480111,
-                  "y": 271.4735577258267
-                },
-                {
-                  "id": "b",
-                  "x": 807.9910318903649,
-                  "y": 299.00896810963513
-                },
-                {
-                  "id": "c",
-                  "x": 807.9910318903649,
-                  "y": 363.00896810963513
-                },
-                {
-                  "id": "d",
-                  "x": 739.9910318903649,
-                  "y": 363.00896810963513
-                }
-              ],
-              "id": "home-door::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "My cottage",
-                  "cursor": "interact",
-                  "exit": "house",
-                  "description": "Home. I should take supplies before venturing into the wood.",
-                  "approachX": 752,
-                  "approachY": 403,
-                  "approachRadius": 10,
-                  "walkPointId": "village.entry.from-house"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "My cottage",
-                "entityId": "home-door"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
                   "x": 409.617215901207,
                   "y": 231.738045092841
                 },
@@ -3761,6 +4066,613 @@
                 },
                 "name": "Forest path",
                 "entityId": "forest-path"
+              }
+            },
+            {
+              "id": "village.transition.to-pub::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 116.81218274111674,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 256.99471490340403,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 256.99471490340403,
+                  "y": 482.17436460354213,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 116.81218274111674,
+                  "y": 482.17436460354213,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · The Copper Tankard",
+                "entityId": "village.transition.to-pub",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "village.floor",
+                  "transitionTo": "pub",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "village.door.village-pub.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": -47.61421319796955,
+                  "y": 378.09638554216866,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": -47.61421319796955,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 369.23857868020303,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 369.23857868020303,
+                  "y": 378.09638554216866,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 189.23857868020303,
+                  "y": 378.09638554216866,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 189.23857868020303,
+                  "y": 374.09638554216866,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 187.61421319796955,
+                  "y": 270.8132530120482,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 170.55837563451777,
+                  "y": 252.92168674698794,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 157.56345177664974,
+                  "y": 248.85542168674698,
+                  "id": "vertex-8"
+                },
+                {
+                  "x": 139.69543147208122,
+                  "y": 253.73493975903614,
+                  "id": "vertex-9"
+                },
+                {
+                  "x": 133.1979695431472,
+                  "y": 266.7469879518072,
+                  "id": "vertex-10"
+                },
+                {
+                  "x": 132.38578680203045,
+                  "y": 378.09638554216866,
+                  "id": "vertex-11"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Copper Tankard door · outside",
+                "entityId": "village.door.village-pub.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 379.09638554216866
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "village.transition.to-house::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 661.4569382619167,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 813.9492385786803,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 813.9492385786803,
+                  "y": 505.0471502471843,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 661.4569382619167,
+                  "y": 505.0471502471843,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · My cottage",
+                "entityId": "village.transition.to-house",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "village.floor",
+                  "transitionTo": "house",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "village.door.village-house.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 559.0862944162436,
+                  "y": 373.2168674698795,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 559.0862944162436,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 980.8121827411168,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 980.8121827411168,
+                  "y": 373.2168674698795,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 800.8121827411168,
+                  "y": 373.2168674698795,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 800.8121827411168,
+                  "y": 369.2168674698795,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 800,
+                  "y": 295.21084337349396,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 784.5685279187817,
+                  "y": 274.87951807228916,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 765.8883248730964,
+                  "y": 269.18674698795184,
+                  "id": "vertex-8"
+                },
+                {
+                  "x": 747.2081218274111,
+                  "y": 275.6927710843374,
+                  "id": "vertex-9"
+                },
+                {
+                  "x": 739.0862944162436,
+                  "y": 297.65060240963857,
+                  "id": "vertex-10"
+                },
+                {
+                  "x": 739.0862944162436,
+                  "y": 373.2168674698795,
+                  "id": "vertex-11"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Cottage door · outside",
+                "entityId": "village.door.village-house.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 374.2168674698795
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "village.transition.to-forest::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 419.3367371816581,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 525,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 525,
+                  "y": 439.0794996717723,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 419.3367371816581,
+                  "y": 439.0794996717723,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Forest path",
+                "entityId": "village.transition.to-forest",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "village.floor",
+                  "transitionTo": "forest",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "village.forest-canopy",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 390,
+                  "y": -200,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 570,
+                  "y": -200,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 570,
+                  "y": 295,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 390,
+                  "y": 295,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Forest path canopy",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 343
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
               }
             }
           ]
@@ -3944,6 +4856,49 @@
                   "y": 157.7710843373494,
                   "scaleX": 0.8121827411167513,
                   "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "pub.threshold.to-village",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Back to the village",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 858.4771573604061
+                },
+                "y": {
+                  "value": 304.90361445783134
+                }
+              }
+            },
+            {
+              "id": "pub.outside.to-village",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Back to the village",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 858.4771573604061
+                },
+                "y": {
+                  "value": 81.72289156626506
+                }
+              }
+            },
+            {
+              "id": "pub.door.pub",
+              "prefabId": "forest.object.door.pub",
+              "name": "Copper Tankard door · inside",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 791.8781725888325,
+                  "y": 89.4578313253012
                 }
               }
             }
@@ -4208,80 +5163,6 @@
               }
             },
             {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
-                  "x": 809.260002854402,
-                  "y": 130.96779482620093,
-                  "curve": {
-                    "cx": 857.5063271801115,
-                    "cy": 57.32866822380249
-                  }
-                },
-                {
-                  "id": "b",
-                  "x": 905.7526515058207,
-                  "y": 129.2749413410883
-                },
-                {
-                  "id": "c",
-                  "x": 906.599078248377,
-                  "y": 307.8709840204683,
-                  "curve": {
-                    "cx": 852.4277667247736,
-                    "cy": 301.09957008001794
-                  }
-                },
-                {
-                  "id": "d",
-                  "x": 813.4921365671837,
-                  "y": 298.56028985234906
-                }
-              ],
-              "id": "pub-exit::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "Back to the village",
-                  "cursor": "interact",
-                  "exit": "village",
-                  "description": "The morning air might clear my head.",
-                  "approachX": 710,
-                  "approachY": 440,
-                  "approachRadius": 10,
-                  "walkPointId": "pub.entry.from-village"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "Back to the village",
-                "entityId": "pub-exit"
-              }
-            },
-            {
               "tag": "pointlesh:area",
               "visible": true,
               "locked": false,
@@ -4381,6 +5262,227 @@
                 },
                 "name": "Bar",
                 "entityId": "prefab-instance-mtyj1z1j-nxfwc1"
+              }
+            },
+            {
+              "id": "pub.transition.to-village::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 666,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 902.4771573604061,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 902.4771573604061,
+                  "y": 485,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 666,
+                  "y": 485,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Back to the village",
+                "entityId": "pub.transition.to-village",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "pub.floor",
+                  "transitionTo": "village",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "pub.door.pub.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 631.3705583756345,
+                  "y": 304.90361445783134,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 631.3705583756345,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 1085.5837563451778,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 1085.5837563451778,
+                  "y": 304.90361445783134,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 905.5837563451777,
+                  "y": 304.90361445783134,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 905.5837563451777,
+                  "y": 300.90361445783134,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 905.5837563451777,
+                  "y": 154.51807228915663,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 891.7766497461929,
+                  "y": 127.68072289156626,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 869.8477157360406,
+                  "y": 111.41566265060241,
+                  "id": "vertex-8"
+                },
+                {
+                  "x": 845.4822335025381,
+                  "y": 105.72289156626506,
+                  "id": "vertex-9"
+                },
+                {
+                  "x": 822.741116751269,
+                  "y": 117.10843373493977,
+                  "id": "vertex-10"
+                },
+                {
+                  "x": 812.994923857868,
+                  "y": 140.69277108433735,
+                  "id": "vertex-11"
+                },
+                {
+                  "x": 811.3705583756345,
+                  "y": 304.90361445783134,
+                  "id": "vertex-12"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Copper Tankard door · inside",
+                "entityId": "pub.door.pub.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 305.90361445783134
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
               }
             }
           ]
@@ -4573,6 +5675,49 @@
                   "y": 174.03614457831324,
                   "scaleX": 0.8121827411167513,
                   "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "house.threshold.to-village",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Back to the village",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 897.4619289340101
+                },
+                "y": {
+                  "value": 354.5120481927711
+                }
+              }
+            },
+            {
+              "id": "house.outside.to-village",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Back to the village",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 897.4619289340101
+                },
+                "y": {
+                  "value": 111.8132530120482
+                }
+              }
+            },
+            {
+              "id": "house.door.house",
+              "prefabId": "forest.object.door.house",
+              "name": "Cottage door · inside",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 844.6700507614213,
+                  "y": 117.92168674698796
                 }
               }
             }
@@ -4822,89 +5967,6 @@
               }
             },
             {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
-                  "x": 859.7391493540888,
-                  "y": 161.45594859685943,
-                  "curve": {
-                    "cx": 869.5642243697185,
-                    "cy": 136.8932610577851
-                  }
-                },
-                {
-                  "id": "vertex-mu8tt853-iwmtmx",
-                  "x": 897.0744344134818,
-                  "y": 127.0681860421554,
-                  "curve": {
-                    "cx": 922.619629454119,
-                    "cy": 134.92824605465916
-                  }
-                },
-                {
-                  "id": "b",
-                  "x": 928.5146744634968,
-                  "y": 158.5084260921705,
-                  "curve": {
-                    "cx": 958.972407011949,
-                    "cy": 170.2985161109262
-                  }
-                },
-                {
-                  "id": "c",
-                  "x": 930.4796894666229,
-                  "y": 363.8524939188318
-                },
-                {
-                  "id": "d",
-                  "x": 850.8965818400221,
-                  "y": 341.2548213828834
-                }
-              ],
-              "id": "house-exit::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "Back to the village",
-                  "cursor": "interact",
-                  "exit": "village",
-                  "description": "There is a king out there who needs me.",
-                  "approachX": 874,
-                  "approachY": 403,
-                  "approachRadius": 10,
-                  "walkPointId": "house.entry.from-village"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "Back to the village",
-                "entityId": "house-exit"
-              }
-            },
-            {
               "id": "house.hearth-kettle::area",
               "tag": "pointlesh:area",
               "visible": true,
@@ -5025,6 +6087,222 @@
                   "maxZoom": 1,
                   "smoothing": 5,
                   "baseline": 310
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "house.transition.to-village::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 816.515084618482,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 941.4619289340101,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 941.4619289340101,
+                  "y": 553.4479561311276,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 816.515084618482,
+                  "y": 553.4479561311276,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Back to the village",
+                "entityId": "house.transition.to-village",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "house.floor",
+                  "transitionTo": "village",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "house.door.house.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 682.5380710659898,
+                  "y": 354.5120481927711,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 682.5380710659898,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 1112.3857868020305,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 1112.3857868020305,
+                  "y": 354.5120481927711,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 932.3857868020305,
+                  "y": 354.5120481927711,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 932.3857868020305,
+                  "y": 350.5120481927711,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 932.3857868020305,
+                  "y": 174.84939759036143,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 914.5177664974619,
+                  "y": 152.89156626506025,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 895.0253807106599,
+                  "y": 135.8132530120482,
+                  "id": "vertex-8"
+                },
+                {
+                  "x": 872.2842639593908,
+                  "y": 150.45180722891567,
+                  "id": "vertex-9"
+                },
+                {
+                  "x": 862.5380710659898,
+                  "y": 175.66265060240963,
+                  "id": "vertex-10"
+                },
+                {
+                  "x": 862.5380710659898,
+                  "y": 354.5120481927711,
+                  "id": "vertex-11"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Cottage door · inside",
+                "entityId": "house.door.house.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 355.5120481927711
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -5218,6 +6496,122 @@
                   "y": 194.6685082872928,
                   "scaleX": 0.7458563535911602,
                   "scaleY": 0.7458563535911602
+                }
+              }
+            },
+            {
+              "id": "forest.threshold.to-mine",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Goldroot Mine",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 269.6270718232044
+                },
+                "y": {
+                  "value": 323.22651933701655
+                }
+              }
+            },
+            {
+              "id": "forest.outside.to-mine",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Goldroot Mine",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 269.6270718232044
+                },
+                "y": {
+                  "value": 216.91160220994473
+                }
+              }
+            },
+            {
+              "id": "forest.door.forest-mine",
+              "prefabId": "forest.object.door.forest-mine",
+              "name": "Goldroot Mine gate",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 227.48618784530387,
+                  "y": 225.99447513812154
+                }
+              }
+            },
+            {
+              "id": "forest.threshold.to-camp",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Orc encampment",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 1366.03591160221
+                },
+                "y": {
+                  "value": 306.81767955801104
+                }
+              }
+            },
+            {
+              "id": "forest.outside.to-camp",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Orc encampment",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 1366.03591160221
+                },
+                "y": {
+                  "value": 189.31491712707182
+                }
+              }
+            },
+            {
+              "id": "forest.door.forest-camp",
+              "prefabId": "forest.object.door.forest-camp",
+              "name": "Orc camp gate",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 1312.707182320442,
+                  "y": 201.38121546961327
+                }
+              }
+            },
+            {
+              "id": "forest.threshold.to-village",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Bramblehollow",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 706.0180350034552
+                },
+                "y": {
+                  "value": 550
+                }
+              }
+            },
+            {
+              "id": "forest.outside.to-village",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Bramblehollow",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 706.0180350034552
+                },
+                "y": {
+                  "value": 770
                 }
               }
             }
@@ -5533,138 +6927,6 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 240,
-                  "y": 250
-                },
-                {
-                  "id": "b",
-                  "x": 308,
-                  "y": 250
-                },
-                {
-                  "id": "c",
-                  "x": 308,
-                  "y": 314
-                },
-                {
-                  "id": "d",
-                  "x": 240,
-                  "y": 314
-                }
-              ],
-              "id": "mine-path::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "Goldroot Mine",
-                  "cursor": "interact",
-                  "exit": "mine",
-                  "description": "A lantern flickers in the old gold mine.",
-                  "approachX": 274,
-                  "approachY": 410,
-                  "approachRadius": 10,
-                  "walkPointId": "forest.entry.from-mine"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "Goldroot Mine",
-                "entityId": "mine-path"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
-                  "x": 1351,
-                  "y": 240
-                },
-                {
-                  "id": "b",
-                  "x": 1419,
-                  "y": 240
-                },
-                {
-                  "id": "c",
-                  "x": 1419,
-                  "y": 304
-                },
-                {
-                  "id": "d",
-                  "x": 1351,
-                  "y": 304
-                }
-              ],
-              "id": "camp-path::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "Orc encampment",
-                  "cursor": "interact",
-                  "exit": "camp",
-                  "description": "A crooked palisade. Smoke. Terrible singing.",
-                  "approachX": 1385,
-                  "approachY": 410,
-                  "approachRadius": 10,
-                  "walkPointId": "forest.entry.from-camp"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "Orc encampment",
-                "entityId": "camp-path"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
                   "x": 250.83644911744514,
                   "y": 507.67729606776527
                 },
@@ -5817,6 +7079,512 @@
                     "type": "number",
                     "label": "Approach distance",
                     "min": 0,
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "forest.transition.to-mine::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 225.6270718232044,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 318,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 318,
+                  "y": 455,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 225.6270718232044,
+                  "y": 455,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Goldroot Mine",
+                "entityId": "forest.transition.to-mine",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "forest.floor",
+                  "transitionTo": "mine",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "forest.door.forest-mine.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 60.165745856353595,
+                  "y": 323.22651933701655,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 60.165745856353595,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 479.08839779005524,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 479.08839779005524,
+                  "y": 323.22651933701655,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 299.08839779005524,
+                  "y": 323.22651933701655,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 299.08839779005524,
+                  "y": 319.22651933701655,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 299.08839779005524,
+                  "y": 261.7955801104972,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 281.1878453038674,
+                  "y": 247.6243093922652,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 263.28729281767954,
+                  "y": 240.91160220994473,
+                  "id": "vertex-8"
+                },
+                {
+                  "x": 246.13259668508286,
+                  "y": 250.60773480662982,
+                  "id": "vertex-9"
+                },
+                {
+                  "x": 240.1657458563536,
+                  "y": 267.01657458563534,
+                  "id": "vertex-10"
+                },
+                {
+                  "x": 240.1657458563536,
+                  "y": 323.22651933701655,
+                  "id": "vertex-11"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Goldroot Mine gate",
+                "entityId": "forest.door.forest-mine.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 324.22651933701655
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "forest.transition.to-camp::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 1322.03591160221,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 1429,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 1429,
+                  "y": 455,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 1322.03591160221,
+                  "y": 455,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Orc encampment",
+                "entityId": "forest.transition.to-camp",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "forest.floor",
+                  "transitionTo": "camp",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "forest.door.forest-camp.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 1149.8618784530386,
+                  "y": 306.81767955801104,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 1149.8618784530386,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 1582.2099447513813,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 1582.2099447513813,
+                  "y": 306.81767955801104,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 1402.2099447513813,
+                  "y": 306.81767955801104,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 1402.2099447513813,
+                  "y": 302.81767955801104,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 1402.2099447513813,
+                  "y": 213.31491712707182,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 1329.8618784530386,
+                  "y": 213.31491712707182,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 1329.8618784530386,
+                  "y": 306.81767955801104,
+                  "id": "vertex-8"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Orc camp gate",
+                "entityId": "forest.door.forest-camp.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 307.81767955801104
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "forest.transition.to-village::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 662.0180350034552,
+                  "y": 486.01606456080515,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 750.0180350034552,
+                  "y": 486.01606456080515,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 750.0180350034552,
+                  "y": 815,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 662.0180350034552,
+                  "y": 815,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Bramblehollow",
+                "entityId": "forest.transition.to-village",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "forest.floor",
+                  "transitionTo": "village",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
                     "step": 1
                   }
                 }
@@ -5975,6 +7743,36 @@
                   "y": 204.1265060240964,
                   "scaleX": 0.8121827411167513,
                   "scaleY": 0.8132530120481928
+                }
+              }
+            },
+            {
+              "id": "mine.threshold.to-forest",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Back to the wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 113.5
+                },
+                "y": {
+                  "value": 271
+                }
+              }
+            },
+            {
+              "id": "mine.outside.to-forest",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Back to the wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 113.5
+                },
+                "y": {
+                  "value": 158
                 }
               }
             }
@@ -6339,6 +8137,222 @@
                 "name": "Back to the wood",
                 "entityId": "mine-exit"
               }
+            },
+            {
+              "id": "mine.transition.to-forest::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 69.5,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 480.57328783947673,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 480.57328783947673,
+                  "y": 542.2888893523861,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 69.5,
+                  "y": 542.2888893523861,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Back to the wood",
+                "entityId": "mine.transition.to-forest",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "mine.floor",
+                  "transitionTo": "forest",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "mine.entrance.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": -105,
+                  "y": 271,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": -105,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 332,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 332,
+                  "y": 271,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 152,
+                  "y": 271,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 152,
+                  "y": 267,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 150,
+                  "y": 233,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 123,
+                  "y": 185,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 104,
+                  "y": 182,
+                  "id": "vertex-8"
+                },
+                {
+                  "x": 81,
+                  "y": 208,
+                  "id": "vertex-9"
+                },
+                {
+                  "x": 75,
+                  "y": 224,
+                  "id": "vertex-10"
+                },
+                {
+                  "x": 75,
+                  "y": 271,
+                  "id": "vertex-11"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Mine tunnel entrance",
+                "entityId": "mine.entrance.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 272
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
             }
           ]
         }
@@ -6581,6 +8595,49 @@
                 },
                 "behaviors": []
               }
+            },
+            {
+              "id": "camp.threshold.to-forest",
+              "prefabId": "forest.point.entry",
+              "name": "Threshold · Back to the wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 108.02030456852792
+                },
+                "y": {
+                  "value": 296.7710843373494
+                }
+              }
+            },
+            {
+              "id": "camp.outside.to-forest",
+              "prefabId": "forest.point.entry",
+              "name": "Offscreen / behind doorway · Back to the wood",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 108.02030456852792
+                },
+                "y": {
+                  "value": 132.14457831325302
+                }
+              }
+            },
+            {
+              "id": "camp.door.camp",
+              "prefabId": "forest.object.door.camp",
+              "name": "Orc camp gate · inside",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "object": {
+                  "x": 56.85279187817259,
+                  "y": 143.94578313253012
+                }
+              }
             }
           ],
           "objects": [],
@@ -6766,72 +8823,6 @@
                 },
                 "name": "Stew cauldron",
                 "entityId": "cauldron"
-              }
-            },
-            {
-              "tag": "pointlesh:hotspot",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "id": "a",
-                  "x": 262.74501394893815,
-                  "y": 467.9272859023206
-                },
-                {
-                  "id": "b",
-                  "x": 664.198746995659,
-                  "y": 462.91282599794346
-                },
-                {
-                  "id": "c",
-                  "x": 665.9003520487365,
-                  "y": 530.1262255945119
-                },
-                {
-                  "id": "d",
-                  "x": 262.74501394893815,
-                  "y": 531.9272859023206
-                }
-              ],
-              "id": "camp-exit::area",
-              "pointlesh": {
-                "kind": "hotspot",
-                "properties": {
-                  "enabled": true,
-                  "label": "Back to the wood",
-                  "cursor": "interact",
-                  "exit": "forest",
-                  "description": "A discreet retreat is also a kind of strategy.",
-                  "approachX": 90,
-                  "approachY": 494,
-                  "approachRadius": 10,
-                  "walkPointId": "camp.entry.from-forest"
-                },
-                "behaviors": [
-                  "forest.interact"
-                ],
-                "propertySchema": {
-                  "approachX": {
-                    "type": "number",
-                    "label": "Approach X",
-                    "step": 1
-                  },
-                  "approachY": {
-                    "type": "number",
-                    "label": "Approach Y",
-                    "step": 1
-                  },
-                  "approachRadius": {
-                    "type": "number",
-                    "label": "Approach distance",
-                    "min": 0,
-                    "step": 1
-                  }
-                },
-                "name": "Back to the wood",
-                "entityId": "camp-exit"
               }
             },
             {
@@ -7288,6 +9279,295 @@
                   "maxZoom": 1,
                   "smoothing": 5,
                   "baseline": 345
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.transition.to-forest::area",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 64.02030456852792,
+                  "y": -180,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 517.4890234280215,
+                  "y": -180,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 517.4890234280215,
+                  "y": 548.5151136665667,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 64.02030456852792,
+                  "y": 548.5151136665667,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Transition · Back to the wood",
+                "entityId": "camp.transition.to-forest",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "camp.floor",
+                  "transitionTo": "forest",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.door.camp.frame",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": -106.90355329949239,
+                  "y": 296.7710843373494,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": -106.90355329949239,
+                  "y": -250,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 322.94416243654825,
+                  "y": -250,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 322.94416243654825,
+                  "y": 296.7710843373494,
+                  "id": "vertex-3"
+                },
+                {
+                  "x": 142.94416243654823,
+                  "y": 296.7710843373494,
+                  "id": "vertex-4"
+                },
+                {
+                  "x": 142.94416243654823,
+                  "y": 292.7710843373494,
+                  "id": "vertex-5"
+                },
+                {
+                  "x": 142.94416243654823,
+                  "y": 156.14457831325302,
+                  "id": "vertex-6"
+                },
+                {
+                  "x": 73.09644670050761,
+                  "y": 156.14457831325302,
+                  "id": "vertex-7"
+                },
+                {
+                  "x": 73.09644670050761,
+                  "y": 296.7710843373494,
+                  "id": "vertex-8"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Door frame · Orc camp gate · inside",
+                "entityId": "camp.door.camp.frame",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 297.7710843373494
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "camp.cage-approach",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "x": 570,
+                  "y": 300,
+                  "id": "vertex-0"
+                },
+                {
+                  "x": 740,
+                  "y": 300,
+                  "id": "vertex-1"
+                },
+                {
+                  "x": 740,
+                  "y": 448,
+                  "id": "vertex-2"
+                },
+                {
+                  "x": 570,
+                  "y": 448,
+                  "id": "vertex-3"
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Cage approach · continuous perspective",
+                "entityId": "camp.cage-approach",
+                "properties": {
+                  "enabled": false,
+                  "walkable": true,
+                  "scaleEnabled": true,
+                  "zoomEnabled": true,
+                  "walkBehindEnabled": false,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "perspectiveSourceAreaId": "camp.floor",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {

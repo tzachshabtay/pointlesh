@@ -39,8 +39,8 @@ test('walk and interact cursors switch, animate on click, and use the base asset
   const baseWidth = await page.evaluate(() => (window as any).pointleshDemo.scene.aiRuntime.manifest.assets['cursor.walk'].dimensions.width);
   expect((await cursor.boundingBox())!.width).toBe(baseWidth);
   const centroid = await page.evaluate(() => {
-    const vertices = (window as any).pointleshDemo.scene.resolved().areas.find((area: any) => area.id === 'pub-door').polygon;
-    return vertices.reduce((sum: any, point: any) => ({ x: sum.x + point.x / vertices.length, y: sum.y + point.y / vertices.length }), { x: 0, y: 0 });
+    const center = (window as any).pointleshDemo.scene.entitySprites.get('village.door.village-pub').getCenter();
+    return { x: center.x, y: center.y };
   });
   const door = await worldPoint(page, centroid.x, centroid.y);
   await page.mouse.move(door.x, door.y);
@@ -65,7 +65,7 @@ test('hovering scenery or a character interrupts walk feedback immediately', asy
     const clip = runtime.manifest.assets['cursor.walk.click'].animations[0];
     clip.frameTimings = clip.frames.map(() => ({ delayMs: 2000 }));
   });
-  for (const target of ['pub-door', 'village.npc.elder']) {
+  for (const target of ['village.door.village-pub', 'village.npc.elder']) {
     const ground = await worldPoint(page, 600, 470);
     await page.mouse.click(ground.x, ground.y);
     await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.walk');
@@ -73,12 +73,9 @@ test('hovering scenery or a character interrupts walk feedback immediately', asy
     const point = await page.evaluate(target => {
       const scene = (window as any).pointleshDemo.scene;
       scene.character.stop();
-      if (target === 'pub-door') {
-        const vertices = scene.resolved().areas.find((area: any) => area.id === target).polygon;
-        return vertices.reduce((sum: any, p: any) => ({ x: sum.x + p.x / vertices.length, y: sum.y + p.y / vertices.length }), { x: 0, y: 0 });
-      }
       const sprite = scene.entitySprites.get(target);
-      return { x: sprite.x, y: sprite.y - sprite.displayHeight / 2 };
+      const center = sprite.getCenter();
+      return { x: center.x, y: center.y };
     }, target);
     const screen = await worldPoint(page, point.x, point.y);
     await page.mouse.move(screen.x, screen.y);

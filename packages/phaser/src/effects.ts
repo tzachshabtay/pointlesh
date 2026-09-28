@@ -33,14 +33,24 @@ export function evaluatePointleshAreaEffects(areas: readonly ResolvedPointleshAr
   for (const area of areas) {
     if (!area.enabled || !area.closed || !pointInPolygon(point, area.polygon)) continue;
     effects.activeAreaIds.push(area.id);
+    // A corridor reuses the source's coordinate range, not its own bounding box.
+    // This matches every point in the overlap and clamps continuously beyond it.
+    const visited = new Set<string>([area.id]);
+    let perspective = area;
+    while (typeof perspective.properties.perspectiveSourceAreaId === 'string' && perspective.properties.perspectiveSourceAreaId) {
+      const source = areas.find(candidate => candidate.id === perspective.properties.perspectiveSourceAreaId);
+      if (!source || visited.has(source.id)) break;
+      visited.add(source.id); perspective = source;
+    }
     const roles = pointleshAreaCapabilities(area);
-    const axis = (key: string) => (area.properties[key] ?? area.properties.axis) === "x" ? "x" : "y";
+    const sourceRoles = pointleshAreaCapabilities(perspective);
+    const axis = (key: string) => (perspective.properties[key] ?? perspective.properties.axis) === "x" ? "x" : "y";
     if (roles.scale) {
-      effects.scale = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minScale", 0.65), numeric(area, "maxScale", 1), axis("scaleAxis")));
+      effects.scale = sourceRoles.scale ? Math.max(0.01, interpolatePointleshArea(perspective, point, numeric(perspective, "minScale", 0.65), numeric(perspective, "maxScale", 1), axis("scaleAxis"))) : defaults.defaultScale ?? 1;
     }
     if (roles.zoom) {
-      effects.zoom = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minZoom", 1.2), numeric(area, "maxZoom", 1), axis("zoomAxis")));
-      effects.zoomSmoothing = Math.max(0, numeric(area, "smoothing", 5));
+      effects.zoom = sourceRoles.zoom ? Math.max(0.01, interpolatePointleshArea(perspective, point, numeric(perspective, "minZoom", 1.2), numeric(perspective, "maxZoom", 1), axis("zoomAxis"))) : defaults.defaultZoom ?? 1;
+      effects.zoomSmoothing = Math.max(0, numeric(perspective, "smoothing", 5));
     }
     if (roles.walkBehind) {
       effects.walkBehindBaseline = numeric(area, "baseline", 0);
