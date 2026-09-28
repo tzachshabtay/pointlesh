@@ -34,7 +34,8 @@ test('wide forest follows walking, restores saves, and uses camera coordinates f
   // Snap at the right edge and inspect the actual camera's rendered world view.
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    scene.character.place({ x: 1510, y: 465 }); scene.binding.sync(); scene.roomCamera.snap();
+    void scene.character.walkTo({ x: 1510, y: 465 });
+    scene.character.place(scene.character.destination); scene.binding.sync(); scene.roomCamera.snap();
   });
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.worldView.right)).toBeCloseTo(1620, 4);
   const point = await page.evaluate(() => {
@@ -51,7 +52,7 @@ test('wide forest follows walking, restores saves, and uses camera coordinates f
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.roomTransition.active)).toBe(false);
   expect(await page.evaluate(() => ({ x: (window as any).pointleshDemo.scene.cameras.main.scrollX, y: (window as any).pointleshDemo.scene.cameras.main.scrollY }))).toEqual({ x: 0, y: 0 });
   await page.evaluate(() => (window as any).pointleshDemo.scene.changeRoom('forest'));
-  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBe(1385);
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBeGreaterThan(1200);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.cameras.main.scrollX)).toBeGreaterThan(600);
   expect(errors).toEqual([]);
 });

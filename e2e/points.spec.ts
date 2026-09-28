@@ -91,7 +91,7 @@ test('Move and Walk act on the selected live character and preserve authored pla
   await context(page).getByRole('button', { name: 'Move character here', exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(point);
   // Put Borin safely away so he doesn't occupy Rowan's destination.
-  await page.evaluate(() => (window as any).pointleshDemo.scene.character.place({ x: 471, y: 470 }));
+  await page.evaluate(() => (window as any).pointleshDemo.scene.character.place({ x: 700, y: 500 }));
   await character.selectOption('village.npc.elder');
   // Rowan's authored pose is off the main path; start the walking test on ground.
   await page.evaluate(() => (window as any).pointleshDemo.scene.npcActors.get('village.npc.elder').controller.place({ x: 420, y: 480 }));
