@@ -332,3 +332,23 @@ Exact cropped orc-palisade double gate opening animation, pixel-art spritesheet.
 ```text
 Precise object animation edit for an existing pixel-art game. This reference is the exact cropped INSIDE of the orc camp gate. Produce an 8-frame opening animation, exactly FOUR equal columns and TWO equal rows, read left to right top to bottom, with no gutters. Every cell has the same framing and 118:195 aspect ratio as the reference. Keep the gateposts, surrounding dark wooden palisade, little rope at the bottom right, camera, warm lighting and pixel texture absolutely stationary. Animate ONLY this exact wooden gate leaf with its riveted iron horizontal straps and diagonal braces swinging INWARD on its left hinges. Frame1 EXACT original CLOSED pose, frames2-7 smooth increasingly open angles, frame8 fully OPEN revealing a dim empty green forest passage. The leaf recedes into the doorway without protruding outside the posts. Preserve the exact existing weathered wood, diagonal Z brace, iron studs and single door leaf identity. Closing will play these poses backward. No characters, new props, text, labels, grid lines, numbering, margins, borders or redesign. Opaque full-crop registered background patches, not isolated transparent doors. Overall sheet aspect ratio 236:195.
 ```
+
+## Fixed doorway views and independent door leaves
+
+Mode: **built-in image generation**, precise edits of the existing cottage door sheets and room backgrounds. `pack-door-corrections.ts` supersedes the original per-frame registration for the cottage and tavern: each cottage opening composites a transparent moving leaf over ONE fixed view. A common leaf scale preserves the changing projected width. Only the hinge/baseline is registered; scenery is never fitted separately per frame. The original aperture masks preserve the surrounding architecture and thresholds. The tavern stays open on both sides.
+
+Final saved assets, under `demos/forest/public/art/objects/doors/`:
+
+- `house-open.png`: fixed daylight village view behind the cottage interior leaf.
+- `village-house-open.png`: fixed warm interior, preserving the existing stone doorstep.
+- `pub.png`, `pub-open.png`: permanent daylight view at the interior pub entrance (last animation frame).
+- `village-pub.png`, `village-pub-open.png`: original painted open pub entrance (last animation frame).
+
+Generation specifications for the final prompt set:
+
+- **Cottage interior leaf:** edit the corrected 4×2 cottage door sheet. Extract only the moving wooden leaves and iron hardware; remove all exterior scenery, steps, floor and framing to alpha zero. Preserve eight opening poses, fixed left hinge, height and baseline, with no per-frame resizing.
+- **Cottage exterior leaf:** edit the 4×2 exterior cottage door sheet. Keep only its wooden leaf, ring and fittings; remove the room, lanterns, barrels, beams and floor to alpha zero. Preserve fixed hinge/height and the closed-to-edge-on sequence.
+- **Cottage outside view:** edit only the far-right doorway aperture of `house-lamps.png`, using `atlas-village-pub-lamps.png` as the village reference. An unobstructed open doorway, no leaf, immediate mossy landing, dirt village square, grass and large tree trunks at the existing scale. No miniature panorama, tiny cottage, toy well, black hallway or added upward steps. Preserve all other architecture, composition and pixel-art style.
+- **Pub outside view:** edit only the far-right doorway aperture of `pub-lamps.png`, with the same village reference. Permanently open and unobstructed, no leaf; immediate village dirt and worn stones, grass and full-scale tree trunks. No miniature village or dark hallway. Preserve the room outside the aperture.
+
+The already-generated final exterior cottage open pose supplies its single warm interior plate. Import only the aperture; preserve the original closed pose and doorstep. Tests compare uncovered scenery pixels across frames to prevent future backdrop movement or scale changes.

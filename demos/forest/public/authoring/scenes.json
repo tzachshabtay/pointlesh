@@ -3219,12 +3219,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "pub-door"
+          "targetId": "pub-door",
+          "doorAlwaysOpen": true
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     },
     "forest.object.door.village-house": {
@@ -3269,12 +3275,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "home-door"
+          "targetId": "home-door",
+          "doorAlwaysOpen": false
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     },
     "forest.object.door.pub": {
@@ -3319,12 +3331,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "pub-exit"
+          "targetId": "pub-exit",
+          "doorAlwaysOpen": true
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     },
     "forest.object.door.house": {
@@ -3369,12 +3387,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "house-exit"
+          "targetId": "house-exit",
+          "doorAlwaysOpen": false
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     },
     "forest.object.door.forest-mine": {
@@ -3419,12 +3443,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "mine-path"
+          "targetId": "mine-path",
+          "doorAlwaysOpen": false
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     },
     "forest.object.door.forest-camp": {
@@ -3469,12 +3499,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "camp-path"
+          "targetId": "camp-path",
+          "doorAlwaysOpen": false
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     },
     "forest.object.door.camp": {
@@ -3519,12 +3555,18 @@
           "animationPlaying": false,
           "animationLoop": false,
           "role": "door",
-          "targetId": "camp-exit"
+          "targetId": "camp-exit",
+          "doorAlwaysOpen": false
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "doorAlwaysOpen": {
+            "type": "boolean",
+            "label": "Keep door open"
+          }
+        }
       }
     }
   },
@@ -4108,14 +4150,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "village.floor",
                   "transitionTo": "pub",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 351.8822459221226,
+                    "end": 531.5641276260035
+                  },
+                  "zoomRange": {
+                    "start": 351.8822459221226,
+                    "end": 531.5641276260035
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -4165,22 +4214,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": -47.61421319796955,
+                  "x": 121.8274111675127,
                   "y": 378.09638554216866,
                   "id": "vertex-0"
                 },
                 {
-                  "x": -47.61421319796955,
-                  "y": -250,
+                  "x": 121.8274111675127,
+                  "y": 231.77710843373495,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 369.23857868020303,
-                  "y": -250,
+                  "x": 207.10659898477158,
+                  "y": 231.77710843373495,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 369.23857868020303,
+                  "x": 207.10659898477158,
                   "y": 378.09638554216866,
                   "id": "vertex-3"
                 },
@@ -4324,14 +4373,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "village.floor",
                   "transitionTo": "house",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 351.8822459221226,
+                    "end": 531.5641276260035
+                  },
+                  "zoomRange": {
+                    "start": 351.8822459221226,
+                    "end": 531.5641276260035
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -4381,22 +4437,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 559.0862944162436,
+                  "x": 725.2791878172588,
                   "y": 373.2168674698795,
                   "id": "vertex-0"
                 },
                 {
-                  "x": 559.0862944162436,
-                  "y": -250,
+                  "x": 725.2791878172588,
+                  "y": 256.17469879518075,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 980.8121827411168,
-                  "y": -250,
+                  "x": 814.6192893401015,
+                  "y": 256.17469879518075,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 980.8121827411168,
+                  "x": 814.6192893401015,
                   "y": 373.2168674698795,
                   "id": "vertex-3"
                 },
@@ -4540,14 +4596,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "village.floor",
                   "transitionTo": "forest",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 351.8822459221226,
+                    "end": 531.5641276260035
+                  },
+                  "zoomRange": {
+                    "start": 351.8822459221226,
+                    "end": 531.5641276260035
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -5304,14 +5367,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "pub.floor",
                   "transitionTo": "village",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 1,
+                  "maxScale": 1.5,
+                  "minZoom": 1.1,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 355,
+                    "end": 514.4553452218695
+                  },
+                  "zoomRange": {
+                    "start": 355,
+                    "end": 514.4553452218695
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -5361,22 +5431,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 631.3705583756345,
+                  "x": 791.8781725888325,
                   "y": 304.90361445783134,
                   "id": "vertex-0"
                 },
                 {
-                  "x": 631.3705583756345,
-                  "y": -250,
+                  "x": 791.8781725888325,
+                  "y": 89.4578313253012,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 1085.5837563451778,
-                  "y": -250,
+                  "x": 921.0152284263959,
+                  "y": 89.4578313253012,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 1085.5837563451778,
+                  "x": 921.0152284263959,
                   "y": 304.90361445783134,
                   "id": "vertex-3"
                 },
@@ -6168,14 +6238,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "house.floor",
                   "transitionTo": "village",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 1.22,
+                  "maxScale": 1.5,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 361.21531822760045,
+                    "end": 515
+                  },
+                  "zoomRange": {
+                    "start": 361.21531822760045,
+                    "end": 515
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -6225,22 +6302,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 682.5380710659898,
+                  "x": 844.6700507614213,
                   "y": 354.5120481927711,
                   "id": "vertex-0"
                 },
                 {
-                  "x": 682.5380710659898,
-                  "y": -250,
+                  "x": 844.6700507614213,
+                  "y": 117.92168674698796,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 1112.3857868020305,
-                  "y": -250,
+                  "x": 948.6294416243654,
+                  "y": 117.92168674698796,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 1112.3857868020305,
+                  "x": 948.6294416243654,
                   "y": 354.5120481927711,
                   "id": "vertex-3"
                 },
@@ -7124,14 +7201,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "forest.floor",
                   "transitionTo": "mine",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 331.09818526141385,
+                    "end": 539.0100045431417
+                  },
+                  "zoomRange": {
+                    "start": 331.09818526141385,
+                    "end": 539.0100045431417
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -7181,22 +7265,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 60.165745856353595,
+                  "x": 227.48618784530387,
                   "y": 323.22651933701655,
                   "id": "vertex-0"
                 },
                 {
-                  "x": 60.165745856353595,
-                  "y": -250,
+                  "x": 227.48618784530387,
+                  "y": 225.99447513812154,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 479.08839779005524,
-                  "y": -250,
+                  "x": 316.9889502762431,
+                  "y": 225.99447513812154,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 479.08839779005524,
+                  "x": 316.9889502762431,
                   "y": 323.22651933701655,
                   "id": "vertex-3"
                 },
@@ -7340,14 +7424,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "forest.floor",
                   "transitionTo": "camp",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 331.09818526141385,
+                    "end": 539.0100045431417
+                  },
+                  "zoomRange": {
+                    "start": 331.09818526141385,
+                    "end": 539.0100045431417
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -7397,22 +7488,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 1149.8618784530386,
+                  "x": 1312.707182320442,
                   "y": 306.81767955801104,
                   "id": "vertex-0"
                 },
                 {
-                  "x": 1149.8618784530386,
-                  "y": -250,
+                  "x": 1312.707182320442,
+                  "y": 201.38121546961327,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 1582.2099447513813,
-                  "y": -250,
+                  "x": 1418.6187845303866,
+                  "y": 201.38121546961327,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 1582.2099447513813,
+                  "x": 1418.6187845303866,
                   "y": 306.81767955801104,
                   "id": "vertex-3"
                 },
@@ -7541,14 +7632,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "forest.floor",
                   "transitionTo": "village",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 331.09818526141385,
+                    "end": 539.0100045431417
+                  },
+                  "zoomRange": {
+                    "start": 331.09818526141385,
+                    "end": 539.0100045431417
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -8178,14 +8276,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "mine.floor",
                   "transitionTo": "forest",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 355,
+                    "end": 515
+                  },
+                  "zoomRange": {
+                    "start": 355,
+                    "end": 515
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -8235,22 +8340,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": -105,
+                  "x": 57,
                   "y": 271,
                   "id": "vertex-0"
                 },
                 {
-                  "x": -105,
-                  "y": -250,
+                  "x": 57,
+                  "y": 164,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 332,
-                  "y": -250,
+                  "x": 170,
+                  "y": 164,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 332,
+                  "x": 170,
                   "y": 271,
                   "id": "vertex-3"
                 },
@@ -9360,14 +9465,21 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "camp.floor",
                   "transitionTo": "forest",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 355,
+                    "end": 515
+                  },
+                  "zoomRange": {
+                    "start": 355,
+                    "end": 515
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -9417,22 +9529,22 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": -106.90355329949239,
+                  "x": 56.85279187817259,
                   "y": 296.7710843373494,
                   "id": "vertex-0"
                 },
                 {
-                  "x": -106.90355329949239,
-                  "y": -250,
+                  "x": 56.85279187817259,
+                  "y": 143.94578313253012,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 322.94416243654825,
-                  "y": -250,
+                  "x": 152.69035532994923,
+                  "y": 143.94578313253012,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 322.94416243654825,
+                  "x": 152.69035532994923,
                   "y": 296.7710843373494,
                   "id": "vertex-3"
                 },
@@ -9561,13 +9673,20 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "perspectiveSourceAreaId": "camp.floor",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
+                  "minScale": 0.75,
+                  "maxScale": 1.22,
+                  "minZoom": 1.035,
                   "maxZoom": 1,
                   "smoothing": 5,
-                  "baseline": 160
+                  "baseline": 160,
+                  "scaleRange": {
+                    "start": 355,
+                    "end": 515
+                  },
+                  "zoomRange": {
+                    "start": 355,
+                    "end": 515
+                  }
                 },
                 "behaviors": [],
                 "propertySchema": {

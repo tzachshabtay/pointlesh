@@ -1,4 +1,4 @@
-import { pointInPolygon, pointleshAreaCapabilities, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
+import { pointInPolygon, pointleshAreaCapabilities, pointleshAreaRange, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
 import type Phaser from "phaser";
 
 export type PointleshAreaEffects = {
@@ -16,10 +16,10 @@ function numeric(area: ResolvedPointleshArea, key: string, fallback: number): nu
 }
 
 /** Start/end values follow the area's bounding box along its authored x/y axis. */
-export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Point, start: number, end: number, axis: "x" | "y" = area.properties.axis === "x" ? "x" : "y"): number {
+export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Point, start: number, end: number, axis: "x" | "y" = area.properties.axis === "x" ? "x" : "y", range?: { start: number; end: number }): number {
   const coordinates = area.polygon.map(vertex => vertex[axis]);
   if (!coordinates.length) return start;
-  const minimum = Math.min(...coordinates), maximum = Math.max(...coordinates);
+  const minimum = range?.start ?? Math.min(...coordinates), maximum = range?.end ?? Math.max(...coordinates);
   const amount = maximum === minimum ? 0 : Math.max(0, Math.min(1, (point[axis] - minimum) / (maximum - minimum)));
   return start + (end - start) * amount;
 }
@@ -33,24 +33,14 @@ export function evaluatePointleshAreaEffects(areas: readonly ResolvedPointleshAr
   for (const area of areas) {
     if (!area.enabled || !area.closed || !pointInPolygon(point, area.polygon)) continue;
     effects.activeAreaIds.push(area.id);
-    // A corridor reuses the source's coordinate range, not its own bounding box.
-    // This matches every point in the overlap and clamps continuously beyond it.
-    const visited = new Set<string>([area.id]);
-    let perspective = area;
-    while (typeof perspective.properties.perspectiveSourceAreaId === 'string' && perspective.properties.perspectiveSourceAreaId) {
-      const source = areas.find(candidate => candidate.id === perspective.properties.perspectiveSourceAreaId);
-      if (!source || visited.has(source.id)) break;
-      visited.add(source.id); perspective = source;
-    }
     const roles = pointleshAreaCapabilities(area);
-    const sourceRoles = pointleshAreaCapabilities(perspective);
-    const axis = (key: string) => (perspective.properties[key] ?? perspective.properties.axis) === "x" ? "x" : "y";
+    const axis = (key: string) => (area.properties[key] ?? area.properties.axis) === "x" ? "x" : "y";
     if (roles.scale) {
-      effects.scale = sourceRoles.scale ? Math.max(0.01, interpolatePointleshArea(perspective, point, numeric(perspective, "minScale", 0.65), numeric(perspective, "maxScale", 1), axis("scaleAxis"))) : defaults.defaultScale ?? 1;
+      effects.scale = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minScale", 0.65), numeric(area, "maxScale", 1), axis("scaleAxis"), pointleshAreaRange(area, 'scale')));
     }
     if (roles.zoom) {
-      effects.zoom = sourceRoles.zoom ? Math.max(0.01, interpolatePointleshArea(perspective, point, numeric(perspective, "minZoom", 1.2), numeric(perspective, "maxZoom", 1), axis("zoomAxis"))) : defaults.defaultZoom ?? 1;
-      effects.zoomSmoothing = Math.max(0, numeric(perspective, "smoothing", 5));
+      effects.zoom = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minZoom", 1.2), numeric(area, "maxZoom", 1), axis("zoomAxis"), pointleshAreaRange(area, 'zoom')));
+      effects.zoomSmoothing = Math.max(0, numeric(area, "smoothing", 5));
     }
     if (roles.walkBehind) {
       effects.walkBehindBaseline = numeric(area, "baseline", 0);

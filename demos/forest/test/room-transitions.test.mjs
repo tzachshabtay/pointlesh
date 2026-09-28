@@ -21,7 +21,7 @@ test('door sheets preserve the existing aperture, have distinct registered poses
         const inside = pointInPolygon({ x: x + .5, y: y + .5 }, door.aperture);
         assert.equal(frame.data[(y * frame.width + x) * 4 + 3], inside ? 255 : 0, `${door.id}: fully cover the old door, preserve its frame`);
       }
-      if (!i) assert.deepEqual(frame.data, base.data);
+      if (i === (door.alwaysOpen ? 7 : 0)) assert.deepEqual(frame.data, base.data);
       frames.push(frame.data.toString('base64'));
     }
     assert.equal(new Set(frames).size, 8, `${door.id}: eight distinct door poses`);
@@ -74,4 +74,56 @@ test('legacy rooftop endpoints migrate without resetting authored door, floor, o
   assert.deepEqual(addForestTransitions(scenes), original);
   outside.overrides.x.value = 155; outside.overrides.y.value = 366;
   assert.deepEqual(addForestTransitions(scenes), scenes, 'an edited endpoint and corridor are preserved');
+});
+
+test('door scenery remains pixel-identical once uncovered and tavern portals remain open', () => {
+  for (const id of ['house', 'village-house']) {
+    const door = forestDoors.find(door => door.id === id), { width, height } = door.crop;
+    const sheet = PNG.sync.read(readFileSync(new URL(`../public/art/objects/doors/${id}-open.png`, import.meta.url)));
+    const x0 = Math.ceil(Math.max(...door.aperture.map(p => p.x)) - 18);
+    const y0 = Math.ceil(Math.min(...door.aperture.map(p => p.y)) + 55);
+    for (let y = y0; y < height - 20; y++) for (let x = x0; x < x0 + 10; x++) {
+      if (!pointInPolygon({x:x+.5,y:y+.5}, door.aperture)) continue;
+      const pixel = i => {
+        const offset = ((Math.floor(i/4)*height+y)*sheet.width+i%4*width+x)*4;
+        return sheet.data.subarray(offset,offset+4);
+      };
+      for (let i = 3; i < 7; i++) assert.deepEqual(pixel(i), pixel(7), `${id}: fixed outside view at ${x},${y}, frame ${i}`);
+    }
+  }
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  for (const room of ['pub', 'village']) {
+    const to = room === 'pub' ? 'village' : 'pub';
+    assert.equal(forestPortal(scenes, room, to).doorId, undefined, 'no opening or closing the tavern');
+  }
+});
+
+test('old corridor links migrate once to independent curves, preserving unrelated edits and deleted masks', () => {
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  const layer = scenes.scenes.village.layers[0];
+  const corridor = layer.areas.find(a => a.pointlesh?.entityId === 'village.transition.to-forest');
+  const floor = resolvePointleshScene(scenes, 'village').areas.find(a => a.id === 'village.floor');
+  corridor.pointlesh.properties.perspectiveSourceAreaId = 'village.floor';
+  corridor.pointlesh.properties.maxScale = 19;
+  layer.areas = layer.areas.filter(a => !['village.forest-canopy', 'village.door.house.frame'].includes(a.id));
+  const migrated = addForestTransitions(scenes);
+  const area = migrated.scenes.village.layers[0].areas.find(a => a.id === corridor.id);
+  assert.equal(area.pointlesh.properties.maxScale, floor.properties.maxScale);
+  assert.equal(area.pointlesh.properties.perspectiveSourceAreaId, undefined);
+  assert.deepEqual(area.vertices, corridor.vertices);
+  area.pointlesh.properties.maxScale = 2.5;
+  assert.deepEqual(addForestTransitions(migrated), migrated, 'custom corridor curve is never overwritten');
+  assert.deepEqual(resolvePointleshScene(migrated, 'village').areas.find(a => a.id === 'village.floor'), floor);
+  assert.ok(!migrated.scenes.village.layers[0].areas.some(a => a.id === 'village.forest-canopy'));
+});
+
+test('door frame occlusion stays inside the doorway crop, clear of neighboring fireplaces', () => {
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  for (const door of forestDoors) {
+    const mask = resolvePointleshScene(scenes, door.room).areas.find(a => a.id === `${door.room}.door.${door.id}.frame`);
+    if (!mask) continue; // Designer deletions are intentionally respected.
+    assert.ok(Math.min(...mask.polygon.map(p => p.x)) >= door.crop.left * door.scaleX);
+    assert.ok(Math.max(...mask.polygon.map(p => p.x)) <= (door.crop.left + door.crop.width) * door.scaleX);
+    assert.ok(Math.min(...mask.polygon.map(p => p.y)) >= door.crop.top * door.scaleY);
+  }
 });

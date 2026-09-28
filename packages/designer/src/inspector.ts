@@ -6,6 +6,7 @@ import {
   type PointleshPrefabMetadata,
   assertJSON,
   resolvePointleshScene,
+  pointleshAreaRange,
   pointleshAreaCapabilities,
   mergeCharacterAnimations,
   readCharacterAnimations,
@@ -99,7 +100,7 @@ const animationDirections: { id: CharacterAnimationDirection; label: string; dia
   { id: 'front-left', label: 'Front left', diagonal: true }, { id: 'front-right', label: 'Front right', diagonal: true },
   { id: 'back-left', label: 'Back left', diagonal: true }, { id: 'back-right', label: 'Back right', diagonal: true },
 ];
-const areaPropertyKeys = new Set(['walkable', 'scaleEnabled', 'zoomEnabled', 'walkBehindEnabled', 'scaleAxis', 'zoomAxis', 'axis', 'minScale', 'maxScale', 'minZoom', 'maxZoom', 'smoothing', 'baseline', 'perspectiveSourceAreaId']);
+const areaPropertyKeys = new Set(['walkable', 'scaleEnabled', 'zoomEnabled', 'walkBehindEnabled', 'scaleAxis', 'zoomAxis', 'axis', 'minScale', 'maxScale', 'minZoom', 'maxZoom', 'smoothing', 'baseline', 'scaleRange', 'zoomRange', 'perspectiveSourceAreaId']);
 
 export function installPointleshInspector(options: PointleshInspectorOptions): PointleshInspector {
   const designer = options.designer;
@@ -359,8 +360,12 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     section.append(element(document, 'h4', '', 'Area capabilities'));
     section.append(element(document, 'p', 'pointlesh-inspector-help', 'One shape can control several behaviors. Turn each capability on independently.'));
     const capabilities = pointleshAreaCapabilities({ kind: target.metadata.kind, properties: values });
+    const room = resolvePointleshScene(last, target.sceneId ?? designer.getSceneId());
+    const ownId = target.area?.pointlesh.entityId ?? target.instance?.id ?? target.id;
+    const own = room.areas.find(area => area.id === ownId || area.areaId === ownId);
     const numeric = (key: string, label: string, fallback: number, min: number | undefined, step: number) =>
-      inheritedField(target, key, propertyField(document, key, values[key] ?? fallback, { label, min, step, ...schemas[key], type: 'number' }, edit, status));
+      inheritedField(target, key, propertyField(document, key, values[key] ?? fallback,
+        { label, min, step, ...schemas[key], type: 'number' }, edit, status));
     const axis = (key: 'scaleAxis' | 'zoomAxis', label: string) => {
       const field = element(document, 'label', 'pointlesh-inspector-field');
       field.append(element(document, 'span', '', label));
@@ -370,30 +375,36 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       input.addEventListener('change', () => edit(key, input.value));
       field.append(input); return inheritedField(target, key, field);
     };
+    const rangeEditor = (effect: 'scale' | 'zoom') => {
+      const title = effect === 'scale' ? 'Scale' : 'Zoom', key = `${effect}Range`;
+      const attributes = target.attributes.find(attribute => attribute.kind === 'area');
+      const polygon = own?.polygon ?? target.area?.vertices ?? (attributes?.kind === 'area' ? attributes.area.vertices : []);
+      const range = pointleshAreaRange({ properties: values, polygon }, effect);
+      const custom = values[key] !== null && typeof values[key] === 'object';
+      const fields = element(document, 'div', 'pointlesh-area-settings');
+      fields.append(propertyField(document, key, !custom, { type: 'boolean', label: `${title}: use area bounds` },
+        (_key, checked) => edit(key, checked ? null : range), status));
+      if (custom) for (const endpoint of ['start', 'end'] as const) {
+        fields.append(propertyField(document, endpoint, range[endpoint], { type: 'number', label: `${title} range ${endpoint}`, step: 1 },
+          (_key, value) => edit(key, { ...range, [endpoint]: value }), status));
+      }
+      fields.append(element(document, 'p', 'pointlesh-inspector-help', 'These coordinates belong only to this area. Beyond the range, the nearest endpoint value is held.'));
+      const details = element(document, 'details', 'pointlesh-property-section');
+      details.append(element(document, 'summary', '', `${title} interpolation range`), fields);
+      return details;
+    };
     const toggle = (key: string, label: string, checked: boolean) => inheritedField(target, key, propertyField(document, key, checked, { type: 'boolean', label }, edit, status));
     section.append(toggle('walkable', 'Walkable', capabilities.walkable));
-    const sourceField = element(document, 'label', 'pointlesh-inspector-field');
-    sourceField.append(element(document, 'span', '', 'Match perspective to area'));
-    const source = document.createElement('select'); source.setAttribute('aria-label', 'Match perspective to area');
-    addOption(source, '', 'Own scale and zoom');
-    const room = resolvePointleshScene(last, target.sceneId ?? designer.getSceneId());
-    const ownId = target.area?.pointlesh.entityId ?? target.instance?.id ?? target.id;
-    for (const area of room.areas) if (area.id !== ownId && (pointleshAreaCapabilities(area).scale || pointleshAreaCapabilities(area).zoom)) addOption(source, area.id, area.name);
-    source.value = String(values.perspectiveSourceAreaId ?? '');
-    source.addEventListener('change', () => edit('perspectiveSourceAreaId', source.value));
-    sourceField.append(source); section.append(sourceField);
-    const inherited = !!values.perspectiveSourceAreaId;
-    if (inherited) section.append(element(document, 'p', 'pointlesh-inspector-help', 'Uses the source area’s scale/zoom and coordinate range. Overlapping ground matches exactly; outside that range the end value is held.'));
     section.append(toggle('scaleEnabled', 'Character scale', capabilities.scale));
-    if (capabilities.scale && !inherited) {
+    if (capabilities.scale) {
       const fields = element(document, 'div', 'pointlesh-area-settings');
-      fields.append(axis('scaleAxis', 'Scale axis'), numeric('minScale', 'Scale at start', 0.65, 0.01, 0.05), numeric('maxScale', 'Scale at end', 1, 0.01, 0.05));
+      fields.append(axis('scaleAxis', 'Scale axis'), numeric('minScale', 'Scale at start', 0.65, 0.01, 0.05), numeric('maxScale', 'Scale at end', 1, 0.01, 0.05), rangeEditor('scale'));
       section.append(fields);
     }
     section.append(toggle('zoomEnabled', 'Camera zoom', capabilities.zoom));
-    if (capabilities.zoom && !inherited) {
+    if (capabilities.zoom) {
       const fields = element(document, 'div', 'pointlesh-area-settings');
-      fields.append(axis('zoomAxis', 'Zoom axis'), numeric('minZoom', 'Zoom at start', 1.2, 0.01, 0.05), numeric('maxZoom', 'Zoom at end', 1, 0.01, 0.05), numeric('smoothing', 'Camera response', 5, 0, 0.5));
+      fields.append(axis('zoomAxis', 'Zoom axis'), numeric('minZoom', 'Zoom at start', 1.2, 0.01, 0.05), numeric('maxZoom', 'Zoom at end', 1, 0.01, 0.05), numeric('smoothing', 'Camera response', 5, 0, 0.5), rangeEditor('zoom'));
       section.append(fields);
     }
     section.append(toggle('walkBehindEnabled', 'Walk-behind', capabilities.walkBehind));

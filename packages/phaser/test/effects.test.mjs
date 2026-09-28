@@ -46,10 +46,11 @@ test('legacy scale and zoom definitions retain their endpoint axes and support r
   assert.equal(evaluatePointleshAreaEffects(room.areas, { x: 25, y: 75 }).scale, 1);
 });
 
-test('transition corridors inherit the floor coordinate range without an overlap seam or edge jump', () => {
-  const floor = createAreaPrefab({ vertices, walkable: true, scaleEnabled: true, zoomEnabled: true, minScale: .5, maxScale: 1.4, minZoom: 1.2, maxZoom: 1 });
+test('independent corridor ranges match adjacent ground initially, then edit only their own area', () => {
+  const settings = { walkable: true, scaleEnabled: true, zoomEnabled: true, minScale: .5, maxScale: 1.4, minZoom: 1.2, maxZoom: 1 };
+  const floor = createAreaPrefab({ vertices, ...settings });
   const corridor = createAreaPrefab({ id: 'corridor', vertices: [{x:40,y:-150},{x:60,y:-150},{x:60,y:150},{x:40,y:150}],
-    walkable: true, scaleEnabled: true, zoomEnabled: true, perspectiveSourceAreaId: 'floor' });
+    ...settings, scaleRange: { start: 0, end: 100 }, zoomRange: { start: 0, end: 100 } });
   const room = roomFor([floor, corridor], [createPointleshInstance({ id: 'floor', prefabId: floor.id }), createPointleshInstance({ id: 'exit', prefabId: corridor.id })]);
   for (const y of [0, 1, 25, 50, 99, 100]) {
     const a = evaluatePointleshAreaEffects([room.areas[0]], {x:50,y}), b = evaluatePointleshAreaEffects(room.areas, {x:50,y});
@@ -57,8 +58,16 @@ test('transition corridors inherit the floor coordinate range without an overlap
   }
   assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, .5);
   assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:140}).scale, 1.4);
-  room.areas[0].properties.minScale = .8;
-  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, .8, 'Source edits propagate immediately');
+  const outside = evaluatePointleshAreaEffects(room.areas, {x:20,y:80});
+  room.areas[1].properties.maxScale = 3;
+  room.areas[1].properties.maxZoom = 2;
+  assert.deepEqual(evaluatePointleshAreaEffects(room.areas, {x:20,y:80}), outside, 'outside this polygon nothing changes');
+  assert.equal(room.areas[0].properties.maxScale, 1.4, 'the floor owns its own curve');
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:140}).scale, 3);
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:140}).zoom, 2);
   room.areas[1].enabled = false;
-  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, 1);
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:50}).scale, .95, 'disabled corridors never change the floor');
+  room.areas[0].properties.minScale = .8;
+  room.areas[1].enabled = true;
+  assert.equal(evaluatePointleshAreaEffects(room.areas, {x:50,y:-100}).scale, .5, 'later floor edits do not leak into corridors');
 });

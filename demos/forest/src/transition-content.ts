@@ -1,5 +1,5 @@
 import { createObjectPrefab, createPointleshArea, createPointleshInstance, findClosestReachablePath, isPointleshArea,
-  resolvePointleshScene, walkablePolygons, type Point, type RoomPortal } from '@pointlesh/core';
+  resolvePointleshScene, pointleshAreaRange, walkablePolygons, type Point, type RoomPortal, type ResolvedPointleshArea } from '@pointlesh/core';
 import type { AiAssetManifest } from '@ai-game-assets/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { targets, type RoomId } from './story';
@@ -42,6 +42,19 @@ export function addDoorAssets(manifest: AiAssetManifest): void {
   }
 }
 
+/** Copy initial perspective, never retain a live link to another area. */
+function initialPerspective(area: ResolvedPointleshArea | undefined) {
+  const p = area?.properties ?? {};
+  return {
+    minScale: typeof p.minScale === 'number' ? p.minScale : .65, maxScale: typeof p.maxScale === 'number' ? p.maxScale : 1,
+    minZoom: typeof p.minZoom === 'number' ? p.minZoom : 1.2, maxZoom: typeof p.maxZoom === 'number' ? p.maxZoom : 1,
+    scaleAxis: p.scaleAxis === 'x' || p.axis === 'x' && p.scaleAxis === undefined ? 'x' as const : 'y' as const,
+    zoomAxis: p.zoomAxis === 'x' || p.axis === 'x' && p.zoomAxis === undefined ? 'x' as const : 'y' as const,
+    smoothing: typeof p.smoothing === 'number' ? p.smoothing : 5,
+    ...(area ? { scaleRange: pointleshAreaRange(area, 'scale'), zoomRange: pointleshAreaRange(area, 'zoom') } : {}),
+  };
+}
+
 /** Add scene-owned corridors and points without moving the user's existing entries. */
 export function addForestTransitions(source: SceneDesignerManifest): SceneDesignerManifest {
   const manifest = structuredClone(source);
@@ -49,6 +62,21 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
     const roomId = scene.id as RoomId, layer = scene.layers[0];
     if (!targets[roomId] || !layer) continue;
     const room = resolvePointleshScene(manifest, roomId);
+    // One-time upgrade of old demo links. Each destination owns its curve after
+    // this migration; editing a corridor must never mutate the main floor.
+    for (const area of scene.layers.flatMap(layer => layer.areas)) {
+      if (!isPointleshArea(area) || typeof area.pointlesh.properties.perspectiveSourceAreaId !== 'string') continue;
+      let reference = room.areas.find(candidate => candidate.id === area.pointlesh.properties.perspectiveSourceAreaId);
+      const visited = new Set<string>();
+      while (reference && !visited.has(reference.id)) {
+        visited.add(reference.id);
+        const next = room.areas.find(candidate => candidate.id === reference!.properties.perspectiveSourceAreaId);
+        if (!next) break;
+        reference = next;
+      }
+      Object.assign(area.pointlesh.properties, initialPerspective(reference));
+      delete area.pointlesh.properties.perspectiveSourceAreaId;
+    }
     const addPoint = (id: string, name: string, position: Point) => {
       if (scene.layers.some(layer => layer.prefabs?.some(point => point.id === id))) return;
       (layer.prefabs ??= []).push(createPointleshInstance({ id, name, prefabId: 'forest.point.entry', overrides: { x: { value: position.x }, y: { value: position.y } } }));
@@ -87,7 +115,7 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       const corridor = scene.layers.flatMap(layer => layer.areas).find(area => isPointleshArea(area) && area.pointlesh.entityId === areaId);
       if (!corridor) {
         layer.areas.push(createPointleshArea({ id: `${areaId}::area`, entityId: areaId, name: `Transition · ${target.name}`,
-          closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, perspectiveSourceAreaId: `${roomId}.floor`,
+          closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`)),
           properties: { enabled: false, transitionTo: to },
           vertices }));
       } else if (migrateOutside && corridor.vertices.length === 4 && corridor.vertices.every((point, i) => samePoint(point, legacyBounds[i]!))) {
@@ -100,6 +128,9 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
           behaviors: ['forest.interact'],
           properties: { role: 'door', ignoreScaling: true, targetId: target.id, animationKey: 'open', animationPlaying: false, animationLoop: false },
           editor: { folderPath: ['Objects', 'Doors'] } });
+        const prefab = manifest.prefabs[prefabId] as ReturnType<typeof createObjectPrefab>;
+        prefab.pointlesh.properties.doorAlwaysOpen ??= door.alwaysOpen ?? false;
+        (prefab.pointlesh.propertySchema ??= {}).doorAlwaysOpen ??= { type: 'boolean', label: 'Keep door open' };
         if (!scene.layers.some(layer => layer.prefabs?.some(object => object.id === id))) {
           (layer.prefabs ??= []).push(createPointleshInstance({ id, prefabId, name: door.name,
             overrides: { object: { x: door.crop.left * door.scaleX, y: door.crop.top * door.scaleY } } }));
@@ -109,22 +140,30 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       }
       if (aperture) {
         const maskId = `${door ? doorObjectId(door) : 'mine.entrance'}.frame`;
-        if (!layer.areas.some(area => area.id === maskId)) {
-          const left = Math.min(...aperture.map(p => p.x)), right = Math.max(...aperture.map(p => p.x));
-          // A concave U around the aperture hides a walking actor behind the
-          // original jambs and arch. The open bottom admits the approaching feet.
+        const left = Math.min(...aperture.map(p => p.x)), right = Math.max(...aperture.map(p => p.x));
+        const inner = [{ x: right, y: maxY + 4 }, ...[...aperture].reverse().slice(1), { x: left, y: maxY + 4 }];
+        const legacy = [{ x: left - 180, y: maxY + 4 }, { x: left - 180, y: -250 }, { x: right + 180, y: -250 }, { x: right + 180, y: maxY + 4 }, ...inner];
+        // Only the actual jambs and arch occlude actors. A room-sized copy of
+        // the static background also covers neighboring animated fireplaces.
+        const outerLeft = door ? door.crop.left * door.scaleX : left - 18;
+        const outerRight = door ? (door.crop.left + door.crop.width) * door.scaleX : right + 18;
+        const outerTop = door ? door.crop.top * door.scaleY : minY - 18;
+        const vertices = [{ x: outerLeft, y: maxY + 4 }, { x: outerLeft, y: outerTop }, { x: outerRight, y: outerTop }, { x: outerRight, y: maxY + 4 }, ...inner];
+        const mask = scene.layers.flatMap(layer => layer.areas).find(area => area.id === maskId);
+        if (!mask && !corridor) {
           layer.areas.push(createPointleshArea({ id: maskId, entityId: maskId, name: `Door frame · ${door?.name ?? 'Mine tunnel entrance'}`, closed: true, walkBehindEnabled: true, baseline: maxY + 5,
-            vertices: [{ x: left - 180, y: maxY + 4 }, { x: left - 180, y: -250 }, { x: right + 180, y: -250 }, { x: right + 180, y: maxY + 4 },
-              { x: right, y: maxY + 4 }, ...[...aperture].reverse().slice(1), { x: left, y: maxY + 4 }] }));
+            vertices }));
+        } else if (mask && mask.vertices.length === legacy.length && mask.vertices.every((p, i) => samePoint(p, legacy[i]!))) {
+          mask.vertices = vertices.map((p, i) => ({ ...mask.vertices[i]!, ...p }));
         }
-      } else if (roomId === 'village' && !layer.areas.some(area => area.id === 'village.forest-canopy')) {
+      } else if (roomId === 'village' && !corridor && !layer.areas.some(area => area.id === 'village.forest-canopy')) {
         layer.areas.push(createPointleshArea({ id: 'village.forest-canopy', name: 'Forest path canopy', walkBehindEnabled: true, baseline: 343, closed: true,
           vertices: [{ x: 390, y: -200 }, { x: 570, y: -200 }, { x: 570, y: 295 }, { x: 390, y: 295 }] }));
       }
     }
     if (roomId === 'camp' && !layer.areas.some(area => area.id === CAGE_APPROACH_AREA)) {
       layer.areas.push(createPointleshArea({ id: CAGE_APPROACH_AREA, entityId: CAGE_APPROACH_AREA, name: 'Cage approach · continuous perspective',
-        closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, perspectiveSourceAreaId: 'camp.floor', properties: { enabled: false },
+        closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === 'camp.floor')), properties: { enabled: false },
         vertices: [{ x: 570, y: 300 }, { x: 740, y: 300 }, { x: 740, y: 448 }, { x: 570, y: 448 }] }));
     }
   }
@@ -145,5 +184,6 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   return { roomId, areaId: transitionAreaId(roomId, to),
     path: [inside, point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
     ...(door || roomId === 'mine' ? { fadeOnLastSegment: true } : {}),
-    ...(door ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
+    ...(door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true
+      ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
 }

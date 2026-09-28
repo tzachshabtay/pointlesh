@@ -526,7 +526,7 @@ class ForestAdventure extends Phaser.Scene {
     this.actor.setAlpha(this.roomTransition.characterOpacity);
     for (const object of this.resolved().objects.filter(object => object.properties.role === 'door')) {
       const sprite = this.entitySprites.get(object.id), animation = this.objectAnimations.get(object.id);
-      const progress = this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress : 0;
+      const progress = object.properties.doorAlwaysOpen === true ? 1 : this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress : 0;
       // Seeking shares the normal object renderer and supports live previews.
       const key = this.transitionDoorKey(object.id);
       const linked = assets.assets[object.assetId]?.linkedAnimationAssets?.[key]?.assetId;
