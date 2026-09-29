@@ -13,7 +13,7 @@ function setup() {
   return { character, transition, events, tick: () => { character.tick(10); transition.update(10); } };
 }
 
-test('walks fully out and in, gates the room switch on concealment, and closes both doors', () => {
+test('walks fully out and in, waits for the endpoint, and closes both doors', () => {
   const run = setup(); run.transition.begin(from, to);
   const phases = new Set();
   for (let i = 0; i < 1000 && run.transition.active; i++) {
@@ -57,39 +57,15 @@ test('activation is transient and cancellation or invalid geometry never switche
   assert.throws(() => assertRoomTransitionCheckpoint({ from, to, phase: 'wrong', elapsedMs: 0, waypoint: 0 }));
 });
 
-test('doorway concealment reverses on entry, survives a mid-fade save, and resets on cancellation', () => {
+test('legacy saves with doorway fading still resume their route without a rendering dependency', () => {
   const run = setup();
-  run.transition.begin({ ...from, fadeOnLastSegment: true }, { ...to, fadeOnLastSegment: true });
-  let exiting = 1, entering = 0, fadedOut = false, fadedIn = false, restored = false;
-  for (let i = 0; i < 1000 && run.transition.active; i++) {
-    const opacity = run.transition.characterOpacity, phase = run.transition.phase;
-    assert.ok(opacity >= 0 && opacity <= 1);
-    if (phase === 'open-exit' || phase === 'close-entry') assert.equal(opacity, 1);
-    if (phase === 'close-exit' || phase === 'open-entry') assert.equal(opacity, 0);
-    if (phase === 'exit') { assert.ok(opacity <= exiting); exiting = opacity; fadedOut ||= opacity > 0 && opacity < 1; }
-    if (phase === 'entry') { assert.ok(opacity >= entering); entering = opacity; fadedIn ||= opacity > 0 && opacity < 1; }
-    if (!restored && opacity > .2 && opacity < .8) {
-      const copy = setup(); copy.character.restore(run.character.snapshot()); copy.transition.restore(run.transition.snapshot());
-      assert.equal(copy.transition.characterOpacity, opacity);
-      copy.transition.cancel(); assert.equal(copy.transition.characterOpacity, 1);
-      restored = true;
-    }
-    run.tick();
-  }
-  assert.ok(fadedOut && fadedIn && restored);
-  assert.equal(run.transition.characterOpacity, 1);
+  const legacyFrom = { ...from, fadeOnLastSegment: true }, legacyTo = { ...to, fadeOnLastSegment: true };
+  const checkpoint = { from: legacyFrom, to: legacyTo, phase: 'exit', elapsedMs: 0, waypoint: 1 };
+  assertRoomTransitionCheckpoint(checkpoint);
+  run.character.place(from.path[1]);
+  run.transition.restore(checkpoint);
+  for (let i = 0; i < 1000 && run.transition.active; i++) run.tick();
   assert.deepEqual(run.events, ['b', 'done']);
-  const checkpoint = run.transition.snapshot(); assert.equal(checkpoint, null);
-  assert.throws(() => assertRoomTransitionCheckpoint({ from: { ...from, fadeOnLastSegment: 'yes' }, to, phase: 'exit', elapsedMs: 0, waypoint: 0 }));
-  assert.throws(() => assertRoomTransitionCheckpoint({ from: { ...from, fadeOnLastSegment: true, path: [from.path[0], from.path[0]] }, to, phase: 'exit', elapsedMs: 0, waypoint: 0 }));
-});
-
-test('a bent approach cannot fade the actor before the last segment', () => {
-  const run = setup();
-  const portal = { ...from, fadeOnLastSegment: true, path: [{ x: 100, y: 80 }, { x: 50, y: 50 }, { x: 120, y: 50 }] };
-  run.character.place({ x: 100, y: 80 });
-  run.transition.restore({ from: portal, to, phase: 'exit', elapsedMs: 0, waypoint: 1 });
-  assert.equal(run.transition.characterOpacity, 1, 'approaching the sill is fully visible even beyond its plane');
-  run.transition.restore({ from, to: portal, phase: 'entry', elapsedMs: 0, waypoint: 2 });
-  assert.equal(run.transition.characterOpacity, 1, 'already inside the room is fully visible');
+  assert.deepEqual(run.character.state.position, to.path[0]);
+  assert.equal(run.transition.active, false);
 });

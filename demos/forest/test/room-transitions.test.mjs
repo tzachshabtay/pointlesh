@@ -50,13 +50,11 @@ test('doorway paths continue the grounded approach instead of climbing to the ar
     assert.ok(Math.abs(dx * ey - dy * ex) < 1e-6, `${room} → ${to}: same walk line at the sill`);
     assert.ok(dx * ex + dy * ey > 0, `${room} → ${to}: continue forward`);
     assert.ok(Math.hypot(ex, ey) <= 24.000001, `${room} → ${to}: stay close to the floor`);
-    assert.equal(portal.fadeOnLastSegment, true);
     const corridor = resolvePointleshScene(scenes, room).areas.find(area => area.id === portal.areaId);
     assert.equal(corridor.enabled, false);
     for (const point of portal.path) assert.ok(pointInPolygon(point, corridor.polygon));
     assert.ok(Math.min(...corridor.polygon.map(point => point.y)) > 0, 'no corridor into the sky');
   }
-  assert.equal(forestPortal(scenes, 'forest', 'village').fadeOnLastSegment, undefined, 'open screen edges still walk fully offscreen');
 });
 
 test('legacy rooftop endpoints migrate without resetting authored door, floor, or point edits', () => {

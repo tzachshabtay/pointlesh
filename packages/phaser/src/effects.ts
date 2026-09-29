@@ -51,7 +51,8 @@ export function evaluatePointleshAreaEffects(areas: readonly ResolvedPointleshAr
 
 export type PointleshWalkBehindOverlay = {
   readonly image: Phaser.GameObjects.Image | Phaser.GameObjects.Sprite;
-  sync(area: ResolvedPointleshArea): void;
+  /** Optional disjoint foreground pieces, e.g. gate slats or animated door leaves. */
+  sync(area: ResolvedPointleshArea, polygons?: readonly (readonly Point[])[]): void;
   destroy(): void;
 };
 
@@ -122,16 +123,16 @@ export function createWalkBehindOverlay(
     image.setMask(geometryMask);
   }
   let destroyed = false;
-  const sync = (next: ResolvedPointleshArea) => {
+  const sync = (next: ResolvedPointleshArea, polygons: readonly (readonly Point[])[] = [next.polygon]) => {
     if (destroyed) return;
     graphics.clear();
-    const points = next.polygon;
-    if (points.length >= 3) {
+    const shapes = polygons.filter(points => points.length >= 3);
+    for (const points of shapes) {
       graphics.fillStyle(0xffffff, 1).beginPath().moveTo(points[0]!.x, points[0]!.y);
       for (const point of points.slice(1)) graphics.lineTo(point.x, point.y);
       graphics.closePath().fillPath();
     }
-    image.setVisible(next.enabled && next.closed && points.length >= 3 && pointleshAreaCapabilities(next).walkBehind);
+    image.setVisible(next.enabled && next.closed && shapes.length > 0 && pointleshAreaCapabilities(next).walkBehind);
     image.setDepth((options.depthOffset ?? 0) + numeric(next, "baseline", 0));
   };
   const destroy = () => {

@@ -194,7 +194,6 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   const door = forestDoors.find(door => door.room === roomId && door.to === to);
   return { roomId, areaId: transitionAreaId(roomId, to),
     path: [inside, point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
-    ...(door || roomId === 'mine' ? { fadeOnLastSegment: true } : {}),
     ...(door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true
       ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
 }

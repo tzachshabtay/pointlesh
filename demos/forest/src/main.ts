@@ -18,6 +18,8 @@ import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from 
 import { addIntroAssets } from './intro-assets';
 import { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint, type RoomTransitionCheckpoint } from '@pointlesh/core';
 import { addDoorAssets, addForestTransitions, forestPortal, CAGE_APPROACH_AREA } from './transition-content';
+import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
+import { DoorForeground } from './door-foreground';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
@@ -81,6 +83,7 @@ class ForestAdventure extends Phaser.Scene {
   private doorBinding?: PhaserAdventureCharacter;
   private guardCheckpoint?: GuardPatrolSnapshot;
   entitySprites = new Map<string, Phaser.GameObjects.Sprite>();
+  doorForegrounds = new Map<string, DoorForeground>();
   objectTextureBindings = new Map<string, { assetId: string; binding: ReturnType<AiAssetRuntime['bindTexture']> }>();
   objectAnimations = new Map<string, PhaserAdventureObject>();
   private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
@@ -429,6 +432,7 @@ class ForestAdventure extends Phaser.Scene {
           onLook: () => this.look(String(current().properties.targetId), current().id),
         });
         sprite.once('destroy', () => {
+          this.doorForegrounds.delete(object.id);
           this.objectTextureBindings.get(object.id)?.binding.destroy();
           this.objectTextureBindings.delete(object.id);
           this.objectAnimations.get(object.id)?.destroy();
@@ -526,7 +530,6 @@ class ForestAdventure extends Phaser.Scene {
     return this.roomTransition.portal?.doorId === id && this.roomTransition.phase?.startsWith('close') ? 'close' : 'open';
   }
   private syncTransitionDoors(): void {
-    this.actor.setAlpha(this.roomTransition.characterOpacity);
     for (const object of this.resolved().objects.filter(object => object.properties.role === 'door')) {
       const sprite = this.entitySprites.get(object.id), animation = this.objectAnimations.get(object.id);
       const progress = object.properties.doorAlwaysOpen === true ? 1 : this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress : 0;
@@ -537,6 +540,20 @@ class ForestAdventure extends Phaser.Scene {
       const duration = clip ? clip.frames.reduce((sum, _frame, i) => sum + (clip.frameTimings?.[i]?.delayMs ?? 1000 / clip.frameRate), 0) : 1000;
       animation?.seek((key === 'close' ? 1 - progress : progress) * duration);
       sprite?.setDepth(-900);
+      const door = forestDoors.find(door => doorObjectId(door) === object.id);
+      if (sprite && door) {
+        let foreground = this.doorForegrounds.get(object.id);
+        if (!foreground) {
+          foreground = new DoorForeground(this, sprite, door);
+          this.doorForegrounds.set(object.id, foreground);
+        }
+        const frameArea = this.resolved().areas.find(area => area.id === `${object.id}.frame`);
+        const baseline = Number(frameArea?.properties.baseline ?? Math.max(...doorWorldAperture(door).map(p => p.y)) + 5);
+        // Match the frame selected by the object renderer (including reverse
+        // playback), rather than independently advancing an occlusion clock.
+        const index = Number(sprite.frame.name);
+        foreground.sync(Number.isInteger(index) && index >= 0 && index < 8 ? index : Math.min(7, Math.floor(progress * 8)), baseline);
+      }
     }
   }
   private renderTyingGuard(): void {

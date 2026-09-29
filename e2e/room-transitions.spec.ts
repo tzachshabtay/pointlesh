@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { PNG } from 'pngjs';
 import { openAdventure } from './start-helpers';
 
 test('all room connections walk out and in with temporary corridors, animated doors, and restorable progress', async ({ page }, testInfo) => {
@@ -16,7 +17,7 @@ test('all room connections walk out and in with temporary corridors, animated do
       scene.changeRoom(from); scene.character.place(forestPortal(manifest, from, to).path[0]); scene.binding.sync();
       scene.applyInteraction(target);
       const phases = new Set<string>(), frames = new Set<number>(), checkpoints = new Set<string>();
-      const faded = new Set<string>();
+      const ordered = new Set<string>();
       let sourceLast: any, destinationFirst: any;
       for (let i = 0; i < 1500 && scene.roomTransition.active; i++) {
         const phase = scene.roomTransition.phase; phases.add(phase);
@@ -27,25 +28,19 @@ test('all room connections walk out and in with temporary corridors, animated do
           if (JSON.stringify(scene.snapshot()) !== JSON.stringify(saved)) throw new Error(`Changed checkpoint ${from}/${phase}`);
           checkpoints.add(phase);
         }
-        if (portal.fadeOnLastSegment) {
-          const position = scene.character.state.position, alpha = scene.actor.alpha;
-          if (alpha !== scene.roomTransition.characterOpacity) throw new Error(`Wrong rendered opacity ${from}/${phase}`);
-          if (phase === 'open-entry' || phase === 'close-exit') {
-            if (alpha !== 0) throw new Error(`Visible behind a closing/closed door ${from}/${phase}`);
-          }
-          if (position.y < Math.min(...portal.path.map((p: any) => p.y)) - 1e-6) throw new Error(`Walking above doorway floor ${from}/${phase}`);
-          if (alpha > 0 && alpha < 1) {
-            faded.add(phase);
-            const [inside, threshold] = portal.path;
-            const cross = (position.x - threshold.x) * (threshold.y - inside.y) - (position.y - threshold.y) * (threshold.x - inside.x);
-            if (Math.abs(cross) > 1e-5) throw new Error(`Turned away from approach line ${from}/${phase}`);
-          }
+        if (scene.actor.alpha !== 1) throw new Error(`Character opacity changed ${from}/${phase}`);
+        if (portal.doorId) {
+          const foreground = scene.doorForegrounds.get(portal.doorId);
+          const frame = scene.resolved().areas.find((area: any) => area.id === `${portal.doorId}.frame`);
+          if (!foreground || foreground.image.depth !== frame.properties.baseline) throw new Error(`Wrong door baseline ${from}/${phase}`);
+          if (scene.actor.depth > foreground.image.depth) ordered.add('front');
+          else ordered.add('behind');
         }
         const oldRoom = scene.story.roomId, oldPosition = { ...scene.character.state.position };
         scene.update(0, 50);
         if (oldRoom !== scene.story.roomId) { sourceLast = oldPosition; destinationFirst = { ...scene.character.state.position }; }
       }
-      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], faded: [...faded], alpha: scene.actor.alpha, sourceLast, destinationFirst,
+      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst,
         position: { ...scene.character.state.position }, expected: forestPortal(manifest, to, from).path[0],
         enabled: scene.resolved().areas.filter((area: any) => area.id.includes('.transition.') && area.enabled).length });
     }
@@ -59,8 +54,10 @@ test('all room connections walk out and in with temporary corridors, animated do
     expect(route, `${route.from} → ${route.to}`).toMatchObject({ active: false, room: route.to, enabled: 0, position: route.expected, alpha: 1 });
     expect(route.phases).toEqual(['open-exit','exit','close-exit','open-entry','entry','close-entry']);
     expect(route.sourceLast).toBeTruthy(); expect(route.destinationFirst).toBeTruthy();
-    if (route.frames.length) expect(route.frames.length).toBeGreaterThan(3);
-    if (![route.from, route.to].every(room => ['village', 'forest'].includes(room))) expect(route.faded).toEqual(['exit', 'entry']);
+    if (route.frames.length) {
+      expect(route.frames.length).toBeGreaterThan(3);
+      expect(route.ordered.sort(), `${route.from} → ${route.to}: crosses the doorway baseline`).toEqual(['behind', 'front']);
+    }
   }
   expect(errors).toEqual([]);
   await page.screenshot({ path: testInfo.outputPath('cottage-door-exit.png') });
@@ -81,4 +78,43 @@ test('the king keeps continuous perspective as he crosses into the cage', async 
   });
   expect(scales[0].y).toBeGreaterThan(355); expect(scales.at(-1)!.y).toBeLessThan(355);
   for (let i = 1; i < scales.length; i++) expect(Math.abs(scales[i].height - scales[i-1].height)).toBeLessThan(1);
+});
+
+test('door pixels occlude actors behind the sill while the open passage stays behind them', async ({ page }, testInfo) => {
+  await openAdventure(page);
+  await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
+  await page.evaluate(async () => {
+    const { forestPortal } = await import('/src/transition-content.ts' as string);
+    const api = (window as any).pointleshDemo, scene = api.scene;
+    scene.game.loop.sleep(); scene.changeRoom('house');
+    const from = forestPortal(api.manifest, 'house', 'village'), to = forestPortal(api.manifest, 'village', 'house');
+    scene.roomTransition.restore({ from, to, phase: 'close-exit', elapsedMs: 450, waypoint: 0 });
+    scene.character.place(from.path.at(-1)); scene.binding.sync(); scene.syncTransitionDoors();
+    const foreground = scene.doorForegrounds.get(from.doorId), bounds = foreground.image.getBounds();
+    // A solid actor silhouette makes pixel coverage independent of character art.
+    scene.actor.setVisible(false);
+    scene.add.rectangle(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff)
+      .setOrigin(0).setDepth(foreground.image.depth - 1).setName('occlusion-probe');
+    scene.scene.pause(); scene.game.loop.wake();
+  });
+  const capture = async (name: string) => {
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const bytes = await page.locator('#game canvas').screenshot({ path: testInfo.outputPath(`${name}.png`) });
+    const png = PNG.sync.read(bytes);
+    let pixels = 0;
+    for (let i = 0; i < png.data.length; i += 4) if (png.data[i] > 240 && png.data[i + 1] < 15 && png.data[i + 2] > 240) pixels++;
+    return pixels;
+  };
+  const behind = await capture('behind-door');
+  await page.evaluate(() => (window as any).pointleshDemo.scene.doorForegrounds.get('house.door.house').image.setVisible(false));
+  const passage = await capture('passage-without-leaf');
+  await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    const foreground = scene.doorForegrounds.get('house.door.house').image;
+    foreground.setVisible(true); scene.children.getByName('occlusion-probe').setDepth(foreground.depth + 1);
+  });
+  const front = await capture('in-front-of-door');
+  expect(behind).toBeGreaterThan(100); // The backdrop cannot hide the entire actor.
+  expect(passage - behind).toBeGreaterThan(100); // Only the leaf removes coverage.
+  expect(front).toBeGreaterThan(passage); // Walking forward clears both leaf and frame.
 });

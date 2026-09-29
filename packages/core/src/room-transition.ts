@@ -6,13 +6,10 @@ import type { ResolvedPointleshArea } from './prefabs.js';
 export type RoomPortal = {
   roomId: string;
   areaId: string;
-  /** From ordinary floor to offscreen (or fully concealed beyond a doorway). */
+  /** From ordinary floor to offscreen or beyond a doorway's sill. */
   path: Point[];
   doorId?: string;
   doorDurationMs?: number;
-  /** Conceal the actor over the last path segment, e.g. inside a dark doorway.
-   * Render with characterOpacity instead of extending a path above the arch. */
-  fadeOnLastSegment?: boolean;
 };
 export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'entry' | 'close-entry';
 export type RoomTransitionCheckpoint = {
@@ -28,9 +25,7 @@ export function assertRoomTransitionCheckpoint(value: unknown): asserts value is
     if (!portal || typeof portal.roomId !== 'string' || !portal.roomId || typeof portal.areaId !== 'string' || !portal.areaId ||
       !Array.isArray(portal.path) || portal.path.length < 2 || !portal.path.every(isPoint) ||
       (portal.doorId !== undefined && (typeof portal.doorId !== 'string' || !portal.doorId)) ||
-      (portal.doorDurationMs !== undefined && (!Number.isFinite(portal.doorDurationMs) || portal.doorDurationMs <= 0)) ||
-      (portal.fadeOnLastSegment !== undefined && typeof portal.fadeOnLastSegment !== 'boolean') ||
-      (portal.fadeOnLastSegment && distance(portal.path.at(-2)!, portal.path.at(-1)!) === 0)) throw new Error('Invalid room portal');
+      (portal.doorDurationMs !== undefined && (!Number.isFinite(portal.doorDurationMs) || portal.doorDurationMs <= 0))) throw new Error('Invalid room portal');
   }
   const portal = state.phase.includes('entry') ? state.to : state.from;
   if (state.waypoint >= portal.path.length) throw new Error('Invalid transition waypoint');
@@ -43,7 +38,8 @@ export function activatePointleshAreas(areas: readonly ResolvedPointleshArea[], 
 
 /**
  * A saveable walk-out / door / walk-in sequence. The host ticks its character
- * normally and changes rooms only when the outgoing actor is fully concealed.
+ * normally and changes rooms after the outgoing path and door animation finish.
+ * Rendering and doorway occlusion do not modify the character's opacity.
  */
 export class RoomTransitionController {
   private state?: RoomTransitionCheckpoint;
@@ -55,20 +51,6 @@ export class RoomTransitionController {
   get active(): boolean { return !!this.state; }
   get portal(): RoomPortal | undefined { return this.state && (this.state.phase.includes('entry') ? this.state.to : this.state.from); }
   get phase(): RoomTransitionPhase | undefined { return this.state?.phase; }
-  /** Spatial, reversible concealment; restoring a checkpoint needs no extra clock. */
-  get characterOpacity(): number {
-    const portal = this.portal, phase = this.phase;
-    if (!portal?.fadeOnLastSegment) return 1;
-    if (phase === 'close-exit' || phase === 'open-entry') return 0;
-    if (phase !== 'exit' && phase !== 'entry') return 1;
-    if (phase === 'exit' && this.state!.waypoint < portal.path.length - 1) return 1;
-    if (phase === 'entry' && this.state!.waypoint > 1) return 1;
-    const start = portal.path.at(-2)!, end = portal.path.at(-1)!;
-    const dx = end.x - start.x, dy = end.y - start.y;
-    const position = this.character.state.position;
-    const progress = ((position.x - start.x) * dx + (position.y - start.y) * dy) / (dx * dx + dy * dy);
-    return 1 - Math.max(0, Math.min(1, progress));
-  }
   get doorProgress(): number {
     const state = this.state, portal = this.portal;
     if (!state || !portal?.doorId) return 0;
