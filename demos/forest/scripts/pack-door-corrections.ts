@@ -9,7 +9,8 @@ import { forestDoors } from '../src/door-layout.js';
 // The same view is composited under EVERY pose, including tavern animation
 // previews. Runtime holds its final pose, while close still reverses the sheet.
 const input = process.argv[2];
-if (!input) throw new Error('Usage: tsx pack-door-corrections.ts INPUT_DIRECTORY');
+if (!input) throw new Error('Usage: tsx pack-door-corrections.ts INPUT_DIRECTORY [DOOR_ID...]');
+const doorIds = process.argv.slice(3);
 const publicDir = new URL('../public/', import.meta.url);
 const load = async (file: string) => PNG.sync.read(await sharp(file).ensureAlpha().png().toBuffer());
 function cell(sheet: PNG, i: number) {
@@ -26,8 +27,45 @@ function bounds(image: PNG) {
   if (right <= left || bottom <= top) throw new Error('Empty door art');
   return { left, top, width: right - left + 1, height: bottom - top + 1 };
 }
-for (const id of ['house', 'pub']) {
-  const door = forestDoors.find(door => door.id === id)!;
+// A color-edit prompt alone can still brighten or desaturate the wood. Match
+// the generated closed pose to the painted door once, then apply that same
+// palette transfer to every pose. Never include the scenery in this operation.
+function matchDoorPalette(leaves: PNG, original: PNG, aperture: typeof forestDoors[number]['aperture']) {
+  const material = (r: number, g: number, b: number) => r > 20 && g < r * .85 && b < g * .9 ? 0 : 1;
+  const samples = (image: PNG, painted: boolean) => {
+    const groups: number[][][] = [[[], [], []], [[], [], []]];
+    for (let y = 0; y < image.height; y++) for (let x = 0; x < image.width; x++) {
+      const offset = (y * image.width + x) * 4;
+      const r = image.data[offset]!, g = image.data[offset + 1]!, b = image.data[offset + 2]!;
+      if (image.data[offset + 3]! < 128 || Math.max(r, g, b) <= 20 ||
+        painted && !pointInPolygon({ x: x + .5, y: y + .5 }, aperture)) continue;
+      const group = groups[material(r, g, b)]!;
+      for (let c = 0; c < 3; c++) group[c]!.push(image.data[offset + c]!);
+    }
+    return groups.map(group => group.map(channel => channel.sort((a, b) => a - b)));
+  };
+  const source = samples(cell(leaves, 0), false), target = samples(original, true);
+  const maps = source.map((group, m) => group.map((channel, c) => {
+    const reference = target[m]![c]!;
+    if (!channel.length || !reference.length) throw new Error('Missing door palette samples');
+    let below = 0, through = 0;
+    return Array.from({ length: 256 }, (_, value) => {
+      while (below < channel.length && channel[below]! < value) below++;
+      while (through < channel.length && channel[through]! <= value) through++;
+      const percentile = (below + through) / (2 * channel.length);
+      return reference[Math.min(reference.length - 1, Math.floor(percentile * reference.length))]!;
+    });
+  }));
+  for (let offset = 0; offset < leaves.data.length; offset += 4) {
+    const r = leaves.data[offset]!, g = leaves.data[offset + 1]!, b = leaves.data[offset + 2]!;
+    if (leaves.data[offset + 3]! < 128 || Math.max(r, g, b) <= 20) continue;
+    const palette = maps[material(r, g, b)]!;
+    for (let c = 0; c < 3; c++) leaves.data[offset + c] = palette[c]![leaves.data[offset + c]!]!;
+  }
+}
+for (const id of doorIds.length ? doorIds : ['house', 'pub']) {
+  const door = forestDoors.find(door => door.id === id);
+  if (!door) throw new Error(`Unknown door: ${id}`);
   const { width, height } = door.crop;
   const baseFile = new URL(`art/objects/doors/${id}.png`, publicDir);
   const sheetFile = new URL(`art/objects/doors/${id}-open.png`, publicDir);
@@ -44,6 +82,7 @@ for (const id of ['house', 'pub']) {
     if (leaves.data[offset + 3]! < 128) leaves.data.fill(0, offset, offset + 4);
     else leaves.data[offset + 3] = 255;
   }
+  matchDoorPalette(leaves, original, door.aperture);
   const closedBounds = bounds(cell(leaves, 0));
   let base: PNG | undefined;
   for (let i = 0; i < 8; i++) {
