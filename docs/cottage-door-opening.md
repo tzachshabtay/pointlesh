@@ -2,7 +2,7 @@
 
 The interior and exterior cottage leaves now rotate to a narrow edge-on pose. The original leaves still covered approximately 40% and 26% of their openings; the replacements cover approximately 16% and 9%, including hinge hardware. The original closed-door pixels, aperture, palette matching, and fixed view plates are retained.
 
-The route follows the original entry–threshold line, continued a short distance beyond the sill. The vertical approach detour and its extra foreground-depth override have been removed. Door leaves and jambs use their authored baselines again.
+The route follows a straight entry–threshold line, continued a short distance beyond the sill. The cottage entry point is on the room floor at (740, 440), aligned with the painted staircase. Its temporary walkable area follows the stairs and excludes the root on their right. Scale and zoom endpoints were adjusted for the narrower area's Y bounds to preserve the existing perspective at each height. The vertical approach detour and its extra foreground-depth override have been removed. Door leaves and jambs use their authored baselines again.
 
 Mode: built-in imagegen, with the original closed door as the edit reference. Final source sheets and registered view plates are in `demos/forest/art-source/doors/`. The runtime assets are `demos/forest/public/art/objects/doors/house-open.png` and `village-house-open.png`; opening and closing use the same frames in opposite order. `demos/forest/src/door-occlusion.json` is rebuilt from the same source silhouettes.
 

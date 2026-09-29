@@ -19,6 +19,7 @@ test('all room connections walk out and in with temporary corridors, animated do
       scene.applyInteraction(target);
       const phases = new Set<string>(), frames = new Set<number>(), checkpoints = new Set<string>();
       const ordered = new Set<string>();
+      const cottagePositions: { x: number; y: number }[] = [];
       let sourceLast: any, destinationFirst: any;
       for (let i = 0; i < 1500 && scene.roomTransition.active; i++) {
         const phase = scene.roomTransition.phase; phases.add(phase);
@@ -30,6 +31,7 @@ test('all room connections walk out and in with temporary corridors, animated do
           checkpoints.add(phase);
         }
         if (scene.actor.alpha !== 1) throw new Error(`Character opacity changed ${from}/${phase}`);
+        if (scene.story.roomId === 'house' && (phase === 'exit' || phase === 'entry')) cottagePositions.push({ ...scene.character.state.position });
         if (portal.doorId) {
           const foreground = scene.doorForegrounds.get(portal.doorId);
           const frame = scene.resolved().areas.find((area: any) => area.id === `${portal.doorId}.frame`);
@@ -41,7 +43,7 @@ test('all room connections walk out and in with temporary corridors, animated do
         scene.update(0, 50);
         if (oldRoom !== scene.story.roomId) { sourceLast = oldPosition; destinationFirst = { ...scene.character.state.position }; }
       }
-      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst,
+      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, cottagePositions,
         position: { ...scene.character.state.position }, expected: forestPortal(manifest, to, from).path[0],
         enabled: scene.resolved().areas.filter((area: any) => area.id.includes('.transition.') && area.enabled).length });
     }
@@ -55,6 +57,12 @@ test('all room connections walk out and in with temporary corridors, animated do
     expect(route, `${route.from} → ${route.to}`).toMatchObject({ active: false, room: route.to, enabled: 0, position: route.expected, alpha: 1 });
     expect(route.phases).toEqual(['open-exit','exit','close-exit','open-entry','entry','close-entry']);
     expect(route.sourceLast).toBeTruthy(); expect(route.destinationFirst).toBeTruthy();
+    const root = [[1060,554],[1079,522],[1098,490],[1114,464],[1140,428],[1163,393],[1182,399],[1182,575],[1100,568]]
+      .map(([x, y]) => ({ x: x * 960 / 1182, y: y * 540 / 664 }));
+    for (const position of route.cottagePositions) expect(pointInPolygon(position, root), `${route.from} → ${route.to}: boots on the tree root at ${JSON.stringify(position)}`).toBe(false);
+    if (route.from === 'house' || route.to === 'house') {
+      expect(route.cottagePositions.some(p => p.y > 390 && p.y < 410 && p.x > 790 && p.x < 840), 'cross the lower stair treads in each direction').toBe(true);
+    }
     if (route.frames.length) {
       expect(route.frames.length).toBeGreaterThan(3);
       expect(route.ordered.sort(), `${route.from} → ${route.to}: crosses the doorway baseline`).toEqual(['behind', 'front']);

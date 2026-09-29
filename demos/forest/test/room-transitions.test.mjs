@@ -79,6 +79,29 @@ test('cottage leaves open fully clear of the walking passage on both sides', () 
   }
 });
 
+test('the cottage route follows the painted steps and excludes the right-hand tree root', async () => {
+  const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
+  const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  const door = forestDoors.find(door => door.id === 'house');
+  // Trace the root from house-lamps.png, independently of navigation geometry.
+  const root = [[1060,554],[1079,522],[1098,490],[1114,464],[1140,428],[1163,393],[1182,399],[1182,575],[1100,568]]
+    .map(([x, y]) => ({ x: x * door.scaleX, y: y * door.scaleY }));
+  for (const manifest of [seed, authored]) {
+    const route = forestPortal(manifest, 'house', 'village').path;
+    assert.ok(route[0].x < 780, 'approach starts on the floor to the left of the root');
+    for (let i = 1; i < route.length; i++) for (let step = 0; step <= 100; step++) {
+      const t = step / 100, a = route[i - 1], b = route[i];
+      assert.equal(pointInPolygon({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }, root), false, 'feet never cross the painted tree root');
+    }
+    const [inside, sill] = route, t = (400 - inside.y) / (sill.y - inside.y);
+    const xOnSteps = inside.x + (sill.x - inside.x) * t;
+    assert.ok(xOnSteps > 790 && xOnSteps < 840, 'cross the lower stair treads, not the root to their right');
+  }
+  const corridor = resolvePointleshScene(authored, 'house').areas.find(area => area.id === 'house.transition.to-village');
+  assert.equal(corridor.enabled, false);
+  assert.equal(pointInPolygon({ x: 880, y: 430 }, corridor.polygon), false, 'the temporary walkable area excludes the root too');
+});
+
 test('legacy rooftop endpoints migrate without resetting authored door, floor, or point edits', () => {
   const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
   const original = structuredClone(scenes), door = forestDoors[0];

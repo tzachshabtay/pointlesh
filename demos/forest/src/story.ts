@@ -67,7 +67,7 @@ export const targets: Record<RoomId, Target[]> = {
   house: [
     { id: 'coin', name: 'Copper coin', x: 516, y: 297, walkY: 421, description: 'My emergency breakfast fund.' },
     { id: 'rope', name: 'Climbing rope', x: 127, y: 375, walkY: 443, description: 'A coil of good dwarven climbing rope on the old chest.' },
-    { id: 'house-exit', name: 'Back to the village', x: 874, y: 336, exit: 'village', description: 'There is a king out there who needs me.' }
+    { id: 'house-exit', name: 'Back to the village', x: 874, y: 336, walkX: 740, walkY: 440, exit: 'village', description: 'There is a king out there who needs me.' }
   ],
   pub: [
     { id: 'innkeeper', name: 'Mara the innkeeper', x: 526, y: 348, walkY: 421, description: 'A brewer, a storyteller, and a formidable keeper of tabs.' },
