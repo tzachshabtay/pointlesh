@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { PNG } from 'pngjs';
+import { pointInPolygon } from '@pointlesh/core';
 import { openAdventure } from './start-helpers';
 
 test('all room connections walk out and in with temporary corridors, animated doors, and restorable progress', async ({ page }, testInfo) => {
@@ -117,4 +118,52 @@ test('door pixels occlude actors behind the sill while the open passage stays be
   expect(behind).toBeGreaterThan(100); // The backdrop cannot hide the entire actor.
   expect(passage - behind).toBeGreaterThan(100); // Only the leaf removes coverage.
   expect(front).toBeGreaterThan(passage); // Walking forward clears both leaf and frame.
+});
+
+test('thin door-mask pieces remain opaque at every camera zoom', async ({ page }, testInfo) => {
+  await openAdventure(page);
+  await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
+  for (const room of ['village', 'house']) for (const zoom of [0.6, 1, 1.4]) {
+    const view = await page.evaluate(async ({ room, zoom }) => {
+      const { forestPortal } = await import('/src/transition-content.ts' as string);
+      const { forestDoors, doorWorldAperture } = await import('/src/door-layout.ts' as string);
+      const api = (window as any).pointleshDemo, scene = api.scene;
+      scene.game.loop.sleep(); scene.scene.resume(); scene.changeRoom(room);
+      scene.children.getByName('occlusion-probe')?.destroy();
+      const other = room === 'village' ? 'house' : 'village';
+      const to = forestPortal(api.manifest, room, other), from = forestPortal(api.manifest, other, room);
+      scene.roomTransition.restore({ from, to, phase: 'open-entry', elapsedMs: 0, waypoint: 0 });
+      scene.character.place(to.path.at(-1)); scene.binding.sync(); scene.syncTransitionDoors();
+      const foreground = scene.doorForegrounds.get(to.doorId), bounds = foreground.image.getBounds();
+      scene.actor.setVisible(false);
+      scene.add.rectangle(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff)
+        .setOrigin(0).setDepth(foreground.image.depth - 1).setName('occlusion-probe');
+      const camera = scene.cameras.main;
+      camera.setZoom(zoom).centerOn(bounds.centerX, bounds.centerY);
+      const aperture = doorWorldAperture(forestDoors.find((door: any) => door.room === room && door.to === other)!);
+      const polygon = aperture.map((point: any) => ({
+        x: (point.x - camera.scrollX - camera.width / 2) * zoom + camera.width / 2,
+        y: (point.y - camera.scrollY - camera.height / 2) * zoom + camera.height / 2,
+      }));
+      scene.scene.pause(); scene.game.loop.wake();
+      return { doorId: to.doorId, polygon, width: camera.width };
+    }, { room, zoom });
+    const leakingPixels = async (label: string) => {
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      const png = PNG.sync.read(await page.locator('#game canvas').screenshot({ path: testInfo.outputPath(`${room}-${zoom}-${label}.png`) }));
+      const ratio = png.width / view.width;
+      const polygon = view.polygon.map(point => ({ x: point.x * ratio, y: point.y * ratio }));
+      let count = 0;
+      for (let y = 0; y < png.height; y++) for (let x = 0; x < png.width; x++) {
+        const offset = (y * png.width + x) * 4;
+        if (png.data[offset] < 240 || png.data[offset + 1] > 15 || png.data[offset + 2] < 240) continue;
+        // Ignore the antialiased boundary; the solid interior must have no holes.
+        if ([[0, 0], [-2, 0], [2, 0], [0, -2], [0, 2]].every(([dx, dy]) => pointInPolygon({ x: x + dx, y: y + dy }, polygon))) count++;
+      }
+      return count;
+    };
+    expect(await leakingPixels('masked'), `${room}, zoom ${zoom}: actor pixels through closed wood`).toBe(0);
+    await page.evaluate(id => (window as any).pointleshDemo.scene.doorForegrounds.get(id).image.setVisible(false), view.doorId);
+    expect(await leakingPixels('unmasked')).toBeGreaterThan(300);
+  }
 });

@@ -75,6 +75,18 @@ export function createWalkBehindOverlay(
   const defaultNodes = image.defaultRenderNodes as { Submitter: Submitter };
   const originalSubmitter = customNodes.Submitter;
   if (webgl) {
+    // Occlusion edges must be exact. Phaser's screen-space path simplification
+    // drops subpixel edges (including one-pixel mask rows when zoomed out),
+    // leaving holes through otherwise opaque scenery. An object threshold of 0
+    // cannot override the renderer's minimum, so bypass it for this mask only.
+    type FillPath = Phaser.Renderer.WebGL.RenderNodes.FillPath;
+    const fillPath = (graphics.defaultRenderNodes as { FillPath: FillPath }).FillPath;
+    const exactFillPath = Object.create(fillPath) as typeof fillPath;
+    exactFillPath.run = function (...args: Parameters<typeof fillPath.run>) {
+      args[7] = 0;
+      return fillPath.run.apply(this, args);
+    };
+    (graphics.customRenderNodes as { FillPath?: FillPath }).FillPath = exactFillPath;
     // Draw the original room texture directly through a stencil polygon. A mask
     // filter captures a lower-resolution intermediate image, which disagrees
     // with the background on high-DPI canvases and exposes seams while zooming.
