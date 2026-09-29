@@ -1,4 +1,4 @@
-import { pointInPolygon, pointleshAreaCapabilities, pointleshAreaRange, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
+import { pointInPolygon, pointleshAreaCapabilities, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
 import type Phaser from "phaser";
 
 export type PointleshAreaEffects = {
@@ -16,10 +16,10 @@ function numeric(area: ResolvedPointleshArea, key: string, fallback: number): nu
 }
 
 /** Start/end values follow the area's bounding box along its authored x/y axis. */
-export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Point, start: number, end: number, axis: "x" | "y" = area.properties.axis === "x" ? "x" : "y", range?: { start: number; end: number }): number {
+export function interpolatePointleshArea(area: ResolvedPointleshArea, point: Point, start: number, end: number, axis: "x" | "y" = area.properties.axis === "x" ? "x" : "y"): number {
   const coordinates = area.polygon.map(vertex => vertex[axis]);
   if (!coordinates.length) return start;
-  const minimum = range?.start ?? Math.min(...coordinates), maximum = range?.end ?? Math.max(...coordinates);
+  const minimum = Math.min(...coordinates), maximum = Math.max(...coordinates);
   const amount = maximum === minimum ? 0 : Math.max(0, Math.min(1, (point[axis] - minimum) / (maximum - minimum)));
   return start + (end - start) * amount;
 }
@@ -36,10 +36,10 @@ export function evaluatePointleshAreaEffects(areas: readonly ResolvedPointleshAr
     const roles = pointleshAreaCapabilities(area);
     const axis = (key: string) => (area.properties[key] ?? area.properties.axis) === "x" ? "x" : "y";
     if (roles.scale) {
-      effects.scale = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minScale", 0.65), numeric(area, "maxScale", 1), axis("scaleAxis"), pointleshAreaRange(area, 'scale')));
+      effects.scale = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minScale", 0.65), numeric(area, "maxScale", 1), axis("scaleAxis")));
     }
     if (roles.zoom) {
-      effects.zoom = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minZoom", 1.2), numeric(area, "maxZoom", 1), axis("zoomAxis"), pointleshAreaRange(area, 'zoom')));
+      effects.zoom = Math.max(0.01, interpolatePointleshArea(area, point, numeric(area, "minZoom", 1.2), numeric(area, "maxZoom", 1), axis("zoomAxis")));
       effects.zoomSmoothing = Math.max(0, numeric(area, "smoothing", 5));
     }
     if (roles.walkBehind) {

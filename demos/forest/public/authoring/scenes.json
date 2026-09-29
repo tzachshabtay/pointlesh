@@ -4151,20 +4151,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "pub",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.6519653686842245,
+                  "maxScale": 1.1252645069405818,
+                  "minZoom": 1.042300451268196,
+                  "maxZoom": 1.007054770759744,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 351.8822459221226,
-                    "end": 531.5641276260035
-                  },
-                  "zoomRange": {
-                    "start": 351.8822459221226,
-                    "end": 531.5641276260035
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -4374,20 +4366,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "house",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.6371997818779441,
+                  "maxScale": 1.1576607863350858,
+                  "minZoom": 1.0434000162431316,
+                  "maxZoom": 1.0046422818686638,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 351.8822459221226,
-                    "end": 531.5641276260035
-                  },
-                  "zoomRange": {
-                    "start": 351.8822459221226,
-                    "end": 531.5641276260035
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -4565,12 +4549,12 @@
               "vertices": [
                 {
                   "x": 419.3367371816581,
-                  "y": -180,
+                  "y": 202,
                   "id": "vertex-0"
                 },
                 {
                   "x": 525,
-                  "y": -180,
+                  "y": 202,
                   "id": "vertex-1"
                 },
                 {
@@ -4597,20 +4581,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "forest",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.3579479193150274,
+                  "maxScale": 0.9780848178664759,
+                  "minZoom": 1.0641953677105829,
+                  "maxZoom": 1.0180149603716453,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 351.8822459221226,
-                    "end": 531.5641276260035
-                  },
-                  "zoomRange": {
-                    "start": 351.8822459221226,
-                    "end": 531.5641276260035
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -5368,20 +5344,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "village",
-                  "minScale": 1,
-                  "maxScale": 1.5,
-                  "minZoom": 1.1,
-                  "maxZoom": 1,
+                  "minScale": 0.6511618986922701,
+                  "maxScale": 1.4076376361642668,
+                  "minZoom": 1.1697676202615461,
+                  "maxZoom": 1.0184724727671466,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 355,
-                    "end": 514.4553452218695
-                  },
-                  "zoomRange": {
-                    "start": 355,
-                    "end": 514.4553452218695
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -6239,20 +6207,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "village",
-                  "minScale": 1.22,
-                  "maxScale": 1.5,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 1.0833717182393883,
+                  "maxScale": 1.570003251251308,
+                  "minZoom": 1.0520785352200763,
+                  "maxZoom": 0.9912495935935866,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 361.21531822760045,
-                    "end": 515
-                  },
-                  "zoomRange": {
-                    "start": 361.21531822760045,
-                    "end": 515
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -7202,20 +7162,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "mine",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.5762654109382268,
+                  "maxScale": 1.1141515241281845,
+                  "minZoom": 1.0479376821641746,
+                  "maxZoom": 1.0078823333096032,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 331.09818526141385,
-                    "end": 539.0100045431417
-                  },
-                  "zoomRange": {
-                    "start": 331.09818526141385,
-                    "end": 539.0100045431417
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -7425,20 +7377,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "camp",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.5393456850844133,
+                  "maxScale": 1.0300891893895967,
+                  "minZoom": 1.0506870234511605,
+                  "maxZoom": 1.0141422944071576,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 331.09818526141385,
-                    "end": 539.0100045431417
-                  },
-                  "zoomRange": {
-                    "start": 331.09818526141385,
-                    "end": 539.0100045431417
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -7633,20 +7577,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "village",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 1.1002032906174126,
+                  "maxScale": 1.843895737687498,
+                  "minZoom": 1.0089210315497672,
+                  "maxZoom": 0.9535396791083779,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 331.09818526141385,
-                    "end": 539.0100045431417
-                  },
-                  "zoomRange": {
-                    "start": 331.09818526141385,
-                    "end": 539.0100045431417
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -8277,20 +8213,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "forest",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.3306169018912934,
+                  "maxScale": 1.3001611124726344,
+                  "minZoom": 1.0662306562421375,
+                  "maxZoom": 0.9940305554541655,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 355,
-                    "end": 515
-                  },
-                  "zoomRange": {
-                    "start": 355,
-                    "end": 515
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -9466,20 +9394,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "forest",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.41205278892933467,
+                  "maxScale": 1.3184506463955397,
+                  "minZoom": 1.0601662816754749,
+                  "maxZoom": 0.9926685688854385,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 355,
-                    "end": 515
-                  },
-                  "zoomRange": {
-                    "start": 355,
-                    "end": 515
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {
@@ -9673,20 +9593,12 @@
                   "walkBehindEnabled": false,
                   "scaleAxis": "y",
                   "zoomAxis": "y",
-                  "minScale": 0.75,
-                  "maxScale": 1.22,
-                  "minZoom": 1.035,
-                  "maxZoom": 1,
+                  "minScale": 0.5884375,
+                  "maxScale": 1.0231875000000001,
+                  "minZoom": 1.0470312499999999,
+                  "maxZoom": 1.01465625,
                   "smoothing": 5,
-                  "baseline": 160,
-                  "scaleRange": {
-                    "start": 355,
-                    "end": 515
-                  },
-                  "zoomRange": {
-                    "start": 355,
-                    "end": 515
-                  }
+                  "baseline": 160
                 },
                 "behaviors": [],
                 "propertySchema": {

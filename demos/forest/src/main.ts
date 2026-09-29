@@ -326,6 +326,9 @@ class ForestAdventure extends Phaser.Scene {
       if (this.roomTransition.active) return;
       this.epoch++; this.clearMovementKeys(); this.hover();
       this.roomTransition.begin(forestPortal(authoredScenes, this.story.roomId, exit), forestPortal(authoredScenes, exit, this.story.roomId));
+      // Activation can change perspective at this position. Keep the rendered
+      // pose and immediate save checkpoints consistent with the new area set.
+      this.binding.sync();
       this.renderNearby();
       return;
     }

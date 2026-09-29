@@ -81,9 +81,6 @@ export type PointleshRegionPrefabInput = PointleshAreaPrefabInput & {
   maxZoom?: number;
   smoothing?: number;
   baseline?: number;
-  /** Optional independent interpolation coordinates; otherwise use this area's bounds. */
-  scaleRange?: { start: number; end: number };
-  zoomRange?: { start: number; end: number };
 };
 export type PointleshObjectPrefabInput = PointleshPrefabInput & Partial<SceneObjectDefaults> & { walkThrough?: boolean; walkPointId?: string };
 
@@ -162,8 +159,6 @@ export function createAreaPrefab(input: PointleshRegionPrefabInput = {}): Pointl
     walkBehindEnabled: input.walkBehindEnabled ?? false,
     scaleAxis: input.scaleAxis ?? "y",
     zoomAxis: input.zoomAxis ?? "y",
-    ...(input.scaleRange ? { scaleRange: { ...input.scaleRange } } : {}),
-    ...(input.zoomRange ? { zoomRange: { ...input.zoomRange } } : {}),
   }, [
     number("minScale", "Scale at start", input.minScale ?? 0.65, { min: 0.01, step: 0.05, unit: "multiplier" }),
     number("maxScale", "Scale at end", input.maxScale ?? 1, { min: 0.01, step: 0.05, unit: "multiplier" }),
@@ -435,11 +430,8 @@ export function walkablePolygons(scene: PointleshResolvedScene): PointleshPoint[
   return scene.areas.filter(area => pointleshAreaCapabilities(area).walkable && area.enabled && area.closed && area.polygon.length >= 3).map(area => area.polygon);
 }
 
-/** An area's own interpolation coordinates, shared by its inspector and renderer. */
+/** Endpoints always follow the selected area's geometry, including later vertex edits. */
 export function pointleshAreaRange(area: Pick<ResolvedPointleshArea, 'properties' | 'polygon'>, effect: 'scale' | 'zoom'): { start: number; end: number } {
-  const range = area.properties[`${effect}Range`];
-  if (range && typeof range === 'object' && !Array.isArray(range) &&
-    typeof range.start === 'number' && Number.isFinite(range.start) && typeof range.end === 'number' && Number.isFinite(range.end)) return { start: range.start, end: range.end };
   const axis = (area.properties[`${effect}Axis`] ?? area.properties.axis) === 'x' ? 'x' : 'y';
   const coordinates = area.polygon.map(point => point[axis]);
   return { start: coordinates.length ? Math.min(...coordinates) : 0, end: coordinates.length ? Math.max(...coordinates) : 0 };

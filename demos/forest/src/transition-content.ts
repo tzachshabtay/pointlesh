@@ -43,16 +43,22 @@ export function addDoorAssets(manifest: AiAssetManifest): void {
 }
 
 /** Copy initial perspective, never retain a live link to another area. */
-function initialPerspective(area: ResolvedPointleshArea | undefined) {
+function initialPerspective(area: ResolvedPointleshArea | undefined, polygon: Point[]) {
   const p = area?.properties ?? {};
-  return {
-    minScale: typeof p.minScale === 'number' ? p.minScale : .65, maxScale: typeof p.maxScale === 'number' ? p.maxScale : 1,
-    minZoom: typeof p.minZoom === 'number' ? p.minZoom : 1.2, maxZoom: typeof p.maxZoom === 'number' ? p.maxZoom : 1,
-    scaleAxis: p.scaleAxis === 'x' || p.axis === 'x' && p.scaleAxis === undefined ? 'x' as const : 'y' as const,
-    zoomAxis: p.zoomAxis === 'x' || p.axis === 'x' && p.zoomAxis === undefined ? 'x' as const : 'y' as const,
-    smoothing: typeof p.smoothing === 'number' ? p.smoothing : 5,
-    ...(area ? { scaleRange: pointleshAreaRange(area, 'scale'), zoomRange: pointleshAreaRange(area, 'zoom') } : {}),
+  const axis = (effect: 'scale' | 'zoom') => (p[`${effect}Axis`] ?? p.axis) === 'x' ? 'x' as const : 'y' as const;
+  const endpoints = (effect: 'scale' | 'zoom', start: number, end: number) => {
+    if (!area) return [start, end];
+    const range = pointleshAreaRange(area, effect), coordinates = polygon.map(point => point[axis(effect)]);
+    // Extend the floor's slope to this shape's OWN edges once. This retains
+    // matching values throughout the overlap, without retaining a hidden range.
+    const value = (coordinate: number) => Math.max(.01, start + (end - start) *
+      (range.end === range.start ? 0 : (coordinate - range.start) / (range.end - range.start)));
+    return [value(Math.min(...coordinates)), value(Math.max(...coordinates))];
   };
+  const [minScale, maxScale] = endpoints('scale', Number(p.minScale ?? .65), Number(p.maxScale ?? 1));
+  const [minZoom, maxZoom] = endpoints('zoom', Number(p.minZoom ?? 1.2), Number(p.maxZoom ?? 1));
+  return { minScale: minScale!, maxScale: maxScale!, minZoom: minZoom!, maxZoom: maxZoom!,
+    scaleAxis: axis('scale'), zoomAxis: axis('zoom'), smoothing: Number(p.smoothing ?? 5) };
 }
 
 /** Add scene-owned corridors and points without moving the user's existing entries. */
@@ -62,21 +68,6 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
     const roomId = scene.id as RoomId, layer = scene.layers[0];
     if (!targets[roomId] || !layer) continue;
     const room = resolvePointleshScene(manifest, roomId);
-    // One-time upgrade of old demo links. Each destination owns its curve after
-    // this migration; editing a corridor must never mutate the main floor.
-    for (const area of scene.layers.flatMap(layer => layer.areas)) {
-      if (!isPointleshArea(area) || typeof area.pointlesh.properties.perspectiveSourceAreaId !== 'string') continue;
-      let reference = room.areas.find(candidate => candidate.id === area.pointlesh.properties.perspectiveSourceAreaId);
-      const visited = new Set<string>();
-      while (reference && !visited.has(reference.id)) {
-        visited.add(reference.id);
-        const next = room.areas.find(candidate => candidate.id === reference!.properties.perspectiveSourceAreaId);
-        if (!next) break;
-        reference = next;
-      }
-      Object.assign(area.pointlesh.properties, initialPerspective(reference));
-      delete area.pointlesh.properties.perspectiveSourceAreaId;
-    }
     const addPoint = (id: string, name: string, position: Point) => {
       if (scene.layers.some(layer => layer.prefabs?.some(point => point.id === id))) return;
       (layer.prefabs ??= []).push(createPointleshInstance({ id, name, prefabId: 'forest.point.entry', overrides: { x: { value: position.x }, y: { value: position.y } } }));
@@ -110,15 +101,15 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       const legacyBounds = rectangle(Math.min(entry.position.x, defaultThreshold.x) - 44, aperture || roomId === 'village' ? -180 : Math.min(entry.position.y, defaultThreshold.y) - 45,
         Math.max(entry.position.x, defaultThreshold.x) + 44, aperture || roomId === 'village' ? entry.position.y + 45 : outside.y + 45);
       const route = [entry.position, inside, threshold, outside];
-      const vertices = aperture ? rectangle(Math.min(...route.map(p => p.x)) - 44, Math.min(...route.map(p => p.y)) - 45,
+      const vertices = aperture || roomId === 'village' ? rectangle(Math.min(...route.map(p => p.x)) - 44, Math.min(...route.map(p => p.y)) - 45,
         Math.max(...route.map(p => p.x)) + 44, Math.max(...route.map(p => p.y)) + 45) : legacyBounds;
       const corridor = scene.layers.flatMap(layer => layer.areas).find(area => isPointleshArea(area) && area.pointlesh.entityId === areaId);
       if (!corridor) {
         layer.areas.push(createPointleshArea({ id: `${areaId}::area`, entityId: areaId, name: `Transition · ${target.name}`,
-          closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`)),
+          closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`), vertices),
           properties: { enabled: false, transitionTo: to },
           vertices }));
-      } else if (migrateOutside && corridor.vertices.length === 4 && corridor.vertices.every((point, i) => samePoint(point, legacyBounds[i]!))) {
+      } else if ((migrateOutside || !aperture && roomId === 'village') && corridor.vertices.length === 4 && corridor.vertices.every((point, i) => samePoint(point, legacyBounds[i]!))) {
         corridor.vertices = vertices.map((point, i) => ({ ...corridor.vertices[i]!, ...point }));
       }
       if (door && aperture) {
@@ -162,9 +153,29 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       }
     }
     if (roomId === 'camp' && !layer.areas.some(area => area.id === CAGE_APPROACH_AREA)) {
+      const vertices = [{ x: 570, y: 300 }, { x: 740, y: 300 }, { x: 740, y: 448 }, { x: 570, y: 448 }];
       layer.areas.push(createPointleshArea({ id: CAGE_APPROACH_AREA, entityId: CAGE_APPROACH_AREA, name: 'Cage approach · continuous perspective',
-        closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === 'camp.floor')), properties: { enabled: false },
-        vertices: [{ x: 570, y: 300 }, { x: 740, y: 300 }, { x: 740, y: 448 }, { x: 570, y: 448 }] }));
+        closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === 'camp.floor'), vertices), properties: { enabled: false },
+        vertices }));
+    }
+    // Retire both generations of hidden floor-coordinate overrides. Preserve
+    // authored endpoint edits; only untouched defaults need slope conversion.
+    for (const area of scene.layers.flatMap(layer => layer.areas)) {
+      if (!isPointleshArea(area)) continue;
+      const p = area.pointlesh.properties;
+      const linked = typeof p.perspectiveSourceAreaId === 'string';
+      if (!linked && !p.scaleRange && !p.zoomRange) continue;
+      const ground = room.areas.find(candidate => candidate.id === (linked ? p.perspectiveSourceAreaId : `${roomId}.floor`));
+      const own = resolvePointleshScene(manifest, roomId).areas.find(candidate => candidate.areaId === area.id);
+      const initial = initialPerspective(ground, own?.polygon ?? area.vertices);
+      for (const effect of ['scale', 'zoom'] as const) {
+        const min = effect === 'scale' ? 'minScale' : 'minZoom', max = effect === 'scale' ? 'maxScale' : 'maxZoom';
+        if (linked || p[`${effect}Range`] && ground && p[min] === ground.properties[min] && p[max] === ground.properties[max]) {
+          p[min] = initial[min]; p[max] = initial[max];
+        }
+        delete p[`${effect}Range`];
+      }
+      delete p.perspectiveSourceAreaId;
     }
   }
   return manifest;

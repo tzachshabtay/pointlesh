@@ -352,3 +352,6 @@ Generation specifications for the final prompt set:
 - **Pub outside view:** edit only the far-right doorway aperture of `pub-lamps.png`, with the same village reference. Permanently open and unobstructed, no leaf; immediate village dirt and worn stones, grass and full-scale tree trunks. No miniature village or dark hallway. Preserve the room outside the aperture.
 
 The already-generated final exterior cottage open pose supplies its single warm interior plate. Import only the aperture; preserve the original closed pose and doorstep. Tests compare uncovered scenery pixels across frames to prevent future backdrop movement or scale changes.
+
+
+The cottage and tavern interior views and leaves were rebuilt from registered doorway crops with the actual Bramblehollow reference. See [doorway-art-followup.md](doorway-art-followup.md) for the final saved plates, import coordinates and exact built-in prompts. Those replace the earlier forest-path views; the fixed-backdrop invariant remains in force.

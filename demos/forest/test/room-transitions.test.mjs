@@ -77,9 +77,10 @@ test('legacy rooftop endpoints migrate without resetting authored door, floor, o
 });
 
 test('door scenery remains pixel-identical once uncovered and tavern portals remain open', () => {
-  for (const id of ['house', 'village-house']) {
+  for (const id of ['house', 'pub', 'village-house']) {
     const door = forestDoors.find(door => door.id === id), { width, height } = door.crop;
     const sheet = PNG.sync.read(readFileSync(new URL(`../public/art/objects/doors/${id}-open.png`, import.meta.url)));
+    const view = id === 'village-house' ? undefined : PNG.sync.read(readFileSync(new URL(`../public/art/objects/doors/${id}-view.png`, import.meta.url)));
     const x0 = Math.ceil(Math.max(...door.aperture.map(p => p.x)) - 18);
     const y0 = Math.ceil(Math.min(...door.aperture.map(p => p.y)) + 55);
     for (let y = y0; y < height - 20; y++) for (let x = x0; x < x0 + 10; x++) {
@@ -89,6 +90,10 @@ test('door scenery remains pixel-identical once uncovered and tavern portals rem
         return sheet.data.subarray(offset,offset+4);
       };
       for (let i = 3; i < 7; i++) assert.deepEqual(pixel(i), pixel(7), `${id}: fixed outside view at ${x},${y}, frame ${i}`);
+      if (view) {
+        const offset = (y * width + x) * 4;
+        assert.deepEqual(pixel(7), view.data.subarray(offset, offset + 4), `${id}: original still view is never scaled or tinted`);
+      }
     }
   }
   const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
@@ -108,7 +113,9 @@ test('old corridor links migrate once to independent curves, preserving unrelate
   layer.areas = layer.areas.filter(a => !['village.forest-canopy', 'village.door.house.frame'].includes(a.id));
   const migrated = addForestTransitions(scenes);
   const area = migrated.scenes.village.layers[0].areas.find(a => a.id === corridor.id);
-  assert.equal(area.pointlesh.properties.maxScale, floor.properties.maxScale);
+  assert.ok(Number.isFinite(area.pointlesh.properties.maxScale));
+  assert.equal(area.pointlesh.properties.scaleRange, undefined);
+  assert.equal(area.pointlesh.properties.zoomRange, undefined);
   assert.equal(area.pointlesh.properties.perspectiveSourceAreaId, undefined);
   assert.deepEqual(area.vertices, corridor.vertices);
   area.pointlesh.properties.maxScale = 2.5;
@@ -126,4 +133,21 @@ test('door frame occlusion stays inside the doorway crop, clear of neighboring f
     assert.ok(Math.max(...mask.polygon.map(p => p.x)) <= (door.crop.left + door.crop.width) * door.scaleX);
     assert.ok(Math.min(...mask.polygon.map(p => p.y)) >= door.crop.top * door.scaleY);
   }
+});
+
+
+test('removing copied ranges preserves authored .25/.75 endpoints and edited transition vertices', () => {
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  const area = scenes.scenes.village.layers[0].areas.find(a => a.pointlesh?.entityId === 'village.transition.to-forest');
+  area.pointlesh.properties.minScale = .25; area.pointlesh.properties.maxScale = .75;
+  area.pointlesh.properties.scaleRange = { start: 351, end: 531 };
+  area.pointlesh.properties.zoomRange = { start: 351, end: 531 };
+  area.vertices[0].y = 216;
+  const before = structuredClone(area.vertices);
+  const migrated = addForestTransitions(scenes).scenes.village.layers[0].areas.find(a => a.id === area.id);
+  assert.equal(migrated.pointlesh.properties.minScale, .25);
+  assert.equal(migrated.pointlesh.properties.maxScale, .75);
+  assert.equal(migrated.pointlesh.properties.scaleRange, undefined);
+  assert.equal(migrated.pointlesh.properties.zoomRange, undefined);
+  assert.deepEqual(migrated.vertices, before);
 });

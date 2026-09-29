@@ -1,11 +1,13 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import sharp from 'sharp';
 import { PNG } from 'pngjs';
 import { pointInPolygon } from '@pointlesh/core';
 import { forestDoors } from '../src/door-layout.js';
 
-// AI supplies the art: separate transparent 4×2 door-leaf sheets and one still
-// view per doorway. Import registration never resizes the view per frame.
+// AI supplies transparent 4×2 leaf sheets and single registered doorway views.
+// Views are native crop dimensions, already masked to the original aperture.
+// The same view is composited under EVERY pose, including tavern animation
+// previews. Runtime holds its final pose, while close still reverses the sheet.
 const input = process.argv[2];
 if (!input) throw new Error('Usage: tsx pack-door-corrections.ts INPUT_DIRECTORY');
 const publicDir = new URL('../public/', import.meta.url);
@@ -24,33 +26,30 @@ function bounds(image: PNG) {
   if (right <= left || bottom <= top) throw new Error('Empty door art');
   return { left, top, width: right - left + 1, height: bottom - top + 1 };
 }
-for (const id of ['house', 'village-house', 'pub', 'village-pub']) {
+for (const id of ['house', 'pub']) {
   const door = forestDoors.find(door => door.id === id)!;
   const { width, height } = door.crop;
   const baseFile = new URL(`art/objects/doors/${id}.png`, publicDir);
   const sheetFile = new URL(`art/objects/doors/${id}-open.png`, publicDir);
   const original = PNG.sync.read(await sharp(new URL(`art/${door.background}`, publicDir).pathname).extract(door.crop).ensureAlpha().png().toBuffer());
-  const sheet = door.alwaysOpen ? PNG.sync.read(await readFile(sheetFile)) : new PNG({ width: width * 4, height: height * 2 });
+  const sheet = new PNG({ width: width * 4, height: height * 2 });
   const left = Math.floor(Math.min(...door.aperture.map(p => p.x))), top = Math.floor(Math.min(...door.aperture.map(p => p.y)));
   const right = Math.ceil(Math.max(...door.aperture.map(p => p.x))), bottom = Math.ceil(Math.max(...door.aperture.map(p => p.y)));
-  let backdrop = original;
-  if (id === 'house' || id === 'pub') {
-    backdrop = PNG.sync.read(await sharp(`${input}/${id}-view.png`).resize(1182, 664, { kernel: 'nearest' }).extract(door.crop).ensureAlpha().png().toBuffer());
-  } else if (id === 'village-house') {
-    // Register the warm cottage interior ONCE from the open pose, then reuse it.
-    const open = cell(await load(`${input}/village-house.png`), 7);
-    const view = PNG.sync.read(await sharp(PNG.sync.write(open)).extract(bounds(open)).flatten({ background: '#17140f' })
-      .resize(right - left, bottom - top, { kernel: 'nearest' }).ensureAlpha().png().toBuffer());
-    backdrop = new PNG({ width, height }); PNG.bitblt(view, backdrop, 0, 0, view.width, view.height, left, top);
+  const backdrop = await load(`${input}/${id}-view.png`);
+  if (backdrop.width !== width || backdrop.height !== height) throw new Error(`${id}: register the still view to the native doorway crop first`);
+  const leaves = await load(`${input}/${id}-leaf.png`);
+  // Pixel-art leaf masks are binary. Remove generated semi-transparent halo
+  // pixels before compositing; they must not darken the fixed scenery per pose.
+  for (let offset = 0; offset < leaves.data.length; offset += 4) {
+    if (leaves.data[offset + 3]! < 128) leaves.data.fill(0, offset, offset + 4);
+    else leaves.data[offset + 3] = 255;
   }
-  const leaves = door.alwaysOpen ? undefined : await load(`${input}/${id}-leaf.png`);
-  const closedBounds = leaves && bounds(cell(leaves, 0));
+  const closedBounds = bounds(cell(leaves, 0));
   let base: PNG | undefined;
   for (let i = 0; i < 8; i++) {
-    if (door.alwaysOpen && i !== 7) continue;
     let source = backdrop;
-    if (!door.alwaysOpen && i === 0) source = original;
-    else if (leaves && closedBounds) {
+    if (i === 0) source = original;
+    else {
       const leaf = cell(leaves, i), box = bounds(leaf);
       // One scale for all poses. Only register the hinge and baseline; never
       // stretch a narrow open leaf (or its scenery) to the closed door's width.
@@ -66,8 +65,9 @@ for (const id of ['house', 'village-house', 'pub', 'village-pub']) {
       source.data.copy(frame.data, offset, offset, offset + 4); frame.data[offset + 3] = 255;
     }
     PNG.bitblt(frame, sheet, 0, 0, width, height, i % 4 * width, Math.floor(i / 4) * height);
-    if (i === 0 || door.alwaysOpen) base = frame;
+    if (i === (door.alwaysOpen ? 7 : 0)) base = frame;
   }
+  await writeFile(new URL(`art/objects/doors/${id}-view.png`, publicDir), PNG.sync.write(backdrop));
   await writeFile(baseFile, PNG.sync.write(base!));
   await writeFile(sheetFile, PNG.sync.write(sheet));
   console.log(`Packed ${id}: fixed backdrop, registered leaf, original aperture`);
