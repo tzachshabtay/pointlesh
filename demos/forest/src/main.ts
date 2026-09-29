@@ -530,7 +530,6 @@ class ForestAdventure extends Phaser.Scene {
     return this.roomTransition.portal?.doorId === id && this.roomTransition.phase?.startsWith('close') ? 'close' : 'open';
   }
   private syncTransitionDoors(): void {
-    const transition = this.roomTransition.snapshot();
     for (const object of this.resolved().objects.filter(object => object.properties.role === 'door')) {
       const sprite = this.entitySprites.get(object.id), animation = this.objectAnimations.get(object.id);
       const progress = object.properties.doorAlwaysOpen === true ? 1 : this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress : 0;
@@ -553,15 +552,7 @@ class ForestAdventure extends Phaser.Scene {
         // Match the frame selected by the object renderer (including reverse
         // playback), rather than independently advancing an occlusion clock.
         const index = Number(sprite.frame.name);
-        const portal = this.roomTransition.portal;
-        const crossing = transition && portal?.areaId === `${door.room}.transition.to-${door.to}` && (
-          transition.phase === 'exit' && transition.waypoint >= portal.path.length - 2 ||
-          transition.phase === 'entry' && transition.waypoint <= portal.path.length - 2);
-        // The route passes beside the open leaf. Keep that panel in front of
-        // the crossing sprite, rather than swapping through its shoulder when
-        // the foot reaches the jamb baseline. Release it once clear of the door.
-        foreground.sync(Number.isInteger(index) && index >= 0 && index < 8 ? index : Math.min(7, Math.floor(progress * 8)), baseline,
-          crossing ? this.actor.depth + 1 : baseline);
+        foreground.sync(Number.isInteger(index) && index >= 0 && index < 8 ? index : Math.min(7, Math.floor(progress * 8)), baseline);
       }
     }
   }

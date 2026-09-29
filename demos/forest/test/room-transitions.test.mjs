@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { PNG } from 'pngjs';
 import { tsImport } from 'tsx/esm/api';
 import { pointInPolygon, resolvePointleshScene } from '@pointlesh/core';
-const { forestDoors, doorWorldAperture, doorPassageX } = await tsImport('../src/door-layout.ts', import.meta.url);
+const { forestDoors, doorWorldAperture } = await tsImport('../src/door-layout.ts', import.meta.url);
 const { addDoorAssets, addForestTransitions, forestPortal } = await tsImport('../src/transition-content.ts', import.meta.url);
 
 test('door sheets preserve the existing aperture, have distinct registered poses, and close in reverse', () => {
@@ -30,7 +30,7 @@ test('door sheets preserve the existing aperture, have distinct registered poses
 });
 
 test('reapplying transition content preserves edited points, door promotions and the inactive corridors', () => {
-  const scenes = addForestTransitions(JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8')));
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
   const assets = JSON.parse(readFileSync(new URL('../public/authoring/assets.json', import.meta.url), 'utf8'));
   const point = scenes.scenes.village.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === 'village.threshold.to-pub');
   point.overrides.x.value = 201;
@@ -44,7 +44,8 @@ test('reapplying transition content preserves edited points, door promotions and
 test('doorway paths continue the grounded approach instead of climbing to the arch', () => {
   const scenes = addForestTransitions(JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8')));
   for (const { room, to } of [...forestDoors, { room: 'mine', to: 'forest' }]) {
-    const portal = forestPortal(scenes, room, to), [inside, threshold, outside] = portal.path.slice(-3);
+    const portal = forestPortal(scenes, room, to), [inside, threshold, outside] = portal.path;
+    assert.equal(portal.path.length, 3, 'no sideways detour followed by a vertical climb');
     const dx = threshold.x - inside.x, dy = threshold.y - inside.y;
     const ex = outside.x - threshold.x, ey = outside.y - threshold.y;
     assert.ok(Math.abs(dx * ey - dy * ex) < 1e-6, `${room} → ${to}: same walk line at the sill`);
@@ -54,6 +55,27 @@ test('doorway paths continue the grounded approach instead of climbing to the ar
     assert.equal(corridor.enabled, false);
     for (const point of portal.path) assert.ok(pointInPolygon(point, corridor.polygon));
     assert.ok(Math.min(...corridor.polygon.map(point => point.y)) > 0, 'no corridor into the sky');
+  }
+});
+
+test('cottage leaves open fully clear of the walking passage on both sides', () => {
+  const masks = JSON.parse(readFileSync(new URL('../src/door-occlusion.json', import.meta.url), 'utf8'));
+  for (const id of ['house', 'village-house']) {
+    const door = forestDoors.find(door => door.id === id);
+    const left = Math.min(...door.aperture.map(p => p.x)), right = Math.max(...door.aperture.map(p => p.x));
+    const frames = masks[id];
+    const edge = frame => Math.max(...frame.map(([x, , width]) => x + width));
+    assert.ok((right - edge(frames[7])) / (right - left) >= .8, `${id}: at least 80% of the doorway width is clear when fully open`);
+    for (let i = 1; i < frames.length; i++) assert.ok(edge(frames[i]) <= edge(frames[i - 1]), `${id}: the leaf opens progressively`);
+    const { width, height } = door.crop;
+    const sheet = PNG.sync.read(readFileSync(new URL(`../public/art/objects/doors/${id}-open.png`, import.meta.url)));
+    const view = PNG.sync.read(readFileSync(new URL(`../public/art/objects/doors/${id}-view.png`, import.meta.url)));
+    // The actual final image must clear the passage too, not just its mask.
+    for (let y = 0; y < height; y++) for (let x = edge(frames[7]); x < right; x++) {
+      if (!pointInPolygon({ x: x + .5, y: y + .5 }, door.aperture)) continue;
+      const offset = ((height + y) * sheet.width + width * 3 + x) * 4, expected = (y * width + x) * 4;
+      assert.deepEqual(sheet.data.subarray(offset, offset + 4), view.data.subarray(expected, expected + 4), `${id}: unobstructed passage at ${x},${y}`);
+    }
   }
 });
 
@@ -69,41 +91,9 @@ test('legacy rooftop endpoints migrate without resetting authored door, floor, o
   area.vertices = area.vertices.map((vertex, i) => ({ ...vertex,
     x: i === 0 || i === 3 ? Math.min(entry.x, outside.overrides.x.value) - 44 : Math.max(entry.x, outside.overrides.x.value) + 44,
     y: i < 2 ? -180 : entry.y + 45 }));
-  const migrated = addForestTransitions(scenes);
-  const portal = forestPortal(migrated, door.room, door.to);
-  assert.equal(portal.path.at(-1).x, doorPassageX(door));
-  assert.equal(portal.path.at(-1).y, portal.path.at(-2).y - 24);
-  assert.deepEqual(migrated.prefabs, original.prefabs);
-  assert.deepEqual(migrated.scenes.village.layers[0].areas.find(a => a.id === 'village.floor::area'), original.scenes.village.layers[0].areas.find(a => a.id === 'village.floor::area'));
-  assert.deepEqual(addForestTransitions(migrated), migrated);
+  assert.deepEqual(addForestTransitions(scenes), original);
   outside.overrides.x.value = 155; outside.overrides.y.value = 366;
-  const edited = addForestTransitions(scenes);
-  assert.deepEqual(edited.scenes.village.layers[0].prefabs.find(point => point.id === outside.id), outside, 'an edited endpoint is preserved');
-  assert.deepEqual(edited.scenes.village.layers[0].areas.find(a => a.id === area.id), area, 'an edited corridor is preserved');
-});
-
-test('door routes line up with the open passage before crossing the sill in either direction', () => {
-  const original = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
-  const scenes = addForestTransitions(original);
-  const masks = JSON.parse(readFileSync(new URL('../src/door-occlusion.json', import.meta.url), 'utf8'));
-  for (const door of forestDoors) {
-    const path = forestPortal(scenes, door.room, door.to).path;
-    const [approach, threshold, outside] = path.slice(-3);
-    assert.equal(path.length, 4);
-    assert.equal(approach.x, doorPassageX(door));
-    assert.equal(approach.x, threshold.x);
-    assert.equal(threshold.x, outside.x);
-    assert.ok(approach.y > threshold.y && threshold.y > outside.y);
-    const nativeX = threshold.x / door.scaleX - door.crop.left;
-    assert.ok(!masks[door.id][7].some(([x, , width]) => nativeX >= x && nativeX <= x + width), `${door.id}: walking line never intersects the open leaf`);
-    const before = resolvePointleshScene(original, door.room), after = resolvePointleshScene(scenes, door.room);
-    assert.deepEqual(after.points.find(p => p.id === `${door.room}.entry.from-${door.to}`), before.points.find(p => p.id === `${door.room}.entry.from-${door.to}`));
-    assert.deepEqual(after.areas.find(a => a.id === `${door.room}.transition.to-${door.to}`), before.areas.find(a => a.id === `${door.room}.transition.to-${door.to}`), 'authored corridor and perspective are unchanged');
-  }
-  const edited = structuredClone(original), layer = edited.scenes.house.layers[0];
-  for (const point of layer.prefabs.filter(point => ['house.threshold.to-village', 'house.outside.to-village'].includes(point.id))) point.overrides.x.value += 3;
-  const upgraded = addForestTransitions(edited);
-  for (const id of ['house.threshold.to-village', 'house.outside.to-village']) assert.deepEqual(upgraded.scenes.house.layers[0].prefabs.find(p => p.id === id), layer.prefabs.find(p => p.id === id));
+  assert.deepEqual(addForestTransitions(scenes), scenes, 'an edited endpoint and corridor are preserved');
 });
 
 test('door scenery remains pixel-identical once uncovered and tavern portals remain open', () => {

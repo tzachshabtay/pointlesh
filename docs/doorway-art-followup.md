@@ -4,6 +4,8 @@ Mode: built-in image generation, editing the original doorway crops with Bramble
 
 The moving leaves subsequently received a [palette correction](door-palette-correction.md) to match the original painted doors. The fixed exterior views below remain unchanged.
 
+The two cottage leaves were subsequently replaced with [fully opening poses](cottage-door-opening.md). Use those source sheets for cottage rebuilds.
+
 Final files under `demos/forest/public/art/objects/doors/`: `house-view.png`, `house-open.png`, `pub-view.png`, `pub-open.png`, and `pub.png`. The view plates are single fixed images at each doorway's native crop dimensions; every opening/closing frame composites its door leaf over that identical view. Exterior threshold geometry comes from the original room; no per-frame fitting or scenery animation occurs. The tavern remains permanently open in gameplay.
 
 The reference crops were enlarged 4× with nearest-neighbor for generation: cottage (1022,125,160,365), pub (960,90,205,320). Register the returned still to that same crop, then extract the door patch at (18,20,128,300) or (15,20,159,275) respectively. Preserve pixels only within `door-layout.ts`'s aperture. `pack-door-corrections.ts` expects those native-size `house-view.png`/`pub-view.png` plates and transparent 4×2 `house-leaf.png`/`pub-leaf.png` sheets. Closed frame zero retains the original room artwork; the tavern base is the final open pose.

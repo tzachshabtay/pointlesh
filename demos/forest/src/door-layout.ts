@@ -1,6 +1,5 @@
 import type { Point } from '@pointlesh/core';
 import type { RoomId } from './story';
-import doorMasks from './door-occlusion.json';
 
 export type ForestDoorLayout = {
   id: string; room: RoomId; to: RoomId; targetId: string; name: string; background: string;
@@ -27,16 +26,3 @@ export const forestDoors: ForestDoorLayout[] = [
 ];
 export const doorObjectId = (door: ForestDoorLayout) => `${door.room}.door.${door.id}`;
 export const doorWorldAperture = (door: ForestDoorLayout) => door.aperture.map(p => ({ x: (door.crop.left + p.x) * door.scaleX, y: (door.crop.top + p.y) * door.scaleY }));
-
-/** Center the walking lane in the OPEN passage, clear of either door leaf. */
-export function doorPassageX(door: ForestDoorLayout): number {
-  const left = Math.min(...door.aperture.map(point => point.x)), right = Math.max(...door.aperture.map(point => point.x));
-  const rectangles = (doorMasks as Record<string, number[][][]>)[door.id]!.at(-1)!;
-  const intervals = rectangles.map(([x, , width]) => [x!, x! + width!] as const).sort((a, b) => a[0] - b[0]);
-  let cursor = left, start = left, end = left;
-  for (const [minimum, maximum] of [...intervals, [right, right]]) {
-    if (minimum - cursor > end - start) { start = cursor; end = minimum; }
-    cursor = Math.max(cursor, maximum);
-  }
-  return (door.crop.left + (start + end) / 2) * door.scaleX;
-}

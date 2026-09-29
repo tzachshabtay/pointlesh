@@ -8,7 +8,8 @@ import { forestDoors } from '../src/door-layout.js';
 // the same native registration as pack-door-corrections.ts. Older gate sheets
 // have authored leaf silhouettes; their cool passage pixels never occlude actors.
 const input = process.argv[2];
-if (!input) throw new Error('Usage: tsx build-door-occlusion.ts DIRECTORY_WITH_CORRECTED_LEAVES');
+if (!input) throw new Error('Usage: tsx build-door-occlusion.ts DIRECTORY_WITH_CORRECTED_LEAVES [DOOR_ID...]');
+const doorIds = process.argv.slice(3);
 type Rect = [number, number, number, number];
 function cell(sheet: PNG, i: number) {
   const left = Math.round(i % 4 * sheet.width / 4), top = Math.round(Math.floor(i / 4) * sheet.height / 2);
@@ -35,8 +36,9 @@ function rectangles(mask: Uint8Array, width: number, height: number): Rect[] {
   }
   return result;
 }
-const result: Record<string,Rect[][]>={};
-for(const door of forestDoors) {
+const output = new URL('../src/door-occlusion.json', import.meta.url);
+const result: Record<string,Rect[][]> = doorIds.length ? JSON.parse(await readFile(output, 'utf8')) : {};
+for(const door of forestDoors.filter(door => !doorIds.length || doorIds.includes(door.id))) {
   const {width,height}=door.crop, frames: Rect[][]=[];
   const standalone=['house','pub','village-house'].includes(door.id);
   const leaves=standalone?PNG.sync.read(await readFile(`${input}/${door.id}-leaf.png`)):undefined;
@@ -76,5 +78,5 @@ for(const door of forestDoors) {
   result[door.id]=frames;
 }
 const json = '{\n' + Object.entries(result).map(([id, frames]) => `  ${JSON.stringify(id)}: [\n${frames.map(frame => `    ${JSON.stringify(frame)}`).join(',\n')}\n  ]`).join(',\n') + '\n}\n';
-await writeFile(new URL('../src/door-occlusion.json',import.meta.url),json);
-console.log('Packed native-pixel foreground masks for all seven doors.');
+await writeFile(output,json);
+console.log(`Packed native-pixel foreground masks for ${doorIds.length ? doorIds.join(', ') : 'all seven doors'}.`);

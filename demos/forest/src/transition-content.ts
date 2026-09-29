@@ -4,12 +4,11 @@ import type { AiAssetManifest } from '@ai-game-assets/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { targets, type RoomId } from './story';
 import { roomEntryPointId } from './points';
-import { doorObjectId, doorPassageX, doorWorldAperture, forestDoors } from './door-layout';
+import { doorObjectId, doorWorldAperture, forestDoors } from './door-layout';
 
 export const transitionAreaId = (room: RoomId, to: RoomId) => `${room}.transition.to-${to}`;
 export const transitionOutsideId = (room: RoomId, to: RoomId) => `${room}.outside.to-${to}`;
 export const transitionThresholdId = (room: RoomId, to: RoomId) => `${room}.threshold.to-${to}`;
-export const transitionApproachId = (room: RoomId, to: RoomId) => `${room}.approach.to-${to}`;
 export const CAGE_APPROACH_AREA = 'camp.cage-approach';
 
 function continueWalkLine(inside: Point, threshold: Point): Point {
@@ -73,10 +72,6 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       if (scene.layers.some(layer => layer.prefabs?.some(point => point.id === id))) return;
       (layer.prefabs ??= []).push(createPointleshInstance({ id, name, prefabId: 'forest.point.entry', overrides: { x: { value: position.x }, y: { value: position.y } } }));
     };
-    const moveGeneratedPoint = (id: string, position: Point) => {
-      const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === id)!;
-      instance.overrides = { ...instance.overrides, x: { value: position.x }, y: { value: position.y } };
-    };
     for (const target of targets[roomId].filter(target => target.exit)) {
       const to = target.exit!, entry = room.points.find(point => point.id === roomEntryPointId(roomId, to));
       if (!entry) continue;
@@ -87,33 +82,25 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       const maxY = aperture ? Math.max(...aperture.map(p => p.y)) : 0;
       const centerX = aperture ? (Math.min(...aperture.map(p => p.x)) + Math.max(...aperture.map(p => p.x))) / 2 : entry.position.x;
       const defaultThreshold = aperture ? { x: centerX, y: maxY + 4 } : roomId === 'village' ? { x: 481, y: 342 } : { x: entry.position.x, y: scene.height + 10 };
-      const previousThreshold = room.points.find(point => point.id === transitionThresholdId(roomId, to))?.position;
-      const migrateThreshold = !!door && !!previousThreshold && samePoint(previousThreshold, defaultThreshold);
-      const threshold = previousThreshold && !migrateThreshold ? previousThreshold : door ? { ...defaultThreshold, x: doorPassageX(door) } : defaultThreshold;
+      const threshold = room.points.find(point => point.id === transitionThresholdId(roomId, to))?.position ?? defaultThreshold;
       const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entry.position;
       const inside = findClosestReachablePath(spawn, entry.position, walkablePolygons(room))?.at(-1) ?? entry.position;
-      // Line up below the leaf before walking through the opening. A diagonal
-      // straight to the old door center cut across the open panel at the sill.
-      const approach = door ? room.points.find(point => point.id === transitionApproachId(roomId, to))?.position
-        ?? { x: threshold.x, y: Math.max(inside.y, threshold.y + 115) } : undefined;
       const legacyOutside = { x: centerX, y: minY - 24 };
-      const defaultOutside = aperture ? continueWalkLine(approach ?? inside, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + 230 };
+      const defaultOutside = aperture ? continueWalkLine(inside, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + 230 };
       const previousOutside = room.points.find(point => point.id === transitionOutsideId(roomId, to))?.position;
-      const migrateOutside = !!aperture && !!previousOutside && (samePoint(previousOutside, legacyOutside)
-        || migrateThreshold && samePoint(previousOutside, continueWalkLine(inside, defaultThreshold)));
+      const migrateOutside = !!aperture && !!previousOutside && samePoint(previousOutside, legacyOutside);
       const outside = !previousOutside || migrateOutside ? defaultOutside : previousOutside;
       addPoint(transitionThresholdId(roomId, to), `Threshold · ${target.name}`, threshold);
-      if (migrateThreshold) moveGeneratedPoint(transitionThresholdId(roomId, to), threshold);
-      if (approach) addPoint(transitionApproachId(roomId, to), `Door approach · ${target.name}`, approach);
       addPoint(transitionOutsideId(roomId, to), `Offscreen / behind doorway · ${target.name}`, outside);
       if (migrateOutside) {
-        // Upgrade only old generated endpoints; preserve edited points.
-        moveGeneratedPoint(transitionOutsideId(roomId, to), outside);
+        // Upgrade only the old generated rooftop endpoint; preserve edited points.
+        const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === transitionOutsideId(roomId, to))!;
+        instance.overrides = { ...instance.overrides, x: { value: outside.x }, y: { value: outside.y } };
       }
       const areaId = transitionAreaId(roomId, to);
       const legacyBounds = rectangle(Math.min(entry.position.x, defaultThreshold.x) - 44, aperture || roomId === 'village' ? -180 : Math.min(entry.position.y, defaultThreshold.y) - 45,
         Math.max(entry.position.x, defaultThreshold.x) + 44, aperture || roomId === 'village' ? entry.position.y + 45 : outside.y + 45);
-      const route = [entry.position, inside, ...(approach ? [approach] : []), threshold, outside];
+      const route = [entry.position, inside, threshold, outside];
       const vertices = aperture || roomId === 'village' ? rectangle(Math.min(...route.map(p => p.x)) - 44, Math.min(...route.map(p => p.y)) - 45,
         Math.max(...route.map(p => p.x)) + 44, Math.max(...route.map(p => p.y)) + 45) : legacyBounds;
       const corridor = scene.layers.flatMap(layer => layer.areas).find(area => isPointleshArea(area) && area.pointlesh.entityId === areaId);
@@ -205,9 +192,8 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entry;
   const inside = findClosestReachablePath(spawn, entry, walkablePolygons(room))?.at(-1) ?? entry;
   const door = forestDoors.find(door => door.room === roomId && door.to === to);
-  const approach = room.points.find(point => point.id === transitionApproachId(roomId, to) && point.enabled);
   return { roomId, areaId: transitionAreaId(roomId, to),
-    path: [inside, ...(approach ? [approach.position] : []), point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
+    path: [inside, point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
     ...(door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true
       ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
 }

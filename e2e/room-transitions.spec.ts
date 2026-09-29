@@ -30,15 +30,11 @@ test('all room connections walk out and in with temporary corridors, animated do
           checkpoints.add(phase);
         }
         if (scene.actor.alpha !== 1) throw new Error(`Character opacity changed ${from}/${phase}`);
-        const waypoint = scene.roomTransition.snapshot().waypoint;
-        if (portal.path.length === 4 && (phase === 'exit' && waypoint >= 2 || phase === 'entry' && waypoint <= 1)) {
-          if (Math.abs(scene.character.state.position.x - portal.path.at(-2).x) > 0.01) throw new Error(`Crossed the open door diagonally ${from}/${phase}`);
-        }
         if (portal.doorId) {
           const foreground = scene.doorForegrounds.get(portal.doorId);
           const frame = scene.resolved().areas.find((area: any) => area.id === `${portal.doorId}.frame`);
-          if (!foreground || foreground.image.depth < frame.properties.baseline) throw new Error(`Wrong door baseline ${from}/${phase}`);
-          if (scene.actor.depth > frame.properties.baseline) ordered.add('front');
+          if (!foreground || foreground.image.depth !== frame.properties.baseline) throw new Error(`Wrong door baseline ${from}/${phase}`);
+          if (scene.actor.depth > foreground.image.depth) ordered.add('front');
           else ordered.add('behind');
         }
         const oldRoom = scene.story.roomId, oldPosition = { ...scene.character.state.position };
@@ -85,7 +81,7 @@ test('the king keeps continuous perspective as he crosses into the cage', async 
   for (let i = 1; i < scales.length; i++) expect(Math.abs(scales[i].height - scales[i-1].height)).toBeLessThan(1);
 });
 
-test('the open door remains solid through the whole crossing while the passage stays behind the actor', async ({ page }, testInfo) => {
+test('door pixels occlude actors behind the sill while the open passage stays behind them', async ({ page }, testInfo) => {
   await openAdventure(page);
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await page.evaluate(async () => {
@@ -93,14 +89,13 @@ test('the open door remains solid through the whole crossing while the passage s
     const api = (window as any).pointleshDemo, scene = api.scene;
     scene.game.loop.sleep(); scene.changeRoom('house');
     const from = forestPortal(api.manifest, 'house', 'village'), to = forestPortal(api.manifest, 'village', 'house');
-    scene.roomTransition.restore({ from, to, phase: 'exit', elapsedMs: 0, waypoint: from.path.length - 2 });
-    const sill = from.path.at(-2);
-    scene.character.place({ x: sill.x, y: sill.y + 20 }); scene.binding.sync(); scene.syncTransitionDoors();
+    scene.roomTransition.restore({ from, to, phase: 'close-exit', elapsedMs: 450, waypoint: 0 });
+    scene.character.place(from.path.at(-1)); scene.binding.sync(); scene.syncTransitionDoors();
     const foreground = scene.doorForegrounds.get(from.doorId), bounds = foreground.image.getBounds();
     // A solid actor silhouette makes pixel coverage independent of character art.
     scene.actor.setVisible(false);
     scene.add.rectangle(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff)
-      .setOrigin(0).setDepth(scene.actor.depth).setName('occlusion-probe');
+      .setOrigin(0).setDepth(foreground.image.depth - 1).setName('occlusion-probe');
     scene.scene.pause(); scene.game.loop.wake();
   });
   const capture = async (name: string) => {
@@ -122,14 +117,7 @@ test('the open door remains solid through the whole crossing while the passage s
   const front = await capture('in-front-of-door');
   expect(behind).toBeGreaterThan(100); // The backdrop cannot hide the entire actor.
   expect(passage - behind).toBeGreaterThan(100); // Only the leaf removes coverage.
-  expect(front).toBe(passage); // Once in front of the leaf, none of its pixels cover the actor.
-  const released = await page.evaluate(() => {
-    const scene = (window as any).pointleshDemo.scene;
-    scene.roomTransition.cancel(); scene.syncTransitionDoors();
-    return { leaf: scene.doorForegrounds.get('house.door.house').image.depth,
-      baseline: scene.resolved().areas.find((area: any) => area.id === 'house.door.house.frame').properties.baseline };
-  });
-  expect(released.leaf).toBe(released.baseline);
+  expect(front).toBeGreaterThan(passage); // Walking forward clears both leaf and frame.
 });
 
 test('thin door-mask pieces remain opaque at every camera zoom', async ({ page }, testInfo) => {
