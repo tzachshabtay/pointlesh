@@ -1,10 +1,11 @@
 import { createObjectPrefab, createPointleshArea, createPointleshInstance, findClosestReachablePath, isPointleshArea,
-  resolvePointleshScene, pointleshAreaRange, walkablePolygons, type Point, type RoomPortal, type ResolvedPointleshArea } from '@pointlesh/core';
+  resolvePointleshScene, pointleshAreaRange, walkablePolygons, type Point, type ResolvedPointleshArea } from '@pointlesh/core';
 import type { AiAssetManifest } from '@ai-game-assets/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { targets, type RoomId } from './story';
 import { roomEntryPointId } from './points';
 import { doorObjectId, doorWorldAperture, forestDoors } from './door-layout';
+import type { RoomPortal } from './room-transition';
 
 export const transitionAreaId = (room: RoomId, to: RoomId) => `${room}.transition.to-${to}`;
 export const transitionOutsideId = (room: RoomId, to: RoomId) => `${room}.outside.to-${to}`;

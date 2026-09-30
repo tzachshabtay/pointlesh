@@ -16,7 +16,7 @@ import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_P
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
 import { addIntroAssets } from './intro-assets';
-import { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint, type RoomTransitionCheckpoint } from '@pointlesh/core';
+import { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint, type RoomTransitionCheckpoint } from './room-transition';
 import { addDoorAssets, addForestTransitions, forestPortal, CAGE_APPROACH_AREA } from './transition-content';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';

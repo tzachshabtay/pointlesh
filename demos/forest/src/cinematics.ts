@@ -8,7 +8,7 @@ import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
 import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
 import { INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
-import { activatePointleshAreas } from '@pointlesh/core';
+import { activatePointleshAreas } from './room-transition';
 import { CAGE_APPROACH_AREA } from './transition-content';
 
 export type CinematicKind = 'intro' | 'ending';

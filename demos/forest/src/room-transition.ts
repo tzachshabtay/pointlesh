@@ -1,7 +1,4 @@
-import { CharacterController } from './character.js';
-import { distance } from './navigation.js';
-import { cloneJSON, isPoint, type Point } from './types.js';
-import type { ResolvedPointleshArea } from './prefabs.js';
+import { CharacterController, distance, cloneJSON, isPoint, type Point, type ResolvedPointleshArea } from '@pointlesh/core';
 
 export type RoomPortal = {
   roomId: string;
@@ -41,7 +38,7 @@ export function activatePointleshAreas(areas: readonly ResolvedPointleshArea[], 
 }
 
 /**
- * A saveable walk-out / door / walk-in sequence. The host ticks its character
+ * The forest game's saveable doorway sequence. The scene ticks its character
  * normally. Open once, cross into the next room with its door already open,
  * and close that door after the character clears the incoming path.
  * Rendering and doorway occlusion do not modify the character's opacity.

@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CharacterController, RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint } from '../dist/index.js';
+import { CharacterController } from '@pointlesh/core';
+import { tsImport } from 'tsx/esm/api';
+const { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint } = await tsImport('../src/room-transition.ts', import.meta.url);
 
 const from = { roomId: 'a', areaId: 'a.exit', path: [{ x: 20, y: 50 }, { x: 50, y: 50 }, { x: 120, y: 50 }], doorId: 'a.door', doorDurationMs: 100 };
 const to = { roomId: 'b', areaId: 'b.entry', path: [{ x: 50, y: 50 }, { x: 0, y: 50 }, { x: -40, y: 50 }], doorId: 'b.door', doorDurationMs: 100 };

@@ -63,3 +63,17 @@ In a local checkout, run `npm run dev:server` alongside `npm run dev`. AI Assets
 Designer manifests are authored content and are separate from saved-game slots. Saved games retain runtime progress; they do not automatically preserve every in-memory editor change. Keep stable content IDs and provide migrations when changing content in ways that invalidate existing saves.
 
 The saved authoring documents live in `demos/forest/public/authoring/`. The demo fetches them at startup, and Vite includes them unchanged in production builds. `demos/forest/src/content.ts` is the seed definition; run the explicit `seed-authoring.ts --reset` script only when you intend to discard promoted edits and restore that seed.
+
+## Room transition implementation
+
+The demo owns its doorway sequence in [`demos/forest/src/room-transition.ts`](../demos/forest/src/room-transition.ts). Its `RoomTransitionController` opens the outgoing door, walks Borin to the threshold, changes rooms with the destination door already open, continues the incoming walk, and closes that door after he clears it. This is game code composed from Pointlesh's movement, animation, area, and save primitives.
+
+[`transition-content.ts`](../demos/forest/src/transition-content.ts) builds a `RoomPortal` for each connection, with a `roomId`, temporary `areaId`, and path ordered from ordinary floor through the threshold to an offscreen or concealed endpoint. `handoffIndex` selects the scene-switch point and the incoming walk's starting point: doorways use the threshold, while screen-edge exits use the final point. Optional `doorId` and `doorDurationMs` control this game's door phases. The tavern stays open, and the mine uses its open tunnel entrance. Doorway endpoints continue the grounded approach line a short distance through the sill; screen-edge exits continue fully offscreen.
+
+The scene ticks its character binding, then `transition.update(deltaMs)`. The game's `enterRoom` callback loads the destination; the controller places Borin at its handoff point and starts his incoming walk in the same update. The renderer uses `doorProgress` to seek the door animation, with progress already at one when the room changes. Player movement and interactions are blocked while the sequence runs. An unreachable path cancels it.
+
+Temporary corridors remain authored with `enabled: false`. The demo's `activatePointleshAreas` helper supplies enabled runtime copies to navigation and perspective only during a crossing, preserving authored values and designer visibility/locks. Corridors initialize their scale and zoom endpoints by extending the adjacent floor's slope, then remain independently editable. The cage has a separate temporary approach region for cinematic actors and the king.
+
+The game saves `transition.snapshot()` in `extensions.roomTransition` alongside the character snapshot. Restoring both resumes the current walk or door phase, including older checkpoints, without restarting the crossing. Changing rooms through the editor or starting a new game cancels it.
+
+Door scenery stays behind actors. `DoorForeground` draws a masked copy of the current animation frame at the door-frame area's baseline so actor foot depth controls occlusion, with character opacity unchanged. Native-pixel masks live in [`door-occlusion.json`](../demos/forest/src/door-occlusion.json), built by `scripts/build-door-occlusion.ts`; regenerate them when changing a door's silhouette. The same masks follow opening, closing, and restored animation frames.
