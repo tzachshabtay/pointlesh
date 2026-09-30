@@ -13,14 +13,27 @@ export const peekAsset: AiAssetDefinition = {
     prompt: 'The current Borin slowly reaches right and leans to peek through a gate; eight consecutive poses with fixed foot anchors and anatomical scale, transparent background.',
     notes: 'Generated from the promoted Borin base and profile references. Fixed anatomical scale and planted feet. Full prompt in docs/art-prompts.md.' } }, tags: ['forest', 'character', 'stealth'],
 };
+export const peekIdleAsset: AiAssetDefinition = {
+  ...structuredClone(peekAsset), id: 'borin.peek-idle',
+  prompt: 'Continue the exact final Borin peeking pose into eight subtle idle frames: planted feet, gentle breathing, a tiny cautious head shift and blink. Preserve his helmet, beard, clothing, body scale and foot anchor. Transparent background, only Borin.',
+  animations: [{ key: 'borin.peek-idle', frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 5, repeat: -1 }],
+  versions: { stealth: { name: 'stealth', file: 'art/characters/borin/peek-idle.png', model: 'imagegen', createdAt: '2026-09-30T00:00:00.000Z',
+    prompt: 'An eight-frame peeking idle loop continuing the final peeking pose with subtle breathing and blinking, fixed feet, proportions and palette, transparent background.',
+    notes: 'First frame is the exact last frame of borin.peek. Generated idle poses use one anatomical scale and fixed feet. Full prompt in docs/art-prompts.md.' } },
+};
 export function addStealthAssets(manifest: AiAssetManifest): void {
-  manifest.assets[peekAsset.id] ??= structuredClone(peekAsset);
-  (manifest.assetPaths ??= {})[peekAsset.id] ??= ['Graphics', 'Characters'];
+  for (const asset of [peekAsset, peekIdleAsset]) {
+    manifest.assets[asset.id] ??= structuredClone(asset);
+    (manifest.assetPaths ??= {})[asset.id] ??= ['Graphics', 'Characters'];
+  }
   const borin = manifest.assets.borin;
-  if (borin) (borin.linkedAnimationAssets ??= {}).peek ??= { assetId: peekAsset.id, label: 'Peek through gate' };
+  if (borin) {
+    (borin.linkedAnimationAssets ??= {}).peek ??= { assetId: peekAsset.id, label: 'Peek through gate' };
+    borin.linkedAnimationAssets['peek-idle'] ??= { assetId: peekIdleAsset.id, label: 'Peeking idle' };
+  }
 }
-export function peekAnimation(): CharacterAnimations {
-  const pose = { assetId: 'borin', key: 'peek' };
+export function peekAnimation(idle = false): CharacterAnimations {
+  const pose = { assetId: 'borin', key: idle ? 'peek-idle' : 'peek' };
   return { idle: { front: pose, back: pose, right: pose, left: { ...pose, flipX: true } } };
 }
 export function peekSize(asset?: AiAssetDefinition) {

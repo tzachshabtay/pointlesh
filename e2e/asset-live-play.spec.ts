@@ -33,7 +33,7 @@ test('Current loads character images and animation sheets from the game server w
     await expect.poll(() => current.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
   }
   await page.getByRole('combobox', { name: 'Animation', exact: true }).selectOption('guard.walk-front');
-  await expect(current).toHaveAttribute('src', /characters\/guard\/walk-front\.png$/);
+  await expect(current).toHaveAttribute('src', new URL(currentFile('guard.walk-front'), page.url()).href);
   await expect.poll(() => current.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
 });
 

@@ -1,5 +1,4 @@
 import { CharacterController, distance, isPoint, type Point } from '@pointlesh/core';
-import { PEEK_DURATION_MS } from './stealth-assets';
 
 export type CampStealthCheckpoint = { phase: 'peek' | 'outbound' | 'return' | 'release'; elapsedMs: number; cover: Point; clearance: Point; path: Point[]; waypoint: number; message?: string };
 export function assertCampStealthCheckpoint(value: unknown): asserts value is CampStealthCheckpoint {
@@ -16,7 +15,7 @@ export class CampStealth {
   get busy() { return !!this.state && this.state.phase !== 'peek'; }
   get peeking() { return this.state?.phase === 'peek'; }
   get elapsedMs() { return this.state?.elapsedMs ?? 0; }
-  start(cover: Point): void { this.state = { phase: 'peek', elapsedMs: PEEK_DURATION_MS, cover: { ...cover }, clearance: { ...cover }, path: [], waypoint: 0 }; }
+  start(cover: Point): void { this.state = { phase: 'peek', elapsedMs: 0, cover: { ...cover }, clearance: { ...cover }, path: [], waypoint: 0 }; }
   cancel(): void { this.state = undefined; }
   poison(target: Point, clearance: Point): void {
     if (!this.state || this.busy) return;

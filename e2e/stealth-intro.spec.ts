@@ -7,31 +7,44 @@ test('intro walks stay on authored ground and Borin leaves through the animated 
   await openAdventure(page);
   const result = await page.evaluate(async () => {
     const api = (window as any).pointleshDemo, scene = api.scene;
+    const { CINEMATIC_DURATIONS } = await import('/src/cinematics.ts' as string);
     scene.game.loop.sleep();
     const samples = [], doorFrames = new Set(), actors = [];
-    for (const step of [1, 3]) for (let ms = 0; ms <= (step === 1 ? 10000 : 8500); ms += 100) {
+    for (const step of [0, 1, 3]) for (let ms = 0; ms <= CINEMATIC_DURATIONS.intro[step]; ms += 100) {
       scene.cinematic.render(step, ms);
       const shot = scene.cinematic.snapshot();
-      for (const actor of shot.cast.filter((actor: any) => actor.visible && (step === 1 || actor.id === 'borin'))) {
+      for (const actor of shot.cast.filter((actor: any) => actor.visible && (step !== 3 || actor.id === 'borin'))) {
         samples.push({ step, ms, actor });
-        if (step === 1 && ms === 5000) actors.push(actor);
+        if (step === 1 && ms === 2200) actors.push(actor);
       }
       if (step === 3) {
         const world = scene.children.getByName('pointlesh-cinematic').list[0];
         doorFrames.add(world.getByName('cutscene-door-village.door.village-house').frame.name);
       }
     }
-    scene.cinematic.render(1, 5000); scene.scene.pause(); scene.game.loop.wake();
-    return { samples, doorFrames: [...doorFrames], actors, manifest: api.manifest };
+    scene.cinematic.render(1, 2200); scene.scene.pause(); scene.game.loop.wake();
+    return { samples, doorFrames: [...doorFrames], actors, manifest: api.manifest, durations: CINEMATIC_DURATIONS.intro };
   });
   const forest = resolvePointleshScene(result.manifest, 'forest'), village = resolvePointleshScene(result.manifest, 'village');
   const villageFloors = walkablePolygons({ ...village, areas: village.areas.map(area => area.id === 'village.transition.to-house' ? { ...area, enabled: true } : area) });
-  for (const { step, ms, actor } of result.samples) expect(isWalkable(actor, step === 1 ? walkablePolygons(forest) : villageFloors), `step ${step}, ${ms}ms, ${actor.id}`).toBe(true);
+  for (const { step, ms, actor } of result.samples) expect(isWalkable(actor, step === 1 ? walkablePolygons(forest) : step === 0 ? walkablePolygons(village) : villageFloors), `step ${step}, ${ms}ms, ${actor.id}`).toBe(true);
+  expect(result.durations[1]).toBe(4500);
   expect(result.actors).toHaveLength(3);
   expect(result.doorFrames).toContain(0); expect(result.doorFrames).toContain(7); expect(result.doorFrames.length).toBeGreaterThan(4);
   await page.screenshot({ path: testInfo.outputPath('forest-march.png') });
+  await page.evaluate(() => (window as any).pointleshDemo.scene.cinematic.render(0, 2000));
+  await page.screenshot({ path: testInfo.outputPath('village-ambush.png') });
   await page.evaluate(() => (window as any).pointleshDemo.scene.cinematic.render(3, 1800));
   await page.screenshot({ path: testInfo.outputPath('cottage-departure.png') });
+  const oldCheckpoint = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene, saved = scene.snapshot();
+    saved.cutscene.introStep = 1; saved.cutscene.introElapsedMs = 7500;
+    scene.restore(saved);
+    const restored = scene.introRunner.snapshot(); scene.scene.resume(); scene.update(0, 50);
+    return { restored, nextStep: scene.story.introStep };
+  });
+  expect(oldCheckpoint.restored).toMatchObject({ stepIndex: 1, elapsedMs: 4499 });
+  expect(oldCheckpoint.nextStep).toBe(2);
   expect(errors).toEqual([]);
 });
 
@@ -55,8 +68,19 @@ test('camp entry peeks, blocks roaming, permits the poison trip and restores eve
     scene.scene.pause(); scene.game.loop.wake(); return result;
   });
   expect(arrival).toMatchObject({ room: 'camp', peeking: true, pos: arrival.expected });
-  expect(Math.max(...arrival.frames as number[])).toBe(3); expect(arrival.key).toContain('borin.peek');
+  expect(Math.max(...arrival.frames as number[])).toBe(3); expect(arrival.key).toContain('borin.peek-idle');
   await page.screenshot({ path: testInfo.outputPath('camp-peeking.png') });
+  const idle = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    const frames = [], positions = [], key = scene.actor.texture.key;
+    for (let i = 0; i < 18; i++) { scene.update(0, 100); frames.push(scene.actor.frame.name); positions.push({ ...scene.character.state.position }); }
+    const saved = scene.snapshot(), pose = { key: scene.actor.texture.key, frame: scene.actor.frame.name };
+    scene.update(0, 100); scene.restore(saved);
+    return { key, frames, positions, restored: pose.key === scene.actor.texture.key && pose.frame === scene.actor.frame.name };
+  });
+  expect(new Set(idle.frames).size).toBe(8); expect(idle.frames[16]).toBe(idle.frames[0]);
+  expect(idle.positions.every(position => position.x === arrival.pos.x && position.y === arrival.pos.y)).toBe(true);
+  expect(idle.restored).toBe(true);
   const canvas = await page.locator('#game canvas').boundingBox();
   await page.mouse.click(canvas!.x + canvas!.width * .6, canvas!.y + canvas!.height * .8);
   await page.keyboard.down('ArrowRight');

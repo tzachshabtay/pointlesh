@@ -27,7 +27,7 @@ import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
-import { CINEMATIC_DURATIONS, ForestCinematic } from './cinematics';
+import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed } from './cinematics';
 import { installViewportLayout } from './viewport-layout';
 import './style.css';
 
@@ -157,7 +157,7 @@ class ForestAdventure extends Phaser.Scene {
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
-      animations: () => this.peeking() ? peekAnimation() : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
+      animations: () => this.peeking() ? peekAnimation(this.roomTransition.phase !== 'peek-entry') : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
       baseSize: () => this.peeking() ? peekSize(assets.assets.borin) : borinActionSize(assets.assets.borin, !!this.story.tyingGuard),
       areas: () => this.playerAreas(), camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
@@ -608,8 +608,9 @@ class ForestAdventure extends Phaser.Scene {
   }
   private renderPeek(): void {
     if (!this.peeking()) return;
+    const entering = this.roomTransition.phase === 'peek-entry';
     this.binding.renderPose({ position: this.character.state.position, activity: 'idle', facing: 'right' },
-      this.roomTransition.phase === 'peek-entry' ? this.roomTransition.peekElapsedMs : this.campStealth.elapsedMs, { loop: false });
+      entering ? this.roomTransition.peekElapsedMs : this.campStealth.elapsedMs, { loop: !entering });
   }
   updateTyingGuard(deltaMs: number): void {
     if (!this.story.tyingGuard) return;
@@ -824,7 +825,7 @@ class ForestAdventure extends Phaser.Scene {
     if (!cutscene || !Number.isInteger(cutscene.introStep) || cutscene.introStep < 0 || cutscene.introStep > intro.length || !Number.isInteger(cutscene.endingStep) || cutscene.endingStep < -1 || cutscene.endingStep > ending.length) throw new Error('Invalid cutscene checkpoint');
     for (const kind of ['intro', 'ending'] as const) {
       const stepIndex = cutscene[`${kind}Step`];
-      new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, stepIndex), elapsedMs: cutscene[`${kind}ElapsedMs`] ?? 0 });
+      new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, stepIndex), elapsedMs: restoreCinematicElapsed(kind, stepIndex, cutscene[`${kind}ElapsedMs`] ?? 0) });
     }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
     if (save.extensions.guardPatrol !== undefined) assertGuardPatrolSnapshot(save.extensions.guardPatrol);
@@ -853,7 +854,7 @@ class ForestAdventure extends Phaser.Scene {
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
     this.cinematic?.destroy(); this.cinematic = undefined;
     this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep, ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
-    for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: checkpoint[`${kind}ElapsedMs`] ?? 0 });
+    for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.guardPatrol = undefined;
     this.guardCheckpoint = save.extensions.guardPatrol as unknown as GuardPatrolSnapshot | undefined;

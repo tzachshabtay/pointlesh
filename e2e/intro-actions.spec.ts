@@ -25,7 +25,7 @@ test('orcs point their existing spears, the king surrenders, and the poses survi
     const save = scene.snapshot();
     shot(500, 2); scene.restore(save);
     const restored = view();
-    const otherShots = [1, 2, 3].map(index => shot(5300, index));
+    const otherShots = [1, 2, 3].map(index => shot(Math.min(5300, scene.introRunner.definition.steps[index].durationMs - 1), index));
     shot(5100);
     scene.scene.pause(); scene.game.loop.wake();
     return { approaching, pointing, surrendering, held, later, restored, otherShots };

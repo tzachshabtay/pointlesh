@@ -7,7 +7,7 @@ import { PNG } from 'pngjs';
 const { CampStealth } = await tsImport('../src/camp-stealth.ts', import.meta.url);
 const { RoomTransitionController } = await tsImport('../src/room-transition.ts', import.meta.url);
 const { PEEK_DOOR_OPEN } = await tsImport('../src/stealth-assets.ts', import.meta.url);
-const { addStealthAssets, peekAsset } = await tsImport('../src/stealth-assets.ts', import.meta.url);
+const { addStealthAssets, peekAsset, peekIdleAsset } = await tsImport('../src/stealth-assets.ts', import.meta.url);
 const ground = [{ x: 0, y: 0 }, { x: 200, y: 0 }, { x: 200, y: 200 }, { x: 0, y: 200 }];
 const cover = { x: 10, y: 20 }, clear = { x: 10, y: 100 }, pot = { x: 140, y: 100 };
 function setup() {
@@ -42,6 +42,16 @@ test('an interrupted approach cannot poison the pot from a distance', () => {
   const run = setup(); run.stealth.start(cover); run.stealth.poison(pot, clear);
   run.hero.stop(); run.stealth.update(20);
   assert.deepEqual(run.events, []); assert.equal(run.stealth.snapshot().phase, 'return');
+});
+test('the peeking idle clock starts at zero and survives save/load without moving the feet', () => {
+  const run = setup(); run.stealth.start(cover);
+  assert.equal(run.stealth.elapsedMs, 0);
+  run.stealth.update(730);
+  const restored = setup(); restored.stealth.restore(run.stealth.snapshot());
+  assert.equal(restored.stealth.elapsedMs, 730);
+  run.stealth.update(100); restored.stealth.update(100);
+  assert.deepEqual(restored.stealth.snapshot(), run.stealth.snapshot());
+  assert.deepEqual(run.hero.state.position, cover);
 });
 test('a stealth entry opens the gate only partly and finishes at its threshold with a peek', () => {
   const run = setup(), from = { roomId: 'forest', areaId: 'forest.gate', path: [cover, clear], doorId: 'outer' };
@@ -83,4 +93,22 @@ test('the peek is an editable linked animation with distinct transparent poses a
   authored.assets['borin.peek'].activeVersion = 'custom';
   authored.assets.borin.linkedAnimationAssets.peek.assetId = 'custom-peek';
   const before = structuredClone(authored); addStealthAssets(authored); assert.deepEqual(authored, before);
+});
+test('the eight-frame idle loop starts at the exact final peek frame and keeps its feet planted', () => {
+  const peek = PNG.sync.read(readFileSync(new URL('../public/' + peekAsset.versions.stealth.file, import.meta.url)));
+  const idle = PNG.sync.read(readFileSync(new URL('../public/' + peekIdleAsset.versions.stealth.file, import.meta.url)));
+  const last = new PNG({ width: 160, height: 140 }), first = new PNG({ width: 160, height: 140 });
+  PNG.bitblt(peek, last, 480, 140, 160, 140, 0, 0); PNG.bitblt(idle, first, 0, 0, 160, 140, 0, 0);
+  assert.deepEqual(first.data, last.data);
+  assert.equal(peekIdleAsset.animations[0].repeat, -1);
+  assert.equal(peekIdleAsset.animations[0].frames.length, 8);
+  const frames = [];
+  for (let i = 0; i < 8; i++) {
+    const frame = new PNG({ width: 160, height: 140 });
+    PNG.bitblt(idle, frame, i % 4 * 160, Math.floor(i / 4) * 140, 160, 140, 0, 0);
+    let bottom = -1;
+    for (let y = 0; y < 140; y++) for (let x = 0; x < 160; x++) if (frame.data[(y * 160 + x) * 4 + 3] > 16) bottom = y;
+    assert.equal(bottom, 119); assert.equal(frame.data[3], 0); frames.push(frame.data.toString('base64'));
+  }
+  assert.equal(new Set(frames).size, 8);
 });

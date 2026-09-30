@@ -10,15 +10,21 @@ import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, res
 import { INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
 import { activatePointleshAreas } from './room-transition';
 import { CAGE_APPROACH_AREA } from './transition-content';
-import { cottageDeparture, forestMarch, sampleWalk, walkLength } from './cinematic-paths';
+import { cottageDeparture, forestMarch, villageAbduction, sampleWalk, walkLength } from './cinematic-paths';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 
 export type CinematicKind = 'intro' | 'ending';
 export const CINEMATIC_DURATIONS = {
-  intro: [6000, 10000, 6000, 8500],
+  intro: [6000, 4500, 6000, 8500],
   ending: [6200, 6200, 5600, 6500],
 } as const;
+
+/** Older saves can be partway through the former ten-second forest shot. */
+export function restoreCinematicElapsed(kind: CinematicKind, step: number, elapsedMs: number): number {
+  return kind === 'intro' && step === 1 && elapsedMs >= CINEMATIC_DURATIONS.intro[1] && elapsedMs < 10000
+    ? CINEMATIC_DURATIONS.intro[1] - 1 : elapsedMs;
+}
 
 type CastId = 'borin' | 'king' | 'guard-front' | 'guard-rear' | 'elder' | 'innkeeper' | 'miner';
 type Pose = { x: number; y: number; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: 'up' | 'down' | 'left' | 'right'; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back' | IntroAction; actionElapsedMs?: number };
@@ -64,6 +70,7 @@ export class ForestCinematic {
   private ambient: { sprite: Phaser.GameObjects.Sprite; binding: PhaserAdventureObject; playing: boolean }[] = [];
   private roomDoors: { object: ResolvedPointleshObject; sprite: Phaser.GameObjects.Sprite; binding: PhaserAdventureObject; foreground: DoorForeground }[] = [];
   private march?: ReturnType<typeof forestMarch>;
+  private abduction?: ReturnType<typeof villageAbduction>;
   private departure?: ReturnType<typeof cottageDeparture>;
   private overlayRoom?: string;
   private readonly foreground: Phaser.GameObjects.Graphics;
@@ -123,7 +130,7 @@ export class ForestCinematic {
     if (manifest !== this.authoredManifest) {
       this.definitions = new Map(Object.keys(manifest.scenes).map(id => [id, resolvePointleshScene(manifest, id)]));
       this.authoredManifest = manifest;
-      this.march = undefined; this.departure = undefined;
+      this.march = undefined; this.departure = undefined; this.abduction = undefined;
       this.overlayRoom = undefined;
     }
     this.excludeGameplayObjects();
@@ -331,23 +338,27 @@ export class ForestCinematic {
   private intro(step: number, t: number): void {
     if (step === 0) {
       this.shot('village', 'BRAMBLEHOLLOW · BEFORE DAWN', lerp(1.03, 1.12, t), lerp(465, 500, t), 296, 0xaebbc6);
-      const kingX = lerp(468, 576, segment(t, 0, 0.43));
-      const rearX = lerp(75, 386, smooth(segment(t, 0, 0.47)));
-      const frontX = lerp(925, 766, smooth(segment(t, 0, 0.47)));
+      const paths = this.abduction ??= villageAbduction(this.authoredManifest!);
+      const king = sampleWalk(paths.king, walkLength(paths.king) * segment(t, 0, .43));
+      const rear = sampleWalk(paths['guard-rear'], walkLength(paths['guard-rear']) * smooth(segment(t, 0, .47)));
+      const front = sampleWalk(paths['guard-front'], walkLength(paths['guard-front']) * smooth(segment(t, 0, .47)));
+      const elder = sampleWalk(paths.elder, walkLength(paths.elder) * segment(t, .18, .42));
       const spear = this.elapsedMs >= INTRO_SPEAR_START_MS;
       const hands = this.elapsedMs >= INTRO_HANDS_START_MS;
-      this.pose('king', { x: kingX, y: 427, walking: t < 0.43,
+      this.pose('king', { ...king, facing: t < .43 ? king.facing : 'down', walking: t < 0.43,
         ...(hands ? { action: 'hands-up', actionElapsedMs: this.elapsedMs - INTRO_HANDS_START_MS } : {}) });
-      this.pose('guard-rear', { x: rearX, y: 442, walking: t < 0.47, facing: 'right',
+      this.pose('guard-rear', { ...rear, walking: t < 0.47, facing: t < .47 ? rear.facing : 'right',
         ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
-      this.pose('guard-front', { x: frontX, y: 440, walking: t < 0.47, facing: 'left',
+      this.pose('guard-front', { ...front, walking: t < 0.47, facing: t < .47 ? front.facing : 'left',
         ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
-      this.pose('elder', { x: lerp(324, 267, segment(t, 0.18, 0.42)), y: 415, walking: t > 0.18 && t < 0.42, facingLeft: true });
+      this.pose('elder', { ...elder, walking: t > 0.18 && t < 0.42, facing: t < .42 ? elder.facing : 'left' });
       this.mist(0xa9bac3, 0.065);
     } else if (step === 1) {
       const path = this.march ??= forestMarch(this.authoredManifest!);
       const length = walkLength(path), spacing = Math.min(90, length / 4);
-      const lead = spacing * 2 + (length - spacing * 2) * t;
+      // Cut the march sooner without speeding up the convoy to cover the whole room.
+      const progress = Math.min(this.elapsedMs, CINEMATIC_DURATIONS.intro[1]) / 10000;
+      const lead = spacing * 2 + (length - spacing * 2) * progress;
       const king = sampleWalk(path, lead - spacing);
       this.shot('forest', 'THE WHISPERING WOOD · TAKEN EAST', lerp(1.09, 1.18, t), king.x, 296, 0xb6c4ca);
       this.pose('guard-front', { ...sampleWalk(path, lead), walking: true });

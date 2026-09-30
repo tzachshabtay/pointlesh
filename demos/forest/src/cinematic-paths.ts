@@ -34,6 +34,16 @@ export function forestMarch(manifest: SceneDesignerManifest): Point[] {
   return route(forestPortal(manifest, 'forest', 'village').path[0]!, forestPortal(manifest, 'forest', 'camp').path[0]!, walkablePolygons(room));
 }
 
+export function villageAbduction(manifest: SceneDesignerManifest) {
+  const floors = walkablePolygons(resolvePointleshScene(manifest, 'village'));
+  return {
+    king: route({ x: 468, y: 427 }, { x: 576, y: 470 }, floors),
+    'guard-rear': route({ x: 75, y: 442 }, { x: 456, y: 470 }, floors),
+    'guard-front': route({ x: 925, y: 440 }, { x: 696, y: 470 }, floors),
+    elder: route({ x: 324, y: 415 }, { x: 267, y: 435 }, floors),
+  };
+}
+
 export function cottageDeparture(manifest: SceneDesignerManifest) {
   const room = resolvePointleshScene(manifest, 'village'), portal = forestPortal(manifest, 'village', 'house');
   const areas = activatePointleshAreas(room.areas, [portal.areaId]);
