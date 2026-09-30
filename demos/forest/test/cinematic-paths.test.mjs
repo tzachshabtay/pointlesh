@@ -22,4 +22,12 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) {
     assert.deepEqual(departure.path[0], departure.portal.path[1]);
     assert.ok(departure.clearDistance > 0);
   });
+  test(`${label} village ambush leaves spear clearance and a proper right-orc approach`, () => {
+    const paths = villageAbduction(manifest), king = paths.king.at(-1), rear = paths['guard-rear'].at(-1), front = paths['guard-front'].at(-1);
+    assert.ok(king.x < 420);
+    assert.ok(king.x - rear.x >= 230); assert.ok(front.x - king.x >= 230);
+    assert.equal(rear.y, king.y); assert.equal(front.y, king.y);
+    assert.ok(walkLength(paths['guard-front']) >= 140);
+    assert.ok(walkLength(paths['guard-front']) < 180);
+  });
 }

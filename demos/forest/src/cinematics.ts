@@ -337,19 +337,20 @@ export class ForestCinematic {
 
   private intro(step: number, t: number): void {
     if (step === 0) {
-      this.shot('village', 'BRAMBLEHOLLOW · BEFORE DAWN', lerp(1.03, 1.12, t), lerp(465, 500, t), 296, 0xaebbc6);
+      this.shot('village', 'BRAMBLEHOLLOW · BEFORE DAWN', lerp(1.03, 1.12, t), lerp(465, 450, t), 296, 0xaebbc6);
       const paths = this.abduction ??= villageAbduction(this.authoredManifest!);
-      const king = sampleWalk(paths.king, walkLength(paths.king) * segment(t, 0, .43));
-      const rear = sampleWalk(paths['guard-rear'], walkLength(paths['guard-rear']) * smooth(segment(t, 0, .47)));
-      const front = sampleWalk(paths['guard-front'], walkLength(paths['guard-front']) * smooth(segment(t, 0, .47)));
+      const travelled = this.elapsedMs * .06;
+      const king = sampleWalk(paths.king, travelled), kingWalking = travelled < walkLength(paths.king);
+      const rear = sampleWalk(paths['guard-rear'], travelled), rearWalking = travelled < walkLength(paths['guard-rear']);
+      const front = sampleWalk(paths['guard-front'], travelled), frontWalking = travelled < walkLength(paths['guard-front']);
       const elder = sampleWalk(paths.elder, walkLength(paths.elder) * segment(t, .18, .42));
       const spear = this.elapsedMs >= INTRO_SPEAR_START_MS;
       const hands = this.elapsedMs >= INTRO_HANDS_START_MS;
-      this.pose('king', { ...king, facing: t < .43 ? king.facing : 'down', walking: t < 0.43,
+      this.pose('king', { ...king, facing: kingWalking ? king.facing : 'down', walking: kingWalking,
         ...(hands ? { action: 'hands-up', actionElapsedMs: this.elapsedMs - INTRO_HANDS_START_MS } : {}) });
-      this.pose('guard-rear', { ...rear, walking: t < 0.47, facing: t < .47 ? rear.facing : 'right',
+      this.pose('guard-rear', { ...rear, walking: rearWalking, facing: rearWalking ? rear.facing : 'right',
         ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
-      this.pose('guard-front', { ...front, walking: t < 0.47, facing: t < .47 ? front.facing : 'left',
+      this.pose('guard-front', { ...front, walking: frontWalking, facing: frontWalking ? front.facing : 'left',
         ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
       this.pose('elder', { ...elder, walking: t > 0.18 && t < 0.42, facing: t < .42 ? elder.facing : 'left' });
       this.mist(0xa9bac3, 0.065);
