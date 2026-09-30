@@ -20,7 +20,7 @@ test('all room connections walk out and in with temporary corridors, animated do
       const phases = new Set<string>(), frames = new Set<number>(), checkpoints = new Set<string>();
       const ordered = new Set<string>();
       const cottagePositions: { x: number; y: number }[] = [];
-      let sourceLast: any, destinationFirst: any;
+      let sourceLast: any, destinationFirst: any, arrival: any;
       for (let i = 0; i < 1500 && scene.roomTransition.active; i++) {
         const phase = scene.roomTransition.phase; phases.add(phase);
         const portal = scene.roomTransition.portal;
@@ -41,9 +41,16 @@ test('all room connections walk out and in with temporary corridors, animated do
         }
         const oldRoom = scene.story.roomId, oldPosition = { ...scene.character.state.position };
         scene.update(0, 50);
-        if (oldRoom !== scene.story.roomId) { sourceLast = oldPosition; destinationFirst = { ...scene.character.state.position }; }
+        if (oldRoom !== scene.story.roomId) {
+          sourceLast = oldPosition; destinationFirst = { ...scene.character.state.position };
+          const portal = scene.roomTransition.portal;
+          arrival = { phase: scene.roomTransition.phase, walking: scene.character.isWalking,
+            doorProgress: scene.roomTransition.doorProgress, hasDoor: !!portal.doorId,
+            doorFrame: portal.doorId && scene.entitySprites.get(portal.doorId).frame.name,
+            expectedPosition: portal.path[portal.handoffIndex ?? portal.path.length - 1] };
+        }
       }
-      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, cottagePositions,
+      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, arrival, cottagePositions,
         position: { ...scene.character.state.position }, expected: forestPortal(manifest, to, from).path[0],
         enabled: scene.resolved().areas.filter((area: any) => area.id.includes('.transition.') && area.enabled).length });
     }
@@ -55,8 +62,11 @@ test('all room connections walk out and in with temporary corridors, animated do
   });
   for (const route of result) {
     expect(route, `${route.from} → ${route.to}`).toMatchObject({ active: false, room: route.to, enabled: 0, position: route.expected, alpha: 1 });
-    expect(route.phases).toEqual(['open-exit','exit','close-exit','open-entry','entry','close-entry']);
+    expect(route.phases).toEqual(['open-exit','exit','entry','close-entry']);
     expect(route.sourceLast).toBeTruthy(); expect(route.destinationFirst).toBeTruthy();
+    expect(route.arrival).toMatchObject({ phase: 'entry', walking: true });
+    expect(route.destinationFirst).toEqual(route.arrival.expectedPosition);
+    if (route.arrival.hasDoor) expect(route.arrival).toMatchObject({ doorProgress: 1, doorFrame: 7 });
     const root = [[1060,554],[1079,522],[1098,490],[1114,464],[1140,428],[1163,393],[1182,399],[1182,575],[1100,568]]
       .map(([x, y]) => ({ x: x * 960 / 1182, y: y * 540 / 664 }));
     for (const position of route.cottagePositions) expect(pointInPolygon(position, root), `${route.from} → ${route.to}: boots on the tree root at ${JSON.stringify(position)}`).toBe(false);
@@ -65,7 +75,10 @@ test('all room connections walk out and in with temporary corridors, animated do
     }
     if (route.frames.length) {
       expect(route.frames.length).toBeGreaterThan(3);
-      expect(route.ordered.sort(), `${route.from} → ${route.to}: crosses the doorway baseline`).toEqual(['behind', 'front']);
+      expect(route.ordered, `${route.from} → ${route.to}: approaches from the floor`).toContain('front');
+      // The outgoing sill is the scene cut, so only an incoming door renders
+      // the character behind its baseline before the walk clears the doorway.
+      if (route.arrival.hasDoor) expect(route.ordered).toContain('behind');
     }
   }
   expect(errors).toEqual([]);

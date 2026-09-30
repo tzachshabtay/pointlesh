@@ -13,7 +13,7 @@ function setup() {
   return { character, transition, events, tick: () => { character.tick(10); transition.update(10); } };
 }
 
-test('walks fully out and in, waits for the endpoint, and closes both doors', () => {
+test('opens once, walks out and in without a second opening, then closes on arrival', () => {
   const run = setup(); run.transition.begin(from, to);
   const phases = new Set();
   for (let i = 0; i < 1000 && run.transition.active; i++) {
@@ -21,7 +21,7 @@ test('walks fully out and in, waits for the endpoint, and closes both doors', ()
     if (!run.events.length) assert.equal(run.transition.portal.roomId, 'a');
     run.tick();
   }
-  assert.deepEqual([...phases], ['open-exit', 'exit', 'close-exit', 'open-entry', 'entry', 'close-entry']);
+  assert.deepEqual([...phases], ['open-exit', 'exit', 'entry', 'close-entry']);
   assert.deepEqual(run.events, ['b', 'done']);
   assert.deepEqual(run.character.state.position, to.path[0]);
   assert.equal(run.transition.active, false); assert.equal(run.transition.doorProgress, 0);
@@ -42,7 +42,57 @@ test('every door/walk phase resumes from its exact checkpoint without replaying 
     }
     original.tick();
   }
-  assert.equal(restoredPhases.size, 6);
+  assert.equal(restoredPhases.size, 4);
+});
+
+test('doorway handoff switches at the sill and immediately continues walking with the destination open', () => {
+  const run = setup(), outgoing = { ...from, handoffIndex: 1 }, incoming = { ...to, handoffIndex: 1 };
+  let exitPosition, doorAtSwitch;
+  const enterRoom = run.transition.options.enterRoom;
+  run.transition.options.enterRoom = portal => {
+    exitPosition = { ...run.character.state.position };
+    doorAtSwitch = run.transition.doorProgress;
+    enterRoom(portal);
+  };
+  run.transition.begin(outgoing, incoming);
+  for (let i = 0; i < 500 && !run.events.length; i++) run.tick();
+  assert.deepEqual(exitPosition, outgoing.path[1], 'do not repeat the concealed tail of the exit');
+  assert.deepEqual(run.character.state.position, incoming.path[1], 'appear midway through the doorway');
+  assert.equal(doorAtSwitch, 1);
+  assert.equal(run.transition.doorProgress, 1);
+  assert.equal(run.transition.phase, 'entry');
+  assert.equal(run.character.isWalking, true, 'first destination frame is already walking');
+  assert.deepEqual(run.character.destination, incoming.path[0]);
+  assert.equal(run.transition.snapshot().waypoint, 1);
+  const copy = setup(); copy.character.restore(run.character.snapshot()); copy.transition.restore(run.transition.snapshot());
+  assert.equal(copy.character.isWalking, true); assert.equal(copy.transition.doorProgress, 1);
+  run.tick();
+  assert.ok(run.character.state.position.x > incoming.path[1].x, 'no stationary opening wait after the cut');
+  for (let i = 0; i < 1000 && copy.transition.active; i++) copy.tick();
+  assert.deepEqual(copy.events, ['done']);
+  assert.deepEqual(copy.character.state.position, incoming.path[0]);
+});
+
+test('handoff indices must select a real crossing point and saved waypoints stay within the shortened route', () => {
+  for (const handoffIndex of [-1, 0, 3, .5, NaN, Infinity]) {
+    assert.throws(() => setup().transition.begin({ ...from, handoffIndex }, to), /Invalid room portal/);
+  }
+  assert.throws(() => assertRoomTransitionCheckpoint({ from: { ...from, handoffIndex: 1 }, to, phase: 'exit', elapsedMs: 0, waypoint: 2 }), /Invalid transition waypoint/);
+});
+
+test('old close-exit and open-entry checkpoints skip the redundant door cycle', () => {
+  for (const phase of ['close-exit', 'open-entry']) {
+    const run = setup();
+    run.character.place(phase === 'close-exit' ? from.path.at(-1) : to.path.at(-1));
+    run.transition.restore({ from, to, phase, elapsedMs: 25, waypoint: 0 });
+    run.transition.update(0);
+    assert.equal(run.transition.phase, 'entry');
+    assert.equal(run.transition.doorProgress, 1);
+    assert.deepEqual(run.events, phase === 'close-exit' ? ['b'] : []);
+    for (let i = 0; i < 1000 && run.transition.active; i++) run.tick();
+    assert.deepEqual(run.character.state.position, to.path[0]);
+    assert.deepEqual(run.events, phase === 'close-exit' ? ['b', 'done'] : ['done']);
+  }
 });
 
 test('activation is transient and cancellation or invalid geometry never switches rooms', () => {
