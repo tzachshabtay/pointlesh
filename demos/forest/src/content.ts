@@ -12,6 +12,7 @@ import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
 import { addRescueAssets } from './rescue-assets';
 import { addIntroAssets } from './intro-assets';
+import { addStealthAssets } from './stealth-assets';
 import { addDoorAssets, addForestTransitions } from './transition-content';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
@@ -137,6 +138,7 @@ export const assets = {
 addForestObjectAssets(assets);
 addRescueAssets(assets);
 addIntroAssets(assets);
+addStealthAssets(assets);
 addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);

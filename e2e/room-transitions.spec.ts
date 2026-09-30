@@ -11,6 +11,7 @@ test('all room connections walk out and in with temporary corridors, animated do
     const { forestPortal } = await import('/src/transition-content.ts' as string);
     const scene = (window as any).pointleshDemo.scene, manifest = (window as any).pointleshDemo.manifest;
     scene.game.loop.sleep();
+    scene.story.flags.guardAsleep = true; // Unrestricted crossings; stealth has its own integration coverage.
     const connections = [['village','pub','pub-door'],['pub','village','pub-exit'],['village','house','home-door'],['house','village','house-exit'],
       ['village','forest','forest-path'],['forest','village','forest-exit'],['forest','mine','mine-path'],['mine','forest','mine-exit'],['forest','camp','camp-path'],['camp','forest','camp-exit']];
     const results = [];

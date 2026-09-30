@@ -1,4 +1,5 @@
 import { CharacterController, distance, cloneJSON, isPoint, type Point, type ResolvedPointleshArea } from '@pointlesh/core';
+import { PEEK_DOOR_OPEN, PEEK_DURATION_MS } from './stealth-assets';
 
 export type RoomPortal = {
   roomId: string;
@@ -11,16 +12,18 @@ export type RoomPortal = {
   doorDurationMs?: number;
 };
 // close-exit and open-entry remain readable for saves made by the old sequence.
-export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'entry' | 'close-entry';
+export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'entry' | 'close-entry' | 'peek-entry';
 export type RoomTransitionCheckpoint = {
   from: RoomPortal; to: RoomPortal; phase: RoomTransitionPhase; elapsedMs: number; waypoint: number;
+  campStealth?: boolean;
 };
-const phases: RoomTransitionPhase[] = ['open-exit', 'exit', 'close-exit', 'open-entry', 'entry', 'close-entry'];
+const phases: RoomTransitionPhase[] = ['open-exit', 'exit', 'close-exit', 'open-entry', 'entry', 'close-entry', 'peek-entry'];
 
 export function assertRoomTransitionCheckpoint(value: unknown): asserts value is RoomTransitionCheckpoint {
   const state = value as RoomTransitionCheckpoint;
   if (!state || !phases.includes(state.phase) || !Number.isFinite(state.elapsedMs) || state.elapsedMs < 0 ||
     !Number.isInteger(state.waypoint) || state.waypoint < 0) throw new Error('Invalid room transition checkpoint');
+  if (state.campStealth !== undefined && typeof state.campStealth !== 'boolean' || state.phase === 'peek-entry' && (!state.campStealth || state.to.roomId !== 'camp')) throw new Error('Invalid stealth transition');
   for (const portal of [state.from, state.to]) {
     if (!portal || typeof portal.roomId !== 'string' || !portal.roomId || typeof portal.areaId !== 'string' || !portal.areaId ||
       !Array.isArray(portal.path) || portal.path.length < 2 || !portal.path.every(isPoint) ||
@@ -53,14 +56,16 @@ export class RoomTransitionController {
   get active(): boolean { return !!this.state; }
   get portal(): RoomPortal | undefined { return this.state && (this.state.phase.includes('entry') ? this.state.to : this.state.from); }
   get phase(): RoomTransitionPhase | undefined { return this.state?.phase; }
+  get peekElapsedMs(): number { return this.state?.phase === 'peek-entry' ? this.state.elapsedMs : 0; }
   get doorProgress(): number {
     const state = this.state, portal = this.portal;
     if (!state || !portal?.doorId) return 0;
     const t = Math.min(1, state.elapsedMs / (portal.doorDurationMs ?? 900));
-    return state.phase.startsWith('open') ? t : state.phase.startsWith('close') ? 1 - t : 1;
+    return (state.phase.startsWith('open') ? t : state.phase.startsWith('close') ? 1 - t : 1) * (state.campStealth ? PEEK_DOOR_OPEN : 1);
   }
-  begin(from: RoomPortal, to: RoomPortal): void {
-    const state: RoomTransitionCheckpoint = { from, to, phase: 'open-exit', elapsedMs: 0, waypoint: 0 };
+  begin(from: RoomPortal, to: RoomPortal, campStealth = false): void {
+    // Retreating from cover starts at an already ajar gate.
+    const state: RoomTransitionCheckpoint = { from, to, phase: campStealth && from.roomId === 'camp' ? 'exit' : 'open-exit', elapsedMs: 0, waypoint: 0, ...(campStealth ? { campStealth: true } : {}) };
     assertRoomTransitionCheckpoint(state);
     if (this.active) throw new Error('A room transition is already active');
     this.character.stop();
@@ -93,7 +98,7 @@ export class RoomTransitionController {
     if (state.phase === 'close-exit') { this.enterDestination(); return; }
     if (state.phase === 'open-entry') { this.next('entry'); this.walk(); return; }
     state.elapsedMs += deltaMs;
-    const duration = this.portal?.doorId ? this.portal.doorDurationMs ?? 900 : 0;
+    const duration = state.phase === 'peek-entry' ? PEEK_DURATION_MS : this.portal?.doorId ? this.portal.doorDurationMs ?? 900 : 0;
     if (state.elapsedMs < duration) return;
     if (state.phase === 'open-exit') {
       this.next('exit'); this.walk();
@@ -102,10 +107,12 @@ export class RoomTransitionController {
     }
   }
   private enterDestination(): void {
-    this.next('entry');
+    const peek = this.state!.campStealth && this.state!.to.roomId === 'camp';
+    this.next(peek ? 'peek-entry' : 'entry');
     this.options.enterRoom(this.state!.to);
     const path = this.route();
     this.character.place(path[0]!);
+    if (peek) { this.character.face('right'); return; }
     // Start the incoming walk in the same update as the room switch. There is
     // no closed-door frame, stationary entrance pose, or second opening wait.
     this.state!.waypoint = 1;

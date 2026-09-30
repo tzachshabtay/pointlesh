@@ -9,13 +9,15 @@ import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
-import { applyDialogChoice, combineItems, ending, finishGuardDrink, finishTyingGuard, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { applyDialogChoice, combineItems, ending, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
 import { addIntroAssets } from './intro-assets';
+import { addStealthAssets, peekAnimation, peekSize, PEEK_DOOR_OPEN } from './stealth-assets';
+import { CampStealth, assertCampStealthCheckpoint, type CampStealthCheckpoint } from './camp-stealth';
 import { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint, type RoomTransitionCheckpoint } from './room-transition';
 import { addDoorAssets, addForestTransitions, forestPortal, CAGE_APPROACH_AREA } from './transition-content';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
@@ -100,6 +102,7 @@ class ForestAdventure extends Phaser.Scene {
   endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
   cinematic?: ForestCinematic;
   roomTransition!: RoomTransitionController;
+  campStealth!: CampStealth;
   movementKeys = new Set<string>();
   talking = false;
   showHotspots = false;
@@ -126,9 +129,24 @@ class ForestAdventure extends Phaser.Scene {
     installPhaserDisplayResolution(this.game);
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000).setDisplaySize(this.roomSize('village').width, this.roomSize('village').height);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
+    this.campStealth = new CampStealth(this.character, {
+      poison: () => {
+        const result = interact(this.story, 'cauldron', 'sleepyStout');
+        if (!this.story.inventory.includes('sleepyStout')) this.selected = undefined;
+        this.render();
+        return result.text ?? '';
+      },
+      returned: message => { this.binding.sync(); this.render(); if (message) this.say(message); },
+    });
     this.roomTransition = new RoomTransitionController(this.character, {
       enterRoom: portal => this.changeRoom(portal.roomId as RoomId, false, true),
-      onComplete: () => { this.binding.sync(); this.render(); },
+      onComplete: () => {
+        if (this.campRestricted()) this.campStealth.start(this.character.state.position);
+        else if (this.story.roomId === 'camp' && !walkablePolygons(this.resolved()).some(floor => pointInPolygon(this.character.state.position, floor))) {
+          this.campStealth.start(this.character.state.position); this.campStealth.release(this.campClearance());
+        }
+        this.binding.sync(); this.render();
+      },
       onBlocked: () => { this.syncTransitionDoors(); this.renderNearby(); toast('That entrance is blocked. Check its transition points and corridor.'); },
     });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
@@ -139,8 +157,8 @@ class ForestAdventure extends Phaser.Scene {
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
-      animations: () => this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
-      baseSize: () => borinActionSize(assets.assets.borin, !!this.story.tyingGuard),
+      animations: () => this.peeking() ? peekAnimation() : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
+      baseSize: () => this.peeking() ? peekSize(assets.assets.borin) : borinActionSize(assets.assets.borin, !!this.story.tyingGuard),
       areas: () => this.playerAreas(), camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
     this.navigation = new PhaserAdventureNavigation(this, () => this.walkables());
@@ -183,6 +201,7 @@ class ForestAdventure extends Phaser.Scene {
             else {
               this.cursor.click();
               if (this.selected) return;
+              if (this.campRestricted()) { toast('I should stay hidden by the gate until the guard is asleep.'); return; }
               this.epoch++;
               try { void this.character.walkTo(point); }
               catch (error) { toast(error instanceof Error ? error.message : String(error)); }
@@ -256,7 +275,17 @@ class ForestAdventure extends Phaser.Scene {
   playerDefinition() { return this.resolved().objects.find(entity => entity.kind === 'character' && entity.properties.role === 'player'); }
   playerAreas() {
     const portal = this.roomTransition?.portal;
-    return activatePointleshAreas(this.resolved().areas, portal?.roomId === this.story.roomId ? [portal.areaId] : []);
+    return activatePointleshAreas(this.resolved().areas, [
+      ...(portal?.roomId === this.story.roomId ? [portal.areaId] : []),
+      ...(this.story.roomId === 'camp' && (this.campRestricted() || this.campStealth?.busy || this.campStealth?.peeking) ? ['camp.transition.to-forest'] : []),
+    ]);
+  }
+  campRestricted() { return this.story.roomId === 'camp' && !this.story.flags.guardAsleep; }
+  peeking() { return this.campRestricted() && (this.roomTransition?.phase === 'peek-entry' || !!this.campStealth?.peeking); }
+  campCover() { const portal = forestPortal(authoredScenes, 'camp', 'forest'); return portal.path[portal.handoffIndex ?? portal.path.length - 1]!; }
+  campClearance() {
+    const floors = walkablePolygons(this.resolved()), start = floors[0]?.[0], cover = this.campCover();
+    return start ? findClosestReachablePath(start, cover, floors)?.at(-1) ?? cover : cover;
   }
   walkables() { return walkablePolygons({ ...this.resolved(), areas: this.playerAreas() }); }
   navigationFootprint(object?: ResolvedPointleshObject) {
@@ -271,13 +300,13 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return !this.started || this.roomTransition?.active || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked() { return !this.started || this.roomTransition?.active || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
   }
   updateMovementKeys() {
-    if (this.blocked()) { this.clearMovementKeys(); return; }
+    if (this.blocked() || this.campRestricted()) { this.clearMovementKeys(); return; }
     const direction = [...this.movementKeys].reduce((sum, key) => ({ x: sum.x + arrowDirections[key].x, y: sum.y + arrowDirections[key].y }), { x: 0, y: 0 });
     try { this.character.setMovementDirection(direction.x || direction.y ? direction : null); }
     catch (error) { this.clearMovementKeys(); toast(error instanceof Error ? error.message : String(error)); }
@@ -311,6 +340,16 @@ class ForestAdventure extends Phaser.Scene {
     if (!entity) return;
     this.cursor.click(this.selected ? inventoryAssetId(this.selected) : undefined);
     const selected = this.selected;
+    if (this.campRestricted()) {
+      if (targetId === 'camp-exit') { this.applyInteraction(targetId); return; }
+      if (targetId === 'cauldron' && selected === 'sleepyStout' && this.story.inventory.includes(selected) && !this.story.flags.stewSpiked) {
+        if (!guardLookingAway(this.story)) { this.say('He is watching! Wait until he turns his back, then try the brew again.'); return; }
+        const point = resolvePointleshPoint(this.resolved(), String(entity.properties.walkPointId || 'camp.walk.cauldron')).position;
+        this.campStealth.poison(point, this.campClearance()); this.binding.sync(); this.renderNearby(); return;
+      }
+      this.say(this.story.flags.stewSpiked ? 'The stew is ready. I should keep hidden until he falls asleep.' : 'I need to keep hidden. A little sleeping draught in that cauldron could give me a chance.');
+      return;
+    }
     const operation = ++this.epoch;
     let arrived: boolean;
     // Named walk points take priority; legacy approach offsets remain supported.
@@ -328,7 +367,11 @@ class ForestAdventure extends Phaser.Scene {
     if (exit) {
       if (this.roomTransition.active) return;
       this.epoch++; this.clearMovementKeys(); this.hover();
-      this.roomTransition.begin(forestPortal(authoredScenes, this.story.roomId, exit), forestPortal(authoredScenes, exit, this.story.roomId));
+      const from = forestPortal(authoredScenes, this.story.roomId, exit), to = forestPortal(authoredScenes, exit, this.story.roomId);
+      const stealth = !this.story.flags.guardAsleep && (from.roomId === 'camp' || to.roomId === 'camp');
+      if (this.campRestricted()) from.path[0] = { ...this.character.state.position };
+      this.campStealth.cancel();
+      this.roomTransition.begin(from, to, stealth);
       // Activation can change perspective at this position. Keep the rendered
       // pose and immediate save checkpoints consistent with the new area set.
       this.binding.sync();
@@ -346,6 +389,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
     if (!transitioning) this.roomTransition?.cancel();
+    this.campStealth?.cancel();
     // A designer scene switch can bypass gameplay input blocking. Cancel safely;
     // the rope has not been consumed until the animation finishes.
     if (room !== 'camp') delete this.story.tyingGuard;
@@ -367,6 +411,7 @@ class ForestAdventure extends Phaser.Scene {
       // Editing an entry outside the floor must not strand the arriving player.
       const arrival = findClosestReachablePath(spawn, requested, walkablePolygons(destination))?.at(-1) ?? requested;
       this.character.place(arrival, 'down');
+      if (this.campRestricted()) { this.character.place(this.campCover(), 'right'); this.campStealth.start(this.campCover()); }
     }
     for (const sprite of this.entitySprites.values()) sprite.destroy(); this.entitySprites.clear(); this.npcActors.clear();
     for (const star of this.stars) star.image.destroy(); this.stars = [];
@@ -532,7 +577,8 @@ class ForestAdventure extends Phaser.Scene {
   private syncTransitionDoors(): void {
     for (const object of this.resolved().objects.filter(object => object.properties.role === 'door')) {
       const sprite = this.entitySprites.get(object.id), animation = this.objectAnimations.get(object.id);
-      const progress = object.properties.doorAlwaysOpen === true ? 1 : this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress : 0;
+      const progress = object.properties.doorAlwaysOpen === true ? 1 : this.roomTransition?.portal?.doorId === object.id ? this.roomTransition.doorProgress
+        : (this.campRestricted() || this.campStealth?.busy) && object.id === 'camp.door.camp' ? PEEK_DOOR_OPEN : 0;
       // Seeking shares the normal object renderer and supports live previews.
       const key = this.transitionDoorKey(object.id);
       const linked = assets.assets[object.assetId]?.linkedAnimationAssets?.[key]?.assetId;
@@ -559,6 +605,11 @@ class ForestAdventure extends Phaser.Scene {
   private renderTyingGuard(): void {
     if (!this.story.tyingGuard) return;
     this.binding.renderPose({ position: this.character.state.position, activity: 'idle', facing: 'up' }, this.story.tyingGuard.elapsedMs, { loop: false });
+  }
+  private renderPeek(): void {
+    if (!this.peeking()) return;
+    this.binding.renderPose({ position: this.character.state.position, activity: 'idle', facing: 'right' },
+      this.roomTransition.phase === 'peek-entry' ? this.roomTransition.peekElapsedMs : this.campStealth.elapsedMs, { loop: false });
   }
   updateTyingGuard(deltaMs: number): void {
     if (!this.story.tyingGuard) return;
@@ -642,7 +693,7 @@ class ForestAdventure extends Phaser.Scene {
     for (const target of targets[this.story.roomId].filter(target => targetVisible(this.story, target.id))) {
       const node = button(target.name + (target.exit ? ' ↗' : ''), () => void this.act(target.id));
       node.setAttribute('aria-label', `Interact with ${target.name}`);
-      node.disabled = this.roomTransition.active || !this.interactionEntity(target.id);
+      node.disabled = this.roomTransition.active || this.campStealth.busy || !this.interactionEntity(target.id);
       el('nearby').append(node);
     }
   }
@@ -733,7 +784,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   showStartScreen() {
     this.started = false; this.epoch++; this.clearMovementKeys(); this.hover();
-    if (!this.roomTransition.active) this.character.stop();
+    if (!this.roomTransition.active && !this.campStealth.busy) this.character.stop();
     closeModal(); clearTimeout(toastTimer); el('toast').hidden = true;
     if (document.body.classList.contains('tools-visible')) el('designer').click();
     document.body.classList.add('menu-open');
@@ -762,6 +813,7 @@ class ForestAdventure extends Phaser.Scene {
       cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
         ...(this.roomTransition.active ? { roomTransition: this.roomTransition.snapshot() as unknown as JSONValue } : {}),
+        ...(this.campStealth.snapshot() ? { campStealth: this.campStealth.snapshot() as unknown as JSONValue } : {}),
         ...(this.story.tyingGuard ? { tyingGuard: { ...this.story.tyingGuard } } : {}),
         ...(this.guardPatrol || this.guardCheckpoint ? { guardPatrol: (this.guardPatrol?.snapshot() ?? this.guardCheckpoint) as unknown as JSONValue } : {}),
         speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '' } };
@@ -776,6 +828,10 @@ class ForestAdventure extends Phaser.Scene {
     }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
     if (save.extensions.guardPatrol !== undefined) assertGuardPatrolSnapshot(save.extensions.guardPatrol);
+    if (save.extensions.campStealth !== undefined) {
+      assertCampStealthCheckpoint(save.extensions.campStealth);
+      if (save.roomId !== 'camp') throw new Error('Stealth checkpoint is outside the camp');
+    }
     if (save.extensions.roomTransition !== undefined) {
       assertRoomTransitionCheckpoint(save.extensions.roomTransition);
       const transition = save.extensions.roomTransition;
@@ -809,8 +865,11 @@ class ForestAdventure extends Phaser.Scene {
     // phase last, then let the binding select that activity's authored clip.
     this.character.restore(save.characters.borin);
     this.roomTransition.restore((save.extensions.roomTransition ?? null) as RoomTransitionCheckpoint | null);
+    this.campStealth.restore((save.extensions.campStealth ?? null) as CampStealthCheckpoint | null);
+    if (this.campRestricted() && !this.roomTransition.active && !save.extensions.campStealth) this.campStealth.takeCover(this.campCover(), this.campClearance());
     this.syncTransitionDoors();
     this.binding.sync(); this.render(); this.renderCutscene(); this.renderTyingGuard();
+    this.renderPeek();
     this.roomCamera.snap();
   }
   update(_time: number, delta: number) {
@@ -838,6 +897,8 @@ class ForestAdventure extends Phaser.Scene {
       this.binding.update(Math.min(delta, 100));
       const previousRoom = this.story.roomId;
       this.roomTransition.update(Math.min(delta, 100));
+      if (!this.talking) this.campStealth.update(Math.min(delta, 100));
+      if (!this.campRestricted() && this.campStealth.peeking) this.campStealth.release(this.campClearance());
       if (previousRoom !== this.story.roomId) { this.binding.sync(); this.roomCamera.snap(); }
       this.roomCamera.update(Math.min(delta, 100));
       if (!this.talking && this.story.roomId === 'camp' && !this.story.flags.guardAsleep) this.story.guardClock += Math.min(delta, 100);
@@ -859,6 +920,7 @@ class ForestAdventure extends Phaser.Scene {
     this.syncDoor();
     this.syncTransitionDoors();
     this.renderTyingGuard();
+    this.renderPeek();
     if (!this.cinematic) this.characterLighting.sync(forestLighting(this.story.roomId, this.resolved().objects, id => this.entitySprites.get(id)));
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
   }
@@ -945,6 +1007,7 @@ addForestObjectAssets(assets);
 updateRescueAssetText(assets);
 addRescueAssets(assets);
 addIntroAssets(assets);
+addStealthAssets(assets);
 addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);

@@ -83,9 +83,9 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   await travel(page, 'Back to the wood', 'The Whispering Wood');
   await travel(page, 'Orc encampment', 'The Orc Encampment');
 
-  // Approach without an item first so testing the timing window excludes travel time.
+  // Looking/interacting without the potion must keep Borin in cover.
   await target(page, 'Stew cauldron');
-  await speech(page, 'sleeping potion'); await dismiss(page);
+  await speech(page, 'keep hidden'); await dismiss(page);
   // Observe a complete transition so there is a full watching window to attempt the failure.
   const guardPhase = () => page.evaluate(() => (window as any).pointleshDemo.scene.guardPatrol.phase);
   await expect(page.locator('#guard-status')).toHaveCount(0);
@@ -99,6 +99,7 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   await target(page, 'Stew cauldron');
   await speech(page, 'wait for his next drink'); await dismiss(page);
   await expect.poll(guardPhase, { timeout: 35000 }).toBe('asleep');
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.campStealth.busy)).toBe(false);
   await expect(page.locator('#inventory').getByRole('button', { name: 'Dreamcap stout', exact: true })).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('camp-guard-asleep.png'), fullPage: true });
 

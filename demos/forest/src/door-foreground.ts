@@ -27,7 +27,9 @@ export class DoorForeground {
     if (signature === this.signature) return;
     this.signature = signature;
     const rectangles = (masks as Record<string, number[][][]>)[this.door.id]?.[frame] ?? [];
-    const matrix = s.getWorldTransformMatrix();
+    // The overlay supplies its parent container transform (including cinematic
+    // camera pans), so mask vertices belong in that parent's local space.
+    const matrix = s.getLocalTransformMatrix();
     const { width, height } = this.door.crop;
     const point = (x: number, y: number) => matrix.transformPoint(((s.flipX ? 1 - x / width : x / width) - s.originX) * s.width, ((s.flipY ? 1 - y / height : y / height) - s.originY) * s.height);
     const polygons = rectangles.map(([x, y, w, h]) => [point(x!, y!), point(x! + w!, y!), point(x! + w!, y! + h!), point(x!, y! + h!)]);
