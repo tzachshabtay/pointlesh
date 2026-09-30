@@ -66,6 +66,17 @@ test('eye and lock controls only affect editing, including live blockers and hid
 
   await toggle(page).click();
   await expect.poll(() => state(page)).toEqual(before);
+  // Complete the stealth restriction before testing ordinary player input.
+  // The earlier checks still exercise the awake guard's live patrol.
+  await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.story.flags.guardAsleep = true;
+    scene.guardPatrol.start(true);
+    scene.campStealth.cancel();
+  });
+  const unrestricted = await state(page);
+  expect(unrestricted.objects).toEqual(before.objects);
+  expect(unrestricted.obstacles).toBe(before.obstacles);
   // Click-to-walk still works even though the designer remembers a hidden floor.
   const target = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
@@ -80,11 +91,11 @@ test('eye and lock controls only affect editing, including live blockers and hid
   await toggle(page).click();
   await expect(row(page, 'Grub the guard').getByRole('button', { name: 'Show instance', exact: true })).toBeVisible();
   await expect(row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Unlock area', exact: true })).toBeVisible();
-  await expect.poll(() => state(page)).toEqual({ ...before, objects: before.objects.map(object => ({ ...object, rendered: false })) });
+  await expect.poll(() => state(page)).toEqual({ ...unrestricted, objects: unrestricted.objects.map(object => ({ ...object, rendered: false })) });
   await page.getByRole('button', { name: 'Hide layer', exact: true }).click();
   await page.getByRole('button', { name: 'Lock layer', exact: true }).click();
   await toggle(page).click();
-  await expect.poll(() => state(page)).toEqual(before);
+  await expect.poll(() => state(page)).toEqual(unrestricted);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.actor.visible)).toBe(true);
   const x = await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x);
   await page.keyboard.down('ArrowRight');
