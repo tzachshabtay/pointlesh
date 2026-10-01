@@ -154,7 +154,7 @@ const rectangle = (x: number, y: number, width: number, height: number) => [
 ];
 /** Room-specific floor outlines retain the broad corridor used by all approach points. */
 export function roomFloorVertices(room: typeof roomIds[number]) {
-  if (room === 'forest') return [[35, 443], [190, 448], [274, 371], [360, 398], [450, 435], [680, 445], [920, 438], [1170, 419], [1365, 365], [1450, 389], [1585, 443], [1585, 515], [35, 515]].map(([x, y], index) => ({ id: `floor-${index}`, x, y }));
+  if (room === 'forest') return [[35, 443], [190, 448], [409, 446], [307, 351], [319, 345], [365, 387], [429, 411], [450, 435], [680, 445], [920, 438], [1170, 419], [1365, 365], [1450, 389], [1585, 443], [1585, 515], [35, 515]].map(([x, y], index) => ({ id: `floor-${index}`, x, y }));
   const shoulders = { village: [124, 371, 835, 381], pub: [85, 380, 876, 373], house: [158, 365, 819, 390], forest: [167, 387, 832, 378], mine: [142, 374, 865, 390], camp: [116, 392, 848, 366] }[room];
   return [[35, 403], [shoulders[0], shoulders[1]], [360, 355], [710, 355], [shoulders[2], shoulders[3]], [925, 403], [925, 494], [850, 515], [110, 515], [35, 494]].map(([x, y], index) => ({ id: `floor-${index}`, x, y }));
 }

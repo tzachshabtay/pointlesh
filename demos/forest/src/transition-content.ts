@@ -24,6 +24,16 @@ const samePoint = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y) < 1e-
 const rectangle = (left: number, top: number, right: number, bottom: number): Point[] =>
   [{ x: left, y: top }, { x: right, y: top }, { x: right, y: bottom }, { x: left, y: bottom }];
 
+/** Only bridge the doorway to the nearest ordinary ground, never the whole approach. */
+function doorwayCorridor(ground: Point, outside: Point): Point[] {
+  const length = Math.hypot(outside.x - ground.x, outside.y - ground.y);
+  const dx = length ? (outside.x - ground.x) / length : 0, dy = length ? (outside.y - ground.y) / length : -1;
+  const start = { x: ground.x - dx * 12, y: ground.y - dy * 12 };
+  const end = { x: outside.x + dx * 4, y: outside.y + dy * 4 };
+  return [{ x: start.x - dy * 10, y: start.y + dx * 10 }, { x: end.x - dy * 10, y: end.y + dx * 10 },
+    { x: end.x + dy * 10, y: end.y - dx * 10 }, { x: start.x + dy * 10, y: start.y - dx * 10 }];
+}
+
 export function addDoorAssets(manifest: AiAssetManifest): void {
   for (const door of forestDoors) {
     const id = `door.${door.id}`, { width, height } = door.crop;
@@ -76,6 +86,13 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
     for (const target of targets[roomId].filter(target => target.exit)) {
       const to = target.exit!, entry = room.points.find(point => point.id === roomEntryPointId(roomId, to));
       if (!entry) continue;
+      const mineGate = roomId === 'forest' && to === 'mine';
+      const migrateMineGate = mineGate && samePoint(entry.position, { x: 274, y: 410 });
+      const entryPosition = migrateMineGate ? { x: 440, y: 460 } : entry.position;
+      if (migrateMineGate) {
+        const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === entry.id)!;
+        instance.overrides = { ...instance.overrides, x: { value: entryPosition.x }, y: { value: entryPosition.y } };
+      }
       const door = forestDoors.find(door => door.room === roomId && door.to === to);
       const aperture = door ? doorWorldAperture(door) : undefined;
       const minY = aperture ? Math.min(...aperture.map(p => p.y)) : 0;
@@ -87,20 +104,21 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       // screen edge. Subsequent designer edits to the new points stay intact.
       const migrateMine = roomId === 'mine' && !!previousThreshold && samePoint(previousThreshold, { x: 113.5, y: 271 });
       const threshold = migrateMine ? defaultThreshold : previousThreshold ?? defaultThreshold;
-      const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entry.position;
-      const inside = findClosestReachablePath(spawn, entry.position, walkablePolygons(room))?.at(-1) ?? entry.position;
+      const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entryPosition;
+      const inside = findClosestReachablePath(spawn, entryPosition, walkablePolygons(room))?.at(-1) ?? entryPosition;
+      const ground = mineGate ? findClosestReachablePath(inside, threshold, walkablePolygons(room))?.at(-1) ?? inside : inside;
       const legacyOutside = { x: centerX, y: minY - 24 };
-      const defaultOutside = aperture ? continueWalkLine(inside, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + (roomId === 'mine' ? 400 : 230) };
+      const defaultOutside = aperture ? continueWalkLine(ground, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entryPosition.x, y: scene.height + (roomId === 'mine' ? 400 : 230) };
       const previousOutside = room.points.find(point => point.id === transitionOutsideId(roomId, to))?.position;
       const migrateOutside = !!aperture && !!previousOutside && samePoint(previousOutside, legacyOutside);
-      const outside = !previousOutside || migrateOutside || migrateMine ? defaultOutside : previousOutside;
+      const outside = !previousOutside || migrateOutside || migrateMine || migrateMineGate ? defaultOutside : previousOutside;
       addPoint(transitionThresholdId(roomId, to), `Threshold · ${target.name}`, threshold);
       addPoint(transitionOutsideId(roomId, to), `Offscreen / behind doorway · ${target.name}`, outside);
       if (migrateMine) {
         const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === transitionThresholdId(roomId, to))!;
         instance.overrides = { ...instance.overrides, x: { value: threshold.x }, y: { value: threshold.y } };
       }
-      if (migrateOutside || migrateMine) {
+      if (migrateOutside || migrateMine || migrateMineGate) {
         // Upgrade obsolete generated endpoints; preserve other edited points.
         const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === transitionOutsideId(roomId, to))!;
         instance.overrides = { ...instance.overrides, x: { value: outside.x }, y: { value: outside.y } };
@@ -108,8 +126,8 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       const areaId = transitionAreaId(roomId, to);
       const legacyBounds = rectangle(Math.min(entry.position.x, defaultThreshold.x) - 44, aperture || roomId === 'village' ? -180 : Math.min(entry.position.y, defaultThreshold.y) - 45,
         Math.max(entry.position.x, defaultThreshold.x) + 44, aperture || roomId === 'village' ? entry.position.y + 45 : outside.y + 45);
-      const route = [entry.position, inside, threshold, outside];
-      const vertices = aperture || roomId === 'village' ? rectangle(Math.min(...route.map(p => p.x)) - 44, Math.min(...route.map(p => p.y)) - 45,
+      const route = [entryPosition, inside, threshold, outside];
+      const vertices = mineGate ? doorwayCorridor(ground, outside) : aperture || roomId === 'village' ? rectangle(Math.min(...route.map(p => p.x)) - 44, Math.min(...route.map(p => p.y)) - 45,
         Math.max(...route.map(p => p.x)) + 44, Math.max(...route.map(p => p.y)) + 45) : legacyBounds;
       const corridor = scene.layers.flatMap(layer => layer.areas).find(area => isPointleshArea(area) && area.pointlesh.entityId === areaId);
       if (!corridor) {
@@ -117,7 +135,7 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
           closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`), vertices),
           properties: { enabled: false, transitionTo: to },
           vertices }));
-      } else if (migrateMine && isPointleshArea(corridor)) {
+      } else if ((migrateMine || migrateMineGate) && isPointleshArea(corridor)) {
         corridor.vertices = vertices.map((point, i) => ({ ...corridor.vertices[i]!, ...point }));
         corridor.pointlesh.properties = { ...corridor.pointlesh.properties, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`), vertices) };
       } else if ((migrateOutside || !aperture && roomId === 'village') && corridor.vertices.length === 4 && corridor.vertices.every((point, i) => samePoint(point, legacyBounds[i]!))) {
@@ -206,9 +224,13 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entry;
   const inside = findClosestReachablePath(spawn, entry, walkablePolygons(room))?.at(-1) ?? entry;
   const door = forestDoors.find(door => door.room === roomId && door.to === to);
+  const threshold = point(transitionThresholdId(roomId, to));
+  const approach = roomId === 'forest' && to === 'mine'
+    ? findClosestReachablePath(inside, threshold, walkablePolygons(room)) ?? [inside] : [inside];
+  const path = [...approach, threshold, point(transitionOutsideId(roomId, to))];
   return { roomId, areaId: transitionAreaId(roomId, to),
-    path: [inside, point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
-    ...(door ? { handoffIndex: 1 } : {}),
+    path,
+    ...(door ? { handoffIndex: path.length - 2 } : {}),
     ...(door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true
       ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
 }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { PNG } from 'pngjs';
 import { tsImport } from 'tsx/esm/api';
-import { pointInPolygon, resolvePointleshScene } from '@pointlesh/core';
+import { isSegmentWalkable, isWalkable, pointInPolygon, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
 const { forestDoors, doorWorldAperture } = await tsImport('../src/door-layout.ts', import.meta.url);
 const { addDoorAssets, addForestTransitions, forestPortal } = await tsImport('../src/transition-content.ts', import.meta.url);
 
@@ -44,8 +44,8 @@ test('reapplying transition content preserves edited points, door promotions and
 test('doorway paths continue the grounded approach instead of climbing to the arch', () => {
   const scenes = addForestTransitions(JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8')));
   for (const { room, to } of forestDoors) {
-    const portal = forestPortal(scenes, room, to), [inside, threshold, outside] = portal.path;
-    assert.equal(portal.path.length, 3, 'no sideways detour followed by a vertical climb');
+    const portal = forestPortal(scenes, room, to), [inside, threshold, outside] = portal.path.slice(-3);
+    assert.equal(portal.handoffIndex, portal.path.length - 2);
     const dx = threshold.x - inside.x, dy = threshold.y - inside.y;
     const ex = outside.x - threshold.x, ey = outside.y - threshold.y;
     assert.ok(Math.abs(dx * ey - dy * ex) < 1e-6, `${room} → ${to}: same walk line at the sill`);
@@ -53,9 +53,39 @@ test('doorway paths continue the grounded approach instead of climbing to the ar
     assert.ok(Math.hypot(ex, ey) <= 24.000001, `${room} → ${to}: stay close to the floor`);
     const corridor = resolvePointleshScene(scenes, room).areas.find(area => area.id === portal.areaId);
     assert.equal(corridor.enabled, false);
-    for (const point of portal.path) assert.ok(pointInPolygon(point, corridor.polygon));
+    for (const point of portal.path.slice(-3)) assert.ok(pointInPolygon(point, corridor.polygon));
     assert.ok(Math.min(...corridor.polygon.map(point => point.y)) > 0, 'no corridor into the sky');
   }
+});
+
+test('returning from the mine follows the forest floor after its short doorway bridge', async () => {
+  const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
+  const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  for (const manifest of [seed, authored]) {
+    const room = resolvePointleshScene(manifest, 'forest'), portal = forestPortal(manifest, 'forest', 'mine');
+    const floors = walkablePolygons(room), approach = portal.path.slice(0, -2);
+    assert.ok(approach.length >= 2);
+    assert.ok(approach[0].x > 400 && approach[0].y > 440, 'arrive on the main path');
+    for (let i = 1; i < approach.length; i++) assert.ok(isSegmentWalkable(approach[i - 1], approach[i], floors), 'both directions follow ordinary ground');
+    const corridor = room.areas.find(area => area.id === portal.areaId);
+    const active = [...floors, corridor.polygon];
+    for (let i = 1; i < portal.path.length; i++) assert.ok(isSegmentWalkable(portal.path[i - 1], portal.path[i], active));
+    assert.equal(isWalkable({ x: 274, y: 410 }, active), false, 'the old shortcut across the rocks is not walkable');
+    assert.ok(Math.max(...corridor.polygon.map(point => point.y)) < 380, 'temporary ground only bridges the doorway');
+  }
+});
+
+test('the old forest mine shortcut migrates while keeping the authored walkable outline', () => {
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  const original = structuredClone(scenes), layer = scenes.scenes.forest.layers[0];
+  const entry = layer.prefabs.find(point => point.id === 'forest.entry.from-mine');
+  entry.overrides.x.value = 274; entry.overrides.y.value = 410;
+  const outside = layer.prefabs.find(point => point.id === 'forest.outside.to-mine');
+  outside.overrides.x.value = 268.7116430061564; outside.overrides.y.value = 299.24398423163376;
+  const corridor = layer.areas.find(area => area.id === 'forest.transition.to-mine::area');
+  for (const vertex of corridor.vertices) vertex.y += 100;
+  corridor.pointlesh.properties.minScale = .5;
+  assert.deepEqual(addForestTransitions(scenes), original);
 });
 
 test('the mine crosses the bottom edge in both directions, with editable offscreen points', async () => {

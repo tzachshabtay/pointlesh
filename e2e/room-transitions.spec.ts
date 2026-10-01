@@ -22,6 +22,8 @@ test('all room connections walk out and in with temporary corridors, animated do
       const ordered = new Set<string>();
       const cottagePositions: { x: number; y: number }[] = [];
       const minePositions: { x: number; y: number; facing: string; phase: string }[] = [];
+      const forestMinePositions: { x: number; y: number }[] = [];
+      let forestGround: { x: number; y: number }[][] = [], forestBridge: { x: number; y: number }[] = [], bridgeEndY = 0;
       let sourceLast: any, destinationFirst: any, arrival: any, sourceHidden = false, destinationHidden = false;
       for (let i = 0; i < 1500 && scene.roomTransition.active; i++) {
         const phase = scene.roomTransition.phase; phases.add(phase);
@@ -35,6 +37,12 @@ test('all room connections walk out and in with temporary corridors, animated do
         if (scene.actor.alpha !== 1) throw new Error(`Character opacity changed ${from}/${phase}`);
         if (scene.story.roomId === 'house' && (phase === 'exit' || phase === 'entry')) cottagePositions.push({ ...scene.character.state.position });
         if (scene.story.roomId === 'mine' && (phase === 'exit' || phase === 'entry')) minePositions.push({ ...scene.character.state.position, facing: scene.character.state.facing, phase });
+        if (scene.story.roomId === 'forest' && portal.areaId === 'forest.transition.to-mine' && (phase === 'exit' || phase === 'entry')) {
+          forestMinePositions.push({ ...scene.character.state.position });
+          forestGround = scene.resolved().areas.filter((area: any) => area.enabled && area.properties.walkable).map((area: any) => area.polygon);
+          forestBridge = scene.resolved().areas.find((area: any) => area.id === portal.areaId).polygon;
+          bridgeEndY = portal.path.at(-3).y;
+        }
         if (portal.doorId) {
           const foreground = scene.doorForegrounds.get(portal.doorId);
           const frame = scene.resolved().areas.find((area: any) => area.id === `${portal.doorId}.frame`);
@@ -55,7 +63,7 @@ test('all room connections walk out and in with temporary corridors, animated do
             expectedPosition: portal.path[portal.handoffIndex ?? portal.path.length - 1] };
         }
       }
-      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, arrival, cottagePositions, minePositions, sourceHidden, destinationHidden,
+      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, arrival, cottagePositions, minePositions, forestMinePositions, forestGround, forestBridge, bridgeEndY, sourceHidden, destinationHidden,
         position: { ...scene.character.state.position }, expected: forestPortal(manifest, to, from).path[0],
         enabled: scene.resolved().areas.filter((area: any) => area.id.includes('.transition.') && area.enabled).length });
     }
@@ -78,6 +86,11 @@ test('all room connections walk out and in with temporary corridors, animated do
       expect(position.x).toBeGreaterThan(300); expect(position.x).toBeLessThan(600);
       expect(position.y).toBeGreaterThan(470);
       expect(position.facing).toBe(position.phase === 'exit' ? 'down' : 'up');
+    }
+    for (const position of route.forestMinePositions) {
+      const onGround = route.forestGround.some(polygon => pointInPolygon(position, polygon));
+      expect(onGround || pointInPolygon(position, route.forestBridge), 'boots stay on ordinary ground or the narrow doorway bridge').toBe(true);
+      if (position.y > route.bridgeEndY + 1) expect(onGround, 'the return to the main path never uses the old rectangle across the rocks').toBe(true);
     }
     const root = [[1060,554],[1079,522],[1098,490],[1114,464],[1140,428],[1163,393],[1182,399],[1182,575],[1100,568]]
       .map(([x, y]) => ({ x: x * 960 / 1182, y: y * 540 / 664 }));

@@ -76,7 +76,7 @@ export const targets: Record<RoomId, Target[]> = {
   ],
   forest: [
     { id: 'mushroom', name: 'Dreamcap mushrooms', x: 111, y: 409, walkY: 448, description: 'Violet caps with silver spots. Mara will know what they do.' },
-    { id: 'mine-path', name: 'Goldroot Mine', x: 274, y: 285, walkY: 410, exit: 'mine', description: 'A lantern flickers in the old gold mine.' },
+    { id: 'mine-path', name: 'Goldroot Mine', x: 274, y: 285, walkX: 440, walkY: 460, exit: 'mine', description: 'A lantern flickers in the old gold mine.' },
     { id: 'camp-path', name: 'Orc encampment', x: 1385, y: 275, walkY: 410, exit: 'camp', description: 'A crooked palisade. Smoke. Terrible singing.' },
     { id: 'forest-exit', name: 'Bramblehollow', x: 471, y: 490, exit: 'village', description: 'The path home winds between the roots.' }
   ],
