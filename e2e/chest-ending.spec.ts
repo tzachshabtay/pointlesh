@@ -88,12 +88,25 @@ test('both ending actors stay on authored ground for every shot and restore with
     return { samples, manifest: api.manifest, before, after };
   });
   const camp = resolvePointleshScene(result.manifest, 'camp');
+  const forest = resolvePointleshScene(result.manifest, 'forest'), village = resolvePointleshScene(result.manifest, 'village');
   const floors = [walkablePolygons({ ...camp, areas: camp.areas.map(area => area.id === 'camp.cage-approach' ? { ...area, enabled: true } : area) }),
-    walkablePolygons(resolvePointleshScene(result.manifest, 'forest')), walkablePolygons(resolvePointleshScene(result.manifest, 'village'))];
+    walkablePolygons({ ...forest, areas: forest.areas.map(area => ['forest.transition.to-camp', 'forest.transition.to-village'].includes(area.id) ? { ...area, enabled: true } : area) }),
+    walkablePolygons({ ...village, areas: village.areas.map(area => area.id === 'village.transition.to-forest' ? { ...area, enabled: true } : area) })];
   for (const { step, ms, actor } of result.samples) expect(isWalkable(actor, floors[step < 2 ? 0 : step - 1]), `ending ${step}/${ms}ms: ${actor.id}`).toBe(true);
+  const { tsImport } = await import('tsx/esm/api');
+  const { forestPortal } = await tsImport('../demos/forest/src/transition-content.ts', import.meta.url);
+  const exit = forestPortal(result.manifest, 'forest', 'village'), entry = forestPortal(result.manifest, 'village', 'forest');
+  for (const id of ['borin', 'king']) {
+    const departure = result.samples.filter(sample => sample.step === 2 && sample.actor.id === id).at(-1)!.actor;
+    expect(departure.x).toBeCloseTo(exit.path.at(-1)!.x); expect(departure.y).toBeCloseTo(exit.path.at(-1)!.y);
+    const arrival = result.samples.find(sample => sample.step === 3 && sample.actor.id === id)!.actor;
+    expect(arrival.x).toBeCloseTo(entry.path.at(-1)!.x); expect(arrival.y).toBeCloseTo(entry.path.at(-1)!.y);
+  }
   expect(result.after.cast.filter((actor: any) => actor.visible)).toEqual(result.before.cast.filter((actor: any) => actor.visible));
   expect(result.after.elapsedMs).toBe(result.before.elapsedMs); expect(errors).toEqual([]);
   await page.screenshot({ path: testInfo.outputPath('forest-homeward.png') });
-  await page.evaluate(() => (window as any).pointleshDemo.scene.cinematic.render(3, 3000));
+  await page.evaluate(() => { const s = (window as any).pointleshDemo.scene; s.story.endingStep = 3; s.endingRunner.restore({ cutsceneId: 'forest.ending', version: 1, stepIndex: 3, elapsedMs: 2000 }); s.renderCutscene(); });
   await page.screenshot({ path: testInfo.outputPath('village-homecoming.png') });
+  await page.evaluate(() => (window as any).pointleshDemo.scene.cinematic.render(2, 4100));
+  await page.screenshot({ path: testInfo.outputPath('forest-exit.png') });
 });

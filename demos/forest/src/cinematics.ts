@@ -27,7 +27,7 @@ export function restoreCinematicElapsed(kind: CinematicKind, step: number, elaps
 }
 
 type CastId = 'borin' | 'king' | 'guard-front' | 'guard-rear' | 'elder' | 'innkeeper' | 'miner';
-type Pose = { x: number; y: number; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: 'up' | 'down' | 'left' | 'right'; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back' | IntroAction; actionElapsedMs?: number };
+type Pose = { x: number; y: number; transitionAreas?: string[]; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: 'up' | 'down' | 'left' | 'right'; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back' | IntroAction; actionElapsedMs?: number };
 type CastActor = {
   sprite: Phaser.GameObjects.Sprite;
   shadow: Phaser.GameObjects.Ellipse;
@@ -35,6 +35,7 @@ type CastActor = {
   definition?: ResolvedPointleshObject;
   binding?: PhaserAdventureCharacter;
   sleeping: boolean;
+  transitionAreas?: string[];
   action?: 'bound' | 'tie-rope-back' | 'pickaxe-back' | IntroAction;
 };
 export type CinematicSnapshot = {
@@ -260,6 +261,7 @@ export class ForestCinematic {
   private pose(id: CastId, pose: Pose): Phaser.GameObjects.Sprite {
     const actor = this.cast.get(id)!;
     actor.sleeping = pose.sleeping ?? false;
+    actor.transitionAreas = pose.transitionAreas ?? [];
     actor.action = actor.sleeping ? 'bound' : pose.action;
     const { sprite, shadow } = actor;
     const characterId = id.startsWith('guard') ? 'guard' : id;
@@ -282,7 +284,9 @@ export class ForestCinematic {
             ? introActionSize(this.assets.manifest.assets[assetId], actor.action)
             : characterId === 'borin' ? borinActionSize(this.assets.manifest.assets[assetId], !!actor.action)
               : guardAnimationSize(this.assets.manifest.assets[assetId], actor.sleeping),
-          areas: () => actor.definition!.properties.ignoreScaling ? [] : activatePointleshAreas(this.definitions.get(this.room)?.areas ?? [], this.room === 'camp' ? [CAGE_APPROACH_AREA] : this.kind === 'intro' && this.stepIndex === 3 && id === 'borin' ? ['village.transition.to-house'] : []),
+          areas: () => actor.definition!.properties.ignoreScaling ? [] : activatePointleshAreas(this.definitions.get(this.room)?.areas ?? [],
+            this.room === 'camp' ? [CAGE_APPROACH_AREA]
+              : this.kind === 'intro' && this.stepIndex === 3 && id === 'borin' ? ['village.transition.to-house'] : actor.transitionAreas ?? []),
           origin: () => ({ x: actor.definition!.anchorX, y: 1 - actor.definition!.anchorY }),
           angle: () => actor.definition!.rotation,
           animations: () => actor.action === 'point-spear' || actor.action === 'hands-up' ? introAnimation(assetId, actor.action)
@@ -423,11 +427,18 @@ export class ForestCinematic {
       this.sleepingGuard();
       this.mist(0xb3c4a8, 0.025);
     } else if (step === 2) {
-      this.shot('forest', 'THE WHISPERING WOOD · RUN FOR HOME', lerp(1.13, 1.07, t), lerp(528, 451, t), 290);
-      const path = this.homeward ??= forestHomeward(this.authoredManifest!);
-      const separation = Math.min(96, walkLength(path) / 3), travelled = t * (walkLength(path) - separation);
-      this.pose('borin', { ...sampleWalk(path, travelled + separation), walking: true });
-      this.pose('king', { ...sampleWalk(path, travelled), walking: true });
+      const homeward = this.homeward ??= forestHomeward(this.authoredManifest!);
+      const path = homeward.path, length = walkLength(path);
+      const separation = Math.min(96, length / 3), travelled = t * length;
+      const borin = sampleWalk(path, travelled + separation), king = sampleWalk(path, travelled);
+      this.shot('forest', 'THE WHISPERING WOOD · RUN FOR HOME', lerp(1.13, 1.07, t), (borin.x + king.x) / 2, 290);
+      // The rescue has already opened the gate. Shut it only after Aldric clears it.
+      if (homeward.entry.doorId) this.roomDoor(homeward.entry.doorId,
+        1 - segment(travelled, homeward.entryClearDistance, homeward.entryClearDistance + 60));
+      const transitionAreas = (distance: number) => distance <= homeward.entryClearDistance ? [homeward.entry.areaId]
+        : distance >= homeward.exitStartDistance ? [homeward.exit.areaId] : [];
+      this.pose('borin', { ...borin, walking: travelled + separation < length, transitionAreas: transitionAreas(travelled + separation) });
+      this.pose('king', { ...king, walking: travelled < length, transitionAreas: transitionAreas(travelled) });
       this.mist(0xc3cead, 0.05);
       // Fireflies and wind-blown leaves make the escape read as continuous motion.
       for (let i = 0; i < 13; i++) {
@@ -436,11 +447,14 @@ export class ForestCinematic {
         this.foreground.fillStyle(i % 2 ? 0xcaa65c : 0x8eaa65, 0.65).fillRect(leafX, leafY, 5, 2);
       }
     } else {
-      this.shot('village', 'BRAMBLEHOLLOW · HOME AGAIN', lerp(1.15, 1.04, t), 482, 290, 0xfff4d9);
-      const arrive = smooth(segment(t, 0, 0.67));
       const paths = this.homecoming ??= villageHomecoming(this.authoredManifest!);
-      this.pose('borin', { ...sampleWalk(paths.borin, walkLength(paths.borin) * arrive), walking: t < .67 });
-      this.pose('king', { ...sampleWalk(paths.king, walkLength(paths.king) * arrive), walking: t < .67 });
+      this.shot('village', 'BRAMBLEHOLLOW · HOME AGAIN', lerp(1.15, 1.04, t), 482, 290, 0xfff4d9);
+      const length = Math.max(walkLength(paths.borin), walkLength(paths.king)), separation = 70;
+      const travelled = smooth(segment(t, 0, .78)) * (length + separation);
+      this.pose('borin', { ...sampleWalk(paths.borin, travelled), walking: travelled > 0 && travelled < walkLength(paths.borin),
+        transitionAreas: travelled <= paths.entryClearDistance ? [paths.portal.areaId] : [] });
+      this.pose('king', { ...sampleWalk(paths.king, travelled - separation), walking: travelled > separation && travelled - separation < walkLength(paths.king),
+        transitionAreas: travelled - separation <= paths.entryClearDistance ? [paths.portal.areaId] : [] });
       this.pose('elder', { x: 359, y: 433, speaking: true });
       this.pose('innkeeper', { x: 274, y: 438 - Math.max(0, Math.sin(this.elapsedMs / 300)) * segment(t, 0.36, 0.62) * 8 });
       this.pose('miner', { x: 690, y: 441 - Math.max(0, Math.sin(this.elapsedMs / 320 + 1)) * segment(t, 0.36, 0.62) * 8 });

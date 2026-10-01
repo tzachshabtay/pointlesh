@@ -76,11 +76,29 @@ export function campRescue(manifest: SceneDesignerManifest) {
     borinEscape: route(aside.at(-1)!, { x: outside.x - 193, y: outside.y + 29 }, floors),
     kingEscape: route(release.at(-1)!, { x: outside.x - 146, y: outside.y + 22 }, floors) };
 }
-export function forestHomeward(manifest: SceneDesignerManifest): Point[] {
-  return route({ x: 812, y: 448 }, { x: 94, y: 445 }, walkablePolygons(resolvePointleshScene(manifest, 'forest')));
+function through(points: readonly Point[], floors: Polygon[]): Point[] {
+  let path = route(points[0]!, points[0]!, floors);
+  for (const point of points.slice(1)) path = [...path, ...route(path.at(-1)!, point, floors).slice(1)];
+  return path;
+}
+export function forestHomeward(manifest: SceneDesignerManifest) {
+  const room = resolvePointleshScene(manifest, 'forest');
+  const entry = forestPortal(manifest, 'forest', 'camp'), exit = forestPortal(manifest, 'forest', 'village');
+  const areas = activatePointleshAreas(room.areas, [entry.areaId, exit.areaId]);
+  const entrance = through(entry.path.slice(0, (entry.handoffIndex ?? entry.path.length - 1) + 1).reverse(),
+    walkablePolygons({ ...room, areas: activatePointleshAreas(room.areas, [entry.areaId]) }));
+  // Route across ordinary ground first. Activating an exit corridor must not
+  // allow the cross-room walk to take a shortcut through scenery.
+  const crossing = route(entrance.at(-1)!, exit.path[0]!, walkablePolygons(room));
+  const departure = through([crossing.at(-1)!, ...exit.path.slice(1)],
+    walkablePolygons({ ...room, areas: activatePointleshAreas(room.areas, [exit.areaId]) }));
+  const path = [...entrance, ...crossing.slice(1), ...departure.slice(1)];
+  return { path, entry, exit, entryClearDistance: walkLength(entrance), exitStartDistance: walkLength(entrance) + walkLength(crossing), areas };
 }
 export function villageHomecoming(manifest: SceneDesignerManifest) {
-  const floors = walkablePolygons(resolvePointleshScene(manifest, 'village'));
-  return { borin: route({ x: 584, y: 347 }, { x: 476, y: 435 }, floors),
-    king: route({ x: 661, y: 352 }, { x: 566, y: 436 }, floors) };
+  const room = resolvePointleshScene(manifest, 'village'), portal = forestPortal(manifest, 'village', 'forest');
+  const areas = activatePointleshAreas(room.areas, [portal.areaId]);
+  const entrance = through([...portal.path].reverse(), walkablePolygons({ ...room, areas }));
+  const arrival = (destination: Point) => [...entrance, ...route(entrance.at(-1)!, destination, walkablePolygons(room)).slice(1)];
+  return { borin: arrival({ x: 476, y: 435 }), king: arrival({ x: 566, y: 436 }), portal, entryClearDistance: walkLength(entrance), areas };
 }
