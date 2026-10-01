@@ -77,24 +77,31 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
       const to = target.exit!, entry = room.points.find(point => point.id === roomEntryPointId(roomId, to));
       if (!entry) continue;
       const door = forestDoors.find(door => door.room === roomId && door.to === to);
-      const aperture = door ? doorWorldAperture(door) : roomId === 'mine'
-        ? [{x:75,y:224},{x:81,y:208},{x:104,y:182},{x:123,y:185},{x:150,y:233},{x:152,y:267},{x:75,y:267}] : undefined;
+      const aperture = door ? doorWorldAperture(door) : undefined;
       const minY = aperture ? Math.min(...aperture.map(p => p.y)) : 0;
       const maxY = aperture ? Math.max(...aperture.map(p => p.y)) : 0;
       const centerX = aperture ? (Math.min(...aperture.map(p => p.x)) + Math.max(...aperture.map(p => p.x))) / 2 : entry.position.x;
       const defaultThreshold = aperture ? { x: centerX, y: maxY + 4 } : roomId === 'village' ? { x: 481, y: 342 } : { x: entry.position.x, y: scene.height + 10 };
-      const threshold = room.points.find(point => point.id === transitionThresholdId(roomId, to))?.position ?? defaultThreshold;
+      const previousThreshold = room.points.find(point => point.id === transitionThresholdId(roomId, to))?.position;
+      // Retire the mine's generated tunnel route; its entrance is the foreground
+      // screen edge. Subsequent designer edits to the new points stay intact.
+      const migrateMine = roomId === 'mine' && !!previousThreshold && samePoint(previousThreshold, { x: 113.5, y: 271 });
+      const threshold = migrateMine ? defaultThreshold : previousThreshold ?? defaultThreshold;
       const spawn = room.objects.find(object => object.properties.role === 'player')?.position ?? entry.position;
       const inside = findClosestReachablePath(spawn, entry.position, walkablePolygons(room))?.at(-1) ?? entry.position;
       const legacyOutside = { x: centerX, y: minY - 24 };
-      const defaultOutside = aperture ? continueWalkLine(inside, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + 230 };
+      const defaultOutside = aperture ? continueWalkLine(inside, threshold) : roomId === 'village' ? { x: 481, y: 247 } : { x: entry.position.x, y: scene.height + (roomId === 'mine' ? 400 : 230) };
       const previousOutside = room.points.find(point => point.id === transitionOutsideId(roomId, to))?.position;
       const migrateOutside = !!aperture && !!previousOutside && samePoint(previousOutside, legacyOutside);
-      const outside = !previousOutside || migrateOutside ? defaultOutside : previousOutside;
+      const outside = !previousOutside || migrateOutside || migrateMine ? defaultOutside : previousOutside;
       addPoint(transitionThresholdId(roomId, to), `Threshold · ${target.name}`, threshold);
       addPoint(transitionOutsideId(roomId, to), `Offscreen / behind doorway · ${target.name}`, outside);
-      if (migrateOutside) {
-        // Upgrade only the old generated rooftop endpoint; preserve edited points.
+      if (migrateMine) {
+        const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === transitionThresholdId(roomId, to))!;
+        instance.overrides = { ...instance.overrides, x: { value: threshold.x }, y: { value: threshold.y } };
+      }
+      if (migrateOutside || migrateMine) {
+        // Upgrade obsolete generated endpoints; preserve other edited points.
         const instance = scene.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === transitionOutsideId(roomId, to))!;
         instance.overrides = { ...instance.overrides, x: { value: outside.x }, y: { value: outside.y } };
       }
@@ -110,6 +117,9 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
           closed: true, walkable: true, scaleEnabled: true, zoomEnabled: true, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`), vertices),
           properties: { enabled: false, transitionTo: to },
           vertices }));
+      } else if (migrateMine && isPointleshArea(corridor)) {
+        corridor.vertices = vertices.map((point, i) => ({ ...corridor.vertices[i]!, ...point }));
+        corridor.pointlesh.properties = { ...corridor.pointlesh.properties, ...initialPerspective(room.areas.find(area => area.id === `${roomId}.floor`), vertices) };
       } else if ((migrateOutside || !aperture && roomId === 'village') && corridor.vertices.length === 4 && corridor.vertices.every((point, i) => samePoint(point, legacyBounds[i]!))) {
         corridor.vertices = vertices.map((point, i) => ({ ...corridor.vertices[i]!, ...point }));
       }
@@ -153,6 +163,9 @@ export function addForestTransitions(source: SceneDesignerManifest): SceneDesign
           vertices: [{ x: 390, y: -200 }, { x: 570, y: -200 }, { x: 570, y: 295 }, { x: 390, y: 295 }] }));
       }
     }
+    if (roomId === 'mine') for (const layer of scene.layers) {
+      layer.areas = layer.areas.filter(area => area.id !== 'mine.entrance.frame');
+    }
     if (roomId === 'camp' && !layer.areas.some(area => area.id === CAGE_APPROACH_AREA)) {
       const vertices = [{ x: 570, y: 300 }, { x: 740, y: 300 }, { x: 740, y: 448 }, { x: 570, y: 448 }];
       layer.areas.push(createPointleshArea({ id: CAGE_APPROACH_AREA, entityId: CAGE_APPROACH_AREA, name: 'Cage approach · continuous perspective',
@@ -195,7 +208,7 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   const door = forestDoors.find(door => door.room === roomId && door.to === to);
   return { roomId, areaId: transitionAreaId(roomId, to),
     path: [inside, point(transitionThresholdId(roomId, to)), point(transitionOutsideId(roomId, to))],
-    ...(door || roomId === 'mine' ? { handoffIndex: 1 } : {}),
+    ...(door ? { handoffIndex: 1 } : {}),
     ...(door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true
       ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
 }

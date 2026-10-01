@@ -83,7 +83,7 @@ export const targets: Record<RoomId, Target[]> = {
   mine: [
     { id: 'tool-chest', name: 'Runed tool chest', x: 258, y: 400, description: 'The inscription reads: “What does the mountain remember?”' },
     { id: 'gold', name: 'Gold seam', x: 658, y: 331, walkY: 432, description: 'All that glitters. It can wait until the king is safe.' },
-    { id: 'mine-exit', name: 'Back to the wood', x: 68, y: 459, exit: 'forest', description: 'Cool air drifts in from the forest.' }
+    { id: 'mine-exit', name: 'Back to the wood', x: 440, y: 510, walkY: 497, exit: 'forest', description: 'Cool air drifts in from the forest.' }
   ],
   camp: [
     { id: 'cauldron', name: 'Stew cauldron', x: 306, y: 398, walkX: 402, walkY: 466, description: 'The orcs’ supper. Even a sleeping potion would improve it.' },

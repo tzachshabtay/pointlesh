@@ -21,7 +21,8 @@ test('all room connections walk out and in with temporary corridors, animated do
       const phases = new Set<string>(), frames = new Set<number>(), checkpoints = new Set<string>();
       const ordered = new Set<string>();
       const cottagePositions: { x: number; y: number }[] = [];
-      let sourceLast: any, destinationFirst: any, arrival: any;
+      const minePositions: { x: number; y: number; facing: string; phase: string }[] = [];
+      let sourceLast: any, destinationFirst: any, arrival: any, sourceHidden = false, destinationHidden = false;
       for (let i = 0; i < 1500 && scene.roomTransition.active; i++) {
         const phase = scene.roomTransition.phase; phases.add(phase);
         const portal = scene.roomTransition.portal;
@@ -33,6 +34,7 @@ test('all room connections walk out and in with temporary corridors, animated do
         }
         if (scene.actor.alpha !== 1) throw new Error(`Character opacity changed ${from}/${phase}`);
         if (scene.story.roomId === 'house' && (phase === 'exit' || phase === 'entry')) cottagePositions.push({ ...scene.character.state.position });
+        if (scene.story.roomId === 'mine' && (phase === 'exit' || phase === 'entry')) minePositions.push({ ...scene.character.state.position, facing: scene.character.state.facing, phase });
         if (portal.doorId) {
           const foreground = scene.doorForegrounds.get(portal.doorId);
           const frame = scene.resolved().areas.find((area: any) => area.id === `${portal.doorId}.frame`);
@@ -41,9 +43,11 @@ test('all room connections walk out and in with temporary corridors, animated do
           else ordered.add('behind');
         }
         const oldRoom = scene.story.roomId, oldPosition = { ...scene.character.state.position };
+        const oldHidden = scene.actor.getBounds().top > scene.cameras.main.worldView.bottom;
         scene.update(0, 50);
         if (oldRoom !== scene.story.roomId) {
           sourceLast = oldPosition; destinationFirst = { ...scene.character.state.position };
+          sourceHidden = oldHidden; destinationHidden = scene.actor.getBounds().top > scene.cameras.main.worldView.bottom;
           const portal = scene.roomTransition.portal;
           arrival = { phase: scene.roomTransition.phase, walking: scene.character.isWalking,
             doorProgress: scene.roomTransition.doorProgress, hasDoor: !!portal.doorId,
@@ -51,7 +55,7 @@ test('all room connections walk out and in with temporary corridors, animated do
             expectedPosition: portal.path[portal.handoffIndex ?? portal.path.length - 1] };
         }
       }
-      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, arrival, cottagePositions,
+      results.push({ from, to, active: scene.roomTransition.active, room: scene.story.roomId, phases: [...phases], frames: [...frames], ordered: [...ordered], alpha: scene.actor.alpha, sourceLast, destinationFirst, arrival, cottagePositions, minePositions, sourceHidden, destinationHidden,
         position: { ...scene.character.state.position }, expected: forestPortal(manifest, to, from).path[0],
         enabled: scene.resolved().areas.filter((area: any) => area.id.includes('.transition.') && area.enabled).length });
     }
@@ -68,6 +72,13 @@ test('all room connections walk out and in with temporary corridors, animated do
     expect(route.arrival).toMatchObject({ phase: 'entry', walking: true });
     expect(route.destinationFirst).toEqual(route.arrival.expectedPosition);
     if (route.arrival.hasDoor) expect(route.arrival).toMatchObject({ doorProgress: 1, doorFrame: 7 });
+    if (route.from === 'mine') { expect(route.sourceLast.y).toBeGreaterThan(540); expect(route.sourceHidden).toBe(true); }
+    if (route.to === 'mine') { expect(route.destinationFirst.y).toBeGreaterThan(540); expect(route.destinationHidden).toBe(true); }
+    for (const position of route.minePositions) {
+      expect(position.x).toBeGreaterThan(300); expect(position.x).toBeLessThan(600);
+      expect(position.y).toBeGreaterThan(470);
+      expect(position.facing).toBe(position.phase === 'exit' ? 'down' : 'up');
+    }
     const root = [[1060,554],[1079,522],[1098,490],[1114,464],[1140,428],[1163,393],[1182,399],[1182,575],[1100,568]]
       .map(([x, y]) => ({ x: x * 960 / 1182, y: y * 540 / 664 }));
     for (const position of route.cottagePositions) expect(pointInPolygon(position, root), `${route.from} → ${route.to}: boots on the tree root at ${JSON.stringify(position)}`).toBe(false);

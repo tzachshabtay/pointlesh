@@ -43,7 +43,7 @@ test('reapplying transition content preserves edited points, door promotions and
 
 test('doorway paths continue the grounded approach instead of climbing to the arch', () => {
   const scenes = addForestTransitions(JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8')));
-  for (const { room, to } of [...forestDoors, { room: 'mine', to: 'forest' }]) {
+  for (const { room, to } of forestDoors) {
     const portal = forestPortal(scenes, room, to), [inside, threshold, outside] = portal.path;
     assert.equal(portal.path.length, 3, 'no sideways detour followed by a vertical climb');
     const dx = threshold.x - inside.x, dy = threshold.y - inside.y;
@@ -56,6 +56,41 @@ test('doorway paths continue the grounded approach instead of climbing to the ar
     for (const point of portal.path) assert.ok(pointInPolygon(point, corridor.polygon));
     assert.ok(Math.min(...corridor.polygon.map(point => point.y)) > 0, 'no corridor into the sky');
   }
+});
+
+test('the mine crosses the bottom edge in both directions, with editable offscreen points', async () => {
+  const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
+  const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  for (const manifest of [seed, authored]) {
+    const room = resolvePointleshScene(manifest, 'mine'), portal = forestPortal(manifest, 'mine', 'forest');
+    const [inside, edge, outside] = portal.path;
+    assert.equal(portal.handoffIndex, undefined, 'cross only after fully walking offscreen');
+    assert.ok(inside.x > 300 && inside.x < 600, 'enter on the broad foreground floor');
+    assert.ok(inside.y > 470 && inside.y < 540);
+    assert.equal(edge.x, inside.x); assert.equal(outside.x, inside.x);
+    assert.ok(edge.y > 540); assert.ok(outside.y > edge.y);
+    const corridor = room.areas.find(area => area.id === portal.areaId);
+    assert.equal(corridor.enabled, false);
+    for (const point of portal.path) assert.ok(pointInPolygon(point, corridor.polygon));
+    assert.ok(!room.areas.some(area => area.id === 'mine.entrance.frame'));
+    const edited = structuredClone(manifest);
+    const point = edited.scenes.mine.layers.flatMap(layer => layer.prefabs ?? []).find(point => point.id === 'mine.outside.to-forest');
+    point.overrides.y.value += 10;
+    assert.deepEqual(addForestTransitions(edited), edited, 'reopening the designer preserves new point edits');
+  }
+});
+
+test('the old mine tunnel points migrate without moving its authored entry or other rooms', () => {
+  const scenes = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
+  const original = structuredClone(scenes), layer = scenes.scenes.mine.layers[0];
+  const threshold = layer.prefabs.find(point => point.id === 'mine.threshold.to-forest');
+  threshold.overrides.x.value = 113.5; threshold.overrides.y.value = 271;
+  const outside = layer.prefabs.find(point => point.id === 'mine.outside.to-forest');
+  outside.overrides.x.value = 93.84236769323141; outside.overrides.y.value = 257.2312857502275;
+  const corridor = layer.areas.find(area => area.id === 'mine.transition.to-forest::area');
+  for (const vertex of corridor.vertices) vertex.y -= 250;
+  corridor.pointlesh.properties.minScale = .3;
+  assert.deepEqual(addForestTransitions(scenes), original);
 });
 
 test('cottage leaves open fully clear of the walking passage on both sides', () => {

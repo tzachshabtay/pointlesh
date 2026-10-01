@@ -7788,10 +7788,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 113.5
+                  "value": 436.57328783947673
                 },
                 "y": {
-                  "value": 271
+                  "value": 550
                 }
               }
             },
@@ -7803,10 +7803,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 93.84236769323141
+                  "value": 436.57328783947673
                 },
                 "y": {
-                  "value": 257.2312857502275
+                  "value": 940
                 }
               }
             }
@@ -8180,23 +8180,23 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 49.84236769323141,
-                  "y": 212.23128575022753,
+                  "x": 392.57328783947673,
+                  "y": 452.2888893523861,
                   "id": "vertex-0"
                 },
                 {
                   "x": 480.57328783947673,
-                  "y": 212.23128575022753,
+                  "y": 452.2888893523861,
                   "id": "vertex-1"
                 },
                 {
                   "x": 480.57328783947673,
-                  "y": 542.2888893523861,
+                  "y": 985,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 49.84236769323141,
-                  "y": 542.2888893523861,
+                  "x": 392.57328783947673,
+                  "y": 985,
                   "id": "vertex-3"
                 }
               ],
@@ -8213,139 +8213,12 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "forest",
-                  "minScale": 0.3306169018912934,
-                  "maxScale": 1.3001611124726344,
-                  "minZoom": 1.0662306562421375,
-                  "maxZoom": 0.9940305554541655,
+                  "minScale": 1.0357861124726342,
+                  "maxScale": 2.600625,
+                  "minZoom": 1.0137180554541656,
+                  "maxZoom": 0.8971875000000002,
                   "smoothing": 5,
                   "baseline": 160
-                },
-                "behaviors": [],
-                "propertySchema": {
-                  "minScale": {
-                    "type": "number",
-                    "label": "Scale at start",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "maxScale": {
-                    "type": "number",
-                    "label": "Scale at end",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "minZoom": {
-                    "type": "number",
-                    "label": "Zoom at start",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "maxZoom": {
-                    "type": "number",
-                    "label": "Zoom at end",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "smoothing": {
-                    "type": "number",
-                    "label": "Camera response",
-                    "min": 0,
-                    "step": 0.5
-                  },
-                  "baseline": {
-                    "type": "number",
-                    "label": "Baseline",
-                    "step": 1
-                  }
-                }
-              }
-            },
-            {
-              "id": "mine.entrance.frame",
-              "tag": "pointlesh:area",
-              "visible": true,
-              "locked": false,
-              "closed": true,
-              "vertices": [
-                {
-                  "x": 57,
-                  "y": 271,
-                  "id": "vertex-0"
-                },
-                {
-                  "x": 57,
-                  "y": 164,
-                  "id": "vertex-1"
-                },
-                {
-                  "x": 170,
-                  "y": 164,
-                  "id": "vertex-2"
-                },
-                {
-                  "x": 170,
-                  "y": 271,
-                  "id": "vertex-3"
-                },
-                {
-                  "x": 152,
-                  "y": 271,
-                  "id": "vertex-4"
-                },
-                {
-                  "x": 152,
-                  "y": 267,
-                  "id": "vertex-5"
-                },
-                {
-                  "x": 150,
-                  "y": 233,
-                  "id": "vertex-6"
-                },
-                {
-                  "x": 123,
-                  "y": 185,
-                  "id": "vertex-7"
-                },
-                {
-                  "x": 104,
-                  "y": 182,
-                  "id": "vertex-8"
-                },
-                {
-                  "x": 81,
-                  "y": 208,
-                  "id": "vertex-9"
-                },
-                {
-                  "x": 75,
-                  "y": 224,
-                  "id": "vertex-10"
-                },
-                {
-                  "x": 75,
-                  "y": 271,
-                  "id": "vertex-11"
-                }
-              ],
-              "pointlesh": {
-                "kind": "area",
-                "name": "Door frame · Mine tunnel entrance",
-                "entityId": "mine.entrance.frame",
-                "properties": {
-                  "enabled": true,
-                  "walkable": false,
-                  "scaleEnabled": false,
-                  "zoomEnabled": false,
-                  "walkBehindEnabled": true,
-                  "scaleAxis": "y",
-                  "zoomAxis": "y",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
-                  "maxZoom": 1,
-                  "smoothing": 5,
-                  "baseline": 272
                 },
                 "behaviors": [],
                 "propertySchema": {
