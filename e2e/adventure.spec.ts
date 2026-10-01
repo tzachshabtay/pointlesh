@@ -79,6 +79,9 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   await expect(page.locator('#inventory').getByRole('button', { name: 'Dreamcap stout', exact: true })).toBeVisible();
   await travel(page, 'Goldroot Mine', 'The Goldroot Mine');
   await converse(page, 'Runed tool chest', 'Stone remembers.');
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.flags.chestOpen === true)).toBe(true);
+  await target(page, 'Runed tool chest');
+  await speech(page, 'Orrin’s finest pickaxe. For the king.'); await dismiss(page);
   await expect(page.locator('#inventory').getByRole('button', { name: 'Goldroot pickaxe', exact: true })).toBeVisible();
   await travel(page, 'Back to the wood', 'The Whispering Wood');
   await travel(page, 'Orc encampment', 'The Orc Encampment');
