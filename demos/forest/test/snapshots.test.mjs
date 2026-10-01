@@ -27,6 +27,7 @@ test('full authored-dialog rescue walkthrough travels through all six room exits
   interact('mine-path');
   assert.equal(interact('tool-chest').dialog, 'chest-open');
   choose(state, 'chest-open', 'open-chest');
+  story.finishOpeningChest(state); interact('tool-chest');
   interact('mine-exit'); interact('camp-path');
   state.guardClock = 0;
   interact('cauldron', 'sleepyStout');

@@ -18,6 +18,7 @@ export interface StoryState {
   guardClock: number;
   introStep: number;
   endingStep: number;
+  chestOpening?: { elapsedMs: number };
   tyingGuard?: { elapsedMs: number };
 }
 export function newStory(): StoryState {
@@ -35,6 +36,7 @@ export function migrateRescueStory(source: StoryState): StoryState {
       state.journal.push('The climbing rope is back in my satchel. It could secure the sleeping guard.');
     }
   }
+  if (state.flags.tookPickaxe) state.flags.chestOpen = true;
   return state;
 }
 export function guardLookingAway(state: StoryState): boolean { return state.flags.guardDistracted === true; }
@@ -104,7 +106,7 @@ export function finishTyingGuard(state: StoryState): InteractionResult {
   return { text: 'The knots are secure. If the noise wakes you, Grub, you will have to complain from there.' };
 }
 export function interact(state: StoryState, targetId: string, item?: ItemId): InteractionResult {
-  if (state.tyingGuard) return {};
+  if (state.tyingGuard || state.chestOpening) return {};
   const target = targets[state.roomId].find(target => target.id === targetId);
   if (!target || !targetVisible(state, targetId)) return { text: 'Nothing to do here.' };
   if (item && !state.inventory.includes(item)) return { text: 'That is no longer in my satchel.' };
@@ -147,6 +149,11 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
   if (targetId === 'elder' || targetId === 'innkeeper' || targetId === 'miner') return { dialog: targetId };
   if (targetId === 'tool-chest') {
     if (state.flags.tookPickaxe) return { text: 'The tool chest is empty. Its pickaxe is in capable, if rather small, hands.' };
+    if (state.flags.chestOpen) {
+      state.inventory.push('pickaxe');
+      addClue(state, 'tookPickaxe', 'The runed chest yielded a pickaxe. It should break the king’s lock.');
+      return { text: 'Orrin’s finest pickaxe. For the king.' };
+    }
     return { dialog: state.flags.knowsPassword ? 'chest-open' : 'chest-locked' };
   }
   if (targetId === 'guard') return { text: state.flags.guardBound ? 'Sound asleep and securely tied. Those knots should hold him while we escape.' : state.flags.guardAsleep ? 'Sound asleep, but breaking that lock could wake him. Better tie him up first.' : 'Grub: No visitors! Especially short ones with suspiciously heroic expressions.' };
@@ -156,9 +163,12 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
 export function applyDialogChoice(state: StoryState, optionId: string): void {
   if (optionId === 'dreamcap') addClue(state, 'knowsDreamcap', 'Mara says dreamcaps grow in the wood. Mix one with honey stout to make a sleeping draught.');
   if (optionId === 'password') addClue(state, 'knowsPassword', 'Orrin’s secret: the tool chest opens to “Stone remembers.”');
-  if (optionId === 'open-chest' && !state.flags.tookPickaxe) {
-    state.inventory.push('pickaxe'); addClue(state, 'tookPickaxe', 'The runed chest yielded a pickaxe. It should break the king’s lock.');
-  }
+  if (optionId === 'open-chest' && state.flags.knowsPassword && !state.flags.chestOpen && !state.flags.tookPickaxe && !state.chestOpening) state.chestOpening = { elapsedMs: 0 };
+}
+export function finishOpeningChest(state: StoryState): void {
+  if (!state.chestOpening) return;
+  delete state.chestOpening;
+  state.flags.chestOpen = true;
 }
 export function hint(state: StoryState): string {
   if (!state.flags.tookCoin || !state.flags.tookRope) return 'Start at home. A copper coin and a strong rope may come in handy.';
@@ -166,6 +176,7 @@ export function hint(state: StoryState): string {
   if (!state.flags.boughtStout) return 'Select the copper coin in your satchel, then give it to Mara.';
   if (!state.flags.tookMushroom) return 'Mara described the silver-spotted mushrooms beside the forest path.';
   if (!state.flags.mixedBrew) return 'Select the dreamcap, then select the stout to combine them.';
+  if (state.flags.chestOpen && !state.flags.tookPickaxe) return 'Search the open chest for Orrin’s pickaxe.';
   if (!state.flags.tookPickaxe) return 'The runed chest in Goldroot Mine opens with Orrin’s words.';
   if (!state.flags.guardAsleep) return state.flags.stewSpiked ? 'The stew is ready. Let Grub finish his next drink.' : 'At the camp, use the dreamcap stout on the cauldron when the guard turns away.';
   if (!state.flags.guardBound) return 'Use the climbing rope on the sleeping Grub before the noise of breaking the lock wakes him.';

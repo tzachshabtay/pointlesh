@@ -20,7 +20,7 @@ test('the mine chest renders its own clickable artwork and opens the existing pu
     return { x: canvas.left + p.x * canvas.width / camera.width, y: canvas.top + p.y * canvas.height / camera.height,
       texture: sprite.texture.key, visible: sprite.visible };
   });
-  expect(point.texture).toBe('tool-chest'); expect(point.visible).toBe(true);
+  expect(point.texture).toBe('tool-chest.open'); expect(point.visible).toBe(true);
   await page.mouse.move(point.x, point.y);
   await expect(page.locator('#hover-label')).toHaveText('Runed tool chest');
   await page.mouse.click(point.x, point.y);

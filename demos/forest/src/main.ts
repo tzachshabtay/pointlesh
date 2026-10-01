@@ -9,7 +9,8 @@ import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
-import { applyDialogChoice, combineItems, ending, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { CHEST_OPEN_DURATION_MS } from './chest-assets';
+import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
@@ -300,7 +301,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return !this.started || this.roomTransition?.active || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked() { return !this.started || this.roomTransition?.active || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -393,6 +394,7 @@ class ForestAdventure extends Phaser.Scene {
     // A designer scene switch can bypass gameplay input blocking. Cancel safely;
     // the rope has not been consumed until the animation finishes.
     if (room !== 'camp') delete this.story.tyingGuard;
+    if (room !== 'mine' && this.story.chestOpening) finishOpeningChest(this.story);
     this.doorBinding?.destroy(); this.doorBinding = undefined;
     if (this.guardPatrol) this.guardCheckpoint = this.guardPatrol.snapshot();
     this.guardPatrol = undefined;
@@ -490,6 +492,7 @@ class ForestAdventure extends Phaser.Scene {
           if (!this.objectAnimations.has(object.id)) this.objectAnimations.set(object.id,
             new PhaserAdventureObject(this, sprite, { aiRuntime: this.aiRuntime, object: () => {
               const object = current();
+              if (object.id === 'tool-chest') return { ...object, properties: { ...object.properties, animationKey: this.story.flags.tookPickaxe ? 'empty' : 'open', animationPlaying: false, animationLoop: false } };
               return object.properties.role === 'door' ? { ...object, properties: { ...object.properties,
                 animationKey: this.transitionDoorKey(object.id), animationPlaying: false, animationLoop: false } } : object;
             }, areas: () => this.resolved().areas,
@@ -551,9 +554,13 @@ class ForestAdventure extends Phaser.Scene {
         npc.binding.sync();
       }
     }
+    this.syncChest();
     this.syncDoor();
     this.syncTransitionDoors();
     this.renderTyingGuard();
+  }
+  private syncChest(): void {
+    this.objectAnimations.get('tool-chest')?.seek(this.story.flags.chestOpen || this.story.flags.tookPickaxe ? Number.MAX_SAFE_INTEGER : this.story.chestOpening?.elapsedMs ?? 0);
   }
   private syncDoor(): void {
     const door = this.resolved().objects.find(object => object.id === CAGE_DOOR_ID);
@@ -815,6 +822,7 @@ class ForestAdventure extends Phaser.Scene {
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
         ...(this.roomTransition.active ? { roomTransition: this.roomTransition.snapshot() as unknown as JSONValue } : {}),
         ...(this.campStealth.snapshot() ? { campStealth: this.campStealth.snapshot() as unknown as JSONValue } : {}),
+        ...(this.story.chestOpening ? { chestOpening: { ...this.story.chestOpening } } : {}),
         ...(this.story.tyingGuard ? { tyingGuard: { ...this.story.tyingGuard } } : {}),
         ...(this.guardPatrol || this.guardCheckpoint ? { guardPatrol: (this.guardPatrol?.snapshot() ?? this.guardCheckpoint) as unknown as JSONValue } : {}),
         speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '' } };
@@ -842,6 +850,8 @@ class ForestAdventure extends Phaser.Scene {
         if (!roomIds.includes(portal.roomId as RoomId) || !resolvePointleshScene(authoredScenes, portal.roomId).areas.some(area => area.id === portal.areaId)) throw new Error('Transition references missing room geometry');
       }
     }
+    const opening = save.extensions.chestOpening as { elapsedMs: number } | undefined;
+    if (opening !== undefined && (!opening || !Number.isFinite(opening.elapsedMs) || opening.elapsedMs < 0 || opening.elapsedMs >= CHEST_OPEN_DURATION_MS || save.roomId !== 'mine' || !save.flags.knowsPassword || save.flags.chestOpen || save.flags.tookPickaxe)) throw new Error('Invalid chest-opening checkpoint');
     const tying = save.extensions.tyingGuard as { elapsedMs: number } | undefined;
     if (tying !== undefined && (!tying || !Number.isFinite(tying.elapsedMs) || tying.elapsedMs < 0 || save.roomId !== 'camp' || !save.flags.guardAsleep || save.flags.guardBound || !save.inventory.includes('rope'))) throw new Error('Invalid rope-tying checkpoint');
     const checkDialog = new AdventureDialog(dialogs, assets); checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
@@ -853,7 +863,7 @@ class ForestAdventure extends Phaser.Scene {
     const checkpoint = save.cutscene as ForestCheckpoint;
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
     this.cinematic?.destroy(); this.cinematic = undefined;
-    this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep, ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
+    this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.guardPatrol = undefined;
@@ -892,8 +902,12 @@ class ForestAdventure extends Phaser.Scene {
         else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
       }
     }
+    if (!modalOpen && this.story.chestOpening) {
+      this.story.chestOpening.elapsedMs += Math.min(delta, 100);
+      if (this.story.chestOpening.elapsedMs >= CHEST_OPEN_DURATION_MS) { finishOpeningChest(this.story); this.render(); }
+    }
     if (!modalOpen) this.updateTyingGuard(Math.min(delta, 100));
-    const paused = modalOpen || !!this.story.tyingGuard || this.story.introStep < intro.length || this.story.endingStep >= 0;
+    const paused = modalOpen || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0;
     if (!paused) {
       this.binding.update(Math.min(delta, 100));
       const previousRoom = this.story.roomId;
@@ -918,6 +932,7 @@ class ForestAdventure extends Phaser.Scene {
       if (!paused) npc.binding.update(Math.min(delta, 100));
     }
     this.drawRoomTexture(this.story.roomId);
+    this.syncChest();
     this.syncDoor();
     this.syncTransitionDoors();
     this.renderTyingGuard();

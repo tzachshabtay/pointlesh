@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, isSegmentWalkable, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
-const { forestMarch, villageAbduction, cottageDeparture, sampleWalk, walkLength } = await tsImport('../src/cinematic-paths.ts', import.meta.url);
+const { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, cottageDeparture, sampleWalk, walkLength } = await tsImport('../src/cinematic-paths.ts', import.meta.url);
 const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
 const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url)));
 
@@ -29,5 +29,24 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) {
     assert.equal(rear.y, king.y); assert.equal(front.y, king.y);
     assert.ok(walkLength(paths['guard-front']) >= 140);
     assert.ok(walkLength(paths['guard-front']) < 180);
+  });
+}
+
+for (const [label, manifest] of [['seed', seed], ['authored', authored]]) {
+  test(`${label} every ending route stays on the floor, including the cage exit`, () => {
+    const camp = resolvePointleshScene(manifest, 'camp'), rescue = campRescue(manifest);
+    const campFloors = walkablePolygons({ ...camp, areas: rescue.areas });
+    const forestFloors = walkablePolygons(resolvePointleshScene(manifest, 'forest'));
+    const villageFloors = walkablePolygons(resolvePointleshScene(manifest, 'village'));
+    for (const [path, floors] of [
+      ...['approach', 'aside', 'release', 'borinEscape', 'kingEscape'].map(key => [rescue[key], campFloors]),
+      [forestHomeward(manifest), forestFloors],
+      ...Object.values(villageHomecoming(manifest)).map(path => [path, villageFloors])]) {
+      for (let i = 1; i < path.length; i++) assert.ok(isSegmentWalkable(path[i-1], path[i], floors));
+      for (let d = 0; d <= walkLength(path); d += 2) assert.ok(isWalkable(sampleWalk(path, d), floors));
+    }
+    assert.deepEqual(rescue.approach.at(-1), rescue.aside[0]);
+    assert.deepEqual(rescue.aside.at(-1), rescue.borinEscape[0]);
+    assert.deepEqual(rescue.release.at(-1), rescue.kingEscape[0]);
   });
 }

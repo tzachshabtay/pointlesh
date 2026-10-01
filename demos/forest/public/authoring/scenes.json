@@ -1355,7 +1355,10 @@
           "ignoreScaling": false,
           "role": "prop",
           "targetId": "tool-chest",
-          "description": "The inscription reads: “What does the mountain remember?”"
+          "description": "The inscription reads: “What does the mountain remember?”",
+          "animationKey": "open",
+          "animationPlaying": false,
+          "animationLoop": false
         },
         "behaviors": [
           "forest.interact"

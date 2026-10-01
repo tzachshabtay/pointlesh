@@ -6374,10 +6374,10 @@
       "kind": "image",
       "dimensions": {
         "width": 120,
-        "height": 80
+        "height": 120
       },
       "prompt": "A closed dwarven oak tool chest with aged iron bands, lock and three amber runes. Match the Goldroot Mine pixel art; transparent background. Full production prompt in docs/art-prompts.md.",
-      "activeVersion": "runed",
+      "activeVersion": "opening",
       "versions": {
         "runed": {
           "name": "runed",
@@ -6385,13 +6385,30 @@
           "prompt": "Runed dwarven tool chest matching the Goldroot Mine.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z"
+        },
+        "opening": {
+          "name": "opening",
+          "file": "art/objects/runed-tool-chest-padded.png",
+          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z"
         }
       },
       "tags": [
         "forest",
         "object",
         "mine"
-      ]
+      ],
+      "linkedAnimationAssets": {
+        "open": {
+          "assetId": "tool-chest.open",
+          "label": "Runes glow · open lid"
+        },
+        "empty": {
+          "assetId": "tool-chest.empty",
+          "label": "Open · empty"
+        }
+      }
     },
     "guard.bound": {
       "id": "guard.bound",
@@ -9487,6 +9504,136 @@
         "character",
         "stealth"
       ]
+    },
+    "tool-chest.open": {
+      "id": "tool-chest.open",
+      "kind": "animation",
+      "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 360,
+        "height": 360
+      },
+      "frameGrid": {
+        "frameWidth": 120,
+        "frameHeight": 120,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "animations": [
+        {
+          "key": "tool-chest.open",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 240
+            },
+            {
+              "delayMs": 240
+            },
+            {
+              "delayMs": 220
+            },
+            {
+              "delayMs": 480
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "opening",
+      "versions": {
+        "opening": {
+          "name": "opening",
+          "file": "art/objects/runed-tool-chest-open.png",
+          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "mine"
+      ]
+    },
+    "tool-chest.empty": {
+      "id": "tool-chest.empty",
+      "kind": "animation",
+      "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+      "dimensions": {
+        "width": 360,
+        "height": 360
+      },
+      "frameGrid": {
+        "frameWidth": 120,
+        "frameHeight": 120,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "animations": [
+        {
+          "key": "tool-chest.empty",
+          "frames": [
+            8
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 1000
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "opening",
+      "versions": {
+        "opening": {
+          "name": "opening",
+          "file": "art/objects/runed-tool-chest-open.png",
+          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z"
+        }
+      },
+      "tags": [
+        "forest",
+        "object",
+        "mine"
+      ]
     }
   },
   "styleGuide": {
@@ -10156,6 +10303,14 @@
     "borin.peek-idle": [
       "Graphics",
       "Characters"
+    ],
+    "tool-chest.open": [
+      "Graphics",
+      "Objects"
+    ],
+    "tool-chest.empty": [
+      "Graphics",
+      "Objects"
     ]
   }
 }

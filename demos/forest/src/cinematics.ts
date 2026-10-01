@@ -10,7 +10,7 @@ import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, res
 import { INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
 import { activatePointleshAreas } from './room-transition';
 import { CAGE_APPROACH_AREA } from './transition-content';
-import { cottageDeparture, forestMarch, villageAbduction, sampleWalk, walkLength } from './cinematic-paths';
+import { campRescue, forestHomeward, villageHomecoming, cottageDeparture, forestMarch, villageAbduction, sampleWalk, walkLength } from './cinematic-paths';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 
@@ -69,6 +69,9 @@ export class ForestCinematic {
   private overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
   private ambient: { sprite: Phaser.GameObjects.Sprite; binding: PhaserAdventureObject; playing: boolean }[] = [];
   private roomDoors: { object: ResolvedPointleshObject; sprite: Phaser.GameObjects.Sprite; binding: PhaserAdventureObject; foreground: DoorForeground }[] = [];
+  private rescue?: ReturnType<typeof campRescue>;
+  private homeward?: ReturnType<typeof forestHomeward>;
+  private homecoming?: ReturnType<typeof villageHomecoming>;
   private march?: ReturnType<typeof forestMarch>;
   private abduction?: ReturnType<typeof villageAbduction>;
   private departure?: ReturnType<typeof cottageDeparture>;
@@ -130,6 +133,7 @@ export class ForestCinematic {
     if (manifest !== this.authoredManifest) {
       this.definitions = new Map(Object.keys(manifest.scenes).map(id => [id, resolvePointleshScene(manifest, id)]));
       this.authoredManifest = manifest;
+      this.rescue = undefined; this.homeward = undefined; this.homecoming = undefined;
       this.march = undefined; this.departure = undefined; this.abduction = undefined;
       this.overlayRoom = undefined;
     }
@@ -394,11 +398,11 @@ export class ForestCinematic {
   private ending(step: number, t: number): void {
     if (step === 0) {
       this.shot('camp', 'THE ORC ENCAMPMENT · ONE GOOD STRIKE', lerp(1.18, 1.30, t), 585, 301);
-      const cage = this.cagePositions();
-      this.pose('king', cage.king);
+      const paths = this.rescue ??= campRescue(this.authoredManifest!);
+      this.pose('king', paths.release[0]!);
       const approaching = this.elapsedMs < PICKAXE_START_MS;
       const arrive = smooth(segment(this.elapsedMs, 0, PICKAXE_START_MS));
-      this.pose('borin', { x: lerp(cage.strike.x - 65, cage.strike.x, arrive), y: lerp(cage.strike.y + 45, cage.strike.y, arrive),
+      this.pose('borin', { ...sampleWalk(paths.approach, walkLength(paths.approach) * arrive),
         walking: approaching, ...(approaching ? {} : { action: 'pickaxe-back', actionElapsedMs: this.elapsedMs - PICKAXE_START_MS }) });
       this.sleepingGuard();
       this.cage(0, Math.max(0, this.elapsedMs - PICKAXE_START_MS - PICKAXE_IMPACT_MS));
@@ -406,22 +410,24 @@ export class ForestCinematic {
     } else if (step === 1) {
       this.shot('camp', 'GOOD KNOTS · AN OPEN DOOR', lerp(1.26, 1.16, t), 570, 298);
       this.cage(1);
-      const cage = this.cagePositions();
+      const paths = this.rescue ??= campRescue(this.authoredManifest!);
       const stepAside = smooth(segment(t, 0, .24));
       const exit = smooth(segment(t, .20, .64));
       const flee = smooth(segment(t, .72, 1));
-      this.pose('king', { x: lerp(cage.king.x, cage.outside.x, exit) - flee * 146, y: lerp(cage.king.y, cage.outside.y, exit) + flee * 22,
-        walking: t > .20 && t < .64 || t > .72, facing: t > .72 ? 'left' : 'down' });
-      this.pose('borin', { x: lerp(lerp(cage.strike.x, cage.strike.x - 75, stepAside), cage.outside.x - 193, flee),
-        y: lerp(lerp(cage.strike.y, cage.strike.y + 12, stepAside), cage.outside.y + 29, flee),
-        walking: t < .24 || t > .72, facingLeft: true });
+      this.pose('king', { ...sampleWalk(t > .72 ? paths.kingEscape : paths.release,
+        walkLength(t > .72 ? paths.kingEscape : paths.release) * (t > .72 ? flee : exit)),
+        walking: t > .20 && t < .64 || t > .72 });
+      this.pose('borin', { ...sampleWalk(t > .72 ? paths.borinEscape : paths.aside,
+        walkLength(t > .72 ? paths.borinEscape : paths.aside) * (t > .72 ? flee : stepAside)),
+        walking: t < .24 || t > .72 });
       this.sleepingGuard();
       this.mist(0xb3c4a8, 0.025);
     } else if (step === 2) {
       this.shot('forest', 'THE WHISPERING WOOD · RUN FOR HOME', lerp(1.13, 1.07, t), lerp(528, 451, t), 290);
-      const x = lerp(784, 162, t), y = 445 - Math.sin(t * Math.PI) * 15;
-      this.pose('borin', { x: x - 68, y, walking: true, facingLeft: true });
-      this.pose('king', { x: x + 28, y: y + 3, walking: true, facingLeft: true });
+      const path = this.homeward ??= forestHomeward(this.authoredManifest!);
+      const separation = Math.min(96, walkLength(path) / 3), travelled = t * (walkLength(path) - separation);
+      this.pose('borin', { ...sampleWalk(path, travelled + separation), walking: true });
+      this.pose('king', { ...sampleWalk(path, travelled), walking: true });
       this.mist(0xc3cead, 0.05);
       // Fireflies and wind-blown leaves make the escape read as continuous motion.
       for (let i = 0; i < 13; i++) {
@@ -432,8 +438,9 @@ export class ForestCinematic {
     } else {
       this.shot('village', 'BRAMBLEHOLLOW · HOME AGAIN', lerp(1.15, 1.04, t), 482, 290, 0xfff4d9);
       const arrive = smooth(segment(t, 0, 0.67));
-      this.pose('borin', { x: lerp(584, 476, arrive), y: lerp(347, 435, arrive), walking: t < 0.67, facingLeft: true });
-      this.pose('king', { x: lerp(661, 566, arrive), y: lerp(352, 436, arrive), walking: t < 0.67, facingLeft: true });
+      const paths = this.homecoming ??= villageHomecoming(this.authoredManifest!);
+      this.pose('borin', { ...sampleWalk(paths.borin, walkLength(paths.borin) * arrive), walking: t < .67 });
+      this.pose('king', { ...sampleWalk(paths.king, walkLength(paths.king) * arrive), walking: t < .67 });
       this.pose('elder', { x: 359, y: 433, speaking: true });
       this.pose('innkeeper', { x: 274, y: 438 - Math.max(0, Math.sin(this.elapsedMs / 300)) * segment(t, 0.36, 0.62) * 8 });
       this.pose('miner', { x: 690, y: 441 - Math.max(0, Math.sin(this.elapsedMs / 320 + 1)) * segment(t, 0.36, 0.62) * 8 });

@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, resolvePointleshScene, walkablePolygons, pointleshApproachTarget } from '@pointlesh/core';
-const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, finishTyingGuard, targetVisible, hint, migrateRescueStory } = await tsImport('../src/story.ts', import.meta.url);
+const { newStory, interact, applyDialogChoice, combineItems, guardLookingAway, finishGuardDrink, finishOpeningChest, finishTyingGuard, targetVisible, hint, migrateRescueStory } = await tsImport('../src/story.ts', import.meta.url);
 
 test('the rescue puzzle has an achievable dependency chain and a recoverable timing failure', () => {
   const state = newStory();
@@ -20,6 +20,10 @@ test('the rescue puzzle has an achievable dependency chain and a recoverable tim
   state.roomId = 'mine';
   assert.equal(interact(state, 'tool-chest').dialog, 'chest-open');
   applyDialogChoice(state, 'open-chest'); applyDialogChoice(state, 'open-chest');
+  assert.equal(state.inventory.includes('pickaxe'), false);
+  assert.deepEqual(interact(state, 'tool-chest'), {});
+  finishOpeningChest(state);
+  interact(state, 'tool-chest'); interact(state, 'tool-chest');
   assert.equal(state.inventory.filter(item => item === 'pickaxe').length, 1);
   state.roomId = 'camp';
   state.guardClock = 1000;
@@ -143,4 +147,21 @@ test('tying a sleeping guard consumes one rope and old cage-rope saves remain so
   const won = migrateRescueStory({ ...source, flags: { ...source.flags, won: true }, endingStep: 1 });
   assert.equal(won.flags.guardBound, true); assert.equal(won.endingStep, 1);
   assert.deepEqual(won.inventory, ['pickaxe'], 'Completed older rescues keep their consumed rope');
+});
+
+test('opening the chest survives a checkpoint and requires a separate search', () => {
+  const state = newStory(); state.roomId = 'mine';
+  applyDialogChoice(state, 'open-chest'); assert.equal(state.chestOpening, undefined);
+  state.flags.knowsPassword = true; applyDialogChoice(state, 'open-chest');
+  state.chestOpening.elapsedMs = 760;
+  const restored = migrateRescueStory(state);
+  assert.deepEqual(restored.chestOpening, { elapsedMs: 760 });
+  assert.deepEqual(restored.inventory, []);
+  finishOpeningChest(restored);
+  assert.equal(restored.flags.chestOpen, true); assert.deepEqual(restored.inventory, []);
+  assert.match(interact(restored, 'tool-chest').text, /finest pickaxe/);
+  assert.equal(restored.flags.tookPickaxe, true);
+  assert.match(interact(restored, 'tool-chest').text, /empty/);
+  assert.deepEqual(restored.inventory, ['pickaxe']);
+  assert.equal(migrateRescueStory({ ...state, flags: { tookPickaxe: true } }).flags.chestOpen, true);
 });

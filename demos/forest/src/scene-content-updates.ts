@@ -1,6 +1,7 @@
+import { addChestAssets } from './chest-assets';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import type { AiAssetDefinition, AiAssetManifest } from '@ai-game-assets/core';
-import { createObjectPrefab, createPointleshArea, createPointleshInstance, isPointleshArea, resolvePointleshScene } from '@pointlesh/core';
+import { createObjectPrefab, createPointleshArea, createPointleshInstance, isPointleshArea, isPointleshPrefab, resolvePointleshScene } from '@pointlesh/core';
 import { items, targets } from './story';
 import { CAGE_DOOR_ID, CAGE_DOOR_PLACEMENT, CAGE_DOOR_PREFAB } from './rescue-assets';
 
@@ -34,6 +35,7 @@ export const chestAsset: AiAssetDefinition = {
 export function addForestObjectAssets(assets: AiAssetManifest): void {
   assets.assets[chestAsset.id] ??= structuredClone(chestAsset);
   (assets.assetPaths ??= {})[chestAsset.id] ??= ['Graphics', 'Objects'];
+  addChestAssets(assets);
 }
 
 /** Upgrade existing authored rooms while retaining unrelated edits and walk points. */
@@ -82,6 +84,10 @@ export function updateForestInteractions(source: SceneDesignerManifest): SceneDe
         overrides: { object: { x: (Math.min(...xs) + Math.max(...xs)) / 2, y: Math.max(...ys), scaleX: 1, scaleY: 1 } } }));
     }
     layer.areas = layer.areas.filter(area => area !== chest);
+  }
+  const chestPrefab = manifest.prefabs?.['forest.object.tool-chest'];
+  if (chestPrefab && isPointleshPrefab(chestPrefab) && !chestPrefab.pointlesh.properties.animationKey) {
+    Object.assign(chestPrefab.pointlesh.properties, { animationKey: 'open', animationPlaying: false, animationLoop: false });
   }
   const camp = manifest.scenes.camp;
   if (camp && !camp.layers.some(layer => layer.prefabs?.some(instance => instance.id === CAGE_DOOR_ID))) {
