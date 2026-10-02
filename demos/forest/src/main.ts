@@ -779,6 +779,33 @@ class ForestAdventure extends Phaser.Scene {
       }));
     }
   }
+  renderCinematicShot(index: number, elapsedMs: number) {
+    this.cinematic?.render(index, elapsedMs);
+    if (this.adoptIntroCast()) this.cinematic?.render(index, elapsedMs);
+  }
+  adoptIntroCast(): boolean {
+    const shot = this.cinematic?.snapshot();
+    if (!shot?.visible || shot.kind !== 'intro' || shot.stepIndex !== intro.length - 1 || shot.elapsedMs < INTRO_HANDOFF_MS) return false;
+    let changed = false;
+    // The intro has its own cast controllers. A restored checkpoint can still
+    // hold an older gameplay pose, so the visible final shot owns the handoff.
+    for (const actor of shot.cast) {
+      if (!actor.visible || (actor.id !== 'borin' && actor.id !== 'elder')) continue;
+      const npc = [...this.npcActors.values()].find(npc => npc.actorName === actor.id);
+      const controller = actor.id === 'borin' ? this.character : npc?.controller;
+      const definition = actor.id === 'borin' ? this.playerDefinition() : this.resolved().objects.find(object => object.properties.actorName === actor.id);
+      if (!controller || !definition) continue;
+      const facing = this.authoredFacing(definition);
+      if (controller.state.position.x === actor.x && controller.state.position.y === actor.y && controller.state.facing === facing) continue;
+      controller.place({ x: actor.x, y: actor.y }, facing);
+      (actor.id === 'borin' ? this.binding : npc!.binding).sync();
+      changed = true;
+    }
+    // Align the outgoing camera again in this frame, before the renderer takes
+    // the crossfade snapshot, when adopting a pose changes the gameplay zoom.
+    if (changed) this.roomCamera.snap();
+    return changed;
+  }
   renderCutscene() {
     const isEnding = this.story.endingStep >= 0;
     const index = isEnding ? this.story.endingStep : this.story.introStep;
@@ -804,6 +831,8 @@ class ForestAdventure extends Phaser.Scene {
       }
       if (this.cinematic && !this.cutsceneCrossfade) {
         const outgoing = this.cinematic;
+        const shot = outgoing.snapshot();
+        this.renderCinematicShot(shot.stepIndex, shot.elapsedMs);
         this.cutsceneCrossfade = new CutsceneCrossfade(this);
         this.cutsceneCrossfade.start(el('game').parentElement!, el('cinematic-portrait'), () => {
           outgoing.destroy(); this.cinematic = undefined;
@@ -824,7 +853,7 @@ class ForestAdventure extends Phaser.Scene {
       this.clearMovementKeys(); this.character.stop(); this.hover();
     }
     document.body.classList.add('cinematic-playing');
-    this.cinematic.render(index, runner.snapshot().elapsedMs);
+    this.renderCinematicShot(index, runner.snapshot().elapsedMs);
     el('cutscene-location').textContent = this.cinematic.locationName;
     el('cutscene-kicker').textContent = isEnding ? 'THE JOURNEY HOME' : 'THE STORY BEGINS';
     const step = runner.current()!;
@@ -849,7 +878,7 @@ class ForestAdventure extends Phaser.Scene {
       if (!skip && runner.snapshot().elapsedMs < INTRO_HANDOFF_MS) return;
       // Explicitly skipping this shot omits its remaining motion. Capture its
       // settled pose, rather than dissolving a mid-walk actor into another spot.
-      if (skip) this.cinematic.render(intro.length - 1, CINEMATIC_DURATIONS.intro.at(-1)! - 1);
+      if (skip) this.renderCinematicShot(intro.length - 1, CINEMATIC_DURATIONS.intro.at(-1)! - 1);
     }
     if (skip) runner.skip(); else runner.advance();
     if (isEnding) this.story.endingStep = runner.snapshot().stepIndex;
@@ -1003,7 +1032,7 @@ class ForestAdventure extends Phaser.Scene {
         const checkpoint = runner.snapshot();
         if (isEnding) this.story.endingStep = checkpoint.stepIndex; else this.story.introStep = checkpoint.stepIndex;
         if (checkpoint.stepIndex !== previousStep) this.renderCutscene();
-        else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
+        else this.renderCinematicShot(checkpoint.stepIndex, checkpoint.elapsedMs);
         this.syncCutsceneAdvance();
       }
     }

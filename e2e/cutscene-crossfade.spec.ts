@@ -41,7 +41,14 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip'], [1440, 'begin-e
       await expect(begin).toBeDisabled();
       expect(await page.evaluate(() => {
         const scene = (window as any).pointleshDemo.scene;
-        scene.advanceCutscene(); scene.scene.resume();
+        scene.advanceCutscene();
+        // Hold the first enabled frame. Waiting for the DOM then pausing can
+        // miss this short window when a busy browser advances the whole shot.
+        const holdFinalPose = () => {
+          if (scene.story.introStep !== 3 || (document.querySelector('#cutscene-next') as HTMLButtonElement).disabled) return;
+          scene.scene.pause(); scene.events.off('postupdate', holdFinalPose);
+        };
+        scene.events.on('postupdate', holdFinalPose); scene.scene.resume();
         return scene.story.introStep;
       })).toBe(3);
       await expect(begin).toBeEnabled();
@@ -109,6 +116,11 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip'], [1440, 'begin-e
 }
 
 test('loading during the dissolve cancels its overlay and restores normal input', async ({ page }) => {
+  await page.addInitScript(() => new MutationObserver(() => {
+    for (const image of document.querySelectorAll('.cutscene-crossfade, #cinematic-portrait')) {
+      for (const animation of image.getAnimations()) animation.pause();
+    }
+  }).observe(document, { childList: true, subtree: true }));
   await openAdventure(page);
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
