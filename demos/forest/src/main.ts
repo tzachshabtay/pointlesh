@@ -28,7 +28,7 @@ import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
-import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
+import { CINEMATIC_DURATIONS, INTRO_HANDOFF_MS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { installViewportLayout } from './viewport-layout';
 import './style.css';
@@ -836,11 +836,21 @@ class ForestAdventure extends Phaser.Scene {
     el('skip-intro').hidden = false;
     el('skip-intro').textContent = isEnding ? 'Skip to homecoming' : 'Skip introduction';
     el('cutscene-next').firstChild!.textContent = index === sequence.length - 1 ? isEnding ? 'Home at last ' : 'Begin adventure ' : 'Next scene ';
+    this.syncCutsceneAdvance();
+  }
+  syncCutsceneAdvance() {
+    el<HTMLButtonElement>('cutscene-next').disabled = this.story.endingStep < 0 && this.story.introStep === intro.length - 1 && this.introRunner.snapshot().elapsedMs < INTRO_HANDOFF_MS;
   }
   advanceCutscene(skip = false) {
     if (!this.cinematic) return;
     const isEnding = this.story.endingStep >= 0;
     const runner = isEnding ? this.endingRunner : this.introRunner;
+    if (!isEnding && this.story.introStep === intro.length - 1) {
+      if (!skip && runner.snapshot().elapsedMs < INTRO_HANDOFF_MS) return;
+      // Explicitly skipping this shot omits its remaining motion. Capture its
+      // settled pose, rather than dissolving a mid-walk actor into another spot.
+      if (skip) this.cinematic.render(intro.length - 1, CINEMATIC_DURATIONS.intro.at(-1)! - 1);
+    }
     if (skip) runner.skip(); else runner.advance();
     if (isEnding) this.story.endingStep = runner.snapshot().stepIndex;
     else this.story.introStep = runner.snapshot().stepIndex;
@@ -994,6 +1004,7 @@ class ForestAdventure extends Phaser.Scene {
         if (isEnding) this.story.endingStep = checkpoint.stepIndex; else this.story.introStep = checkpoint.stepIndex;
         if (checkpoint.stepIndex !== previousStep) this.renderCutscene();
         else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
+        this.syncCutsceneAdvance();
       }
     }
     if (!modalOpen && this.story.chestOpening) {

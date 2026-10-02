@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { openAdventure } from './start-helpers';
 
-for (const [width, finish] of [[1440, 'natural'], [390, 'skip']] as const) {
+for (const [width, finish] of [[1440, 'natural'], [390, 'skip'], [1440, 'begin-early'], [390, 'skip-early']] as const) {
   test(`intro dissolves into playable game at ${width}px (${finish})`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
     // Hold the real browser animation so both endpoints and its midpoint can be
@@ -16,7 +16,7 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip']] as const) {
       const scene = (window as any).pointleshDemo.scene;
       scene.scene.pause();
       scene.story.introStep = 3;
-      scene.introRunner.restore({ cutsceneId: 'forest.intro', version: 1, stepIndex: 3, elapsedMs: 8400 });
+      scene.introRunner.restore({ cutsceneId: 'forest.intro', version: 1, stepIndex: 3, elapsedMs: finish.endsWith('early') ? 4500 : 8400 });
       scene.renderCutscene();
       const position = { ...scene.character.state.position };
       const world = scene.children.getByName('pointlesh-cinematic').list[0];
@@ -25,9 +25,37 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip']] as const) {
         return { id, position: { x: sprite.x, y: sprite.y }, screen: { x: matrix.tx, y: matrix.ty } };
       });
       if (finish === 'natural') scene.update(0, 100);
-      else scene.advanceCutscene(true);
+      else if (finish !== 'begin-early') scene.advanceCutscene(true);
+      if (finish === 'skip-early') {
+        // Skipping explicitly omits the remaining walk and captures the final
+        // posed frame. Compare against that actual outgoing frame.
+        for (const actor of cast) {
+          const sprite = world.getByName('cinematic-' + actor.id), matrix = sprite.getWorldTransformMatrix();
+          actor.position = { x: sprite.x, y: sprite.y }; actor.screen = { x: matrix.tx, y: matrix.ty };
+        }
+      }
       return { position, cast };
     }, finish);
+    if (finish === 'begin-early') {
+      const begin = page.getByRole('button', { name: 'Begin adventure' });
+      await expect(begin).toBeDisabled();
+      expect(await page.evaluate(() => {
+        const scene = (window as any).pointleshDemo.scene;
+        scene.advanceCutscene(); scene.scene.resume();
+        return scene.story.introStep;
+      })).toBe(3);
+      await expect(begin).toBeEnabled();
+      before.cast = await page.evaluate(() => {
+        const scene = (window as any).pointleshDemo.scene;
+        scene.scene.pause();
+        const world = scene.children.getByName('pointlesh-cinematic').list[0];
+        return ['borin', 'elder'].map(id => {
+          const sprite = world.getByName('cinematic-' + id), matrix = sprite.getWorldTransformMatrix();
+          return { id, position: { x: sprite.x, y: sprite.y }, screen: { x: matrix.tx, y: matrix.ty } };
+        });
+      });
+      await begin.click();
+    }
     const image = page.locator('.cutscene-crossfade');
     await expect(image).toBeVisible();
     const captured = await page.evaluate(() => {

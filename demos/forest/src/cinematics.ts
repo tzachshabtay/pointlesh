@@ -21,6 +21,8 @@ export const CINEMATIC_DURATIONS = {
   intro: [6000, 4500, 6000, 8500],
   ending: [6200, 6200, 5600, 6500],
 } as const;
+/** The cottage door and walk must finish before control passes to gameplay. */
+export const INTRO_HANDOFF_MS = 7100;
 
 /** Older saves can be partway through the former ten-second forest shot. */
 export function restoreCinematicElapsed(kind: CinematicKind, step: number, elapsedMs: number): number {
@@ -388,7 +390,7 @@ export class ForestCinematic {
     } else {
       this.shot('village', 'BRAMBLEHOLLOW · A QUIETER HERO', lerp(1.07, 1.18, t), 487, 292);
       const departure = this.departure ??= cottageDeparture(this.authoredManifest!);
-      const length = walkLength(departure.path), openingMs = 900, walkMs = 6200;
+      const length = walkLength(departure.path), openingMs = 900, walkMs = INTRO_HANDOFF_MS - openingMs;
       const travelled = length * segment(this.elapsedMs, openingMs, openingMs + walkMs);
       const clearMs = openingMs + walkMs * departure.clearDistance / length;
       this.roomDoor(departure.portal.doorId!, segment(this.elapsedMs, 0, openingMs) * (1 - segment(this.elapsedMs, clearMs, clearMs + 900)));
@@ -402,7 +404,7 @@ export class ForestCinematic {
       // Land on the gameplay camera's exact view before dissolving the two
       // rendered layers; equal world coordinates alone still shift on screen.
       const camera = this.scene.cameras.main;
-      const blend = smooth(segment(this.elapsedMs, CINEMATIC_DURATIONS.intro[3] - 1100, CINEMATIC_DURATIONS.intro[3] - 100));
+      const blend = smooth(segment(this.elapsedMs, INTRO_HANDOFF_MS - 1000, INTRO_HANDOFF_MS));
       this.world.setPosition(lerp(this.world.x, W / 2 * (1 - camera.zoom) - camera.scrollX * camera.zoom, blend),
         lerp(this.world.y, H / 2 * (1 - camera.zoom) - camera.scrollY * camera.zoom, blend))
         .setScale(lerp(this.world.scaleX, camera.zoom, blend));
