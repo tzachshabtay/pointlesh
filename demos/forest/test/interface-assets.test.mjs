@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { inflateSync } from 'node:zlib';
+import { PNG } from 'pngjs';
 import { tsImport } from 'tsx/esm/api';
 import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
 import { createAiAssetDevServer } from '@ai-game-assets/dev';
@@ -31,14 +31,13 @@ test('all cursor and inventory images have real, distinct click frames under the
         assert.equal(file.readUInt32BE(16), definition.dimensions.width); assert.equal(file.readUInt32BE(20), definition.dimensions.height);
       }
       const file = await readFile(new URL(animation.versions[animation.activeVersion].file, directory));
-      const chunks = [];
-      for (let offset = 8; offset < file.length;) {
-        const size = file.readUInt32BE(offset);
-        if (file.toString('ascii', offset + 4, offset + 8) === 'IDAT') chunks.push(file.subarray(offset + 8, offset + 8 + size));
-        offset += size + 12;
-      }
-      const pixels = inflateSync(Buffer.concat(chunks)), width = animation.dimensions.width;
-      const frame = index => Buffer.concat(Array.from({ length: 32 }, (_, row) => pixels.subarray(row * (width * 4 + 1) + 1 + index * 32 * 4, row * (width * 4 + 1) + 1 + (index + 1) * 32 * 4)));
+      const png = PNG.sync.read(file), grid = animation.frameGrid;
+      const frame = index => {
+        const result = new PNG({ width: grid.frameWidth, height: grid.frameHeight });
+        PNG.bitblt(png, result, index % grid.columns * grid.frameWidth, Math.floor(index / grid.columns) * grid.frameHeight,
+          grid.frameWidth, grid.frameHeight, 0, 0);
+        return result.data;
+      };
       assert.notDeepEqual(frame(0), frame(2), `${id} click changes real pixels`);
       assert.ok(frame(0).some((value, index) => index % 4 === 3 && value === 0), 'Transparent around the icon');
       assert.ok(frame(0).some((value, index) => index % 4 === 3 && value > 0), 'Visible icon pixels');

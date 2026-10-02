@@ -120,11 +120,12 @@ test('complete rescue uses rooms, conversation, inventory, timing retry, and end
   await expectCastMotion(page);
   await page.screenshot({ path: testInfo.outputPath('animated-rescue.png'), fullPage: true });
   for (let index = 0; index < 4; index++) await page.locator('#cutscene-next').click();
-  await expectCinematicCleanup(page);
   await expect(page.getByRole('dialog')).toContainText('A king home. A hero made.');
-  await page.getByRole('button', { name: 'Return to Bramblehollow', exact: true }).click();
+  await page.getByRole('button', { name: 'Play again', exact: true }).click();
   await expect(page.locator('#room-name')).toHaveText('Bramblehollow');
-  await expect(page.locator('#objective')).toHaveText('King Aldric is home. Well done, Borin.');
+  await expect(page.locator('#cutscene-kicker')).toHaveText('THE STORY BEGINS');
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.story.flags)).toEqual({});
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.story.inventory)).toEqual([]);
   await page.screenshot({ path: testInfo.outputPath('king-rescued.png'), fullPage: true });
   expect(errors).toEqual([]);
 });

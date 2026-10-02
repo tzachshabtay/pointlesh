@@ -37,6 +37,7 @@ export function migrateRescueStory(source: StoryState): StoryState {
     }
   }
   if (state.flags.tookPickaxe) state.flags.chestOpen = true;
+  if (state.flags.won && state.endingStep < 0) state.endingStep = 4;
   return state;
 }
 export function guardLookingAway(state: StoryState): boolean { return state.flags.guardDistracted === true; }
@@ -97,7 +98,14 @@ export const targets: Record<RoomId, Target[]> = {
 export function targetVisible(state: StoryState, id: string): boolean {
   return !(id === 'coin' && state.flags.tookCoin || id === 'rope' && state.flags.tookRope || id === 'mushroom' && state.flags.tookMushroom);
 }
-export type InteractionResult = { text?: string; dialog?: string; room?: RoomId; ending?: boolean; action?: 'tie-guard' };
+export type InteractionResult = { text?: string; speaker?: string; dialog?: string; room?: RoomId; ending?: boolean; action?: 'tie-guard' };
+/** Called after an accepted pour finishes; the guard check happens before raising the mug. */
+export function finishPouringBrew(state: StoryState): InteractionResult {
+  if (!state.inventory.includes('sleepyStout') || state.flags.stewSpiked) return {};
+  state.inventory = state.inventory.filter(value => value !== 'sleepyStout');
+  addClue(state, 'stewSpiked', 'The dreamcap stout is in the stew. Now wait for Grub’s next drink.');
+  return { text: 'A discreet splash. Now to wait for his next drink.' };
+}
 export function finishTyingGuard(state: StoryState): InteractionResult {
   if (!state.tyingGuard || !state.flags.guardAsleep || !state.inventory.includes('rope')) return {};
   delete state.tyingGuard;
@@ -114,13 +122,11 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
     if (item === 'coin' && targetId === 'innkeeper') {
       state.inventory = state.inventory.filter(value => value !== 'coin'); state.inventory.push('stout');
       addClue(state, 'boughtStout', 'Mara sold me honey stout. Orcs love its smell.');
-      return { text: 'Mara: One honey stout. If you are taking that to the orcs, please do not tell them who brewed it.' };
+      return { speaker: 'Mara', text: 'One honey stout. If you are taking that to the orcs, please do not tell them who brewed it.' };
     }
     if (item === 'sleepyStout' && targetId === 'cauldron') {
       if (!guardLookingAway(state)) return { text: 'He is watching! Wait until he turns his back, then try the brew again.' };
-      state.inventory = state.inventory.filter(value => value !== item);
-      addClue(state, 'stewSpiked', 'The dreamcap stout is in the stew. Now wait for Grub’s next drink.');
-      return { text: 'A discreet splash. Now to wait for his next drink.' };
+      return finishPouringBrew(state);
     }
     if (item === 'rope' && targetId === 'guard') {
       if (!state.flags.guardAsleep) return { text: 'He would never let me tie him up while he is awake. Sleep first, knots second.' };
@@ -156,8 +162,8 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
     }
     return { dialog: state.flags.knowsPassword ? 'chest-open' : 'chest-locked' };
   }
-  if (targetId === 'guard') return { text: state.flags.guardBound ? 'Sound asleep and securely tied. Those knots should hold him while we escape.' : state.flags.guardAsleep ? 'Sound asleep, but breaking that lock could wake him. Better tie him up first.' : 'Grub: No visitors! Especially short ones with suspiciously heroic expressions.' };
-  if (targetId === 'cage') return { text: state.flags.guardBound ? 'Aldric: Good knots, Borin. Now break this lock and let us get out of here!' : state.flags.guardAsleep ? 'Aldric whispers: Tie up the guard before you break the lock. The noise might wake him!' : 'Aldric whispers: Borin, deal with the guard. Quietly!' };
+  if (targetId === 'guard') return { speaker: state.flags.guardAsleep ? 'Borin' : 'Orc guard', text: state.flags.guardBound ? 'Sound asleep and securely tied. Those knots should hold him while we escape.' : state.flags.guardAsleep ? 'Sound asleep, but breaking that lock could wake him. Better tie him up first.' : 'No visitors! Especially short ones with suspiciously heroic expressions.' };
+  if (targetId === 'cage') return { speaker: 'King Aldric', text: state.flags.guardBound ? 'Good knots, Borin. Now break this lock and let us get out of here!' : state.flags.guardAsleep ? 'Tie up the guard before you break the lock. The noise might wake him!' : 'Borin, deal with the guard. Quietly!' };
   return { text: target.description };
 }
 export function applyDialogChoice(state: StoryState, optionId: string): void {

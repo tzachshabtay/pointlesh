@@ -43,6 +43,9 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 }
 
 /* Cinematic bars replace the game UI strips without covering the canvas. */
+#cinematic-portrait { position:absolute; top:14px; left:14px; width:clamp(68px,13vw,148px); aspect-ratio:1; padding:5px; pointer-events:none; border:1px solid #ad8754; border-radius:8px; background:linear-gradient(135deg,#233527ee,#0c1713ee); box-shadow:0 4px 18px #0009,inset 0 0 0 2px #111d16; }
+#cinematic-portrait canvas { display:block; width:100%!important; height:100%!important; object-fit:contain; }
+.menu-open #cinematic-portrait { display:none; }
 .cinematic-playing .scene-bar,.cinematic-playing .inventory-bar { background:#000; border-color:#000; }
 .cinematic-playing .scene-bar { height:auto; min-height:47px; gap:20px; padding-block:8px; }
 .cinematic-playing .scene-bar>div:first-child { display:none; }

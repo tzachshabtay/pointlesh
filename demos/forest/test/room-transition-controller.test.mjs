@@ -121,3 +121,27 @@ test('legacy saves with doorway fading still resume their route without a render
   assert.deepEqual(run.character.state.position, to.path[0]);
   assert.equal(run.transition.active, false);
 });
+
+test('opens during the approach, waits before crossing, and closes only after clearance while still walking', () => {
+  const run = setup(); run.character.place({ x: 0, y: 50 });
+  run.transition.begin({ ...from, handoffIndex: 1 }, { ...to, handoffIndex: 1, doorClearance: 15 });
+  run.tick();
+  assert.equal(run.transition.phase, 'open-exit');
+  assert.equal(run.character.isWalking, true); assert.ok(run.transition.doorProgress > 0 && run.transition.doorProgress < 1);
+  assert.ok(run.character.state.position.x > 0 && run.character.state.position.x < from.path[0].x);
+  let overlappingClose = false;
+  for (let i = 0; i < 1000 && run.transition.active; i++) {
+    if (run.transition.phase === 'exit') assert.equal(run.transition.doorProgress, 1);
+    if (run.transition.phase === 'entry') {
+      const clear = Math.abs(run.character.state.position.x - to.path[1].x) >= 15;
+      if (!clear) assert.equal(run.transition.doorProgress, 1);
+      if (run.transition.doorProgress < 1 && run.character.isWalking) {
+        assert.ok(clear); overlappingClose = true;
+        const copy = setup(); copy.character.restore(run.character.snapshot()); copy.transition.restore(run.transition.snapshot());
+        assert.equal(copy.transition.doorProgress, run.transition.doorProgress);
+      }
+    }
+    run.tick();
+  }
+  assert.ok(overlappingClose); assert.deepEqual(run.events, ['b', 'done']);
+});

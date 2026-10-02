@@ -24,7 +24,7 @@ export class PhaserAdventureCursor {
   private retainClickAsset = false;
   private destroyed = false;
   constructor(private scene: Phaser.Scene, runtime: AiAssetRuntime, private options: AdventureCursorOptions) {
-    this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: options.assetId, width: options.size, height: options.size, pixelArt: options.pixelArt });
+    this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: options.assetId, width: options.size, height: options.size, pixelArt: options.pixelArt, idleAnimation: 'idle' });
     this.icon.canvas.classList.add('pointlesh-adventure-cursor');
     Object.assign(this.icon.canvas.style, { position: 'fixed', zIndex: '1000', left: '0', top: '0' });
     this.icon.canvas.hidden = true;
@@ -60,8 +60,8 @@ export class PhaserAdventureCursor {
     const enabled = this.options.enabled?.() ?? true;
     // A new hover action takes priority over feedback for the previous action.
     // Explicit click assets stay visible through inventory consumption until the pointer moves.
-    if (assetId && enabled && (!this.icon.playing || !this.retainClickAsset)) this.icon.setAsset(assetId);
-    const visible = !!assetId && (enabled || this.icon.playing) && (!this.touch || this.icon.playing);
+    if (assetId && enabled && (!this.icon.feedbackPlaying || !this.retainClickAsset)) this.icon.setAsset(assetId);
+    const visible = !!assetId && (enabled || this.icon.feedbackPlaying) && (!this.touch || this.icon.feedbackPlaying);
     this.setVisible(visible);
     if (!visible) return;
     const hotspot = this.options.hotspot ?? { x: .5, y: .5 };

@@ -61,7 +61,7 @@ export function cottageDeparture(manifest: SceneDesignerManifest) {
 }
 
 /** Ending choreography uses the same polygons as normal gameplay. */
-export function campRescue(manifest: SceneDesignerManifest) {
+export function campRescue(manifest: SceneDesignerManifest, origin?: Point) {
   const room = resolvePointleshScene(manifest, 'camp');
   const areas = activatePointleshAreas(room.areas, [CAGE_APPROACH_AREA]);
   const floors = walkablePolygons({ ...room, areas });
@@ -69,7 +69,7 @@ export function campRescue(manifest: SceneDesignerManifest) {
   const king = room.objects.find(object => object.properties.actorName === 'king')!;
   const strike = { x: door.position.x + 35, y: door.position.y + 24 };
   const outside = { x: door.position.x + 36, y: door.position.y + 66 };
-  const approach = route({ x: strike.x - 65, y: strike.y + 45 }, strike, floors);
+  const approach = route(origin ?? { x: strike.x - 65, y: strike.y + 45 }, strike, floors);
   const aside = route(approach.at(-1)!, { x: strike.x - 75, y: strike.y + 12 }, floors);
   const release = route(king.position, outside, floors);
   return { areas, approach, aside, release,

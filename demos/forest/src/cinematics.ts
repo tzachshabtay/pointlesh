@@ -1,7 +1,8 @@
 import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import type { SceneDesignerManifest } from '@scene-designer/core';
-import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject } from '@pointlesh/core';
+import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject, type Point, type Direction } from '@pointlesh/core';
+import { intro as introScript, ending as endingScript } from './story';
 import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
 import { forestLighting } from './environment-lighting';
 import { guardAnimationSize } from './guard-assets';
@@ -15,6 +16,7 @@ import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 
 export type CinematicKind = 'intro' | 'ending';
+export type EndingOpening = { position: Point; facing: Direction; zoom: number; x: number; y: number };
 export const CINEMATIC_DURATIONS = {
   intro: [6000, 4500, 6000, 8500],
   ending: [6200, 6200, 5600, 6500],
@@ -91,7 +93,8 @@ export class ForestCinematic {
   private destroyed = false;
 
   constructor(private readonly scene: Phaser.Scene, readonly kind: CinematicKind,
-    private readonly assets: AiAssetRuntime, private readonly getManifest: () => SceneDesignerManifest, private readonly lighting?: PhaserAdventureLighting) {
+    private readonly assets: AiAssetRuntime, private readonly getManifest: () => SceneDesignerManifest, private readonly lighting?: PhaserAdventureLighting,
+    private readonly opening?: EndingOpening) {
     this.root = scene.add.container(0, 0).setName('pointlesh-cinematic').setDepth(5000);
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
@@ -288,8 +291,10 @@ export class ForestCinematic {
             : actor.action ? rescueAnimation(assetId, actor.action) : readCharacterAnimations(actor.definition!.properties),
         });
     }
+    const speaker = (this.kind === 'intro' ? introScript : endingScript)[this.stepIndex]?.speaker;
+    const speaking = ({ Borin: 'borin', 'King Aldric': 'king', 'Elder Rowan': 'elder', Mara: 'innkeeper', Orrin: 'miner' } as Record<string, string>)[speaker ?? ''] === characterId;
     actor.binding.renderPose({ position: { x: pose.x, y: pose.y },
-      activity: actor.action ? 'idle' : pose.speaking ? 'speaking' : pose.walking ? 'walking' : 'idle',
+      activity: actor.action ? 'idle' : pose.walking ? 'walking' : speaking ? 'speaking' : 'idle',
       facing: pose.facing ?? (pose.facingLeft ? 'left' : pose.walking ? 'right' : 'down'),
     }, actor.sleeping ? Number.MAX_SAFE_INTEGER : pose.actionElapsedMs ?? this.elapsedMs, { loop: !actor.action });
     sprite.setVisible(true).setAlpha(pose.alpha ?? 1);
@@ -386,7 +391,7 @@ export class ForestCinematic {
       const travelled = length * segment(this.elapsedMs, openingMs, openingMs + walkMs);
       const clearMs = openingMs + walkMs * departure.clearDistance / length;
       this.roomDoor(departure.portal.doorId!, segment(this.elapsedMs, 0, openingMs) * (1 - segment(this.elapsedMs, clearMs, clearMs + 900)));
-      this.pose('elder', { x: 385, y: 423, speaking: true });
+      this.pose('elder', { x: 385, y: 423 });
       // The closed leaf hides him until it opens; each subsequent foot position
       // follows the authored corridor and the connected village floor.
       if (this.elapsedMs >= openingMs) this.pose('borin', { ...sampleWalk(departure.path, travelled), walking: travelled < length });
@@ -397,7 +402,12 @@ export class ForestCinematic {
   private ending(step: number, t: number): void {
     if (step === 0) {
       this.shot('camp', 'THE ORC ENCAMPMENT · ONE GOOD STRIKE', lerp(1.18, 1.30, t), 585, 301);
-      const paths = this.rescue ??= campRescue(this.authoredManifest!);
+      if (this.opening) {
+        const blend = smooth(this.elapsedMs / 900);
+        this.world.setPosition(lerp(this.opening.x, this.world.x, blend), lerp(this.opening.y, this.world.y, blend))
+          .setScale(lerp(this.opening.zoom, this.world.scaleX, blend));
+      }
+      const paths = this.rescue ??= campRescue(this.authoredManifest!, this.opening?.position);
       this.pose('king', paths.release[0]!);
       const approaching = this.elapsedMs < PICKAXE_START_MS;
       const arrive = smooth(segment(this.elapsedMs, 0, PICKAXE_START_MS));
@@ -453,7 +463,7 @@ export class ForestCinematic {
       this.pose('king', { ...kingPose, facing: kingDistance >= walkLength(paths.king) ? 'down' : kingPose.facing,
         walking: kingDistance > 0 && kingDistance < walkLength(paths.king),
         transitionAreas: travelled - separation <= paths.entryClearDistance ? [paths.portal.areaId] : [] });
-      this.pose('elder', { x: 359, y: 433, speaking: true });
+      this.pose('elder', { x: 359, y: 433 });
       this.pose('innkeeper', { x: 274, y: 438 - Math.max(0, Math.sin(this.elapsedMs / 300)) * segment(t, 0.36, 0.62) * 8 });
       this.pose('miner', { x: 690, y: 441 - Math.max(0, Math.sin(this.elapsedMs / 320 + 1)) * segment(t, 0.36, 0.62) * 8 });
       this.mist(0xd9d49b, 0.025);

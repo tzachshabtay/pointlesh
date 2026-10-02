@@ -1,9 +1,9 @@
 import { CharacterController, distance, isPoint, type Point } from '@pointlesh/core';
 
-export type CampStealthCheckpoint = { phase: 'peek' | 'outbound' | 'return' | 'release'; elapsedMs: number; cover: Point; clearance: Point; path: Point[]; waypoint: number; message?: string };
+export type CampStealthCheckpoint = { phase: 'peek' | 'outbound' | 'pour' | 'return' | 'release'; elapsedMs: number; cover: Point; clearance: Point; path: Point[]; waypoint: number; message?: string };
 export function assertCampStealthCheckpoint(value: unknown): asserts value is CampStealthCheckpoint {
   const s = value as CampStealthCheckpoint;
-  if (!s || !['peek', 'outbound', 'return', 'release'].includes(s.phase) || !Number.isFinite(s.elapsedMs) || s.elapsedMs < 0 || !isPoint(s.cover) || !isPoint(s.clearance) ||
+  if (!s || !['peek', 'outbound', 'pour', 'return', 'release'].includes(s.phase) || !Number.isFinite(s.elapsedMs) || s.elapsedMs < 0 || !isPoint(s.cover) || !isPoint(s.clearance) ||
     !Array.isArray(s.path) || !s.path.every(isPoint) || !Number.isInteger(s.waypoint) || s.waypoint < 0 || (s.phase !== 'peek' && s.waypoint >= s.path.length) ||
     (s.message !== undefined && typeof s.message !== 'string')) throw new Error('Invalid camp stealth checkpoint');
 }
@@ -11,9 +11,10 @@ export function assertCampStealthCheckpoint(value: unknown): asserts value is Ca
 /** The game's one permitted trip out of cover while Grub is awake. */
 export class CampStealth {
   private state?: CampStealthCheckpoint;
-  constructor(private readonly character: CharacterController, private readonly options: { poison: () => string; returned: (message?: string) => void }) {}
+  constructor(private readonly character: CharacterController, private readonly options: { poison: () => string; returned: (message?: string) => void; pourDurationMs?: () => number; canPour?: () => boolean }) {}
   get busy() { return !!this.state && this.state.phase !== 'peek'; }
   get peeking() { return this.state?.phase === 'peek'; }
+  get pouring() { return this.state?.phase === 'pour'; }
   get elapsedMs() { return this.state?.elapsedMs ?? 0; }
   start(cover: Point): void { this.state = { phase: 'peek', elapsedMs: 0, cover: { ...cover }, clearance: { ...cover }, path: [], waypoint: 0 }; }
   cancel(): void { this.state = undefined; }
@@ -46,6 +47,10 @@ export class CampStealth {
     const s = this.state;
     if (!s) return;
     s.elapsedMs += deltaMs;
+    if (s.phase === 'pour') {
+      if (s.elapsedMs < (this.options.pourDurationMs?.() ?? 1800)) return;
+      s.message = this.options.poison(); this.returnToCover(); return;
+    }
     if (s.phase === 'peek' || this.character.isWalking) return;
     const arrived = distance(this.character.state.position, s.path[s.waypoint]!) <= 1;
     if (s.phase === 'release') {
@@ -54,8 +59,10 @@ export class CampStealth {
     }
     if (arrived && s.waypoint < s.path.length - 1) { s.waypoint++; this.walk(); return; }
     if (s.phase === 'outbound') {
-      s.message = arrived ? this.options.poison() : 'That route is blocked. Back to cover.';
-      this.returnToCover();
+      if (arrived && this.options.canPour?.() === false) {
+        s.message = 'He is watching! Wait until he turns his back, then try the brew again.'; this.returnToCover();
+      } else if (arrived) { s.phase = 'pour'; s.elapsedMs = 0; this.character.stop(); this.character.face('up'); }
+      else { s.message = 'That route is blocked. Back to cover.'; this.returnToCover(); }
     } else {
       if (!arrived) {
         // A moved obstacle can interrupt the trip; retry from the current feet.

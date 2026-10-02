@@ -63,7 +63,7 @@ test('returning from the mine follows the forest floor after its short doorway b
   const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
   for (const manifest of [seed, authored]) {
     const room = resolvePointleshScene(manifest, 'forest'), portal = forestPortal(manifest, 'forest', 'mine');
-    const floors = walkablePolygons(room), approach = portal.path.slice(0, -2);
+    const floors = walkablePolygons(room), approach = portal.path.slice(0, portal.openingWaypoint ?? portal.path.length - 2);
     assert.ok(approach.length >= 2);
     assert.ok(approach[0].x > 400 && approach[0].y > 440, 'arrive on the main path');
     for (let i = 1; i < approach.length; i++) assert.ok(isSegmentWalkable(approach[i - 1], approach[i], floors), 'both directions follow ordinary ground');

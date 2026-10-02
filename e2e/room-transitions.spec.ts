@@ -35,13 +35,13 @@ test('all room connections walk out and in with temporary corridors, animated do
           checkpoints.add(phase);
         }
         if (scene.actor.alpha !== 1) throw new Error(`Character opacity changed ${from}/${phase}`);
-        if (scene.story.roomId === 'house' && (phase === 'exit' || phase === 'entry')) cottagePositions.push({ ...scene.character.state.position });
+        if (scene.story.roomId === 'house' && (phase === 'open-exit' || phase === 'exit' || phase === 'entry')) cottagePositions.push({ ...scene.character.state.position });
         if (scene.story.roomId === 'mine' && (phase === 'exit' || phase === 'entry')) minePositions.push({ ...scene.character.state.position, facing: scene.character.state.facing, phase });
         if (scene.story.roomId === 'forest' && portal.areaId === 'forest.transition.to-mine' && (phase === 'exit' || phase === 'entry')) {
           forestMinePositions.push({ ...scene.character.state.position });
           forestGround = scene.resolved().areas.filter((area: any) => area.enabled && area.properties.walkable).map((area: any) => area.polygon);
           forestBridge = scene.resolved().areas.find((area: any) => area.id === portal.areaId).polygon;
-          bridgeEndY = portal.path.at(-3).y;
+          bridgeEndY = portal.path[portal.openingWaypoint !== undefined ? portal.openingWaypoint - 1 : portal.path.length - 3].y;
         }
         if (portal.doorId) {
           const foreground = scene.doorForegrounds.get(portal.doorId);

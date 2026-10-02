@@ -8,9 +8,9 @@ import { PhaserAdventureLighting, PhaserAdventureObject, PhaserAdventureIcon, Ph
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
-import { assets, atlasRooms, dialogs, roomDimensions, scenes } from './content';
+import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses } from './content';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
-import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
@@ -28,7 +28,8 @@ import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
-import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed } from './cinematics';
+import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
+import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { installViewportLayout } from './viewport-layout';
 import './style.css';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
@@ -54,7 +55,9 @@ let modalOpen = false;
 let toastTimer: ReturnType<typeof setTimeout>;
 function toast(text: string) { el('toast').textContent = text; el('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el('toast').hidden = true; }, 4100); }
 let modalReturnFocus: HTMLElement | null = null;
+let endingModal = false;
 function closeModal() {
+  if (endingModal) return;
   el('modal-backdrop').hidden = true; modalOpen = false; el('start-screen').inert = false;
   if (modalReturnFocus?.checkVisibility()) modalReturnFocus.focus();
 }
@@ -105,6 +108,7 @@ class ForestAdventure extends Phaser.Scene {
   introRunner = new CutsceneRunner(cutsceneDefinition('intro'));
   endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
   cinematic?: ForestCinematic;
+  endingOpening?: EndingOpening;
   roomTransition!: RoomTransitionController;
   campStealth!: CampStealth;
   movementKeys = new Set<string>();
@@ -113,6 +117,7 @@ class ForestAdventure extends Phaser.Scene {
   cursor!: PhaserAdventureCursor;
   inventoryIcons = new Map<ItemId, PhaserAdventureIcon>();
   portrait!: ForestDialogPortrait;
+  cinematicPortrait!: ForestDialogPortrait;
   hoveredTarget?: string;
   epoch = 0;
   editing = false;
@@ -124,6 +129,7 @@ class ForestAdventure extends Phaser.Scene {
     gameScene = this;
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
     this.portrait = new ForestDialogPortrait(this, this.aiRuntime, el('dialog-portrait'), () => !this.started || modalOpen);
+    this.cinematicPortrait = new ForestDialogPortrait(this, this.aiRuntime, el('cinematic-portrait'), () => !this.started || modalOpen);
     this.characterLighting = new PhaserAdventureLighting(this);
     for (const room of roomIds) this.drawRoomTexture(room);
     createPixelActors(this);
@@ -136,8 +142,10 @@ class ForestAdventure extends Phaser.Scene {
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000).setDisplaySize(this.roomSize('village').width, this.roomSize('village').height);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
     this.campStealth = new CampStealth(this.character, {
+      pourDurationMs: () => this.binding.animationDurationMs || POUR_DURATION_MS,
+      canPour: () => guardLookingAway(this.story),
       poison: () => {
-        const result = interact(this.story, 'cauldron', 'sleepyStout');
+        const result = finishPouringBrew(this.story);
         if (!this.story.inventory.includes('sleepyStout')) this.selected = undefined;
         this.render();
         return result.text ?? '';
@@ -163,8 +171,8 @@ class ForestAdventure extends Phaser.Scene {
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
-      animations: () => this.peeking() ? peekAnimation(this.roomTransition.phase !== 'peek-entry') : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
-      baseSize: () => this.peeking() ? peekSize(assets.assets.borin) : borinActionSize(assets.assets.borin, !!this.story.tyingGuard),
+      animations: () => this.peeking() ? peekAnimation(this.roomTransition.phase !== 'peek-entry') : this.campStealth.pouring ? rescueAnimation('borin', 'pour-back') : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
+      baseSize: () => this.peeking() ? peekSize(assets.assets.borin) : borinActionSize(assets.assets.borin, !!this.story.tyingGuard || this.campStealth.pouring),
       areas: () => this.playerAreas(), camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
     this.navigation = new PhaserAdventureNavigation(this, () => this.walkables());
@@ -346,6 +354,9 @@ class ForestAdventure extends Phaser.Scene {
     if (!entity) return;
     this.cursor.click(this.selected ? inventoryAssetId(this.selected) : undefined);
     const selected = this.selected;
+    // Door and approach clocks start together; the transition waits at the safe
+    // inside point until the leaf is clear before crossing the sill.
+    if (targets[this.story.roomId].some(target => target.id === targetId && target.exit)) { this.applyInteraction(targetId); return; }
     if (this.campRestricted()) {
       if (targetId === 'camp-exit') { this.applyInteraction(targetId); return; }
       if (targetId === 'cauldron' && selected === 'sleepyStout' && this.story.inventory.includes(selected) && !this.story.flags.stewSpiked) {
@@ -389,8 +400,14 @@ class ForestAdventure extends Phaser.Scene {
     if (result.room) this.changeRoom(result.room);
     if (result.dialog) { this.conversationActive = true; this.conversation.start(result.dialog); }
     if (result.action === 'tie-guard') { this.epoch++; this.character.stop(); this.character.face('up'); this.renderTyingGuard(); }
-    if (result.text) this.say(result.text);
-    if (result.ending) { this.epoch++; this.character.stop(); this.renderCutscene(); }
+    if (result.text) this.say(result.text, result.speaker);
+    if (result.ending) {
+      const camera = this.cameras.main;
+      this.endingOpening = { position: { ...this.character.state.position }, facing: this.character.state.facing,
+        zoom: camera.zoom, x: camera.width / 2 * (1 - camera.zoom) - camera.scrollX * camera.zoom,
+        y: camera.height / 2 * (1 - camera.zoom) - camera.scrollY * camera.zoom };
+      this.epoch++; this.character.stop(); this.dismissSpeech(); this.renderCutscene();
+    }
     this.render();
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
@@ -585,7 +602,7 @@ class ForestAdventure extends Phaser.Scene {
     this.doorBinding.renderPose({ position: door.position, activity: 'idle', facing: 'down' }, this.story.flags.won ? Number.MAX_SAFE_INTEGER : 0, { loop: false });
   }
   private transitionDoorKey(id: string): 'open' | 'close' {
-    return this.roomTransition.portal?.doorId === id && this.roomTransition.phase?.startsWith('close') ? 'close' : 'open';
+    return this.roomTransition.portal?.doorId === id && this.roomTransition.closing ? 'close' : 'open';
   }
   private syncTransitionDoors(): void {
     for (const object of this.resolved().objects.filter(object => object.properties.role === 'door')) {
@@ -625,6 +642,10 @@ class ForestAdventure extends Phaser.Scene {
     this.binding.renderPose({ position: this.character.state.position, activity: 'idle', facing: 'right' },
       entering ? this.roomTransition.peekElapsedMs : this.campStealth.elapsedMs, { loop: !entering });
   }
+  private renderPour(): void {
+    if (!this.campStealth.pouring) return;
+    this.binding.renderPose({ position: this.character.state.position, activity: 'idle', facing: 'up' }, this.campStealth.elapsedMs, { loop: false });
+  }
   updateTyingGuard(deltaMs: number): void {
     if (!this.story.tyingGuard) return;
     this.story.tyingGuard.elapsedMs += deltaMs;
@@ -645,6 +666,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cursor?.refresh();
     for (const icon of this.inventoryIcons.values()) icon.refresh();
     this.portrait?.refresh();
+    this.cinematicPortrait?.refresh();
   }
   installTools() {
     this.sceneDesigner = installPhaserPointleshDesigner({
@@ -712,15 +734,15 @@ class ForestAdventure extends Phaser.Scene {
       el('nearby').append(node);
     }
   }
-  showDialogPortrait(voice: string, speaking: boolean) {
+  showDialogPortrait(voice: string, speaking: boolean, portrait = this.portrait) {
     const character = this.resolved().objects.find(object => object.kind === 'character' && (voice === 'borin' ? object.properties.role === 'player' : object.properties.actorName === voice));
     const prefab = !character ? Object.values(authoredScenes.prefabs ?? {}).filter(isPointleshPrefab).find(prefab => {
       const properties = prefab.pointlesh.properties;
       return prefab.pointlesh.kind === 'character' && (voice === 'borin' ? properties.role === 'player' : properties.actorName === voice);
     }) : undefined;
     const properties = character?.properties ?? prefab?.pointlesh.properties;
-    if (properties) this.portrait.show(properties, speaking);
-    else this.portrait.hide();
+    if (properties) portrait.show(properties, speaking);
+    else portrait.hide();
   }
   say(text: string, speaker = 'Borin') {
     this.epoch++; this.clearMovementKeys(); this.talking = true;
@@ -763,15 +785,29 @@ class ForestAdventure extends Phaser.Scene {
     if (runner.snapshot().stepIndex !== index) runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: index, elapsedMs: 0 });
     el('cutscene').hidden = index >= sequence.length;
     if (index >= sequence.length) {
+      this.cinematicPortrait.hide();
+      if (isEnding) {
+        // Keep the homecoming shot behind a terminal screen. There is no won
+        // sandbox to dismiss into; Play again creates a fresh story and intro.
+        if (!this.cinematic) this.cinematic = new ForestCinematic(this, 'ending', this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening);
+        document.body.classList.add('cinematic-playing');
+        this.cinematic.render(3, CINEMATIC_DURATIONS.ending[3] - 300);
+        if (!endingModal) {
+          const body = modal('A king home. A hero made.'); endingModal = true; el('modal-close').hidden = true;
+          const p = document.createElement('p'); p.textContent = 'You brought Aldric home with a little courage, a little conversation, and an entirely unreasonable amount of stout. Thank you for playing.';
+          const playAgain = button('Play again', () => this.newGame()); playAgain.className = 'primary';
+          body.append(p, playAgain); playAgain.focus();
+        }
+        return;
+      }
       this.cinematic?.destroy(); this.cinematic = undefined;
       document.body.classList.remove('cinematic-playing');
       this.binding.sync();
-      if (isEnding) { this.story.endingStep = -1; this.changeRoom('village'); const body = modal('A king home. A hero made.'); const p = document.createElement('p'); p.textContent = 'You brought Aldric home with a little courage, a little conversation, and an entirely unreasonable amount of stout. Thank you for playing.'; body.append(p, button('Return to Bramblehollow', closeModal)); }
       return;
     }
     const kind = isEnding ? 'ending' : 'intro';
     if (this.cinematic?.snapshot().kind !== kind) {
-      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes, this.characterLighting);
+      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening);
       this.clearMovementKeys(); this.character.stop(); this.hover();
     }
     document.body.classList.add('cinematic-playing');
@@ -779,6 +815,9 @@ class ForestAdventure extends Phaser.Scene {
     el('cutscene-location').textContent = this.cinematic.locationName;
     el('cutscene-kicker').textContent = isEnding ? 'THE JOURNEY HOME' : 'THE STORY BEGINS';
     const step = runner.current()!;
+    const voice = Object.entries(portraitCharacters).find(([, name]) => name === step.speaker)?.[0];
+    if (voice) this.showDialogPortrait(voice, true, this.cinematicPortrait);
+    else this.cinematicPortrait.hide();
     el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = step.text ?? '';
     el('cutscene-progress').textContent = sequence.map((_, i) => i === index ? '◆' : '◇').join(' ');
     el('skip-intro').hidden = false;
@@ -809,7 +848,7 @@ class ForestAdventure extends Phaser.Scene {
         this.inventoryIcons.get(id)?.play('click');
       });
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
-      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: inventoryAssetId(id), width: 36, height: 36 });
+      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: inventoryAssetId(id), width: 36, height: 36, idleAnimation: 'idle', paused: () => !this.started || modalOpen });
       this.inventoryIcons.set(id, icon); node.append(icon.canvas);
       const label = document.createElement('span'); label.className = 'item-label'; label.textContent = items[id].name; node.append(label); el('inventory').append(node);
     }
@@ -831,9 +870,12 @@ class ForestAdventure extends Phaser.Scene {
   enterGame() {
     this.started = true; el('start-screen').hidden = true; document.body.classList.remove('menu-open');
     el('game-header').inert = false; el('game-content').inert = false;
-    this.game.canvas.setAttribute('tabindex', '-1'); this.game.canvas.focus({ preventScroll: true });
+    this.game.canvas.setAttribute('tabindex', '-1');
+    if (endingModal) el('modal-body').querySelector('button')?.focus();
+    else this.game.canvas.focus({ preventScroll: true });
   }
   newGame() {
+    endingModal = false; el('modal-close').hidden = false; closeModal(); this.endingOpening = undefined;
     const story = newStory();
     const actor = resolvePointleshScene(authoredScenes, story.roomId).objects.find(object => object.properties.role === 'player');
     const controller = new CharacterController({ ...this.character.config,
@@ -849,6 +891,7 @@ class ForestAdventure extends Phaser.Scene {
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
       cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
+        ...(this.endingOpening ? { endingOpening: this.endingOpening as unknown as JSONValue } : {}),
         ...(this.roomTransition.active ? { roomTransition: this.roomTransition.snapshot() as unknown as JSONValue } : {}),
         ...(this.campStealth.snapshot() ? { campStealth: this.campStealth.snapshot() as unknown as JSONValue } : {}),
         ...(this.story.chestOpening ? { chestOpening: { ...this.story.chestOpening } } : {}),
@@ -881,6 +924,10 @@ class ForestAdventure extends Phaser.Scene {
       }
     }
     const opening = save.extensions.chestOpening as { elapsedMs: number } | undefined;
+    const endingOpening = save.extensions.endingOpening as unknown as EndingOpening | undefined;
+    if (endingOpening && (!Number.isFinite(endingOpening.position?.x) || !Number.isFinite(endingOpening.position?.y) ||
+      !['up', 'down', 'left', 'right', 'up-left', 'up-right', 'down-left', 'down-right'].includes(endingOpening.facing) ||
+      !Number.isFinite(endingOpening.zoom) || endingOpening.zoom <= 0 || !Number.isFinite(endingOpening.x) || !Number.isFinite(endingOpening.y))) throw new Error('Invalid ending opening pose');
     if (opening !== undefined && (!opening || !Number.isFinite(opening.elapsedMs) || opening.elapsedMs < 0 || opening.elapsedMs >= CHEST_OPEN_DURATION_MS || save.roomId !== 'mine' || !save.flags.knowsPassword || save.flags.chestOpen || save.flags.tookPickaxe)) throw new Error('Invalid chest-opening checkpoint');
     const tying = save.extensions.tyingGuard as { elapsedMs: number } | undefined;
     if (tying !== undefined && (!tying || !Number.isFinite(tying.elapsedMs) || tying.elapsedMs < 0 || save.roomId !== 'camp' || !save.flags.guardAsleep || save.flags.guardBound || !save.inventory.includes('rope'))) throw new Error('Invalid rope-tying checkpoint');
@@ -892,6 +939,8 @@ class ForestAdventure extends Phaser.Scene {
     const conversation = new AdventureDialog(dialogs, assets); const turn = conversation.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const checkpoint = save.cutscene as ForestCheckpoint;
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
+    endingModal = false; el('modal-close').hidden = false;
+    this.endingOpening = save.extensions.endingOpening as unknown as EndingOpening | undefined;
     this.cinematic?.destroy(); this.cinematic = undefined;
     this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
@@ -911,6 +960,7 @@ class ForestAdventure extends Phaser.Scene {
     this.syncTransitionDoors();
     this.binding.sync(); this.render(); this.renderCutscene(); this.renderTyingGuard();
     this.renderPeek();
+    this.renderPour();
     this.roomCamera.snap();
   }
   update(_time: number, delta: number) {
@@ -950,7 +1000,11 @@ class ForestAdventure extends Phaser.Scene {
     }
     for (const npc of this.npcActors.values()) {
       if (npc.actorName === 'guard' && this.guardPatrol) {
-        if (!paused && !this.talking) this.guardPatrol.update(Math.min(delta, 100));
+        if (this.talking && this.speakingVoice === 'guard' && !this.story.flags.guardAsleep) {
+          const speech = el('speech').textContent ?? '';
+          if (npc.controller.state.speech?.text !== speech) void npc.controller.say(speech, 3600000);
+          if (!paused) npc.binding.update(Math.min(delta, 100));
+        } else if (!paused && !this.talking) { npc.controller.finishSpeech(); this.guardPatrol.update(Math.min(delta, 100)); }
         else npc.binding.sync();
         this.story.flags.guardDistracted = this.guardPatrol.distracted;
         continue;
@@ -967,6 +1021,7 @@ class ForestAdventure extends Phaser.Scene {
     this.syncTransitionDoors();
     this.renderTyingGuard();
     this.renderPeek();
+    this.renderPour();
     if (!this.cinematic) this.characterLighting.sync(forestLighting(this.story.roomId, this.resolved().objects, id => this.entitySprites.get(id)));
     for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
   }
@@ -1058,6 +1113,8 @@ addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
+addBrewAssets(assets);
+addChestGuesses(dialogs, assets);
 addCharacterPortraits(authoredScenes);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.

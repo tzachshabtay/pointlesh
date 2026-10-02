@@ -26,14 +26,14 @@ test('the poison trip walks via the clear floor, applies only at the pot, and re
       const copy = setup(); copy.hero.restore(run.hero.snapshot()); copy.stealth.restore(state);
       for (let j = 0; j < 1000 && copy.stealth.busy; j++) copy.tick();
       assert.deepEqual(copy.hero.state.position, cover);
-      assert.equal(copy.events.filter(event => event === 'poison').length, state.phase === 'outbound' ? 1 : 0);
+      assert.equal(copy.events.filter(event => event === 'poison').length, ['outbound', 'pour'].includes(state.phase) ? 1 : 0);
       restored.add(key);
     }
     run.tick();
     if (run.events.includes('poison')) assert.equal(run.stealth.snapshot().phase === 'outbound', false);
   }
   assert.deepEqual(run.events, ['poison', 'done']); assert.deepEqual(run.hero.state.position, cover);
-  assert.equal(run.stealth.peeking, true); assert.equal(restored.size, 4);
+  assert.equal(run.stealth.peeking, true); assert.equal(restored.size, 5);
   run.stealth.release(clear);
   for (let i = 0; i < 1000 && run.stealth.busy; i++) run.tick();
   assert.deepEqual(run.hero.state.position, clear); assert.equal(run.stealth.snapshot(), null);
@@ -42,6 +42,17 @@ test('an interrupted approach cannot poison the pot from a distance', () => {
   const run = setup(); run.stealth.start(cover); run.stealth.poison(pot, clear);
   run.hero.stop(); run.stealth.update(20);
   assert.deepEqual(run.events, []); assert.equal(run.stealth.snapshot().phase, 'return');
+});
+test('check the guard before the pour starts; finish a accepted pour once even after he turns', () => {
+  const hero = new CharacterController({ id: 'borin', position: pot, movementLinkedToAnimation: false });
+  let watching = false, calls = 0;
+  const stealth = new CampStealth(hero, { canPour: () => !watching, poison: () => { calls++; return 'done'; }, returned: () => {} });
+  const checkpoint = { phase: 'outbound', elapsedMs: 0, cover, clearance: clear, path: [pot], waypoint: 0 };
+  stealth.restore(checkpoint); stealth.update(0); assert.equal(stealth.pouring, true);
+  watching = true; stealth.update(800); assert.equal(calls, 0);
+  const saved=stealth.snapshot(); stealth.restore(saved); stealth.update(1000); assert.equal(calls, 1);
+  stealth.update(1000); assert.equal(calls, 1);
+  stealth.restore(checkpoint); stealth.update(0); assert.equal(stealth.pouring, false); assert.equal(calls, 1);
 });
 test('the peeking idle clock starts at zero and survives save/load without moving the feet', () => {
   const run = setup(); run.stealth.start(cover);

@@ -196,6 +196,10 @@
         "peek-idle": {
           "assetId": "borin.peek-idle",
           "label": "Peeking idle"
+        },
+        "pour-back": {
+          "label": "Pour brew · back",
+          "assetId": "borin.pour-back"
         }
       },
       "tags": [
@@ -952,6 +956,34 @@
         "line.chest-open.open-chest": {
           "label": "Chest Open · Stone remembers.",
           "assetId": "line.chest-open.open-chest"
+        },
+        "line.chest-locked.bar-tab": {
+          "label": "Chest Locked · My bar tab? I was hoping it would forget.",
+          "assetId": "line.chest-locked.bar-tab"
+        },
+        "line.chest-locked.bad-beard": {
+          "label": "Chest Locked · That terrible beard I had at sixteen?",
+          "assetId": "line.chest-locked.bad-beard"
+        },
+        "line.chest-locked.knock-knock": {
+          "label": "Chest Locked · Knock knock. Who’s there? A pickaxe, hopefully.",
+          "assetId": "line.chest-locked.knock-knock"
+        },
+        "line.chest-open.guess": {
+          "label": "Chest Open · …where I left my keys?",
+          "assetId": "line.chest-open.guess"
+        },
+        "line.chest-open.bar-tab": {
+          "label": "Chest Open · My bar tab? I was hoping it would forget.",
+          "assetId": "line.chest-open.bar-tab"
+        },
+        "line.chest-open.bad-beard": {
+          "label": "Chest Open · That terrible beard I had at sixteen?",
+          "assetId": "line.chest-open.bad-beard"
+        },
+        "line.chest-open.knock-knock": {
+          "label": "Chest Open · Knock knock. Who’s there? A pickaxe, hopefully.",
+          "assetId": "line.chest-open.knock-knock"
         }
       }
     },
@@ -5810,12 +5842,12 @@
     "inventory.sleepyStout": {
       "id": "inventory.sleepyStout",
       "kind": "image",
-      "prompt": "Dreamcap stout. An exceptionally relaxing brew.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background.",
+      "prompt": "Honey stout mixed with violet dreamcap mushrooms. Purple bubbling ooze, copper-banded wooden mug, transparent pixel art.",
       "dimensions": {
         "width": 32,
         "height": 32
       },
-      "activeVersion": "original",
+      "activeVersion": "purple-brew",
       "versions": {
         "original": {
           "name": "original",
@@ -5824,12 +5856,24 @@
           "createdAt": "2026-09-20T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        },
+        "purple-brew": {
+          "name": "purple-brew",
+          "file": "art/interface/inventory.sleepyStout.purple.png",
+          "prompt": "Honey stout mixed with violet dreamcap mushrooms. Purple bubbling ooze, copper-banded wooden mug, transparent pixel art.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Borin and tankard references. Prompts and source sheets in art-source/brew. Packed with one scale and fixed feet/mug anchors."
         }
       },
       "linkedAnimationAssets": {
         "click": {
           "label": "Click",
           "assetId": "inventory.sleepyStout.click"
+        },
+        "idle": {
+          "label": "Bubbling ooze",
+          "assetId": "inventory.sleepyStout.idle"
         }
       },
       "tags": [
@@ -5840,17 +5884,17 @@
     "inventory.sleepyStout.click": {
       "id": "inventory.sleepyStout.click",
       "kind": "animation",
-      "prompt": "Dreamcap stout. An exceptionally relaxing brew.. Readable 32 by 32 pixel-art adventure UI icon, transparent background, dark one-pixel outline, warm copper and cream highlights, Bramblehollow forest palette. No text or background. Six-frame click confirmation: small squash, bounce, then a brief golden glint; return exactly to the base pose. Preserve the item identity and the 32 by 32 canvas in every frame.",
+      "prompt": "Purple dreamcap stout bubbles and oozes gently over the copper-banded wooden tankard. Eight frames, fixed mug position, transparent pixel art, seamless loop.",
       "dimensions": {
-        "width": 192,
-        "height": 32
+        "width": 128,
+        "height": 64
       },
       "frameGrid": {
         "frameWidth": 32,
         "frameHeight": 32,
-        "columns": 6,
-        "rows": 1,
-        "frameCount": 6
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
       },
       "animations": [
         {
@@ -5861,13 +5905,15 @@
             2,
             3,
             4,
-            5
+            5,
+            6,
+            7
           ],
           "frameRate": 12,
           "repeat": 0
         }
       ],
-      "activeVersion": "original",
+      "activeVersion": "purple-brew",
       "versions": {
         "original": {
           "name": "original",
@@ -5876,12 +5922,25 @@
           "createdAt": "2026-09-20T00:00:00.000Z",
           "model": "pointlesh-pixel-art",
           "notes": "Original pixel art; regenerate with demos/forest/scripts/generate-interface-art.ts. Editable in AI Assets."
+        },
+        "purple-brew": {
+          "name": "purple-brew",
+          "file": "art/interface/inventory.sleepyStout.purple-idle.png",
+          "prompt": "Purple dreamcap stout bubbles and oozes gently over the copper-banded wooden tankard. Eight frames, fixed mug position, transparent pixel art, seamless loop.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Borin and tankard references. Prompts and source sheets in art-source/brew. Packed with one scale and fixed feet/mug anchors."
         }
       },
       "tags": [
         "forest",
-        "click"
-      ]
+        "character"
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      }
     },
     "inventory.pickaxe": {
       "id": "inventory.pickaxe",
@@ -10174,6 +10233,215 @@
         "miner",
         "speak"
       ]
+    },
+    "inventory.sleepyStout.idle": {
+      "id": "inventory.sleepyStout.idle",
+      "kind": "animation",
+      "prompt": "Purple dreamcap stout bubbles and oozes gently over the copper-banded wooden tankard. Eight frames, fixed mug position, transparent pixel art, seamless loop.",
+      "dimensions": {
+        "width": 128,
+        "height": 64
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "inventory.sleepyStout.idle",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "purple-brew",
+      "versions": {
+        "purple-brew": {
+          "name": "purple-brew",
+          "file": "art/interface/inventory.sleepyStout.purple-idle.png",
+          "prompt": "Purple dreamcap stout bubbles and oozes gently over the copper-banded wooden tankard. Eight frames, fixed mug position, transparent pixel art, seamless loop.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Borin and tankard references. Prompts and source sheets in art-source/brew. Packed with one scale and fixed feet/mug anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "inventory"
+      ]
+    },
+    "borin.pour-back": {
+      "id": "borin.pour-back",
+      "kind": "animation",
+      "prompt": "The current Borin from behind raises the purple stout tankard, tips it into an unseen cauldron, then lowers it. Eight full-body frames with fixed body scale and feet; no scenery.",
+      "dimensions": {
+        "width": 800,
+        "height": 400
+      },
+      "frameGrid": {
+        "frameWidth": 200,
+        "frameHeight": 200,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "borin.pour-back",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            },
+            {
+              "delayMs": 225
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "purple-brew",
+      "versions": {
+        "purple-brew": {
+          "name": "purple-brew",
+          "file": "art/characters/borin/pour-back.png",
+          "prompt": "The current Borin from behind raises the purple stout tankard, tips it into an unseen cauldron, then lowers it. Eight full-body frames with fixed body scale and feet; no scenery.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Borin and tankard references. Prompts and source sheets in art-source/brew. Packed with one scale and fixed feet/mug anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "character"
+      ]
+    },
+    "line.chest-locked.bar-tab": {
+      "id": "line.chest-locked.bar-tab",
+      "kind": "voice-line",
+      "prompt": "STONE REMEMBERS. MARA REMEMBERS MORE.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "STONE REMEMBERS. MARA REMEMBERS MORE."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-locked.bad-beard": {
+      "id": "line.chest-locked.bad-beard",
+      "kind": "voice-line",
+      "prompt": "SOME THINGS EVEN A MOUNTAIN WOULD PREFER TO FORGET.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "SOME THINGS EVEN A MOUNTAIN WOULD PREFER TO FORGET."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-locked.knock-knock": {
+      "id": "line.chest-locked.knock-knock",
+      "kind": "voice-line",
+      "prompt": "A DWARF WITH A BETTER JOKE MAY TRY AGAIN. YOURS IS NOT THE PASSWORD.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "A DWARF WITH A BETTER JOKE MAY TRY AGAIN. YOURS IS NOT THE PASSWORD."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-open.guess": {
+      "id": "line.chest-open.guess",
+      "kind": "voice-line",
+      "prompt": "THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-open.bar-tab": {
+      "id": "line.chest-open.bar-tab",
+      "kind": "voice-line",
+      "prompt": "STONE REMEMBERS. MARA REMEMBERS MORE.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "STONE REMEMBERS. MARA REMEMBERS MORE."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-open.bad-beard": {
+      "id": "line.chest-open.bad-beard",
+      "kind": "voice-line",
+      "prompt": "SOME THINGS EVEN A MOUNTAIN WOULD PREFER TO FORGET.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "SOME THINGS EVEN A MOUNTAIN WOULD PREFER TO FORGET."
+      },
+      "activeVersion": "",
+      "versions": {}
+    },
+    "line.chest-open.knock-knock": {
+      "id": "line.chest-open.knock-knock",
+      "kind": "voice-line",
+      "prompt": "A DWARF WITH A BETTER JOKE MAY TRY AGAIN. YOURS IS NOT THE PASSWORD.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.chest",
+        "text": "A DWARF WITH A BETTER JOKE MAY TRY AGAIN. YOURS IS NOT THE PASSWORD."
+      },
+      "activeVersion": "",
+      "versions": {}
     }
   },
   "styleGuide": {
@@ -10899,6 +11167,14 @@
     "portrait.miner.speak": [
       "Graphics",
       "Portraits"
+    ],
+    "inventory.sleepyStout.idle": [
+      "Graphics",
+      "Inventory"
+    ],
+    "borin.pour-back": [
+      "Graphics",
+      "Characters"
     ]
   }
 }

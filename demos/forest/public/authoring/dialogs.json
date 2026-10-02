@@ -310,6 +310,24 @@
               "text": "…where I left my keys?",
               "enabled": true,
               "nextNodeId": "answer-guess"
+            },
+            {
+              "id": "bar-tab",
+              "text": "My bar tab? I was hoping it would forget.",
+              "enabled": true,
+              "nextNodeId": "answer-bar-tab"
+            },
+            {
+              "id": "bad-beard",
+              "text": "That terrible beard I had at sixteen?",
+              "enabled": true,
+              "nextNodeId": "answer-bad-beard"
+            },
+            {
+              "id": "knock-knock",
+              "text": "Knock knock. Who’s there? A pickaxe, hopefully.",
+              "enabled": true,
+              "nextNodeId": "answer-knock-knock"
             }
           ]
         },
@@ -324,6 +342,48 @@
               "enabled": true,
               "voiceAssetId": "voice.chest",
               "lineAssetId": "line.chest-locked.guess"
+            }
+          ]
+        },
+        "answer-bar-tab": {
+          "id": "answer-bar-tab",
+          "type": "block",
+          "name": "My bar tab? I was hoping it would forget.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "bar-tab",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-locked.bar-tab"
+            }
+          ]
+        },
+        "answer-bad-beard": {
+          "id": "answer-bad-beard",
+          "type": "block",
+          "name": "That terrible beard I had at sixteen?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "bad-beard",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-locked.bad-beard"
+            }
+          ]
+        },
+        "answer-knock-knock": {
+          "id": "answer-knock-knock",
+          "type": "block",
+          "name": "Knock knock. Who’s there? A pickaxe, hopefully.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "knock-knock",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-locked.knock-knock"
             }
           ]
         }
@@ -362,6 +422,30 @@
               "text": "Stone remembers.",
               "enabled": true,
               "nextNodeId": "answer-open-chest"
+            },
+            {
+              "id": "guess",
+              "text": "…where I left my keys?",
+              "enabled": true,
+              "nextNodeId": "answer-guess"
+            },
+            {
+              "id": "bar-tab",
+              "text": "My bar tab? I was hoping it would forget.",
+              "enabled": true,
+              "nextNodeId": "answer-bar-tab"
+            },
+            {
+              "id": "bad-beard",
+              "text": "That terrible beard I had at sixteen?",
+              "enabled": true,
+              "nextNodeId": "answer-bad-beard"
+            },
+            {
+              "id": "knock-knock",
+              "text": "Knock knock. Who’s there? A pickaxe, hopefully.",
+              "enabled": true,
+              "nextNodeId": "answer-knock-knock"
             }
           ]
         },
@@ -376,6 +460,62 @@
               "enabled": true,
               "voiceAssetId": "voice.chest",
               "lineAssetId": "line.chest-open.open-chest"
+            }
+          ]
+        },
+        "answer-guess": {
+          "id": "answer-guess",
+          "type": "block",
+          "name": "…where I left my keys?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "guess",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-open.guess"
+            }
+          ]
+        },
+        "answer-bar-tab": {
+          "id": "answer-bar-tab",
+          "type": "block",
+          "name": "My bar tab? I was hoping it would forget.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "bar-tab",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-open.bar-tab"
+            }
+          ]
+        },
+        "answer-bad-beard": {
+          "id": "answer-bad-beard",
+          "type": "block",
+          "name": "That terrible beard I had at sixteen?",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "bad-beard",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-open.bad-beard"
+            }
+          ]
+        },
+        "answer-knock-knock": {
+          "id": "answer-knock-knock",
+          "type": "block",
+          "name": "Knock knock. Who’s there? A pickaxe, hopefully.",
+          "enabled": true,
+          "lines": [
+            {
+              "id": "knock-knock",
+              "enabled": true,
+              "voiceAssetId": "voice.chest",
+              "lineAssetId": "line.chest-open.knock-knock"
             }
           ]
         }

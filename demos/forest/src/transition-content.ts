@@ -227,10 +227,19 @@ export function forestPortal(manifest: SceneDesignerManifest, roomId: RoomId, to
   const threshold = point(transitionThresholdId(roomId, to));
   const approach = roomId === 'forest' && to === 'mine'
     ? findClosestReachablePath(inside, threshold, walkablePolygons(room)) ?? [inside] : [inside];
+  const animatedDoor = door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true;
+  if (animatedDoor) {
+    const last = approach.at(-1)!, length = Math.hypot(threshold.x - last.x, threshold.y - last.y);
+    // A waiting point outside the swinging leaf lets the safe part of the
+    // incoming/outgoing walk overlap the door clock without changing its line.
+    const clearance = Math.min(45, length * .8);
+    if (length > 1) approach.push({ x: threshold.x + (last.x - threshold.x) * clearance / length,
+      y: threshold.y + (last.y - threshold.y) * clearance / length });
+  }
   const path = [...approach, threshold, point(transitionOutsideId(roomId, to))];
   return { roomId, areaId: transitionAreaId(roomId, to),
     path,
     ...(door ? { handoffIndex: path.length - 2 } : {}),
-    ...(door && room.objects.find(object => object.id === doorObjectId(door))?.properties.doorAlwaysOpen !== true
-      ? { doorId: doorObjectId(door), doorDurationMs: 900 } : {}) };
+    ...(animatedDoor ? { doorId: doorObjectId(door), doorDurationMs: 900, doorCloseDurationMs: 450,
+      doorClearance: Math.min(45, Math.hypot(threshold.x - inside.x, threshold.y - inside.y) * .8), openingWaypoint: approach.length - 1 } : {}) };
 }

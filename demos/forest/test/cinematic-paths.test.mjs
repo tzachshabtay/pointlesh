@@ -19,7 +19,7 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) {
       const length = walkLength(path);
       for (let d = 0; d <= length; d += 3) assert.ok(isWalkable(sampleWalk(path, d), floors));
     }
-    assert.deepEqual(departure.path[0], departure.portal.path[1]);
+    assert.deepEqual(departure.path[0], departure.portal.path[departure.portal.handoffIndex]);
     assert.ok(departure.clearDistance > 0);
   });
   test(`${label} village ambush leaves spear clearance and a proper right-orc approach`, () => {

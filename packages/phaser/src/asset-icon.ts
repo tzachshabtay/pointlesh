@@ -10,6 +10,8 @@ export type AdventureIconOptions = {
   pixelArt?: boolean;
   /** Pause the UI animation clock, for example while the game's menu is open. */
   paused?: () => boolean;
+  /** Optional linked animation to loop while no click/action animation is playing. */
+  idleAnimation?: string;
 };
 
 /** An AI Assets image/animation rendered into HTML: inventory, cursors or portraits. */
@@ -42,6 +44,7 @@ export class PhaserAdventureIcon {
     scene.events.once('shutdown', this.destroy);
   }
   get playing(): boolean { return !!this.state; }
+  get feedbackPlaying(): boolean { return !!this.state && this.state !== this.options.idleAnimation; }
   get asset(): string { return this.assetId; }
   get displayWidth(): number { return this.width; }
   get displayHeight(): number { return this.height; }
@@ -53,11 +56,14 @@ export class PhaserAdventureIcon {
   play(state = 'click', options: { loop?: boolean } = {}): void {
     this.state = state; this.loop = options.loop === true; this.elapsed = 0; this.refresh();
   }
-  /** Return to the base image. */
+  /** Return to the base image or configured idle animation. */
   stop(): void { this.state = undefined; this.elapsed = 0; this.refresh(); }
   /** Call after forwarding AI Assets designer callbacks to the runtime. */
   refresh(): void {
     if (this.destroyed) return;
+    if (!this.state && this.options.idleAnimation && this.runtime.manifest.assets[this.assetId]?.linkedAnimationAssets?.[this.options.idleAnimation]) {
+      this.state = this.options.idleAnimation; this.loop = true;
+    }
     this.binding?.destroy(); this.playback?.destroy(); this.playback = undefined;
     this.sprite.anims.stop();
     let source = this.assetId;

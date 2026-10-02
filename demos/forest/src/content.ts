@@ -1,4 +1,4 @@
-import { defineAiAssets, type AiAssetDefinition } from '@ai-game-assets/core';
+import { defineAiAssets, type AiAssetDefinition, type AiAssetManifest } from '@ai-game-assets/core';
 import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
 import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
 import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
@@ -11,6 +11,7 @@ import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-asse
 import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
 import { addRescueAssets } from './rescue-assets';
+import { addBrewAssets } from './brew-assets';
 import { addIntroAssets } from './intro-assets';
 import { addStealthAssets } from './stealth-assets';
 import { addDoorAssets, addForestTransitions } from './transition-content';
@@ -105,6 +106,12 @@ function dialog(id: string, speaker: string, greeting: string, options: { id: st
   for (const option of options) nodes[`answer-${option.id}`] = { id: `answer-${option.id}`, type: 'block', name: option.text, enabled: true, lines: [line(option.id, option.reply, option.text)] };
   return { id, name: roomNames[id as keyof typeof roomNames] ?? id, enabled: true, entryNodeId: 'opening', nodes };
 }
+export const chestGuesses = [
+  { id: 'guess', text: '…where I left my keys?', reply: 'THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words.' },
+  { id: 'bar-tab', text: 'My bar tab? I was hoping it would forget.', reply: 'STONE REMEMBERS. MARA REMEMBERS MORE.' },
+  { id: 'bad-beard', text: 'That terrible beard I had at sixteen?', reply: 'SOME THINGS EVEN A MOUNTAIN WOULD PREFER TO FORGET.' },
+  { id: 'knock-knock', text: 'Knock knock. Who’s there? A pickaxe, hopefully.', reply: 'A DWARF WITH A BETTER JOKE MAY TRY AGAIN. YOURS IS NOT THE PASSWORD.' },
+];
 export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
   elder: dialog('elder', 'elder', 'Borin. You have your father’s stubborn look. Good. We will need it.', [
     { id: 'king', text: 'Where did they take the king?', reply: kingRescueReply },
@@ -121,13 +128,32 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
     { id: 'mining', text: 'Finding much gold these days?', reply: 'Enough to pay Mara. So, no.' },
     { id: 'goodbye', text: 'I will return your pickaxe.', reply: 'Bring the king back first. The pickaxe can wait.' }
   ]),
-  'chest-locked': dialog('chest-locked', 'chest', 'WHAT DOES THE MOUNTAIN REMEMBER?', [
-    { id: 'guess', text: '…where I left my keys?', reply: 'THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words.' }
-  ]),
+  'chest-locked': dialog('chest-locked', 'chest', 'WHAT DOES THE MOUNTAIN REMEMBER?', chestGuesses),
   'chest-open': dialog('chest-open', 'chest', 'WHAT DOES THE MOUNTAIN REMEMBER?', [
+    ...chestGuesses,
     { id: 'open-chest', text: 'Stone remembers.', reply: 'The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.' }
   ])
 } });
+const chestDefaults = structuredClone({ locked: dialogs.dialogs['chest-locked']!, open: dialogs.dialogs['chest-open']!,
+  lines: Object.fromEntries(Object.entries(definitions).filter(([id]) => id.startsWith('line.chest-'))) });
+/** Add new chest topics without replacing edited dialogs or promoted voice lines. */
+export function addChestGuesses(dialogManifest: typeof dialogs, assetManifest: AiAssetManifest): void {
+  for (const source of [chestDefaults.locked, chestDefaults.open]) {
+    const current = dialogManifest.dialogs[source.id];
+    if (!current) { dialogManifest.dialogs[source.id] = structuredClone(source); continue; }
+    const topics = current.nodes.topics, defaults = source.nodes.topics;
+    if (topics?.type !== 'decision' || defaults?.type !== 'decision') continue;
+    for (const option of defaults.options) {
+      if (!topics.options.some(existing => existing.id === option.id)) topics.options.push(structuredClone(option));
+      if (option.nextNodeId) current.nodes[option.nextNodeId] ??= structuredClone(source.nodes[option.nextNodeId]!);
+    }
+  }
+  for (const [id, line] of Object.entries(chestDefaults.lines)) {
+    assetManifest.assets[id] ??= structuredClone(line);
+    const voice = assetManifest.assets['voice.chest'];
+    if (voice) (voice.linkedAnimationAssets ??= {})[id] ??= structuredClone(definitions['voice.chest']!.linkedAnimationAssets![id]!);
+  }
+}
 export const assets = {
   ...defineAiAssets(definitions), styleGuide: bramblehollowStyleGuide,
   assetPaths: {
@@ -144,6 +170,7 @@ addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
+addBrewAssets(assets);
 
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');

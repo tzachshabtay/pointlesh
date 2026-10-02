@@ -195,6 +195,8 @@ Pass `size` to the cursor for an explicit fixed square fit box. Icons accept `wi
 
 Give each icon a base image and a linked animation state named `click`. Calling `play('click')` on an icon, or `click()` on the cursor, plays one cycle and returns to the base image. The cursor keeps the clicked asset until the cycle finishes, including when an inventory item is consumed during that click.
 
+For an animated inventory item, pass `idleAnimation: 'idle'` to its icon and link that state on its base asset. The resting loop resumes after click feedback; `stop()` also returns to it. Cursors automatically use a linked `idle` state when available. `playing` includes resting loops, while `feedbackPlaying` identifies explicit action playback, so an idle loop never pins an old cursor or leaves a permanent touch cursor. The forest demo's dreamcap stout uses this for purple bubbling ooze.
+
 ```ts
 const icon = new PhaserAdventureIcon(scene, assets, { assetId: 'inventory.rope', width: 36, height: 36 });
 inventoryButton.append(icon.canvas);
