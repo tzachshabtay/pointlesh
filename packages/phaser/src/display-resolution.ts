@@ -85,8 +85,12 @@ export function installPhaserDisplayResolution(game: Phaser.Game, options: Phase
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
-      // Canvas resizing can reset GL state even when cached values are equal.
-      originalUpdate.call(wrapper, undefined, true);
+      // Rebind the active VAO's own indices. Phaser's element-buffer cache can
+      // still refer to the last Graphics mask after switching back to quads;
+      // forcing that stale binding would permanently overwrite the quad VAO.
+      const state = wrapper.state;
+      const restored = state.vao ? { ...state, bindings: { ...state.bindings, elementArrayBuffer: state.vao.indexBuffer } } : state;
+      originalUpdate.call(wrapper, restored, true);
     }
   };
   const resized = () => { dirty = true; };

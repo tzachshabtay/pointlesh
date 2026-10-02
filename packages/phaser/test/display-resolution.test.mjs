@@ -11,7 +11,8 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     const view = { devicePixelRatio: 2, getComputedStyle: () => ({ objectFit: "fill" }) }, rect = { width: 590, height: 331.875 };
     const canvas = { width: 960, height: 540, style: { imageRendering: 'pixelated' }, ownerDocument: { defaultView: view }, getBoundingClientRect: () => rect };
     const framebuffer = {}, calls = [];
-    const wrapper = { state: {}, update(...args) { calls.push(args); } };
+    const quadIndices = {}, maskIndices = {};
+    const wrapper = { state: { vao: { indexBuffer: quadIndices }, bindings: { elementArrayBuffer: maskIndices } }, update(...args) { calls.push(args); } };
     const original = wrapper.update;
     const uniforms = new Map(), programManager = { setUniform(name,value) { uniforms.set(name,value); } };
     const setup = function () { this.programManager.setUniform('uLights[0].position',[480,270,40]); this.programManager.setUniform('uLights[0].radius',100); this.programManager.setUniform('uResolution',[960,540]); };
@@ -22,6 +23,7 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     const handle = installPhaserDisplayResolution(game);
     assert.equal(installPhaserDisplayResolution(game), handle);
     assert.deepEqual([canvas.width, canvas.height], [1180, 664]);
+    assert.equal(calls.at(-1)[0].bindings.elementArrayBuffer, quadIndices, 'resize restores quad indices instead of the stale mask buffer');
     assert.deepEqual(scale.gameSize, { width: 960, height: 540 });
     const draw = { bindings: { framebuffer }, viewport: [0, 0, 960, 540], scissor: { enable: true, box: [240, 135, 480, 270] } };
     const before = structuredClone(draw);
@@ -40,6 +42,7 @@ test('device resolution scales canvas draws without changing cameras, pointer sp
     quad.setupUniforms({state:offscreen});assert.deepEqual(uniforms.get('uLights[0].position'),[480,270,40]);assert.equal(uniforms.get('uLights[0].radius'),100);
     rect.width = 400; rect.height = 225; observerCallback(); renderer.emit('prerenderclear');
     assert.deepEqual([canvas.width, canvas.height], [800, 450]);
+    assert.equal(calls.at(-1)[0].bindings.elementArrayBuffer, quadIndices);
     view.devicePixelRatio = 1; renderer.emit('prerenderclear');
     assert.deepEqual([canvas.width, canvas.height], [400, 225]);
     // Scale-manager resizes must not leave the backing canvas at logical resolution.
