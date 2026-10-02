@@ -10,6 +10,10 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 .cinematic-playing .scene-bar,.cinematic-playing .inventory-bar { background:#000; border-color:#000; }
 .cinematic-playing .scene-bar { height:auto; min-height:47px; gap:20px; padding-block:8px; }
 .cinematic-playing .scene-bar>div:first-child { display:none; }
+.cinematic-playing .game-tools { display:none; }
+.cinematic-playing.debug-build .game-tools { display:flex; }
+.cinematic-playing .game-tools>button:not(#designer) { display:none; }
+.cinematic-playing.debug-build .game-tools #designer { display:block; }
 #cutscene { flex:1; min-width:0; }
 .cutscene-inner { width:100%; }
 .cutscene-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }

@@ -28,8 +28,8 @@ for (const width of [1440, 390]) test(`cinematic bars occupy the game UI strips 
   expect(layout.controls.right).toBeLessThanOrEqual(layout.stage.right);
   expect(layout.caption.right).toBeLessThanOrEqual(layout.stage.right);
   expect(layout.canvasBorders).toBe(0);
-  await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Load', exact: true })).toBeVisible();
+  for (const id of ['menu', 'map', 'journal', 'save', 'load']) await expect(page.locator(`#${id}`)).toBeHidden();
+  await expect(page.locator('#designer')).toBeVisible();
   await expect(page.locator('#inventory')).toBeHidden();
   await page.screenshot({ path: testInfo.outputPath('cinematic-bars.png'), fullPage: true });
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
@@ -37,6 +37,18 @@ for (const width of [1440, 390]) test(`cinematic bars occupy the game UI strips 
   await expect(page.locator('#inventory')).toBeVisible();
   await expect(page.locator('.scene-bar')).toHaveCSS('background-color', 'rgb(27, 41, 33)');
   await expect(page.locator('.inventory-bar')).toHaveCSS('background-color', 'rgb(28, 42, 34)');
+  for (const id of ['menu', 'map', 'journal', 'save', 'load']) await expect(page.locator(`#${id}`)).toBeVisible();
+});
+
+test('production cutscenes hide the complete normal toolbar including Designer', async ({ page }, testInfo) => {
+  test.skip(!process.env.POINTLESH_PRODUCTION_URL, 'Requires a built production preview');
+  await page.goto(process.env.POINTLESH_PRODUCTION_URL!);
+  await page.getByRole('button', { name: 'New game', exact: true }).click();
+  await expect(page.locator('#cutscene')).toBeVisible();
+  for (const id of ['menu', 'map', 'journal', 'save', 'load', 'designer']) await expect(page.locator(`#${id}`)).toBeHidden();
+  await expect(page.locator('#skip-intro')).toBeVisible();
+  await expect(page.locator('#cutscene-next')).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('production-cinematic-toolbar.png') });
 });
 
 test('the king faces front after the homecoming walk and retains that pose on load', async ({ page }, testInfo) => {

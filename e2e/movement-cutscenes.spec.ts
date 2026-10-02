@@ -113,15 +113,19 @@ test('animated intro moves real sprites, restores a timed save checkpoint, and c
   await expect(page.locator('#loading')).toBeHidden();
   await expectCastMotion(page);
   await page.screenshot({ path: testInfo.outputPath('animated-abduction.png'), fullPage: true });
-  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  // Gameplay toolbar buttons are hidden during cutscenes. Pause with Help and
+  // exercise the save store directly, then load through the gameplay UI.
+  await page.getByRole('button', { name: 'How to play', exact: true }).click();
   const saved = (await cinematicView(page))!;
   expect(saved.kind).toBe('intro');
   expect(saved.elapsedMs).toBeGreaterThan(100);
   await page.waitForTimeout(200);
   expect((await cinematicView(page))!.elapsedMs).toBe(saved.elapsedMs);
-  await page.getByRole('button', { name: 'save slot 2', exact: true }).click();
+  await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.saves.save('2', scene.snapshot()); });
+  await page.getByRole('button', { name: 'Close', exact: true }).click();
   await page.locator('#cutscene-next').click();
   await expect.poll(async () => (await cinematicView(page))?.stepIndex).toBe(saved.stepIndex + 1);
+  await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
   await page.getByRole('button', { name: 'Load', exact: true }).click();
   const loadSlot = page.getByRole('button', { name: 'load slot 2', exact: true });
   // Observe after the real load handler, before the next animation frame. A
