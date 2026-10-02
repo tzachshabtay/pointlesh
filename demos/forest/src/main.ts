@@ -748,6 +748,7 @@ class ForestAdventure extends Phaser.Scene {
     }
     document.body.classList.add('cinematic-playing');
     this.cinematic.render(index, runner.snapshot().elapsedMs);
+    el('cutscene-location').textContent = this.cinematic.locationName;
     el('cutscene-kicker').textContent = isEnding ? 'THE JOURNEY HOME' : 'THE STORY BEGINS';
     const step = runner.current()!;
     el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = step.text ?? '';

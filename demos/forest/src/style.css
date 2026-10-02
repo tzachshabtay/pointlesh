@@ -6,28 +6,40 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 
 #dialog-next:is(:hover,:focus-visible) { color:#ffe3a4; text-decoration:underline; text-underline-offset:3px; }
 
-/* Cinematic controls sit around the animation; subtitles leave the stage visible. */
-#cutscene { position:absolute; inset:0; z-index:10; pointer-events:none; background:linear-gradient(transparent 72%,#07100dd9); }
-.cutscene-inner { position:absolute; inset:0; max-width:none; width:100%; padding:18px 26px; display:flex; flex-direction:column; justify-content:space-between; }
-.cutscene-top { display:flex; justify-content:flex-end; align-items:center; gap:12px; }
-.cutscene-top .eyebrow { display:none; margin:0; font-size:9px; text-shadow:0 2px 4px #000; }
-.cutscene-controls { display:flex; align-items:center; gap:18px; pointer-events:auto; }
-.cutscene-controls .quiet { margin:0; color:#e1dfc8; font-size:10px; text-shadow:0 1px 3px #000; }
-.cutscene-controls .primary { padding:7px 11px; font-size:10px; background:#18251bdc; color:#e9d4a6; border:1px solid #8a8d5b; }
+/* Cinematic bars replace the game UI strips without covering the canvas. */
+.cinematic-playing .scene-bar,.cinematic-playing .inventory-bar { background:#000; border-color:#000; }
+.cinematic-playing .scene-bar { height:auto; min-height:47px; gap:20px; padding-block:8px; }
+.cinematic-playing .scene-bar>div:first-child { display:none; }
+#cutscene { flex:1; min-width:0; }
+.cutscene-inner { width:100%; }
+.cutscene-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.cutscene-heading { color:#d4c69c; font:9px monospace; }
+.cutscene-heading .eyebrow { margin:0 0 4px; font-size:8px; }
+.cutscene-controls { display:flex; align-items:center; gap:18px; flex-shrink:0; }
+.cutscene-controls .quiet { margin:0; color:#e1dfc8; font-size:10px; }
+.cutscene-controls .primary { padding:7px 11px; font-size:10px; background:#171717; color:#e9d4a6; border:1px solid #8a8d5b; }
 .cutscene-controls .primary span { margin-left:8px; }
-.cinematic-caption { text-align:center; padding:0 5%; text-shadow:0 2px 3px #000; }
+.cinematic-caption { display:none; width:100%; text-align:center; padding:0 5%; }
+.cinematic-playing .inventory-bar { justify-content:center; }
+.cinematic-playing .inventory-bar>:not(.cinematic-caption) { display:none; }
+.cinematic-playing #inventory { display:none; }
+.cinematic-playing .cinematic-caption { display:block; }
 .cinematic-caption #cutscene-progress { font-size:8px; letter-spacing:4px; color:#d1b986; }
 .cinematic-caption h2 { font:600 11px system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:#e4bd79; margin:8px 0 5px; }
 .cinematic-caption p { font:17px/1.4 Georgia,'Times New Roman',serif; color:#f5ebd3; margin:0; }
 .cinematic-playing #hotspots,.cinematic-playing #guard-status { display:none; }
+@media(max-width:1000px) {
+  .cinematic-playing .scene-bar { flex-wrap:wrap; gap:4px 12px; }
+  .cinematic-playing #cutscene { flex-basis:100%; }
+  .cinematic-playing .game-tools { margin-left:auto; }
+}
 @media(max-width:800px) {
-  .cutscene-inner { padding:12px 15px; }
   .cinematic-caption p { font-size:14px; }
   .cinematic-caption h2 { font-size:10px; margin:5px 0 3px; }
 }
 @media(max-width:480px) {
-  .cutscene-inner { padding:8px 10px; }
-  .cutscene-top .eyebrow { font-size:6px; letter-spacing:1px; }
+  .cutscene-heading { font-size:7px; }
+  .cutscene-heading .eyebrow { font-size:6px; letter-spacing:1px; }
   .cutscene-controls { gap:10px; }
   .cutscene-controls .quiet { font-size:8px; }
   .cutscene-controls .primary { font-size:8px; padding:5px 7px; }

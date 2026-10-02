@@ -78,9 +78,8 @@ export class ForestCinematic {
   private departure?: ReturnType<typeof cottageDeparture>;
   private overlayRoom?: string;
   private readonly foreground: Phaser.GameObjects.Graphics;
-  private readonly frame: Phaser.GameObjects.Graphics;
   private readonly fade: Phaser.GameObjects.Rectangle;
-  private readonly location: Phaser.GameObjects.Text;
+  locationName = '';
   private readonly cast = new Map<CastId, CastActor>();
   private readonly ignoredObjects = new Map<Phaser.GameObjects.GameObject, number>();
   private authoredManifest?: SceneDesignerManifest;
@@ -109,12 +108,8 @@ export class ForestCinematic {
       this.world.add([shadow, sprite]);
       this.cast.set(id, { sprite, shadow, sleeping: false });
     }
-    this.frame = scene.add.graphics();
-    this.frame.fillStyle(0x07100d, 1).fillRect(0, 0, W, 34).fillRect(0, H - 28, W, 28);
-    this.frame.lineStyle(1, 0xb69860, 0.4).lineBetween(0, 34, W, 34).lineBetween(0, H - 28, W, H - 28);
-    this.location = scene.add.text(25, 12, '', { fontFamily: 'monospace', fontSize: '10px', color: '#d4c69c', letterSpacing: 2 });
     this.fade = scene.add.rectangle(0, 0, W, H, 0x06100c, 1).setOrigin(0).setAlpha(0);
-    this.root.add([this.frame, this.location, this.fade]);
+    this.root.add(this.fade);
 
     this.camera = scene.cameras.add(0, 0, W, H, false, 'pointlesh-cinematic-camera');
     this.camera.setBackgroundColor('#07110d').setRoundPixels(true);
@@ -241,7 +236,7 @@ export class ForestCinematic {
     for (const overlay of this.overlays) overlay.image.setTint(tint);
     for (const light of this.ambient) light.binding.seek(light.playing ? this.elapsedMs : 0);
     for (const door of this.roomDoors) this.roomDoor(door.object.id, door.object.properties.doorAlwaysOpen ? 1 : 0);
-    this.location.setText(name);
+    this.locationName = name;
     const x = Math.max(W / (2 * zoom), Math.min(size.width - W / (2 * zoom), focusX));
     const y = Math.max(H / (2 * zoom), Math.min(size.height - H / (2 * zoom), focusY));
     this.world.setScale(zoom).setPosition(W / 2 - x * zoom, H / 2 - y * zoom);
@@ -453,7 +448,10 @@ export class ForestCinematic {
       const travelled = smooth(segment(t, 0, .78)) * (length + separation);
       this.pose('borin', { ...sampleWalk(paths.borin, travelled), walking: travelled > 0 && travelled < walkLength(paths.borin),
         transitionAreas: travelled <= paths.entryClearDistance ? [paths.portal.areaId] : [] });
-      this.pose('king', { ...sampleWalk(paths.king, travelled - separation), walking: travelled > separation && travelled - separation < walkLength(paths.king),
+      const kingDistance = travelled - separation;
+      const kingPose = sampleWalk(paths.king, kingDistance);
+      this.pose('king', { ...kingPose, facing: kingDistance >= walkLength(paths.king) ? 'down' : kingPose.facing,
+        walking: kingDistance > 0 && kingDistance < walkLength(paths.king),
         transitionAreas: travelled - separation <= paths.entryClearDistance ? [paths.portal.areaId] : [] });
       this.pose('elder', { x: 359, y: 433, speaking: true });
       this.pose('innkeeper', { x: 274, y: 438 - Math.max(0, Math.sin(this.elapsedMs / 300)) * segment(t, 0.36, 0.62) * 8 });
