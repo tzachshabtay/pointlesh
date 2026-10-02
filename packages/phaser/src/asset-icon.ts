@@ -8,9 +8,11 @@ export type AdventureIconOptions = {
   width?: number;
   height?: number;
   pixelArt?: boolean;
+  /** Pause the UI animation clock, for example while the game's menu is open. */
+  paused?: () => boolean;
 };
 
-/** An AI Assets image/animation rendered into an HTML inventory slot or cursor. */
+/** An AI Assets image/animation rendered into HTML: inventory, cursors or portraits. */
 export class PhaserAdventureIcon {
   readonly canvas: HTMLCanvasElement;
   readonly sprite: Phaser.GameObjects.Sprite;
@@ -18,6 +20,7 @@ export class PhaserAdventureIcon {
   private playback?: AiAssetAnimationPlayback;
   private state?: string;
   private elapsed = 0;
+  private loop = false;
   private assetId: string;
   private destroyed = false;
   private width = 0;
@@ -46,8 +49,12 @@ export class PhaserAdventureIcon {
     if (this.assetId === assetId) return;
     this.assetId = assetId; this.state = undefined; this.elapsed = 0; this.refresh();
   }
-  /** Play a linked state once, then return to the base image, even if authored as looping. */
-  play(state = 'click'): void { this.state = state; this.elapsed = 0; this.refresh(); }
+  /** Play a linked state once by default, or loop it until stop() is called. */
+  play(state = 'click', options: { loop?: boolean } = {}): void {
+    this.state = state; this.loop = options.loop === true; this.elapsed = 0; this.refresh();
+  }
+  /** Return to the base image. */
+  stop(): void { this.state = undefined; this.elapsed = 0; this.refresh(); }
   /** Call after forwarding AI Assets designer callbacks to the runtime. */
   refresh(): void {
     if (this.destroyed) return;
@@ -65,10 +72,11 @@ export class PhaserAdventureIcon {
   private update = (_time: number, delta: number) => {
     if (this.destroyed) return;
     if (this.state) {
-      this.elapsed += Math.max(0, delta);
+      if (!this.options.paused?.()) this.elapsed += Math.max(0, delta);
       const animation = this.playback?.animation;
       const duration = animation?.frames.reduce((sum, _frame, index) => sum + (animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate), 0) ?? 0;
-      if (this.elapsed >= duration) { this.state = undefined; this.elapsed = 0; this.refresh(); }
+      if (duration > 0 && this.loop) this.elapsed %= duration;
+      else if (this.elapsed >= duration) { this.state = undefined; this.elapsed = 0; this.refresh(); }
     }
     this.draw();
   };

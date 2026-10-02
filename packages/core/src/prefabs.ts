@@ -234,7 +234,7 @@ export function createObjectPrefab(input: PointleshObjectPrefabInput & {
     animationKey: input.animationKey ?? '', animationPlaying: input.animationPlaying ?? true, animationLoop: input.animationLoop ?? true }, []);
 }
 
-export function createCharacterPrefab(input: PointleshObjectPrefabInput & { speed?: number; walkStep?: number; frameDurationMs?: number; frameCount?: number; movementLinkedToAnimation?: boolean; directions?: 4 | 8; animations?: CharacterAnimations } = {}): PointleshPrefabDefinition {
+export function createCharacterPrefab(input: PointleshObjectPrefabInput & { speed?: number; walkStep?: number; frameDurationMs?: number; frameCount?: number; movementLinkedToAnimation?: boolean; directions?: 4 | 8; animations?: CharacterAnimations; portraitAssetId?: string; portraitAnimationKey?: string } = {}): PointleshPrefabDefinition {
   if (input.animations !== undefined) assertCharacterAnimations(input.animations);
   if (input.directions !== undefined && input.directions !== 4 && input.directions !== 8) throw new Error('Character directions must be 4 or 8');
   return objectPrefab("character", input, {
@@ -242,6 +242,7 @@ export function createCharacterPrefab(input: PointleshObjectPrefabInput & { spee
     movementLinkedToAnimation: input.movementLinkedToAnimation ?? true,
     facing: "down", directions: input.directions ?? 4,
     animations: structuredClone(input.animations ?? {}),
+    portraitAssetId: input.portraitAssetId ?? '', portraitAnimationKey: input.portraitAnimationKey ?? 'speak',
   }, [
     number("speed", "Walking speed", input.speed ?? 70, { min: 1, step: 1, unit: "pixels-per-second" }),
     number("walkStep", "Pixels per animation frame", input.walkStep ?? 7, { min: 0.1, step: 0.5 }),

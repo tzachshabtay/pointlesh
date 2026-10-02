@@ -353,6 +353,32 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     return [...choices.values()];
   }
 
+  function portraitEditor(target: Target, values: PointleshProperties, edit: (key: string, value: PointleshProperty) => void) {
+    const group = element(document, 'div', 'pointlesh-property-group');
+    const assetId = typeof values.portraitAssetId === 'string' ? values.portraitAssetId : '';
+    const assetField = element(document, 'label', 'pointlesh-inspector-field');
+    assetField.append(element(document, 'span', '', 'Portrait asset'));
+    const asset = document.createElement('select'); asset.setAttribute('aria-label', 'Portrait asset');
+    addOption(asset, '', 'None');
+    const choices = Object.values(aiAssets.assets).filter(asset => ['image', 'animation', 'spritesheet'].includes(asset.kind));
+    for (const choice of choices) addOption(asset, choice.id, choice.id);
+    if (assetId && !aiAssets.assets[assetId]) addOption(asset, assetId, `${assetId} · unavailable`);
+    asset.value = assetId; asset.addEventListener('change', () => edit('portraitAssetId', asset.value));
+    assetField.append(asset); group.append(inheritedField(target, 'portraitAssetId', assetField));
+    const animationField = element(document, 'label', 'pointlesh-inspector-field');
+    animationField.append(element(document, 'span', '', 'Speaking animation'));
+    const animation = document.createElement('select'); animation.setAttribute('aria-label', 'Portrait speaking animation');
+    addOption(animation, '', 'None (still portrait)');
+    const clips = animationChoices(assetId), key = typeof values.portraitAnimationKey === 'string' ? values.portraitAnimationKey : 'speak';
+    for (const clip of clips) addOption(animation, clip.key, clip.label);
+    if (key && !clips.some(clip => clip.key === key)) addOption(animation, key, `${key} · unavailable`);
+    animation.value = key; animation.disabled = !assetId;
+    animation.addEventListener('change', () => edit('portraitAnimationKey', animation.value));
+    animationField.append(animation); group.append(inheritedField(target, 'portraitAnimationKey', animationField));
+    group.append(element(document, 'p', 'pointlesh-inspector-help', 'Optional close-up portrait for your dialog UI. Edit its art and linked speaking animation in Assets.'));
+    return group;
+  }
+
   function areaEditor(target: Target, values: PointleshProperties, schemas: Record<string, PointleshPropertySchema>, edit: (key: string, value: PointleshProperty) => void) {
     const section = element(document, 'section', 'pointlesh-area-capabilities');
     section.setAttribute('aria-label', 'Area capabilities');
@@ -600,6 +626,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     }
     if (isBody || target.metadata.kind === 'hotspot') body.append(walkPointControl(target, values, edit));
     if (isCharacter) body.append(section('Directional animations', animationEditor(target, values, edit)));
+    if (isCharacter) body.append(section('Dialog portrait', portraitEditor(target, values, edit)));
     if (target.metadata.kind === 'object') body.append(section('Animation', objectAnimationEditor(target, values, edit)));
     const isArea = ['area', 'walkable', 'walk-behind', 'scale', 'zoom'].includes(target.metadata.kind);
     if (isArea) body.append(areaEditor(target, values, schemas, edit));
@@ -613,6 +640,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       if (isBody && key === 'walkThrough') continue;
       if (isArea && areaPropertyKeys.has(key)) continue;
       if (isCharacter && ['animations', 'directions', 'facing'].includes(key)) continue;
+      if (isCharacter && ['portraitAssetId', 'portraitAnimationKey'].includes(key)) continue;
       if (target.metadata.kind === 'object' && ['animationKey', 'animationPlaying', 'animationLoop'].includes(key)) continue;
       if (isCharacter && hasAnimationAssignments && ['frameCount', 'frameDurationMs'].includes(key)) continue;
       const schema = { ...schemas[key], label: schemas[key]?.label ?? propertyLabel(key) };

@@ -8,6 +8,18 @@ import {
 } from '../dist/prefabs.js';
 
 const square = [{ id: 'a', x: 0, y: 0 }, { id: 'b', x: 100, y: 0 }, { id: 'c', x: 100, y: 100 }, { id: 'd', x: 0, y: 100 }];
+
+test('optional portrait settings inherit and scene instances can explicitly disable them', () => {
+  const base = createCharacterPrefab({ assetId: 'body', portraitAssetId: 'face', portraitAnimationKey: 'talk' });
+  const derived = extendPointleshPrefab(base, { id: 'mara', name: 'Mara' });
+  const instance = createPointleshInstance({ id: 'mara-in-room', prefabId: derived.id, properties: { portraitAssetId: '' } });
+  const manifest = manifestFor([derived], [instance]);
+  const actor = resolvePointleshScene(manifest, 'room').objects[0];
+  assert.equal(actor.properties.portraitAssetId, '');
+  assert.equal(actor.properties.portraitAnimationKey, 'talk');
+  assert.equal(actor.assetId, 'body');
+  assert.equal(createCharacterPrefab().pointlesh.properties.portraitAssetId, '');
+});
 test('WalkThrough defaults to false, including legacy prefabs, and inherits instance overrides', () => {
   for (const create of [createObjectPrefab, createCharacterPrefab]) {
     const prefab = create();

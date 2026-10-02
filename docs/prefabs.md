@@ -8,7 +8,7 @@ Characters, objects and named points are Scene Designer prefabs. Areas and hotsp
 | `createPointleshArea({ kind: 'hotspot' })` | Scene layer's native areas | Label, cursor, approach point and radius |
 | `createPointPrefab` | Reusable prefab with X/Y number attributes | Named coordinate, live move/walk preview |
 | `createObjectPrefab` | Reusable prefab definition | Sprite, interaction, scaling, navigation |
-| `createCharacterPrefab` | Reusable prefab definition | Object settings, directional animations and movement |
+| `createCharacterPrefab` | Reusable prefab definition | Object settings, directional animations, movement and optional dialog portrait |
 
 One area can supply any combination of navigation, character scaling, camera zoom and walk-behind scenery. Each role has its own enable switch; global `enabled` disables all roles. The inspector shows the relevant settings. Switching a role off preserves its values and geometry. Use separate areas when their boundaries differ.
 

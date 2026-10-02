@@ -6,6 +6,42 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 
 #dialog-next:is(:hover,:focus-visible) { color:#ffe3a4; text-decoration:underline; text-underline-offset:3px; }
 
+/* A framed close-up sits above the speech card, sharing its copper/forest trim. */
+#dialog {
+  display:flex; flex-direction:column; align-items:flex-start; gap:0;
+  padding:0; background:none; border:0; box-shadow:none; overflow:visible;
+  bottom:18px; max-height:calc(100% - 24px); pointer-events:none;
+}
+#dialog .dialog-portrait {
+  display:grid; place-items:center; width:148px; height:148px; min-height:0;
+  margin:0 0 -1px 22px; padding:4px; flex:0 1 auto; aspect-ratio:1;
+  background:radial-gradient(circle at 50% 35%,#40513b,#19291f 78%);
+  border:1px solid #bca26a; border-bottom-color:#77865a; border-radius:10px 10px 0 0;
+  box-shadow:0 -5px 22px #0005,inset 0 0 0 3px #17241c;
+  pointer-events:auto;
+}
+#dialog .dialog-portrait canvas { display:block; width:100%!important; height:100%!important; object-fit:contain; }
+#dialog .dialog-body {
+  width:100%; min-height:0; flex:0 1 auto; overflow:auto; overscroll-behavior:contain;
+  padding:17px 22px 14px; background:linear-gradient(120deg,#233525f7,#13221bf7);
+  border:1px solid #a68f5d; border-radius:6px; box-shadow:0 9px 25px #0008;
+  pointer-events:auto;
+}
+#dialog .dialog-body .eyebrow { display:block; margin:0; color:#e4c58e; font-size:10px; letter-spacing:2px; }
+#dialog .dialog-body p { margin:7px 0 11px; }
+#dialog-next { padding:5px 0; }
+@media(max-width:800px) {
+  #dialog { bottom:9px; max-height:calc(100% - 16px); }
+  #dialog .dialog-portrait { width:106px; height:106px; margin-left:14px; padding:3px; }
+  #dialog .dialog-body { padding:12px 14px 9px; }
+}
+@media(max-width:480px) {
+  #dialog .dialog-portrait { width:80px; height:80px; margin-left:10px; border-radius:7px 7px 0 0; }
+  #dialog .dialog-body { padding:9px 11px 7px; }
+  #dialog .dialog-body p { margin:5px 0 7px; }
+  #dialog .dialog-body .eyebrow { font-size:8px; }
+}
+
 /* Cinematic bars replace the game UI strips without covering the canvas. */
 .cinematic-playing .scene-bar,.cinematic-playing .inventory-bar { background:#000; border-color:#000; }
 .cinematic-playing .scene-bar { height:auto; min-height:47px; gap:20px; padding-block:8px; }

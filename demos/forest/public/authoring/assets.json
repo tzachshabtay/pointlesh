@@ -9634,6 +9634,546 @@
         "object",
         "mine"
       ]
+    },
+    "portrait.borin": {
+      "id": "portrait.borin",
+      "kind": "image",
+      "prompt": "Close-up pixel-art face portrait of Borin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "linkedAnimationAssets": {
+        "speak": {
+          "assetId": "portrait.borin.speak",
+          "label": "Close-up speak"
+        }
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/borin.png",
+          "prompt": "Close-up pixel-art face portrait of Borin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Borin character reference. Full generation prompt in art-source/portraits/borin.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "borin"
+      ]
+    },
+    "portrait.borin.speak": {
+      "id": "portrait.borin.speak",
+      "kind": "animation",
+      "prompt": "Close-up pixel-art face portrait of Borin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+      "dimensions": {
+        "width": 1024,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "portrait.borin.speak",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/borin.speak.png",
+          "prompt": "Close-up pixel-art face portrait of Borin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Borin character reference. Full generation prompt in art-source/portraits/borin.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "borin",
+        "speak"
+      ]
+    },
+    "portrait.king": {
+      "id": "portrait.king",
+      "kind": "image",
+      "prompt": "Close-up pixel-art face portrait of King Aldric, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "linkedAnimationAssets": {
+        "speak": {
+          "assetId": "portrait.king.speak",
+          "label": "Close-up speak"
+        }
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/king.png",
+          "prompt": "Close-up pixel-art face portrait of King Aldric, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current King Aldric character reference. Full generation prompt in art-source/portraits/king.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "king"
+      ]
+    },
+    "portrait.king.speak": {
+      "id": "portrait.king.speak",
+      "kind": "animation",
+      "prompt": "Close-up pixel-art face portrait of King Aldric, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+      "dimensions": {
+        "width": 1024,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "portrait.king.speak",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/king.speak.png",
+          "prompt": "Close-up pixel-art face portrait of King Aldric, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current King Aldric character reference. Full generation prompt in art-source/portraits/king.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "king",
+        "speak"
+      ]
+    },
+    "portrait.guard": {
+      "id": "portrait.guard",
+      "kind": "image",
+      "prompt": "Close-up pixel-art face portrait of Orc guard, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "linkedAnimationAssets": {
+        "speak": {
+          "assetId": "portrait.guard.speak",
+          "label": "Close-up speak"
+        }
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/guard.png",
+          "prompt": "Close-up pixel-art face portrait of Orc guard, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Orc guard character reference. Full generation prompt in art-source/portraits/guard.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "guard"
+      ]
+    },
+    "portrait.guard.speak": {
+      "id": "portrait.guard.speak",
+      "kind": "animation",
+      "prompt": "Close-up pixel-art face portrait of Orc guard, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+      "dimensions": {
+        "width": 1024,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "portrait.guard.speak",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/guard.speak.png",
+          "prompt": "Close-up pixel-art face portrait of Orc guard, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Orc guard character reference. Full generation prompt in art-source/portraits/guard.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "guard",
+        "speak"
+      ]
+    },
+    "portrait.elder": {
+      "id": "portrait.elder",
+      "kind": "image",
+      "prompt": "Close-up pixel-art face portrait of Elder Rowan, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "linkedAnimationAssets": {
+        "speak": {
+          "assetId": "portrait.elder.speak",
+          "label": "Close-up speak"
+        }
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/elder.png",
+          "prompt": "Close-up pixel-art face portrait of Elder Rowan, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Elder Rowan character reference. Full generation prompt in art-source/portraits/elder.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "elder"
+      ]
+    },
+    "portrait.elder.speak": {
+      "id": "portrait.elder.speak",
+      "kind": "animation",
+      "prompt": "Close-up pixel-art face portrait of Elder Rowan, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+      "dimensions": {
+        "width": 1024,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "portrait.elder.speak",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/elder.speak.png",
+          "prompt": "Close-up pixel-art face portrait of Elder Rowan, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Elder Rowan character reference. Full generation prompt in art-source/portraits/elder.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "elder",
+        "speak"
+      ]
+    },
+    "portrait.innkeeper": {
+      "id": "portrait.innkeeper",
+      "kind": "image",
+      "prompt": "Close-up pixel-art face portrait of Mara, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "linkedAnimationAssets": {
+        "speak": {
+          "assetId": "portrait.innkeeper.speak",
+          "label": "Close-up speak"
+        }
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/innkeeper.png",
+          "prompt": "Close-up pixel-art face portrait of Mara, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Mara character reference. Full generation prompt in art-source/portraits/innkeeper.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "innkeeper"
+      ]
+    },
+    "portrait.innkeeper.speak": {
+      "id": "portrait.innkeeper.speak",
+      "kind": "animation",
+      "prompt": "Close-up pixel-art face portrait of Mara, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+      "dimensions": {
+        "width": 1024,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "portrait.innkeeper.speak",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/innkeeper.speak.png",
+          "prompt": "Close-up pixel-art face portrait of Mara, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Mara character reference. Full generation prompt in art-source/portraits/innkeeper.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "innkeeper",
+        "speak"
+      ]
+    },
+    "portrait.miner": {
+      "id": "portrait.miner",
+      "kind": "image",
+      "prompt": "Close-up pixel-art face portrait of Orrin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "linkedAnimationAssets": {
+        "speak": {
+          "assetId": "portrait.miner.speak",
+          "label": "Close-up speak"
+        }
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/miner.png",
+          "prompt": "Close-up pixel-art face portrait of Orrin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Orrin character reference. Full generation prompt in art-source/portraits/miner.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "miner"
+      ]
+    },
+    "portrait.miner.speak": {
+      "id": "portrait.miner.speak",
+      "kind": "animation",
+      "prompt": "Close-up pixel-art face portrait of Orrin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+      "dimensions": {
+        "width": 1024,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "portrait.miner.speak",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "portrait",
+      "versions": {
+        "portrait": {
+          "name": "portrait",
+          "file": "art/portraits/miner.speak.png",
+          "prompt": "Close-up pixel-art face portrait of Orrin, matching their current character artwork. Head, face, hair, beard and headgear only, tiny collar edge; no body, hands or props. Crisp detailed pixels, transparent background, fixed head scale and anchor with empty padding around the whole silhouette. Eight consecutive speaking frames in a 4-column, 2-row sheet. Start with the exact base portrait. Subtle mouth shapes, gentle expression and one blink, seamless loop. Keep the skull, hair, headgear and beard silhouette registered, same head scale in every frame; only the mouth/jaw and eyelids move. Each face stays wholly inside its own square cell. No scenery, text or dividers.",
+          "model": "imagegen",
+          "createdAt": "2026-10-01T00:00:00.000Z",
+          "notes": "Generated from the current Orrin character reference. Full generation prompt in art-source/portraits/miner.txt. Packed with one scale across the entire loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "miner",
+        "speak"
+      ]
     }
   },
   "styleGuide": {
@@ -10311,6 +10851,54 @@
     "tool-chest.empty": [
       "Graphics",
       "Objects"
+    ],
+    "portrait.borin": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.borin.speak": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.king": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.king.speak": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.guard": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.guard.speak": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.elder": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.elder.speak": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.innkeeper": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.innkeeper.speak": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.miner": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.miner.speak": [
+      "Graphics",
+      "Portraits"
     ]
   }
 }

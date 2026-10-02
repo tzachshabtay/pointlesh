@@ -332,7 +332,9 @@
                 "flipX": true
               }
             }
-          }
+          },
+          "portraitAssetId": "portrait.borin",
+          "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.rescue"
@@ -497,7 +499,9 @@
           "actorName": "elder",
           "displayedScale": 2.1,
           "targetId": "elder",
-          "description": "The oldest beard in Bramblehollow. He knows every story."
+          "description": "The oldest beard in Bramblehollow. He knows every story.",
+          "portraitAssetId": "portrait.elder",
+          "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
@@ -651,7 +655,9 @@
           "actorName": "innkeeper",
           "displayedScale": 2.1,
           "targetId": "innkeeper",
-          "description": "A brewer, a storyteller, and a formidable keeper of tabs."
+          "description": "A brewer, a storyteller, and a formidable keeper of tabs.",
+          "portraitAssetId": "portrait.innkeeper",
+          "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
@@ -805,7 +811,9 @@
           "actorName": "miner",
           "displayedScale": 2.1,
           "targetId": "miner",
-          "description": "Orrin warms his boots and guards the mine’s secrets."
+          "description": "Orrin warms his boots and guards the mine’s secrets.",
+          "portraitAssetId": "portrait.miner",
+          "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
@@ -1043,7 +1051,9 @@
           "actorName": "guard",
           "displayedScale": 3.1,
           "targetId": "guard",
-          "description": "An enormous orc with a well-worn route between the cage and the stew."
+          "description": "An enormous orc with a well-worn route between the cage and the stew.",
+          "portraitAssetId": "portrait.guard",
+          "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
@@ -1197,7 +1207,9 @@
           "actorName": "king",
           "displayedScale": 2.1,
           "targetId": "cage",
-          "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
+          "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
+          "portraitAssetId": "portrait.king",
+          "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"

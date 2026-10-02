@@ -17,6 +17,7 @@ import { addDoorAssets, addForestTransitions } from './transition-content';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { withForestLighting } from './environment-lighting';
+import { addPortraitAssets } from './portrait-assets';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -142,11 +143,12 @@ addStealthAssets(assets);
 addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
+addPortraitAssets(assets);
 
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');
 base['forest.rescue-character'] = extendPointleshPrefab(base['pointlesh.character'], {
-  id: 'forest.rescue-character', name: 'Rescue character', properties: { role: 'player', courage: 10 }, behaviors: ['forest.rescue'],
+  id: 'forest.rescue-character', name: 'Rescue character', properties: { role: 'player', courage: 10, portraitAssetId: 'portrait.borin' }, behaviors: ['forest.rescue'],
   propertySchema: { courage: { type: 'number', label: 'Courage', min: 0, max: 100 }, role: { type: 'string', label: 'Story role' } }
 });
 const rectangle = (x: number, y: number, width: number, height: number) => [
@@ -198,6 +200,7 @@ export const scenes = addForestTransitions(withForestLighting(addLamps(addFirepl
         id: `${roomId}.npc.${npc.actorName}`, prefabId: 'pointlesh.character', name: npc.name,
         properties: {
           role: 'npc', actorName: npc.actorName, targetId, description: target.description,
+          portraitAssetId: `portrait.${npc.actorName}`,
           approachOffsetX: (target.walkX ?? target.x) - npc.x,
           approachOffsetY: (target.walkY ?? Math.max(403, Math.min(494, target.y + 25))) - npc.y,
           displayedScale: npc.displayedScale, animations: characterAnimations(npc.actorName),
