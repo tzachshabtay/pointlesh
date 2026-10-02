@@ -149,7 +149,7 @@ export class ForestCinematic {
       id => this.ambient.find(light => light.sprite.name === `ambient-${id}`)?.sprite), this.world);
     // Short cuts connect actual animated shots; the opening starts visibly in motion.
     const inFade = stepIndex === 0 ? 0 : 1 - clamp(elapsedMs / 220);
-    const outFade = clamp((elapsedMs - duration + 280) / 280);
+    const outFade = this.kind === 'intro' && stepIndex === 3 ? 0 : clamp((elapsedMs - duration + 280) / 280);
     this.fade.setAlpha(Math.max(inFade, outFade));
   }
 

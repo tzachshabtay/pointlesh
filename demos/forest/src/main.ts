@@ -34,6 +34,7 @@ import { installViewportLayout } from './viewport-layout';
 import './style.css';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
 import { ForestDialogPortrait } from './dialog-portrait';
+import { CutsceneCrossfade } from './cutscene-crossfade';
 
 const disposeViewportLayout = installViewportLayout(document.documentElement);
 if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
@@ -108,6 +109,7 @@ class ForestAdventure extends Phaser.Scene {
   introRunner = new CutsceneRunner(cutsceneDefinition('intro'));
   endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
   cinematic?: ForestCinematic;
+  cutsceneCrossfade?: CutsceneCrossfade;
   endingOpening?: EndingOpening;
   roomTransition!: RoomTransitionController;
   campStealth!: CampStealth;
@@ -314,7 +316,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return !this.started || this.roomTransition?.active || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked() { return !this.started || !!this.cutsceneCrossfade || this.roomTransition?.active || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -785,8 +787,8 @@ class ForestAdventure extends Phaser.Scene {
     if (runner.snapshot().stepIndex !== index) runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: index, elapsedMs: 0 });
     el('cutscene').hidden = index >= sequence.length;
     if (index >= sequence.length) {
-      this.cinematicPortrait.hide();
       if (isEnding) {
+        this.cinematicPortrait.hide();
         // Keep the homecoming shot behind a terminal screen. There is no won
         // sandbox to dismiss into; Play again creates a fresh story and intro.
         if (!this.cinematic) this.cinematic = new ForestCinematic(this, 'ending', this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening);
@@ -800,11 +802,22 @@ class ForestAdventure extends Phaser.Scene {
         }
         return;
       }
-      this.cinematic?.destroy(); this.cinematic = undefined;
-      document.body.classList.remove('cinematic-playing');
-      this.binding.sync();
+      if (this.cinematic && !this.cutsceneCrossfade) {
+        const outgoing = this.cinematic;
+        this.cutsceneCrossfade = new CutsceneCrossfade(this);
+        this.cutsceneCrossfade.start(el('game').parentElement!, el('cinematic-portrait'), () => {
+          outgoing.destroy(); this.cinematic = undefined;
+          document.body.classList.remove('cinematic-playing');
+          this.binding.sync(); this.roomCamera.snap();
+        }, () => {
+          this.cinematicPortrait.hide(); this.cutsceneCrossfade = undefined;
+        });
+      } else if (!this.cutsceneCrossfade) {
+        this.cinematicPortrait.hide(); document.body.classList.remove('cinematic-playing'); this.binding.sync();
+      }
       return;
     }
+    this.cutsceneCrossfade?.destroy(); this.cutsceneCrossfade = undefined;
     const kind = isEnding ? 'ending' : 'intro';
     if (this.cinematic?.snapshot().kind !== kind) {
       this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening);
@@ -941,6 +954,7 @@ class ForestAdventure extends Phaser.Scene {
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
     endingModal = false; el('modal-close').hidden = false;
     this.endingOpening = save.extensions.endingOpening as unknown as EndingOpening | undefined;
+    this.cutsceneCrossfade?.destroy(); this.cutsceneCrossfade = undefined;
     this.cinematic?.destroy(); this.cinematic = undefined;
     this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
@@ -970,7 +984,7 @@ class ForestAdventure extends Phaser.Scene {
     if (this.cameraWasEditing && !cameraEditing) { this.binding.sync(); this.roomCamera.snap(); }
     this.cameraWasEditing = cameraEditing;
     if (this.blocked() && this.movementKeys.size) this.clearMovementKeys();
-    if (this.cinematic) {
+    if (this.cinematic && !this.cutsceneCrossfade) {
       if (!modalOpen) {
         const isEnding = this.story.endingStep >= 0;
         const runner = isEnding ? this.endingRunner : this.introRunner;
@@ -987,7 +1001,7 @@ class ForestAdventure extends Phaser.Scene {
       if (this.story.chestOpening.elapsedMs >= CHEST_OPEN_DURATION_MS) { finishOpeningChest(this.story); this.render(); }
     }
     if (!modalOpen) this.updateTyingGuard(Math.min(delta, 100));
-    const paused = modalOpen || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0;
+    const paused = modalOpen || !!this.cutsceneCrossfade || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0;
     if (!paused) {
       this.binding.update(Math.min(delta, 100));
       const previousRoom = this.story.roomId;
