@@ -21,6 +21,10 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) {
     }
     assert.deepEqual(departure.path[0], departure.portal.path[departure.portal.handoffIndex]);
     assert.ok(departure.clearDistance > 0);
+    assert.deepEqual(departure.path.at(-1), village.objects.find(object => object.properties.role === 'player').position,
+      'Borin ends the intro at the authored gameplay placement');
+    assert.deepEqual(departure.elderPosition, village.objects.find(object => object.properties.actorName === 'elder').position,
+      'Rowan uses the same authored placement in both presentations');
   });
   test(`${label} village ambush leaves spear clearance and a proper right-orc approach`, () => {
     const paths = villageAbduction(manifest), king = paths.king.at(-1), rear = paths['guard-rear'].at(-1), front = paths['guard-front'].at(-1);

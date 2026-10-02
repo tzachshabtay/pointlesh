@@ -29,7 +29,7 @@ export function restoreCinematicElapsed(kind: CinematicKind, step: number, elaps
 }
 
 type CastId = 'borin' | 'king' | 'guard-front' | 'guard-rear' | 'elder' | 'innkeeper' | 'miner';
-type Pose = { x: number; y: number; transitionAreas?: string[]; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: 'up' | 'down' | 'left' | 'right'; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back' | IntroAction; actionElapsedMs?: number };
+type Pose = { x: number; y: number; transitionAreas?: string[]; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: Direction; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back' | IntroAction; actionElapsedMs?: number };
 type CastActor = {
   sprite: Phaser.GameObjects.Sprite;
   shadow: Phaser.GameObjects.Ellipse;
@@ -53,6 +53,7 @@ const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * clamp(t);
 const smooth = (t: number) => { t = clamp(t); return t * t * (3 - 2 * t); };
 const segment = (t: number, start: number, end: number) => clamp((t - start) / (end - start));
+const authoredFacing = (value: unknown): Direction => typeof value === 'string' && ['up', 'down', 'left', 'right', 'up-left', 'up-right', 'down-left', 'down-right'].includes(value) ? value as Direction : 'down';
 
 /**
  * Pure presentation of a CutsceneRunner checkpoint. Every pose, effect and camera
@@ -391,10 +392,20 @@ export class ForestCinematic {
       const travelled = length * segment(this.elapsedMs, openingMs, openingMs + walkMs);
       const clearMs = openingMs + walkMs * departure.clearDistance / length;
       this.roomDoor(departure.portal.doorId!, segment(this.elapsedMs, 0, openingMs) * (1 - segment(this.elapsedMs, clearMs, clearMs + 900)));
-      this.pose('elder', { x: 385, y: 423 });
+      this.pose('elder', { ...departure.elderPosition, facing: authoredFacing(departure.elderFacing) });
       // The closed leaf hides him until it opens; each subsequent foot position
       // follows the authored corridor and the connected village floor.
-      if (this.elapsedMs >= openingMs) this.pose('borin', { ...sampleWalk(departure.path, travelled), walking: travelled < length });
+      if (this.elapsedMs >= openingMs) {
+        const pose = sampleWalk(departure.path, travelled);
+        this.pose('borin', { ...pose, walking: travelled < length, facing: travelled < length ? pose.facing : authoredFacing(departure.playerFacing) });
+      }
+      // Land on the gameplay camera's exact view before dissolving the two
+      // rendered layers; equal world coordinates alone still shift on screen.
+      const camera = this.scene.cameras.main;
+      const blend = smooth(segment(this.elapsedMs, CINEMATIC_DURATIONS.intro[3] - 1100, CINEMATIC_DURATIONS.intro[3] - 100));
+      this.world.setPosition(lerp(this.world.x, W / 2 * (1 - camera.zoom) - camera.scrollX * camera.zoom, blend),
+        lerp(this.world.y, H / 2 * (1 - camera.zoom) - camera.scrollY * camera.zoom, blend))
+        .setScale(lerp(this.world.scaleX, camera.zoom, blend));
       this.mist(0xa4bd8b, 0.035);
     }
   }

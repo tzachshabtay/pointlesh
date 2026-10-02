@@ -12,16 +12,21 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip']] as const) {
       }
     }).observe(document, { childList: true, subtree: true }));
     await openAdventure(page);
-    const position = await page.evaluate(finish => {
+    const before = await page.evaluate(finish => {
       const scene = (window as any).pointleshDemo.scene;
       scene.scene.pause();
       scene.story.introStep = 3;
       scene.introRunner.restore({ cutsceneId: 'forest.intro', version: 1, stepIndex: 3, elapsedMs: 8400 });
       scene.renderCutscene();
       const position = { ...scene.character.state.position };
+      const world = scene.children.getByName('pointlesh-cinematic').list[0];
+      const cast = ['borin', 'elder'].map(id => {
+        const sprite = world.getByName('cinematic-' + id), matrix = sprite.getWorldTransformMatrix();
+        return { id, position: { x: sprite.x, y: sprite.y }, screen: { x: matrix.tx, y: matrix.ty } };
+      });
       if (finish === 'natural') scene.update(0, 100);
       else scene.advanceCutscene(true);
-      return position;
+      return { position, cast };
     }, finish);
     const image = page.locator('.cutscene-crossfade');
     await expect(image).toBeVisible();
@@ -39,6 +44,20 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip']] as const) {
     expect(captured).toMatchObject({ blocked: true, cinematic: false, fade: 700 });
     expect(captured.width).toBe(captured.canvasWidth); expect(captured.height).toBe(captured.canvasHeight);
     expect(captured.lit).toBeGreaterThan(captured.width * captured.height * .1);
+    const gameplay = await page.evaluate(() => {
+      const scene = (window as any).pointleshDemo.scene, camera = scene.cameras.main;
+      const elder = [...scene.npcActors.values()].find((npc: any) => npc.actorName === 'elder') as any;
+      return [['borin', scene.actor], ['elder', elder.sprite]].map(([id, sprite]: any) => ({ id,
+        position: { x: sprite.x, y: sprite.y }, screen: {
+          x: 480 * (1 - camera.zoom) - camera.scrollX * camera.zoom + sprite.x * camera.zoom,
+          y: 270 * (1 - camera.zoom) - camera.scrollY * camera.zoom + sprite.y * camera.zoom,
+        } }));
+    });
+    for (let i = 0; i < gameplay.length; i++) {
+      expect(gameplay[i]!.position).toEqual(before.cast[i]!.position);
+      expect(gameplay[i]!.screen.x).toBeCloseTo(before.cast[i]!.screen.x, 4);
+      expect(gameplay[i]!.screen.y).toBeCloseTo(before.cast[i]!.screen.y, 4);
+    }
     const stage = (await page.locator('.stage-wrap').boundingBox())!, overlay = (await image.boundingBox())!;
     expect(Math.abs(stage.width - overlay.width)).toBeLessThanOrEqual(2);
     expect(Math.abs(stage.height - overlay.height)).toBeLessThanOrEqual(2);
@@ -57,7 +76,7 @@ for (const [width, finish] of [[1440, 'natural'], [390, 'skip']] as const) {
       const scene = (window as any).pointleshDemo.scene;
       return { blocked: scene.blocked(), position: scene.character.state.position, introStep: scene.story.introStep };
     });
-    expect(resumed).toEqual({ blocked: false, position, introStep: 4 });
+    expect(resumed).toEqual({ blocked: false, position: before.position, introStep: 4 });
   });
 }
 

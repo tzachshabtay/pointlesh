@@ -53,11 +53,13 @@ export function cottageDeparture(manifest: SceneDesignerManifest) {
   const areas = activatePointleshAreas(room.areas, [portal.areaId]);
   const floors = walkablePolygons({ ...room, areas });
   const elder = room.objects.find(object => object.properties.actorName === 'elder');
-  const destination = { x: (elder?.position.x ?? 385) + 90, y: (elder?.position.y ?? 423) + 22 };
+  const player = room.objects.find(object => object.properties.role === 'player');
+  const destination = player?.position ?? { x: 471, y: 462 };
   const threshold = portal.path[portal.handoffIndex ?? portal.path.length - 1]!;
   const exit = route(threshold, portal.path[0]!, floors);
   const approach = route(exit.at(-1)!, destination, walkablePolygons(room));
-  return { portal, areas, path: [...exit, ...approach.slice(1)], clearDistance: walkLength(exit) };
+  return { portal, areas, path: [...exit, ...approach.slice(1)], clearDistance: walkLength(exit),
+    elderPosition: elder?.position ?? { x: 387, y: 418 }, playerFacing: player?.properties.facing, elderFacing: elder?.properties.facing };
 }
 
 /** Ending choreography uses the same polygons as normal gameplay. */
