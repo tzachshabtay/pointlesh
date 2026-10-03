@@ -1113,6 +1113,7 @@ function setupControls() {
   el('journal').onclick = () => {
     const body = modal('Borin’s field notes');
     el('modal-backdrop').querySelector('.modal')!.classList.add('journal-modal');
+    gameScene.journal.refresh();
     renderJournal(body, gameScene.story.journal); gameScene.journal.markRead();
   };
   el('map').onclick = () => {

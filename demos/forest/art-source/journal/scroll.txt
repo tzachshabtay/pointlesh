@@ -1,0 +1,9 @@
+Generated with the built-in image_gen tool, 2026-10-03.
+Style reference: public/art/journal/quill.png.
+Final asset: public/art/journal/scroll.png (1024×1536, transparent PNG).
+
+Use case: stylized-concept
+Asset type: blank parchment SCROLL background for an interactive fantasy adventure journal. The attached image is a STYLE REFERENCE ONLY: match its warm golden parchment and dark weathered pixel-art edges. Create a new LARGE PORTRAIT scroll, flat front-on, on a genuinely transparent background.
+Subject: a single unrolled old parchment scroll. The top and bottom edges roll into shallow natural paper curls, not wood bars or metal handles. Its side edges are irregular, worn and softly singed brown, in the same illustrated pixel-art style as the reference. A generous broad ivory-golden blank writing area occupies 80% of its height and width. Subtle organic paper grain and a little mottling mainly at edges. Light enough in the middle for dark handwritten ink to read clearly.
+Composition: portrait 2:3 aspect ratio, entire scroll visible, isolated and centered with at least 6% transparent padding on every side. Top and bottom curls compact, each within the top/bottom 12% of the parchment. Keep decorative wear confined to the outer 8%, and center plain. Crisp handcrafted pixel-art detail. Fixed front view; no perspective tilt. Designed for nine-slice UI scaling so the corners, side edges and top/bottom curls retain their appearance at different heights.
+Constraints: blank parchment only. NO writing, NO lettering, NO lines, NO numbers, NO icons, NO mountain emblem, NO feather or quill, NO hand, NO book spine, NO binding, NO leather cover, NO background, NO shadow painted behind the scroll, NO watermark.

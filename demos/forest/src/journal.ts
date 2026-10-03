@@ -1,52 +1,21 @@
 import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import { PhaserAdventureIcon } from '@pointlesh/phaser';
-import { JOURNAL_QUILL_ASSET } from './journal-assets';
+import { JOURNAL_QUILL_ASSET, JOURNAL_SCROLL_ASSET } from './journal-assets';
 
-const NOTES_PER_PAGE = 3;
-
-/** The demo's notebook presentation; note text remains part of the saved story. */
+/** One continuous scroll; note text remains part of the saved story. */
 export function renderJournal(host: HTMLElement, notes: readonly string[]): void {
-  let spread = 0;
-  const spreads = Math.max(1, Math.ceil(notes.length / (NOTES_PER_PAGE * 2)));
-  const draw = () => {
-    const book = document.createElement('div'); book.className = 'journal-spread';
-    for (let side = 0; side < 2; side++) {
-      const page = document.createElement('section'); page.className = 'journal-leaf';
-      const pageIndex = spread * 2 + side;
-      page.setAttribute('aria-label', `Journal page ${pageIndex + 1}`);
-      const heading = document.createElement('header'); heading.className = 'journal-page-heading';
-      const kicker = document.createElement('span'); kicker.className = 'journal-kicker';
-      kicker.textContent = side === 0 ? 'THE ELDERWOOD · A RESCUE' : 'OBSERVATIONS & SMALL REVELATIONS';
-      const title = document.createElement('h3'); title.textContent = side === 0 ? 'Borin’s field notes' : 'Along the way';
-      const subtitle = document.createElement('p'); subtitle.textContent = side === 0 ? 'A king to bring home. A few things to remember.' : 'Best written down before I forget.';
-      heading.append(kicker, title, subtitle); page.append(heading);
-      const first = pageIndex * NOTES_PER_PAGE, entries = notes.slice(first, first + NOTES_PER_PAGE);
-      const list = document.createElement('ol'); list.className = 'journal-notes'; list.start = first + 1;
-      for (const [index, note] of entries.entries()) {
-        const row = document.createElement('li'); row.className = 'journal-note';
-        const number = document.createElement('span'); number.className = 'journal-note-number'; number.setAttribute('aria-hidden', 'true');
-        number.textContent = String(first + index + 1).padStart(2, '0');
-        const text = document.createElement('p'); text.textContent = note;
-        row.append(number, text); list.append(row);
-      }
-      page.append(list);
-      if (!entries.length) {
-        const blank = document.createElement('p'); blank.className = 'journal-blank';
-        blank.textContent = 'A little room for good news…'; page.append(blank);
-      }
-      const folio = document.createElement('span'); folio.className = 'journal-folio'; folio.textContent = String(pageIndex + 1);
-      page.append(folio); book.append(page);
-    }
-    const nav = document.createElement('nav'); nav.className = 'journal-pagination'; nav.setAttribute('aria-label', 'Journal pages');
-    const previous = document.createElement('button'); previous.textContent = '← Earlier notes'; previous.disabled = spread === 0;
-    previous.onclick = () => { spread--; draw(); host.scrollIntoView({ block: 'nearest' }); };
-    const label = document.createElement('span'); label.textContent = `Pages ${spread * 2 + 1}–${spread * 2 + 2} of ${spreads * 2}`;
-    const next = document.createElement('button'); next.textContent = 'Later notes →'; next.disabled = spread === spreads - 1;
-    next.onclick = () => { spread++; draw(); host.scrollIntoView({ block: 'nearest' }); };
-    nav.append(previous, label, next); host.replaceChildren(book, nav);
-  };
-  draw();
+  const scroll = document.createElement('section'); scroll.className = 'journal-scroll';
+  scroll.setAttribute('aria-label', 'Borin’s handwritten notes'); scroll.tabIndex = 0;
+  const title = document.createElement('h3'); title.textContent = 'Borin’s field notes';
+  const list = document.createElement('ul'); list.className = 'journal-notes';
+  for (const note of notes) {
+    const row = document.createElement('li'); row.className = 'journal-note';
+    const text = document.createElement('p'); text.textContent = note;
+    row.append(text); list.append(row);
+  }
+  const signature = document.createElement('p'); signature.className = 'journal-signature'; signature.textContent = '— Borin';
+  scroll.append(title, list, signature); host.replaceChildren(scroll);
 }
 
 /** Only additions during play trigger feedback; restores establish a fresh baseline. */
@@ -54,11 +23,13 @@ export class ForestJournal {
   private known = new Set<string>();
   private pending: string[] = [];
   private animation?: Animation;
+  private paperSource?: HTMLImageElement | HTMLCanvasElement;
   readonly icon: PhaserAdventureIcon;
-  constructor(private scene: Phaser.Scene, runtime: AiAssetRuntime,
+  constructor(private scene: Phaser.Scene, private runtime: AiAssetRuntime,
     private notification: HTMLElement, private unreadDot: HTMLElement) {
     this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: JOURNAL_QUILL_ASSET, width: 104, height: 104 });
     notification.querySelector('.journal-quill')!.replaceChildren(this.icon.canvas);
+    this.syncPaper();
     scene.events.once('shutdown', this.destroy);
   }
   reset(notes: readonly string[]): void {
@@ -76,7 +47,20 @@ export class ForestJournal {
     this.pending = []; this.animation?.cancel(); this.animation = undefined;
     this.icon.stop(); this.notification.hidden = true;
   }
-  refresh(): void { this.icon.refresh(); }
+  refresh(): void { this.icon.refresh(); this.syncPaper(); }
+  private syncPaper(): void {
+    const frame = this.scene.textures.getFrame(this.runtime.key(JOURNAL_SCROLL_ASSET));
+    const source = frame?.source.image;
+    if (!(source instanceof HTMLImageElement || source instanceof HTMLCanvasElement) || source === this.paperSource) return;
+    // AI Assets can revoke an image's loading blob after decoding it. Copy its
+    // loaded pixels rather than asking CSS to fetch that expired URL again.
+    const canvas = this.notification.ownerDocument.createElement('canvas');
+    canvas.width = source instanceof HTMLImageElement ? source.naturalWidth : source.width;
+    canvas.height = source instanceof HTMLImageElement ? source.naturalHeight : source.height;
+    canvas.getContext('2d')!.drawImage(source, 0, 0);
+    this.notification.ownerDocument.documentElement.style.setProperty('--journal-paper', `url(${JSON.stringify(canvas.toDataURL())})`);
+    this.paperSource = source;
+  }
   private next(): void {
     const note = this.pending.shift();
     if (!note) { this.notification.hidden = true; return; }

@@ -12,19 +12,21 @@ const notes = [
   'Grub is securely tied up. Even if the lock wakes him, he cannot stop us.',
 ];
 
-for (const width of [1440, 390]) test(`handwritten journal pages remain readable at ${width}px`, async ({ page }, testInfo) => {
+for (const width of [1440, 390]) test(`one handwritten scroll contains every note at ${width}px`, async ({ page }, testInfo) => {
   await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
   await openAdventure(page);
   await page.evaluate(notes => {
     const scene = (window as any).pointleshDemo.scene, save = scene.snapshot();
     save.cutscene = { introVersion: 2, introStep: 3, endingStep: -1 };
-    save.extensions.journal = notes; scene.restore(save);
+    save.extensions.journal = notes.slice(0, 3); scene.restore(save);
   }, notes);
   const stageBefore = await page.locator('.stage-wrap').boundingBox();
   await page.locator('#journal').click();
   await expect(page.getByRole('dialog', { name: 'Borin’s field notes' })).toHaveClass(/journal-modal/);
-  await expect(page.locator('.journal-note')).toHaveCount(6);
-  for (const note of notes.slice(0, 6)) await expect(page.locator('.journal-notes')).toContainText([note]);
+  await expect(page.locator('.journal-note')).toHaveCount(3);
+  await expect(page.locator('.journal-scroll')).toHaveCount(1);
+  await expect(page.locator('.journal-spread, .journal-pagination, .journal-folio')).toHaveCount(0);
+  for (const note of notes.slice(0, 3)) await expect(page.locator('.journal-notes')).toContainText(note);
   await page.evaluate(() => document.fonts.ready);
   expect(await page.locator('.journal-note p').first().evaluate(node => getComputedStyle(node).fontFamily)).toContain('Borin Hand');
   expect(await page.evaluate(() => document.fonts.check('26px "Borin Hand"'))).toBe(true);
@@ -32,14 +34,25 @@ for (const width of [1440, 390]) test(`handwritten journal pages remain readable
   expect(bounds!.x).toBeGreaterThanOrEqual(0); expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
   expect(await page.locator('.journal-modal').evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath(`journal-${width}.png`) });
-  await page.getByRole('button', { name: 'Later notes' }).click();
-  await expect(page.locator('.journal-note')).toHaveCount(2);
-  await expect(page.locator('#modal-body')).toContainText('Pages 3–4 of 4');
-  await expect(page.locator('#modal-body')).toContainText(notes[7]!);
-  await page.getByRole('button', { name: 'Earlier notes' }).click();
-  await expect(page.locator('.journal-note')).toHaveCount(6);
+  const paper = await page.locator('.journal-scroll').evaluate(async node => {
+    const url = getComputedStyle(node).borderImageSource.slice(5, -2);
+    const image = new Image(); image.src = url; await image.decode();
+    return { width: image.naturalWidth, height: image.naturalHeight };
+  });
+  expect(paper).toEqual({ width: 1024, height: 1536 });
   await page.getByRole('button', { name: 'Close', exact: true }).click();
   expect(await page.locator('.stage-wrap').boundingBox()).toEqual(stageBefore);
+  // Later clues remain in the same scroll, including the very last entry.
+  await page.evaluate(notes => {
+    const scene = (window as any).pointleshDemo.scene, save = scene.snapshot();
+    save.extensions.journal = notes; scene.restore(save);
+  }, notes);
+  await page.locator('#journal').click();
+  await expect(page.locator('.journal-note')).toHaveCount(notes.length);
+  await page.locator('.journal-scroll').focus();
+  await page.keyboard.press('End');
+  await expect(page.locator('.journal-note').last()).toBeInViewport();
+  await page.getByRole('button', { name: 'Close', exact: true }).click();
   await page.locator('#map').click();
   await expect(page.getByRole('dialog')).not.toHaveClass(/journal-modal/);
   await expect(page.locator('.map-grid')).toBeVisible();
@@ -66,6 +79,7 @@ test('a learned clue plays the generated quill, fades away and is not replayed o
     return { duration: animation.effect!.getTiming().duration, frames: (animation.effect as KeyframeEffect).getKeyframes().map(frame => frame.opacity) };
   });
   expect(fade).toEqual({ duration: 3600, frames: ['0', '1', '1', '0'] });
+  await expect(notice).toHaveCSS('opacity', '1');
   await page.screenshot({ path: testInfo.outputPath('new-note-quill.png') });
   await expect(notice).toBeHidden({ timeout: 6000 });
   await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.render(); });
