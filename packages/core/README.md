@@ -30,7 +30,7 @@ Hotspots and objects accept optional `walkPointId` (also editable as a property/
 
 ## Inventory item definitions
 
-`createInventoryItemPrefab({ id, name, itemId, assetId, interactionPoint, crosshairAssetId })` creates a reusable inventory definition without a room sprite or collision body. `resolveInventoryItemPrefab(manifest, prefabId)` returns its graphic, properties, behaviors and interaction point. The point uses normalized coordinates from the icon's top-left, from 0 to 1; its default is the center. Native numeric attributes `interactionX` and `interactionY` keep it editable and serializable. Custom properties and behavior IDs support game-specific uses.
+`createInventoryItemPrefab({ id, name, itemId, assetId, interactionPoint, crosshairAssetId })` creates a reusable inventory definition without a room sprite or collision body. `resolveInventoryItemPrefab(manifest, prefabId)` returns its graphic, properties, behaviors and interaction point. The point uses normalized coordinates from the icon's top-left, from 0 to 1; its default is the center. Native numeric attributes `interactionX` and `interactionY` keep it editable and serializable. Inventory items default to `animateOnClick: false`; enable it explicitly for item click clips. Custom properties and behavior IDs support game-specific uses.
 
 The game owns inventory membership, item combinations and interaction dispatch. Renderers place the item graphic so the interaction point coincides with the pointer and draw the optional animated crosshair at that same position.
 

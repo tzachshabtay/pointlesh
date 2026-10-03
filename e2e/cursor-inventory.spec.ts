@@ -5,6 +5,10 @@ async function ready(page: Page) {
   await openAdventure(page); await expect(page.locator('#loading')).toBeHidden();
   // The short intro can already have ended on a slow or suspended test machine.
   await page.locator('#skip-intro').evaluate((button: HTMLButtonElement) => button.click());
+  await expect(page.locator('body')).not.toHaveClass(/cinematic-playing/);
+  await expect.poll(() => page.evaluate(() => !!(window as any).pointleshDemo.scene.cutsceneCrossfade)).toBe(false);
+  await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.introArrival = undefined; scene.dismissSpeech(); });
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.blocked())).toBe(false);
   // Record frames in the page so a short click animation cannot finish between
   // Playwright commands on a busy machine.
   await page.evaluate(() => {
@@ -184,7 +188,7 @@ test('native cursor never flashes between dialog options and returns outside the
   await expect(choices.nth(1)).toHaveCSS('cursor', 'pointer');
 });
 
-test('every inventory slot uses an image, selected items become animated cursors and reset after use', async ({ page }, testInfo) => {
+test('every inventory slot uses an image with a looping crosshair cursor and resets after use', async ({ page }, testInfo) => {
   await ready(page);
   await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.story.inventory = ['coin', 'rope', 'stout', 'mushroom', 'sleepyStout', 'pickaxe']; scene.render(); });
   const icons = page.locator('#inventory .pointlesh-asset-icon'), cursor = page.locator('.pointlesh-adventure-cursor');
@@ -193,12 +197,12 @@ test('every inventory slot uses an image, selected items become animated cursors
     await clearFeedback(page);
     await page.locator('#inventory').getByRole('button', { name, exact: true }).click();
     await expect(cursor).toHaveAttribute('data-asset-id', `inventory.${id}`);
-    await expectFeedback(page, `inventory.${id}`);
+    await expect(page.locator('.pointlesh-adventure-crosshair')).toBeVisible();
     await expect(cursor).toHaveAttribute('data-state', 'idle');
     const ground = await worldPoint(page, 600, 470); await page.mouse.move(ground.x, ground.y);
     await expect(cursor).toHaveAttribute('data-asset-id', `inventory.${id}`);
     await clearFeedback(page);
-    await page.mouse.click(ground.x, ground.y); await expectFeedback(page, `inventory.${id}`);
+    await page.mouse.click(ground.x, ground.y); await expect(cursor).toHaveAttribute('data-state', 'idle');
     await page.getByRole('button', { name: 'Put away ×', exact: true }).click();
     await expect(cursor).toHaveAttribute('data-state', 'idle');
   }
@@ -209,7 +213,7 @@ test('every inventory slot uses an image, selected items become animated cursors
   await expect(cursor).toHaveAttribute('data-state', 'idle');
   await clearFeedback(page);
   await page.getByRole('button', { name: 'Interact with Mara the innkeeper', exact: true }).click();
-  await expectFeedback(page, 'inventory.coin');
+  expect(await page.evaluate(() => (window as any).cursorFeedback)).not.toContain('inventory.coin');
   await expect(page.locator('#speech')).toContainText('One honey stout');
   await expect(page.locator('#inventory').getByRole('button', { name: 'Copper coin', exact: true })).toHaveCount(0);
   await page.locator('#dialog-next').click();

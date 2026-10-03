@@ -262,7 +262,7 @@ export function createPointPrefab(input: PointleshPrefabInput & Partial<Pointles
  * Interaction coordinates are normalized from the icon's top-left, matching cursor hotspots. */
 export function createInventoryItemPrefab(input: PointleshPrefabInput & {
   assetId?: string; itemId?: string; description?: string; interactionPoint?: PointleshPoint;
-  crosshairAssetId?: string; crosshairAnimationKey?: string;
+  crosshairAssetId?: string; crosshairAnimationKey?: string; animateOnClick?: boolean;
 } = {}): PointleshPrefabDefinition {
   const point = input.interactionPoint ?? { x: .5, y: .5 };
   assertInteractionPoint(point);
@@ -271,9 +271,10 @@ export function createInventoryItemPrefab(input: PointleshPrefabInput & {
       number('interactionX', 'Interaction point X', point.x, { min: 0, max: 1, step: .01 }),
       number('interactionY', 'Interaction point Y', point.y, { min: 0, max: 1, step: .01 }),
     ], input.attributes) }),
-    pointlesh: metadata('inventory-item', input, { itemId: input.itemId ?? '', assetId: input.assetId ?? '',
+    pointlesh: metadata('inventory-item', { ...input, propertySchema: { animateOnClick: { type: 'boolean', label: 'Animate item on click' }, ...input.propertySchema } }, { itemId: input.itemId ?? '', assetId: input.assetId ?? '',
       label: input.name ?? 'Inventory item', description: input.description ?? '',
-      crosshairAssetId: input.crosshairAssetId ?? '', crosshairAnimationKey: input.crosshairAnimationKey ?? 'idle' }) };
+      crosshairAssetId: input.crosshairAssetId ?? '', crosshairAnimationKey: input.crosshairAnimationKey ?? 'idle',
+      animateOnClick: input.animateOnClick ?? false }) };
 }
 function assertInteractionPoint(point: PointleshPoint): void {
   if (![point.x, point.y].every(value => Number.isFinite(value) && value >= 0 && value <= 1)) {

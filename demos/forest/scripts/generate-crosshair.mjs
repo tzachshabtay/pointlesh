@@ -13,7 +13,7 @@ for (const [frame, glow] of frames.entries()) {
     rect(x - 1, y - 1, w + 2, h + 2, [30, 34, 28, 210]);
   }
   for (const [x, y, w, h] of [[7, 2, 2, 4], [7, 10, 2, 4], [2, 7, 4, 2], [10, 7, 4, 2]]) {
-    rect(x, y, w, h, [Math.round(216 + 28 * glow), Math.round(185 + 32 * glow), Math.round(125 + 38 * glow), Math.round(180 + 60 * glow)]);
+    rect(x, y, w, h, [Math.round(216 + 39 * glow), Math.round(185 + 51 * glow), Math.round(125 + 39 * glow), Math.round(180 + 60 * glow)]);
   }
   if (!frame) pixels.copy(base);
   for (let row = 0; row < size; row++) pixels.copy(sheet, (row * size * frames.length + frame * size) * 4, row * size * 4, (row + 1) * size * 4);

@@ -303,6 +303,8 @@ Speech remains active until the conversation advances by default. Set `waitForAd
 
 ## Inventory cursors
 
-`PhaserAdventureCursor` accepts either an asset ID or an `AdventureCursorAppearance` from `resolve(target)` and `click(appearance)`. Resolve an inventory prefab in core and return `{ assetId: item.assetId, hotspot: item.interactionPoint, crosshair: { assetId, animation: 'idle' } }`. The cursor places that normalized point at the browser pointer, with the crosshair centered there. Both remain independent of camera zoom and device pixel ratio. Omit `crosshair` for no marker; its default size follows its asset's image/frame dimensions.
+`PhaserAdventureCursor` accepts either an asset ID or an `AdventureCursorAppearance` from `resolve(target)` and `click(appearance)`. Resolve an inventory prefab in core and return `{ assetId: item.assetId, hotspot: item.interactionPoint, animateOnClick: false, crosshair: { assetId, animation: 'idle' } }`. The cursor places that normalized point at the browser pointer, with the crosshair centered there. Both remain independent of camera zoom and device pixel ratio. Omit `crosshair` for no marker; its default size follows its asset's image/frame dimensions.
 
 The crosshair uses `PhaserAdventureIcon`, so linked and directly assigned animations, scaled variants, live previews and promotions use the same rendering path as other interface assets. Explicit item click feedback retains the item's point and crosshair through consumption until the pointer moves. Designer controls retain their native cursor, and destruction removes both overlays and listeners.
+
+Set `animateOnClick: false` on a cursor appearance to keep its image or idle loop on clicks. Its crosshair continues looping independently. Omitting the setting preserves normal click feedback.

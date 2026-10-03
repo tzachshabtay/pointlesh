@@ -272,7 +272,7 @@ class ForestAdventure extends Phaser.Scene {
   inventoryDefinition(id: ItemId) { return resolveInventoryItemPrefab(authoredScenes, inventoryPrefabId(id)); }
   inventoryCursor(id: ItemId): AdventureCursorAppearance {
     const item = this.inventoryDefinition(id), crosshairAssetId = item.properties.crosshairAssetId;
-    return { assetId: item.assetId || inventoryAssetId(id), hotspot: item.interactionPoint,
+    return { assetId: item.assetId || inventoryAssetId(id), hotspot: item.interactionPoint, animateOnClick: item.properties.animateOnClick === true,
       ...(typeof crosshairAssetId === 'string' && crosshairAssetId ? { crosshair: { assetId: crosshairAssetId,
         animation: String(item.properties.crosshairAnimationKey ?? 'idle') } } : {}) };
   }
@@ -905,11 +905,10 @@ class ForestAdventure extends Phaser.Scene {
     for (const id of this.story.inventory) {
       const node = button('', () => {
         if (this.blocked()) return;
-        this.cursor.click(this.inventoryCursor(this.selected ?? id));
         if (this.selected && this.selected !== id) { const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text); }
         else this.selected = this.selected === id ? undefined : id;
         this.render();
-        this.inventoryIcons.get(id)?.play('click');
+        this.cursor.refresh();
       });
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
       const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: this.inventoryDefinition(id).assetId || inventoryAssetId(id), width: 36, height: 36, idleAnimation: 'idle', paused: () => !this.started || modalOpen });

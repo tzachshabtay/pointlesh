@@ -16,6 +16,7 @@ test('inventory definitions resolve normalized interaction points and extensible
     crosshairAssetId: 'crosshair', properties: { custom: { uses: 3 } }, behaviors: ['tie'] });
   const derived = extendPointleshPrefab(base, { id: 'braided-rope', name: 'Braided rope', properties: { custom: { uses: 5 } }, behaviors: ['inspect'] });
   const manifest = manifestFor([derived], []), item = resolveInventoryItemPrefab(manifest, derived.id);
+  assert.equal(item.properties.animateOnClick, false);
   assert.equal(item.assetId, 'rope'); assert.deepEqual(item.interactionPoint, { x: .25, y: .8 });
   assert.equal(item.properties.crosshairAssetId, 'crosshair'); assert.deepEqual(item.behaviors, ['tie', 'inspect']);
   item.properties.custom.uses = 99;

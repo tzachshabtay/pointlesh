@@ -102,7 +102,7 @@ test.describe('inventory cursor targeting', () => {
       const s = (window as any).pointleshDemo.scene;
       const clip = s.aiRuntime.manifest.assets['inventory.rope.click'].animations[0]; clip.frameTimings = clip.frames.map(() => ({ delayMs: 400 }));
       s.cursor.icon.options.paused = () => true;
-      s.cursor.click(s.inventoryCursor('rope')); s.selected = undefined;
+      s.cursor.click({ ...s.inventoryCursor('rope'), animateOnClick: true }); s.selected = undefined;
     });
     await expect(cursor).toHaveAttribute('data-state', 'click'); await expect(crosshair).toBeVisible();
     expect((await alignment()).item).toBeLessThanOrEqual(.5); expect((await alignment()).crosshair).toBeLessThanOrEqual(.5);
@@ -161,4 +161,35 @@ test('a directly assigned crosshair animation uses frame dimensions and loops', 
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
   await expect(page.locator('.pointlesh-adventure-crosshair')).toHaveCSS('width', '16px');
   await expect.poll(() => page.evaluate(() => new Set((window as any).directFrames).size)).toBeGreaterThan(2);
+});
+
+
+test('selecting inventory keeps the item idle while the yellow crosshair loops before and after clicks', async ({ page }, testInfo) => {
+  await ready(page);
+  await page.evaluate(() => {
+    const s = (window as any).pointleshDemo.scene;
+    (window as any).itemClickFrames = []; (window as any).targetFrames = [];
+    s.events.on('postupdate', () => {
+      document.querySelectorAll<HTMLCanvasElement>('#inventory canvas, .pointlesh-adventure-cursor').forEach(icon => {
+        if (icon.dataset.assetId?.startsWith('inventory.') && icon.dataset.state === 'click') (window as any).itemClickFrames.push(icon.dataset.frame);
+      });
+      const target = document.querySelector<HTMLCanvasElement>('.pointlesh-adventure-crosshair');
+      if (target && !target.hidden) (window as any).targetFrames.push(target.dataset.frame);
+    });
+  });
+  await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click();
+  const cursor = page.locator('.pointlesh-adventure-cursor');
+  await expect(cursor).toHaveAttribute('data-asset-id', 'inventory.rope');
+  await expect(cursor).toHaveAttribute('data-state', 'idle');
+  const bounds = (await page.locator('#game canvas').boundingBox())!;
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height * .7);
+  await expect.poll(() => page.evaluate(() => {
+    const frames = (window as any).targetFrames as string[]; const end = frames.indexOf('7');
+    return end >= 0 && frames.slice(end + 1).includes('0');
+  })).toBe(true);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.cursor.click());
+  await expect(cursor).toHaveAttribute('data-state', 'idle');
+  await expect(page.locator('.pointlesh-adventure-crosshair')).toBeVisible();
+  expect(await page.evaluate(() => (window as any).itemClickFrames)).toEqual([]);
+  await page.screenshot({ path: testInfo.outputPath('inventory-looping-crosshair.png') });
 });

@@ -6,6 +6,8 @@ export type AdventureCursorAppearance = {
   assetId: string;
   /** Normalized coordinates from the displayed icon's top-left. */
   hotspot?: { x: number; y: number };
+  /** Set false to keep the image/idle loop when clicked; crosshair animation continues. */
+  animateOnClick?: boolean;
   crosshair?: { assetId: string; animation?: string; size?: number };
 };
 export type AdventureCursorOptions = {
@@ -103,8 +105,9 @@ export class PhaserAdventureCursor {
     this.retainClickAsset = false;
     this.update();
     if (appearance) this.setAppearance(appearance);
-    this.retainClickAsset = !!appearance;
-    this.icon.play('click'); this.update();
+    if (this.appearance.animateOnClick === false) this.icon.stop();
+    else { this.retainClickAsset = !!appearance; this.icon.play('click'); }
+    this.update();
   }
   refresh(): void { this.icon.refresh(); this.crosshair?.refresh(); this.update(); }
   destroy = () => {
