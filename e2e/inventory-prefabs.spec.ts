@@ -130,15 +130,30 @@ test.describe('inventory cursor targeting', () => {
   });
 });
 
-test('changing the inventory prefab graphic updates both satchel and cursor, and the crosshair is optional', async ({ page }) => {
+test('inventory selection previews the edited cursor with the prefab panel open, and the crosshair is optional', async ({ page }) => {
   await ready(page, true); const browser = await inventoryFolder(page);
   await browser.getByRole('button', { name: 'Climbing rope', exact: true }).click();
+  await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click();
+  await expect(page.locator('#inventory button[aria-pressed="true"]')).toHaveAccessibleName('Climbing rope');
+  await expect(page.locator('.pointlesh-adventure-cursor')).toBeVisible();
+  await expect(page.locator('.pointlesh-adventure-cursor')).toHaveAttribute('data-asset-id', 'inventory.rope');
+  const bounds = (await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).boundingBox())!;
+  await expect(page.locator('.pointlesh-adventure-crosshair')).toBeVisible();
+  const point = await authoredPoint(page);
+  await page.getByRole('spinbutton', { name: 'Interaction point X', exact: true }).fill('0.2');
+  await page.getByRole('spinbutton', { name: 'Interaction point X', exact: true }).press('Tab');
+  await page.mouse.move(bounds.x + bounds.width * .5, bounds.y + bounds.height * .7);
+  const cursorBounds = (await page.locator('.pointlesh-adventure-cursor').boundingBox())!;
+  expect(Math.abs(cursorBounds.x + cursorBounds.width * .2 - (bounds.x + bounds.width * .5))).toBeLessThanOrEqual(.5);
+  expect((await authoredPoint(page)).y).toBe(point.y);
   await page.getByRole('combobox', { name: 'Inventory graphic', exact: true }).selectOption('inventory.coin');
   await page.getByRole('combobox', { name: 'Crosshair graphic', exact: true }).selectOption('');
   await expect(page.locator('#inventory button').filter({ hasText: 'Climbing rope' }).locator('canvas')).toHaveAttribute('data-asset-id', 'inventory.coin');
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   await page.locator('#designer').click();
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.blocked())).toBe(false);
+  await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click();
+  await expect(page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true })).toHaveAttribute('aria-pressed', 'false');
   await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click();
   await expect(page.locator('.pointlesh-adventure-cursor')).toHaveAttribute('data-asset-id', 'inventory.coin');
   await expect(page.locator('.pointlesh-adventure-crosshair')).toHaveCount(0);

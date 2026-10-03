@@ -211,10 +211,12 @@ class ForestAdventure extends Phaser.Scene {
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
       assetId: 'cursor.walk',
       resolve: target => {
-        if (!this.started || this.worldEditorOpen() || this.editing || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
+        if (!this.started || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
         const inventory = target.closest('#inventory button, #nearby button');
         const dialog = target.closest('#dialog');
         if (target !== this.game.canvas && !inventory && !dialog) return undefined;
+        // Inventory stays usable while authoring; canvas editing keeps its native tools.
+        if ((this.editing || this.worldEditorOpen()) && !target.closest('#inventory button') && !(this.selected && !this.editing)) return undefined;
         if (this.talking || dialog) return 'cursor.interact';
         return this.selected ? this.inventoryCursor(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
       },
@@ -346,7 +348,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return !this.started || !!this.cutsceneCrossfade || this.roomTransition?.active || !!this.introArrival || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked(includeDesigner = true) { return !this.started || !!this.cutsceneCrossfade || this.roomTransition?.active || !!this.introArrival || this.campStealth?.busy || (includeDesigner && (this.worldEditorOpen() || this.editing)) || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -904,7 +906,8 @@ class ForestAdventure extends Phaser.Scene {
     el('inventory').replaceChildren();
     for (const id of this.story.inventory) {
       const node = button('', () => {
-        if (this.blocked()) return;
+        // Selecting an item also previews its cursor while editing its prefab.
+        if (this.blocked(false)) return;
         if (this.selected && this.selected !== id) { const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text); }
         else this.selected = this.selected === id ? undefined : id;
         this.render();
