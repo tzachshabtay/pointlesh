@@ -6,7 +6,7 @@ The root [installation notes](../../README.md#installation-and-compatibility) de
 
 ## Native adventure prefabs
 
-`pointleshPrefabs()` supplies hidden Object, Character and Point creation templates. Create reusable definitions with the individual factories and place them with `createPointleshInstance()` in a Scene Designer schema-version-2 manifest.
+`pointleshPrefabs()` supplies hidden Object, Character, Point and Inventory item creation templates. Create reusable definitions with the individual factories and place them with `createPointleshInstance()` in a Scene Designer schema-version-2 manifest.
 
 Areas and hotspots belong to a scene layer's `areas`, created with `createPointleshArea({ kind: 'area' | 'hotspot', ... })`. One area has independent `walkable`, `scaleEnabled`, `zoomEnabled` and `walkBehindEnabled` roles on a native polygon, with separate scale/zoom axes and endpoints. Global `enabled` disables all roles. Names, settings, custom JSON properties, schemas and behavior IDs live on the area's `pointlesh` sidecar.
 
@@ -27,6 +27,12 @@ Point `visible` controls only its designer marker, including inherited layer vis
 Hotspots and objects accept optional `walkPointId` (also editable as a property/instance override). `resolvePointleshWalkPoint(room, entity)` returns that point's coordinates or `undefined` for an unassigned reference; broken references throw. `approachPointleshEntity(controller, room, entity, livePosition?)` resolves the named point before legacy approach fields, walks to the closest reachable position to it, then faces the target. Await its boolean result before running an interaction; false indicates unavailable navigation or an interrupted walk. Bind the controller's navigation source with current floors and obstacles. `pointleshApproachTarget` exposes the same target for custom movement logic.
 
 `actOnPoint(controller, point, 'move')` teleports immediately. `'walk'` snaps an inaccessible point to the closest reachable ground without changing the authored coordinate. These functions are renderer-independent. See the [point authoring guide](../../docs/prefabs.md#named-points-and-interaction-walk-points).
+
+## Inventory item definitions
+
+`createInventoryItemPrefab({ id, name, itemId, assetId, interactionPoint, crosshairAssetId })` creates a reusable inventory definition without a room sprite or collision body. `resolveInventoryItemPrefab(manifest, prefabId)` returns its graphic, properties, behaviors and interaction point. The point uses normalized coordinates from the icon's top-left, from 0 to 1; its default is the center. Native numeric attributes `interactionX` and `interactionY` keep it editable and serializable. Custom properties and behavior IDs support game-specific uses.
+
+The game owns inventory membership, item combinations and interaction dispatch. Renderers place the item graphic so the interaction point coincides with the pointer and draw the optional animated crosshair at that same position.
 
 ## Navigation and characters
 

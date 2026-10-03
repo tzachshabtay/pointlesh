@@ -2,8 +2,8 @@ import { extendPointleshPrefab, isPointleshPrefab, type PointleshPrefabDefinitio
 import type { SceneDesignerManifest, ScenePrefabDefinition } from '@scene-designer/core';
 import type { SceneDesigner } from '@scene-designer/designer';
 
-const categories = ['Characters', 'Objects', 'Points'];
-const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) || ['character', 'object', 'point'].includes(prefab.pointlesh.kind);
+const categories = ['Characters', 'Objects', 'Points', 'Inventory items'];
+const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) || ['character', 'object', 'point', 'inventory-item'].includes(prefab.pointlesh.kind);
 export function isPrefabTemplate(prefab: ScenePrefabDefinition): boolean {
   return isPointleshPrefab(prefab) && (prefab.pointlesh.editor?.template ?? prefab.id === `pointlesh.${prefab.pointlesh.kind}`);
 }
@@ -12,7 +12,7 @@ export function prefabFolderPath(prefab: ScenePrefabDefinition): string[] {
   const path = prefab.pointlesh.editor?.folderPath;
   if (path?.length) return [...path];
   const kind = prefab.pointlesh.kind;
-  return [kind === 'character' ? 'Characters' : kind === 'object' ? 'Objects' : kind === 'point' ? 'Points' : kind === 'hotspot' ? 'Hotspots' : 'Areas'];
+  return [kind === 'character' ? 'Characters' : kind === 'object' ? 'Objects' : kind === 'point' ? 'Points' : kind === 'inventory-item' ? 'Inventory items' : kind === 'hotspot' ? 'Hotspots' : 'Areas'];
 }
 const samePath = (a: string[], b: string[]) => a.length === b.length && a.every((part, index) => part === b[index]);
 
@@ -38,20 +38,21 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
     designer.select({ type: 'prefab-definition', prefabId: id });
     sync(designer.getManifest());
   }
-  function navigation(target: HTMLElement, current: string[], selectedId: string | undefined, go: (path: string[]) => void, choose: (id: string) => void) {
+  function navigation(target: HTMLElement, current: string[], selectedId: string | undefined, go: (path: string[]) => void, choose: (id: string) => void, placement = false) {
+    const available = placement ? catalog.filter(prefab => !isPointleshPrefab(prefab) || prefab.pointlesh.kind !== 'inventory-item') : catalog;
     const crumbs = document.createElement('nav'); crumbs.className = 'scene-designer__asset-breadcrumbs';
     crumbs.setAttribute('aria-label', 'Prefab breadcrumbs');
     crumbs.append(button('Prefabs', () => go([])));
     current.forEach((part, index) => crumbs.append(button(part, () => go(current.slice(0, index + 1)))));
-    const chosen = catalog.find(prefab => prefab.id === selectedId);
+    const chosen = available.find(prefab => prefab.id === selectedId);
     if (chosen) {
       const name = document.createElement('span'); name.textContent = chosen.name; name.setAttribute('aria-current', 'page'); crumbs.append(name);
     }
     target.replaceChildren(crumbs);
     if (chosen) return;
     const list = document.createElement('div'); list.className = 'scene-designer__asset-list pointlesh-prefab-list';
-    const folders = new Set<string>(current.length ? [] : categories);
-    for (const prefab of catalog) {
+    const folders = new Set<string>(current.length ? [] : categories.filter(category => !placement || category !== 'Inventory items'));
+    for (const prefab of available) {
       const folder = prefabFolderPath(prefab);
       if (samePath(folder.slice(0, current.length), current) && folder.length > current.length) folders.add(folder[current.length]!);
     }
@@ -59,7 +60,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
       const item = button(folder, () => go([...current, folder]));
       item.dataset.folder = 'true'; item.setAttribute('aria-label', `Open ${folder} folder`); list.append(item);
     }
-    for (const prefab of catalog.filter(prefab => samePath(prefabFolderPath(prefab), current))) {
+    for (const prefab of available.filter(prefab => samePath(prefabFolderPath(prefab), current))) {
       const item = button(prefab.name, () => choose(prefab.id));
       item.dataset.prefabId = prefab.id; list.append(item);
     }
@@ -145,7 +146,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
         state.key = pickerKey;
         navigation(state.root, state.path, state.selected,
           next => { state.path = next; state.selected = undefined; state.key = ''; sync(designer.getManifest()); },
-          id => { state.selected = id; state.select.value = id; state.key = ''; sync(designer.getManifest()); });
+          id => { state.selected = id; state.select.value = id; state.key = ''; sync(designer.getManifest()); }, true);
         const add = [...dialog.querySelectorAll<HTMLButtonElement>('button')].find(button => button.value === 'add');
         if (add) add.disabled = !catalog.some(prefab => prefab.id === state.selected);
       }

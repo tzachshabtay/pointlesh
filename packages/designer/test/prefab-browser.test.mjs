@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pointleshPrefabs, extendPointleshPrefab, createCharacterPrefab } from '@pointlesh/core';
+import { pointleshPrefabs, extendPointleshPrefab, createCharacterPrefab, createInventoryItemPrefab } from '@pointlesh/core';
 import { isPrefabTemplate, prefabFolderPath } from '../dist/prefab-browser.js';
 
 test('only base templates are hidden; derived prefabs support independent custom folder paths', () => {
@@ -19,4 +19,5 @@ test('only base templates are hidden; derived prefabs support independent custom
   legacy.pointlesh.editor = { template: false };
   assert.equal(isPrefabTemplate(legacy), false);
   assert.deepEqual(prefabFolderPath({ id: 'other', name: 'Other', attributes: [] }), ['Other']);
+  assert.deepEqual(prefabFolderPath(createInventoryItemPrefab({ id: 'rope' })), ['Inventory items']);
 });

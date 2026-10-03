@@ -26,7 +26,7 @@ import { assertCharacterAnimations, mergeCharacterAnimations, readCharacterAnima
 /** Only data belongs in a manifest. Register behavior implementations in your game. */
 export type PointleshProperty = string | number | boolean | null | PointleshProperty[] | { [key: string]: PointleshProperty };
 export type PointleshProperties = Record<string, PointleshProperty>;
-export type PointleshPrefabKind = "area" | "walkable" | "walk-behind" | "scale" | "zoom" | "hotspot" | "object" | "character" | "point";
+export type PointleshPrefabKind = "area" | "walkable" | "walk-behind" | "scale" | "zoom" | "hotspot" | "object" | "character" | "point" | "inventory-item";
 export type PointleshPropertySchema = {
   label?: string;
   type: "string" | "number" | "boolean" | "json";
@@ -258,10 +258,48 @@ export function createPointPrefab(input: PointleshPrefabInput & Partial<Pointles
     pointlesh: metadata('point', input, {}) };
 }
 
+/** A reusable inventory definition, independent of room placement and sprite pivots.
+ * Interaction coordinates are normalized from the icon's top-left, matching cursor hotspots. */
+export function createInventoryItemPrefab(input: PointleshPrefabInput & {
+  assetId?: string; itemId?: string; description?: string; interactionPoint?: PointleshPoint;
+  crosshairAssetId?: string; crosshairAnimationKey?: string;
+} = {}): PointleshPrefabDefinition {
+  const point = input.interactionPoint ?? { x: .5, y: .5 };
+  assertInteractionPoint(point);
+  return { ...createPrefab({ id: input.id ?? 'pointlesh.inventory-item', name: input.name ?? 'Inventory item',
+    attributes: mergeAttributes([
+      number('interactionX', 'Interaction point X', point.x, { min: 0, max: 1, step: .01 }),
+      number('interactionY', 'Interaction point Y', point.y, { min: 0, max: 1, step: .01 }),
+    ], input.attributes) }),
+    pointlesh: metadata('inventory-item', input, { itemId: input.itemId ?? '', assetId: input.assetId ?? '',
+      label: input.name ?? 'Inventory item', description: input.description ?? '',
+      crosshairAssetId: input.crosshairAssetId ?? '', crosshairAnimationKey: input.crosshairAnimationKey ?? 'idle' }) };
+}
+function assertInteractionPoint(point: PointleshPoint): void {
+  if (![point.x, point.y].every(value => Number.isFinite(value) && value >= 0 && value <= 1)) {
+    throw new Error('Inventory interaction coordinates must be between zero and one.');
+  }
+}
+export type PointleshInventoryItem = {
+  id: string; name: string; assetId: string; interactionPoint: PointleshPoint;
+  properties: PointleshProperties; behaviors: string[];
+};
+/** Read an inventory definition without placing it in a scene or creating a collision body. */
+export function resolveInventoryItemPrefab(manifest: SceneDesignerManifest, prefabId: string): PointleshInventoryItem {
+  const prefab = manifest.prefabs?.[prefabId];
+  if (!prefab || !isPointleshPrefab(prefab) || prefab.pointlesh.kind !== 'inventory-item') throw new Error(`Unknown inventory item prefab "${prefabId}".`);
+  const interactionPoint = { x: resolvePrefabNumber(manifest, prefab.id, 'interactionX'), y: resolvePrefabNumber(manifest, prefab.id, 'interactionY') };
+  assertInteractionPoint(interactionPoint);
+  const assetId = prefab.pointlesh.properties.assetId;
+  if (typeof assetId !== 'string') throw new Error('An inventory asset ID must be a string.');
+  return { id: prefab.id, name: prefab.name, assetId, interactionPoint,
+    properties: structuredClone(prefab.pointlesh.properties), behaviors: [...prefab.pointlesh.behaviors] };
+}
+
 /** Ready-to-register native prefabs. Supply asset ids from your ai-assets manifest. */
 export function pointleshPrefabs(options: { objectAssetId?: string; characterAssetId?: string; includeLegacyAreas?: boolean } = {}): Record<string, PointleshPrefabDefinition> {
   const prefabs = [
-    createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }), createPointPrefab(),
+    createObjectPrefab({ assetId: options.objectAssetId }), createCharacterPrefab({ assetId: options.characterAssetId }), createPointPrefab(), createInventoryItemPrefab(),
     ...(options.includeLegacyAreas ? [createAreaPrefab(), createHotspotPrefab(), createWalkableAreaPrefab(), createWalkBehindAreaPrefab(), createScaleAreaPrefab(), createZoomAreaPrefab()] : []),
   ];
   return Object.fromEntries(prefabs.map(prefab => {
@@ -298,7 +336,7 @@ export function createPointleshInstance(input: Parameters<typeof createPrefabIns
 
 export function isPointleshPrefab(prefab: ScenePrefabDefinition): prefab is PointleshPrefabDefinition {
   const data = (prefab as Partial<PointleshPrefabDefinition>).pointlesh;
-  return !!data && ["area", "walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character", "point"].includes(data.kind);
+  return !!data && ["area", "walkable", "walk-behind", "scale", "zoom", "hotspot", "object", "character", "point", "inventory-item"].includes(data.kind);
 }
 
 function mergeProperties(base: PointleshProperties, overrides: PointleshProperties = {}, character = false): PointleshProperties {

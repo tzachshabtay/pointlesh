@@ -85,7 +85,7 @@ function png(image: Image): Buffer {
 }
 const directory = new URL('../public/art/interface/', import.meta.url);
 await mkdir(directory, { recursive: true });
-for (const id of Object.keys(interfaceAssetDefinitions).filter(id => !id.endsWith('.click'))) {
+for (const id of Object.keys(interfaceAssetDefinitions).filter(id => !id.endsWith('.click') && !id.startsWith('cursor.crosshair'))) {
   const base = art(id); await writeFile(new URL(`${id}.png`, directory), png(base)); await writeFile(new URL(`${id}.click.png`, directory), png(animation(base)));
 }
 if (process.argv.includes('--promote')) {

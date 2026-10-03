@@ -27,6 +27,22 @@ for (const [id, subject] of Object.entries(subjects)) {
   for (const assetId of [id, click]) interfaceAssetPaths[assetId] = ['Graphics', id.startsWith('cursor.') ? 'Cursors' : 'Inventory'];
 }
 
+const crosshairPrompt = 'A small, hollow-centered, warm gold pixel-art crosshair on a transparent 16 by 16 canvas. Four short symmetrical arms with a dark outline; keep the center unobstructed and exactly centered.';
+const crosshairVersion = (file: string, prompt: string) => ({ name: 'original', file, prompt,
+  createdAt: '2026-10-03T00:00:00.000Z', model: 'authored-pixel-art', notes: 'Regenerate with demos/forest/scripts/generate-crosshair.mjs. Editable in AI Assets.' });
+interfaceAssetDefinitions['cursor.crosshair'] = {
+  id: 'cursor.crosshair', kind: 'image', prompt: crosshairPrompt, dimensions: { width: 16, height: 16 },
+  activeVersion: 'original', versions: { original: crosshairVersion('art/interface/cursor.crosshair.png', crosshairPrompt) },
+  linkedAnimationAssets: { idle: { label: 'Subtle glow', assetId: 'cursor.crosshair.idle' } }, tags: ['forest', 'cursor'],
+};
+interfaceAssetDefinitions['cursor.crosshair.idle'] = {
+  id: 'cursor.crosshair.idle', kind: 'animation', prompt: `${crosshairPrompt} Eight-frame seamless loop: gently brighten and dim the gold, with no movement or change in size. Preserve the exact center and silhouette in every frame.`,
+  dimensions: { width: 128, height: 16 }, frameGrid: { frameWidth: 16, frameHeight: 16, columns: 8, rows: 1, frameCount: 8 },
+  animations: [{ key: 'cursor.crosshair.idle', frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 5, repeat: -1 }],
+  activeVersion: 'original', versions: { original: crosshairVersion('art/interface/cursor.crosshair.idle.png', 'Eight baked frames of a subtle crosshair glow.') }, tags: ['forest', 'cursor'],
+};
+for (const id of ['cursor.crosshair', 'cursor.crosshair.idle']) interfaceAssetPaths[id] = ['Graphics', 'Cursors'];
+
 /** Add the UI catalog without replacing any authored images, animations, or folder edits. */
 export function addForestInterfaceAssets(manifest: AiAssetManifest): AiAssetManifest {
   for (const [id, asset] of Object.entries(interfaceAssetDefinitions)) manifest.assets[id] ??= structuredClone(asset);

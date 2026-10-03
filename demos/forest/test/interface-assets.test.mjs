@@ -46,7 +46,7 @@ test('all cursor and inventory images have real, distinct click frames under the
 });
 
 test('catalog additions preserve authored inventory art and unrelated promoted assets', () => {
-  const manifest = structuredClone(authored);
+  const manifest = addForestInterfaceAssets(structuredClone(authored));
   manifest.assets['inventory.rope'].prompt = 'My authored rope';
   manifest.assetPaths['inventory.rope'] = ['Custom'];
   const original = structuredClone(manifest);

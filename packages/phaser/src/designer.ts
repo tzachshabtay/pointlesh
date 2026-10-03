@@ -12,6 +12,7 @@ export type PhaserPointleshDesignerOptions = PhaserSceneDesignerOptions & {
   onPreview?: (scene: PointleshResolvedScene) => void;
   /** Resolve a scene character instance to its live controller for point preview actions. */
   getCharacter?: (instanceId: string, sceneId: string) => CharacterController | undefined;
+  assetPreviewUrl?: (assetId: string) => string | undefined;
 };
 export type InstalledPhaserPointleshDesigner = InstalledPhaserSceneDesigner & {
   inspector: PointleshInspector;
@@ -41,6 +42,17 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
     designer: native.designer,
     aiAssets: options.aiAssets,
     mount: options.inspectorMount ?? options.mount,
+    assetBaseUrl: options.assetBaseUrl,
+    assetPreviewUrl: options.assetPreviewUrl ?? (options.aiRuntime ? assetId => {
+      const key = options.aiRuntime!.key(assetId);
+      if (!options.scene.textures.exists(key)) return undefined;
+      const frame = options.scene.textures.getFrame(key, options.aiAssets?.assets[assetId]?.frameGrid ? 0 : undefined);
+      const canvas = options.scene.game.canvas.ownerDocument.createElement('canvas');
+      canvas.width = frame.realWidth; canvas.height = frame.realHeight;
+      canvas.getContext('2d')!.drawImage(frame.source.image as CanvasImageSource, frame.cutX, frame.cutY, frame.cutWidth, frame.cutHeight,
+        frame.x, frame.y, frame.cutWidth, frame.cutHeight);
+      return canvas.toDataURL();
+    } : undefined),
     onPreview: options.onPreview,
     onPointAction: options.getCharacter ? request => {
       const character = options.getCharacter!(request.characterId, request.sceneId);

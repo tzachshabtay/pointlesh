@@ -25,11 +25,15 @@ import { prefabAttributeId, prefabInstanceIdFromAttributeId, resolvePrefabNumber
 import { installSceneDesigner, type SceneDesigner, type SceneDesignerOptions } from "@scene-designer/designer";
 import { installPrefabBrowser } from './prefab-browser.js';
 import { installSceneAreas } from './scene-areas.js';
+import { inventoryItemEditor } from './inventory-editor.js';
 
 export type PointleshPointAction = { sceneId: string; pointId: string; characterId: string; action: 'move' | 'walk' };
 export type PointleshInspectorOptions = {
   designer: SceneDesigner;
   aiAssets?: AiAssetManifest;
+  /** Optional decoded/live graphic preview, including an animation's first frame. */
+  assetPreviewUrl?: (assetId: string) => string | undefined;
+  assetBaseUrl?: string;
   mount?: HTMLElement;
   /** Runs for inspector edits and inspector undo/redo. Native edits keep their own callback. */
   onManifestChange?(manifest: SceneDesignerManifest): void;
@@ -60,6 +64,7 @@ export type PointleshInspector = {
 export type PointleshInspectorEditOptions = { history?: boolean };
 export type PointleshDesignerOptions = SceneDesignerOptions & {
   inspectorMount?: HTMLElement;
+  assetPreviewUrl?: (assetId: string) => string | undefined;
   onPreview?(scene: PointleshResolvedScene): void;
   /** Test a point with a live character; does not change authored character placement. */
   onPointAction?(request: PointleshPointAction): boolean | Promise<boolean>;
@@ -88,7 +93,7 @@ export function installPointleshDesigner(options: PointleshDesignerOptions): Ins
       inspector?.sync();
     },
   });
-  inspector = installPointleshInspector({ designer, aiAssets: options.aiAssets, mount: options.inspectorMount ?? options.mount, onPreview: options.onPreview, onPointAction: options.onPointAction });
+  inspector = installPointleshInspector({ designer, aiAssets: options.aiAssets, mount: options.inspectorMount ?? options.mount, onPreview: options.onPreview, onPointAction: options.onPointAction, assetPreviewUrl: options.assetPreviewUrl, assetBaseUrl: options.assetBaseUrl });
   return { designer, inspector, destroy() { inspector?.destroy(); designer.destroy(); } };
 }
 
@@ -617,6 +622,13 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     const hasAnimationAssignments = Object.values(effectiveAnimations).some(slots => !!slots && Object.keys(slots).length > 0);
     const isPoint = target.metadata.kind === 'point';
     if (isPoint) body.append(pointControls(target, values, schemas, edit));
+    const isInventory = target.metadata.kind === 'inventory-item';
+    if (isInventory) body.append(section('Inventory cursor', inventoryItemEditor({ document, assets: aiAssets, values,
+      previewUrl: options.assetPreviewUrl, assetBaseUrl: options.assetBaseUrl,
+      commit: patch => {
+        const next = designer.getManifest(), current = prefabTarget(next, target.id);
+        if (current) setTargetProperties(next, current, patch);
+      } }), true));
     const isCharacter = target.metadata.kind === 'character';
     const isBody = isCharacter || target.metadata.kind === 'object';
     if (isBody) {
@@ -637,6 +649,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       if (key === 'walkPointId' && (isBody || target.metadata.kind === 'hotspot')) continue;
       if (values.walkPointId && ['approachX', 'approachY', 'approachOffsetX', 'approachOffsetY', 'approachRadius'].includes(key)) continue;
       if (isPoint && ['x', 'y'].includes(key)) continue;
+      if (isInventory && ['assetId', 'interactionX', 'interactionY', 'crosshairAssetId', 'crosshairAnimationKey'].includes(key)) continue;
       if (isBody && key === 'walkThrough') continue;
       if (isArea && areaPropertyKeys.has(key)) continue;
       if (isCharacter && ['animations', 'directions', 'facing'].includes(key)) continue;
@@ -829,6 +842,13 @@ function installStyles(document: Document) {
 .pointlesh-inspector-help,.pointlesh-inspector-status,.pointlesh-property-inheritance{color:var(--pointlesh-muted);font-size:11px}
 .pointlesh-inspector-status:not(:empty){margin-top:8px}
 .pointlesh-inspector-field{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}
+.pointlesh-inventory-editor{display:grid;gap:10px}
+.pointlesh-inventory-preview{position:relative;width:200px;max-width:100%;margin:8px auto;background:repeating-conic-gradient(#202838 0% 25%,#2c3545 0% 50%) 0/16px 16px;outline:1px solid var(--pointlesh-border-strong);touch-action:none}
+.pointlesh-inventory-preview img{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}
+.pointlesh-native-area-context .pointlesh-inventory-interaction-point{position:absolute;width:22px;height:22px;padding:0;transform:translate(-50%,-50%);border:2px solid var(--pointlesh-accent);border-radius:50%;background:#11172290;cursor:move;touch-action:none;z-index:1}
+.pointlesh-inventory-interaction-point::before,.pointlesh-inventory-interaction-point::after{content:'';position:absolute;background:var(--pointlesh-accent);left:50%;top:50%;transform:translate(-50%,-50%)}
+.pointlesh-inventory-interaction-point::before{width:28px;height:1px}
+.pointlesh-inventory-interaction-point::after{width:1px;height:28px}
 .pointlesh-property-inheritance,.pointlesh-prefab-link{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
 .pointlesh-native-area-context .pointlesh-property-inheritance button{width:auto;font-size:10px;padding:3px 6px}
 .pointlesh-native-area-context .pointlesh-prefab-link button{width:auto}

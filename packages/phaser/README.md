@@ -300,3 +300,9 @@ speech.sync();
 ```
 
 Speech remains active until the conversation advances by default. Set `waitForAdvance: false` or provide `durationMs(turn)` for timed text. A `speaker(turn)` callback supports custom casting. The bridge does not advance conversations or implement puzzle effects; use the core dialog wrapper's `onTurn` events. Scene shutdown detaches listeners and stops audio. Native `PhaserDialogRuntime`, `installPhaserDialogDesigner` and `loadDialogAudioAssets` are re-exported.
+
+## Inventory cursors
+
+`PhaserAdventureCursor` accepts either an asset ID or an `AdventureCursorAppearance` from `resolve(target)` and `click(appearance)`. Resolve an inventory prefab in core and return `{ assetId: item.assetId, hotspot: item.interactionPoint, crosshair: { assetId, animation: 'idle' } }`. The cursor places that normalized point at the browser pointer, with the crosshair centered there. Both remain independent of camera zoom and device pixel ratio. Omit `crosshair` for no marker; its default size follows its asset's image/frame dimensions.
+
+The crosshair uses `PhaserAdventureIcon`, so linked and directly assigned animations, scaled variants, live previews and promotions use the same rendering path as other interface assets. Explicit item click feedback retains the item's point and crosshair through consumption until the pointer moves. Designer controls retain their native cursor, and destruction removes both overlays and listeners.

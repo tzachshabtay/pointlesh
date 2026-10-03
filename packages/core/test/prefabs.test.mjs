@@ -5,9 +5,28 @@ import {
   createCharacterPrefab, createObjectPrefab, createHotspotPrefab, createPointleshInstance,
   createWalkableAreaPrefab, createAreaPrefab, extendPointleshPrefab, pointleshAreaPolygon, pointleshAreaCapabilities, pointleshPrefabs,
   resolvePointleshScene, walkablePolygons,
+  createInventoryItemPrefab, resolveInventoryItemPrefab,
 } from '../dist/prefabs.js';
+import { migratePointleshSceneAreas } from '../dist/scene-areas.js';
 
 const square = [{ id: 'a', x: 0, y: 0 }, { id: 'b', x: 100, y: 0 }, { id: 'c', x: 100, y: 100 }, { id: 'd', x: 0, y: 100 }];
+
+test('inventory definitions resolve normalized interaction points and extensible data without room bodies', () => {
+  const base = createInventoryItemPrefab({ assetId: 'rope', interactionPoint: { x: .25, y: .8 },
+    crosshairAssetId: 'crosshair', properties: { custom: { uses: 3 } }, behaviors: ['tie'] });
+  const derived = extendPointleshPrefab(base, { id: 'braided-rope', name: 'Braided rope', properties: { custom: { uses: 5 } }, behaviors: ['inspect'] });
+  const manifest = manifestFor([derived], []), item = resolveInventoryItemPrefab(manifest, derived.id);
+  assert.equal(item.assetId, 'rope'); assert.deepEqual(item.interactionPoint, { x: .25, y: .8 });
+  assert.equal(item.properties.crosshairAssetId, 'crosshair'); assert.deepEqual(item.behaviors, ['tie', 'inspect']);
+  item.properties.custom.uses = 99;
+  assert.equal(resolveInventoryItemPrefab(manifest, derived.id).properties.custom.uses, 5);
+  assert.equal(base.pointlesh.properties.custom.uses, 3);
+  assert.deepEqual(migratePointleshSceneAreas(manifest), manifest, 'unplaced inventory definitions survive area migration');
+  assert.equal(resolvePointleshScene(manifest, 'room').objects.length, 0);
+  for (const point of [{ x: -1, y: .5 }, { x: 1, y: Infinity }, { x: .5, y: NaN }]) assert.throws(() => createInventoryItemPrefab({ interactionPoint: point }), /between zero and one/);
+  derived.attributes.find(attribute => attribute.id === 'interactionY').number.value = 1.01;
+  assert.throws(() => resolveInventoryItemPrefab(manifest, derived.id), /between zero and one/);
+});
 
 test('optional portrait settings inherit and scene instances can explicitly disable them', () => {
   const base = createCharacterPrefab({ assetId: 'body', portraitAssetId: 'face', portraitAnimationKey: 'talk' });
@@ -130,7 +149,7 @@ test('one native region combines independent roles and inherits later prefab edi
 });
 
 test('default catalog contains reusable sprites while legacy area factories remain available', () => {
-  assert.deepEqual(Object.keys(pointleshPrefabs()), ['pointlesh.object', 'pointlesh.character', 'pointlesh.point']);
+  assert.deepEqual(Object.keys(pointleshPrefabs()), ['pointlesh.object', 'pointlesh.character', 'pointlesh.point', 'pointlesh.inventory-item']);
   const legacy = pointleshPrefabs({ includeLegacyAreas: true });
   for (const [kind, role] of [['walkable', 'walkable'], ['scale', 'scale'], ['zoom', 'zoom'], ['walk-behind', 'walkBehind']]) {
     const prefab = legacy[`pointlesh.${kind}`];

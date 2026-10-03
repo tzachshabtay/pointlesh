@@ -20,6 +20,7 @@ import { addLampAssets, addLamps } from './lamp-assets';
 import { withForestLighting } from './environment-lighting';
 import { addPortraitAssets } from './portrait-assets';
 import { addJournalAssets } from './journal-assets';
+import { addForestInventoryPrefabs } from './inventory-prefabs';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -261,3 +262,4 @@ export const scenes = addForestTransitions(withForestLighting(addLamps(addFirepl
   const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
   return [roomId, scene];
 })) }))))))));
+addForestInventoryPrefabs(scenes);

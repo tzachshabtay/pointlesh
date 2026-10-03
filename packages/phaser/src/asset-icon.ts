@@ -10,7 +10,7 @@ export type AdventureIconOptions = {
   pixelArt?: boolean;
   /** Pause the UI animation clock, for example while the game's menu is open. */
   paused?: () => boolean;
-  /** Optional linked animation to loop while no click/action animation is playing. */
+  /** Optional linked or direct animation to loop while no click/action animation is playing. */
   idleAnimation?: string;
 };
 
@@ -48,6 +48,13 @@ export class PhaserAdventureIcon {
   get asset(): string { return this.assetId; }
   get displayWidth(): number { return this.width; }
   get displayHeight(): number { return this.height; }
+  /** Map an image-local normalized point into the display box, including fit padding. */
+  pointOffset(point: { x: number; y: number }): { x: number; y: number } {
+    const base = this.scene.textures.getFrame(this.runtime.key(this.assetId), this.runtime.manifest.assets[this.assetId]?.frameGrid ? 0 : undefined);
+    const fit = Math.min(this.width / base.realWidth, this.height / base.realHeight);
+    const width = base.realWidth * fit, height = base.realHeight * fit;
+    return { x: (this.width - width) / 2 + width * point.x, y: (this.height - height) / 2 + height * point.y };
+  }
   setAsset(assetId: string): void {
     if (this.assetId === assetId) return;
     this.assetId = assetId; this.state = undefined; this.elapsed = 0; this.refresh();
@@ -61,7 +68,8 @@ export class PhaserAdventureIcon {
   /** Call after forwarding AI Assets designer callbacks to the runtime. */
   refresh(): void {
     if (this.destroyed) return;
-    if (!this.state && this.options.idleAnimation && this.runtime.manifest.assets[this.assetId]?.linkedAnimationAssets?.[this.options.idleAnimation]) {
+    const asset = this.runtime.manifest.assets[this.assetId];
+    if (!this.state && this.options.idleAnimation && (asset?.linkedAnimationAssets?.[this.options.idleAnimation] || asset?.animations?.length)) {
       this.state = this.options.idleAnimation; this.loop = true;
     }
     this.binding?.destroy(); this.playback?.destroy(); this.playback = undefined;
@@ -89,7 +97,7 @@ export class PhaserAdventureIcon {
   private draw(): void {
     // Read the base texture, including live previews, before variant selection.
     // Click sheets and higher-resolution variants must not change the UI bounds.
-    const base = this.scene.textures.getFrame(this.runtime.key(this.assetId));
+    const base = this.scene.textures.getFrame(this.runtime.key(this.assetId), this.runtime.manifest.assets[this.assetId]?.frameGrid ? 0 : undefined);
     this.width = this.options.width ?? (this.options.height === undefined ? base.realWidth : base.realWidth * this.options.height / base.realHeight);
     this.height = this.options.height ?? (this.options.width === undefined ? base.realHeight : base.realHeight * this.options.width / base.realWidth);
     this.canvas.style.width = `${this.width}px`; this.canvas.style.height = `${this.height}px`;

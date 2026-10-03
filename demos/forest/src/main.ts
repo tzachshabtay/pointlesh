@@ -27,7 +27,10 @@ import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
-import { inventoryAssetId } from './interface-assets';
+import { inventoryAssetId, addForestInterfaceAssets } from './interface-assets';
+import { addForestInventoryPrefabs, inventoryPrefabId } from './inventory-prefabs';
+import { resolveInventoryItemPrefab } from '@pointlesh/core';
+import type { AdventureCursorAppearance } from '@pointlesh/phaser';
 import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { installViewportLayout } from './viewport-layout';
@@ -213,7 +216,7 @@ class ForestAdventure extends Phaser.Scene {
         const dialog = target.closest('#dialog');
         if (target !== this.game.canvas && !inventory && !dialog) return undefined;
         if (this.talking || dialog) return 'cursor.interact';
-        return this.selected ? inventoryAssetId(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
+        return this.selected ? this.inventoryCursor(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
       },
     });
     this.behaviors.register('forest.interact', { handle: context => this.applyInteraction(context.targetId, context.item) });
@@ -266,6 +269,13 @@ class ForestAdventure extends Phaser.Scene {
     } });
   }
   resolved() { return this.resolvedCache ??= resolvePointleshScene(authoredScenes, this.story.roomId); }
+  inventoryDefinition(id: ItemId) { return resolveInventoryItemPrefab(authoredScenes, inventoryPrefabId(id)); }
+  inventoryCursor(id: ItemId): AdventureCursorAppearance {
+    const item = this.inventoryDefinition(id), crosshairAssetId = item.properties.crosshairAssetId;
+    return { assetId: item.assetId || inventoryAssetId(id), hotspot: item.interactionPoint,
+      ...(typeof crosshairAssetId === 'string' && crosshairAssetId ? { crosshair: { assetId: crosshairAssetId,
+        animation: String(item.properties.crosshairAnimationKey ?? 'idle') } } : {}) };
+  }
   roomSize(room: RoomId) {
     const definition = authoredScenes.scenes[room];
     return definition ? { width: definition.width, height: definition.height } : roomDimensions[room];
@@ -365,7 +375,7 @@ class ForestAdventure extends Phaser.Scene {
     if (this.blocked()) return;
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
-    this.cursor.click(this.selected ? inventoryAssetId(this.selected) : undefined);
+    this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
     const target = targets[this.story.roomId].find(target => target.id === targetId);
     this.say(typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name);
   }
@@ -374,7 +384,7 @@ class ForestAdventure extends Phaser.Scene {
     this.clearMovementKeys();
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
-    this.cursor.click(this.selected ? inventoryAssetId(this.selected) : undefined);
+    this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
     const selected = this.selected;
     // Door and approach clocks start together; the transition waits at the safe
     // inside point until the leaf is clear before crossing the sill.
@@ -711,6 +721,8 @@ class ForestAdventure extends Phaser.Scene {
       onManifestChange: manifest => {
         const previous = this.resolved();
         authoredScenes = manifest; this.resolvedCache = undefined;
+        for (const [id, icon] of this.inventoryIcons) icon.setAsset(this.inventoryDefinition(id).assetId || inventoryAssetId(id));
+        this.cursor.refresh();
         // Eye/lock edits must not reset placements, interrupt walks or rebuild game objects.
         const gameplay = (room: ReturnType<typeof resolvePointleshScene>) => JSON.stringify({
           ...room, points: room.points.map(({ visible, ...point }) => point),
@@ -893,14 +905,14 @@ class ForestAdventure extends Phaser.Scene {
     for (const id of this.story.inventory) {
       const node = button('', () => {
         if (this.blocked()) return;
-        this.cursor.click(inventoryAssetId(this.selected ?? id));
+        this.cursor.click(this.inventoryCursor(this.selected ?? id));
         if (this.selected && this.selected !== id) { const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text); }
         else this.selected = this.selected === id ? undefined : id;
         this.render();
         this.inventoryIcons.get(id)?.play('click');
       });
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
-      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: inventoryAssetId(id), width: 36, height: 36, idleAnimation: 'idle', paused: () => !this.started || modalOpen });
+      const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: this.inventoryDefinition(id).assetId || inventoryAssetId(id), width: 36, height: 36, idleAnimation: 'idle', paused: () => !this.started || modalOpen });
       this.inventoryIcons.set(id, icon); node.append(icon.canvas);
       const label = document.createElement('span'); label.className = 'item-label'; label.textContent = items[id].name; node.append(label); el('inventory').append(node);
     }
@@ -1227,6 +1239,8 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addForestInterfaceAssets(assets);
+addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
 addCharacterPortraits(authoredScenes);
