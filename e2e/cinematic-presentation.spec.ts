@@ -28,7 +28,7 @@ for (const width of [1440, 390]) test(`cinematic bars occupy the game UI strips 
   expect(layout.controls.right).toBeLessThanOrEqual(layout.stage.right);
   expect(layout.caption.right).toBeLessThanOrEqual(layout.stage.right);
   expect(layout.canvasBorders).toBe(0);
-  for (const id of ['menu', 'map', 'journal', 'save', 'load']) await expect(page.locator(`#${id}`)).toBeHidden();
+  for (const id of ['menu', 'map', 'journal']) await expect(page.locator(`#${id}`)).toBeHidden();
   await expect(page.locator('#designer')).toBeVisible();
   await expect(page.locator('#inventory')).toBeHidden();
   await page.screenshot({ path: testInfo.outputPath('cinematic-bars.png'), fullPage: true });
@@ -37,7 +37,7 @@ for (const width of [1440, 390]) test(`cinematic bars occupy the game UI strips 
   await expect(page.locator('#inventory')).toBeVisible();
   await expect(page.locator('.scene-bar')).toHaveCSS('background-color', 'rgb(27, 41, 33)');
   await expect(page.locator('.inventory-bar')).toHaveCSS('background-color', 'rgb(28, 42, 34)');
-  for (const id of ['menu', 'map', 'journal', 'save', 'load']) await expect(page.locator(`#${id}`)).toBeVisible();
+  for (const id of ['menu', 'map', 'journal']) await expect(page.locator(`#${id}`)).toBeVisible();
 });
 
 test('production cutscenes hide the complete normal toolbar including Designer', async ({ page }, testInfo) => {
@@ -45,7 +45,7 @@ test('production cutscenes hide the complete normal toolbar including Designer',
   await page.goto(process.env.POINTLESH_PRODUCTION_URL!);
   await page.getByRole('button', { name: 'New game', exact: true }).click();
   await expect(page.locator('#cutscene')).toBeVisible();
-  for (const id of ['menu', 'map', 'journal', 'save', 'load', 'designer']) await expect(page.locator(`#${id}`)).toBeHidden();
+  for (const id of ['menu', 'map', 'journal', 'designer']) await expect(page.locator(`#${id}`)).toBeHidden();
   await expect(page.locator('#skip-intro')).toBeVisible();
   await expect(page.locator('#cutscene-next')).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('production-cinematic-toolbar.png') });

@@ -38,6 +38,7 @@ import { cottageDeparture } from './cinematic-paths';
 import { CutsceneCrossfade } from './cutscene-crossfade';
 import { addJournalAssets } from './journal-assets';
 import { ForestJournal, renderJournal } from './journal';
+import { captureSavePreview } from './save-preview';
 
 const disposeViewportLayout = installViewportLayout(document.documentElement);
 if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
@@ -56,17 +57,20 @@ class ForestAssetDebugClient extends AiAssetDebugClient {
 let authoredScenes: SceneDesignerManifest = scenes;
 let gameScene: ForestAdventure;
 let modalOpen = false;
+let modalRevision = 0;
 let toastTimer: ReturnType<typeof setTimeout>;
 function toast(text: string) { el('toast').textContent = text; el('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el('toast').hidden = true; }, 4100); }
 let modalReturnFocus: HTMLElement | null = null;
 let endingModal = false;
 function closeModal() {
   if (endingModal) return;
+  modalRevision++;
   el('modal-backdrop').hidden = true; modalOpen = false; el('start-screen').inert = false;
   if (modalReturnFocus?.checkVisibility()) modalReturnFocus.focus();
 }
 function modal(title: string) {
-  modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (!modalOpen) modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  modalRevision++;
   gameScene?.clearMovementKeys(); el('start-screen').inert = !gameScene?.started;
   el('modal-backdrop').querySelector('.modal')!.classList.remove('journal-modal');
   el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false;
@@ -1092,7 +1096,7 @@ class ForestAdventure extends Phaser.Scene {
 function setupControls() {
   el('new-game').onclick = () => gameScene.newGame();
   el('start-load').onclick = () => saveMenu('load');
-  el('menu').onclick = () => gameScene.showStartScreen();
+  el('menu').onclick = gameMenu;
   el('character-lighting').onclick = () => {
     const enabled = gameScene.characterLighting.enabled = !gameScene.characterLighting.enabled;
     el('character-lighting').setAttribute('aria-pressed', String(enabled));
@@ -1121,19 +1125,61 @@ function setupControls() {
     for (const id of roomIds) { const card = document.createElement('div'); card.className = 'map-room'; const image = document.createElement('img'); image.src = gameScene.textures.get(`room.${id}`).getSourceImage() instanceof HTMLCanvasElement ? (gameScene.textures.get(`room.${id}`).getSourceImage() as HTMLCanvasElement).toDataURL() : ''; image.alt = roomNames[id]; const label = document.createElement('span'); label.textContent = roomNames[id]; const sub = document.createElement('small'); sub.textContent = id === gameScene.story.roomId ? 'YOU ARE HERE' : ({ village:'Pub · Cottage · Forest',pub:'From Bramblehollow',house:'From Bramblehollow',forest:'Village · Mine · Camp',mine:'From the Whispering Wood',camp:'From the Whispering Wood' })[id]; label.append(sub); card.append(image, label); grid.append(card); } body.append(grid);
   };
   el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click or tap a person to talk, or an object to interact. Nearby buttons also interact and work with the keyboard.', 'Right-click or press and hold for half a second to look at a person, object, or hotspot. Holding works with touch, mouse, or trackpad.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Put away clears your selection.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
+  function gameMenu() {
+    if (!gameScene.started) return;
+    const body = modal('A moment on the trail');
+    const actions = document.createElement('div'); actions.className = 'pause-menu';
+    const save = button('Save', () => saveMenu('save')); save.id = 'save';
+    const load = button('Load', () => saveMenu('load')); load.id = 'load';
+    actions.append(button('Resume adventure', closeModal), save, load,
+      button('Return to title', () => gameScene.showStartScreen()));
+    body.append(actions);
+  }
   function saveMenu(mode: 'save' | 'load') {
+    if (mode === 'save' && !gameScene.started) return;
     const body = modal(mode === 'save' ? 'Keep your place' : 'Pick up the trail');
+    const revision = modalRevision;
     let saves: ReturnType<SaveStore['list']>;
     try { saves = gameScene.saves.list(); } catch (error) { toast(String(error)); return; }
     for (const slot of ['1', '2', '3']) {
-      const existing = saves.find(save => save.slot === slot); const row = document.createElement('div'); row.className = 'slot-row'; const label = document.createElement('span'); label.textContent = `Slot ${slot}`; const date = document.createElement('small'); date.textContent = existing ? new Date(existing.savedAt).toLocaleString() : 'An unwritten adventure'; label.append(date);
-      const action = button(mode === 'save' ? existing ? 'Overwrite' : 'Save here' : 'Load', () => {
-        try { if (mode === 'save') { gameScene.saves.save(slot, gameScene.snapshot()); toast(`Adventure saved in slot ${slot}.`); } else { const candidate = gameScene.saves.load(slot); if (!candidate) throw new Error('That slot is empty.'); gameScene.restore(candidate); gameScene.enterGame(); toast('Welcome back, Borin.'); } closeModal(); }
-        catch (error) { toast(error instanceof Error ? error.message : String(error)); }
-      }); action.setAttribute('aria-label', `${mode} slot ${slot}`); action.disabled = mode === 'load' && !existing; row.append(label, action); body.append(row);
+      const existing = saves.find(save => save.slot === slot);
+      const row = document.createElement('div'); row.className = 'slot-row';
+      const preview = document.createElement('div'); preview.className = 'slot-preview';
+      if (existing?.screenshot) {
+        const image = document.createElement('img'); image.src = existing.screenshot; image.alt = `Saved game in slot ${slot}`;
+        preview.append(image);
+      } else { preview.textContent = existing ? 'No preview yet' : 'Empty slot'; }
+      const label = document.createElement('span'); label.className = 'slot-label'; label.textContent = `Slot ${slot}`;
+      const date = document.createElement('small'); date.textContent = existing ? new Date(existing.savedAt).toLocaleString() : 'An unwritten adventure'; label.append(date);
+      const action = button(mode === 'save' ? existing ? 'Overwrite' : 'Save here' : 'Load', async () => {
+        const actions = Array.from(body.querySelectorAll<HTMLButtonElement>('button'));
+        const disabled = actions.map(node => node.disabled);
+        try {
+          if (mode === 'save') {
+            actions.forEach(node => { node.disabled = true; }); action.textContent = 'Saving…';
+            const state = gameScene.snapshot();
+            const screenshot = await captureSavePreview(gameScene);
+            if (revision !== modalRevision) return;
+            gameScene.saves.save(slot, state, { screenshot }); toast(`Adventure saved in slot ${slot}.`);
+          } else {
+            const candidate = gameScene.saves.load(slot); if (!candidate) throw new Error('That slot is empty.');
+            gameScene.restore(candidate); gameScene.enterGame(); toast('Welcome back, Borin.');
+          }
+          closeModal();
+        } catch (error) {
+          if (revision === modalRevision) toast(error instanceof Error ? error.message : String(error));
+        } finally {
+          if (revision === modalRevision) {
+            actions.forEach((node, index) => { node.disabled = disabled[index]!; });
+            action.textContent = mode === 'save' ? existing ? 'Overwrite' : 'Save here' : 'Load';
+          }
+        }
+      });
+      action.setAttribute('aria-label', `${mode} slot ${slot}`); action.disabled = mode === 'load' && !existing;
+      row.append(preview, label, action); body.append(row);
     }
+    if (gameScene.started) { const back = button('← Back to menu', gameMenu); back.className = 'menu-back'; body.append(back); }
   }
-  el('save').onclick = () => saveMenu('save'); el('load').onclick = () => saveMenu('load');
   el('modal-close').onclick = closeModal; el('modal-backdrop').onclick = event => { if (event.target === el('modal-backdrop')) closeModal(); };
   document.addEventListener('keydown', event => {
     if (editingText(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;

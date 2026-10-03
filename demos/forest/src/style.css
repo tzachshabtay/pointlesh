@@ -189,3 +189,20 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
   .journal-notification-note { font-size:13px; }
   .journal-notification-title { font-size:8px; }
 }
+
+/* Pause and save menus belong to the game, above the rendered room. */
+.modal { min-width:0; width:min(620px,calc(var(--preview-width,100vw) - 48px)); }
+.pause-menu { display:grid; gap:10px; }
+.pause-menu button { padding:13px 18px; border:1px solid #526145; border-radius:4px; text-align:left; background:#17241e; }
+.pause-menu button:hover { background:#283725; border-color:var(--gold); }
+.pause-menu button:last-child { margin-top:10px; color:#94a188; }
+.slot-row { display:grid; grid-template-columns:144px minmax(0,1fr) auto; gap:18px; }
+.slot-preview { aspect-ratio:16/9; display:grid; place-items:center; overflow:hidden; border:1px solid #526145; border-radius:4px; background:#111b16; color:#839488; font-size:10px; }
+.slot-preview img { display:block; width:100%; height:100%; object-fit:cover; }
+.slot-label small { line-height:1.5; }
+.menu-back { margin-top:12px; padding:8px 0; color:var(--gold)!important; font-size:12px!important; }
+@media(max-width:480px) {
+  .slot-row { grid-template-columns:100px minmax(0,1fr); gap:10px 14px; }
+  .slot-preview { grid-row:span 2; }
+  .slot-row button { justify-self:start; }
+}

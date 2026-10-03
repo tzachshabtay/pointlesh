@@ -47,9 +47,11 @@ test('conversation changes speaker, pauses at choices, and restores the right po
   await expect(portrait(page)).toHaveAttribute('data-state', 'idle');
   await page.getByRole('button', { name: 'Where did they take the king?', exact: true }).click();
   await expect(portrait(page)).toHaveAttribute('data-asset-id', 'portrait.elder');
+  await page.locator('#menu').click();
   await page.locator('#save').click();
   await page.getByRole('button', { name: 'save slot 1', exact: true }).click();
   await page.locator('#dialog-next').click();
+  await page.locator('#menu').click();
   await page.locator('#load').click();
   await page.getByRole('button', { name: 'load slot 1', exact: true }).click();
   await expect(page.locator('#speaker')).toHaveText('Elder Rowan');

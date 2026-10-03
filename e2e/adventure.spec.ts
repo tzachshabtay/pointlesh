@@ -138,6 +138,7 @@ test('save and reload restores an active dialog choice and inventory across a fr
   await speech(page);
   await page.locator('#dialog-next').click();
   await expect(page.getByRole('button', { name: 'How do I get past an orc guard?', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await page.getByRole('button', { name: 'save slot 1', exact: true }).click();
   await expect(page.locator('#toast')).toContainText('Adventure saved in slot 1');

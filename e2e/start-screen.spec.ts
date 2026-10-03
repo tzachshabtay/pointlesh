@@ -22,10 +22,13 @@ test('startup waits for a choice, New game always plays the intro, and saved gam
   await expectCastMotion(page); await expect(page.locator('#cutscene')).toBeVisible();
   await page.getByRole('button', {name:'Skip introduction',exact:true}).click();
   await page.evaluate(()=>{const s=(window as any).pointleshDemo.scene;s.changeRoom('house');s.story.inventory=['rope'];s.story.flags.metElder=true;s.render();});
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.getByRole('button',{name:'Save',exact:true}).click();
   await page.getByRole('button',{name:'save slot 1',exact:true}).click();
+  await expect(page.locator('#modal-backdrop')).toBeHidden();
   const saved=await saves(page); expect(Object.keys(saved)).toHaveLength(1);
   await page.getByRole('button',{name:'Menu',exact:true}).click();
+  await page.getByRole('button',{name:'Return to title',exact:true}).click();
   await page.getByRole('button',{name:'New game',exact:true}).click();
   await expect(page.locator('#cutscene')).toBeVisible();
   expect(await page.evaluate(()=>{const s=(window as any).pointleshDemo.scene;return {room:s.story.roomId,inventory:s.story.inventory,flags:s.story.flags,step:s.story.introStep,ending:s.story.endingStep};})).toEqual({room:'village',inventory:[],flags:{},step:0,ending:-1});

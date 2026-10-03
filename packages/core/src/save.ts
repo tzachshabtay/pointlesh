@@ -46,7 +46,11 @@ export interface SaveStoreOptions<T extends GameState> {
   now?: () => Date;
 }
 
-export interface SaveMetadata { slot: string; savedAt: string; version: number; gameId: string }
+export interface SavePreview {
+  /** Optional self-contained PNG, JPEG, or WebP thumbnail data URL (at most 512 KiB). */
+  screenshot?: string;
+}
+export interface SaveMetadata extends SavePreview { slot: string; savedAt: string; version: number; gameId: string }
 interface SaveEnvelope {
   format: 'pointlesh-save';
   formatVersion: 1;
@@ -55,6 +59,7 @@ interface SaveEnvelope {
   savedAt: string;
   state: unknown;
   checksum: string;
+  screenshot?: string;
 }
 
 /** Clear error kinds let UI distinguish absence, corruption, and compatibility failures. */
@@ -81,6 +86,16 @@ function checksum(value: unknown): string {
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
+function assertScreenshot(value: unknown): void {
+  if (value !== undefined && (typeof value !== 'string' || value.length > 512 * 1024 ||
+    !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value))) {
+    throw new Error('Save screenshot must be a PNG, JPEG, or WebP thumbnail data URL of at most 512 KiB');
+  }
+}
+function metadata(slot: string, record: Omit<SaveEnvelope, 'checksum'>): SaveMetadata {
+  return { slot, savedAt: record.savedAt, version: record.version, gameId: record.gameId,
+    ...(record.screenshot !== undefined ? { screenshot: record.screenshot } : {}) };
+}
 export function assertGameState(value: unknown): asserts value is GameState {
   assertJSON(value);
   if (!isRecord(value) || typeof value.roomId !== 'string' || !value.roomId || !Array.isArray(value.inventory) ||
@@ -108,17 +123,20 @@ export class SaveStore<T extends GameState = GameState> {
     this.prefix = `pointlesh:${encodeURIComponent(options.gameId)}:`;
   }
 
-  save(slot: string, state: T): SaveMetadata {
+  save(slot: string, state: T, preview: SavePreview = {}): SaveMetadata {
     const key = this.key(slot);
     const candidate = this.validate(state);
+    try { assertScreenshot(preview.screenshot); }
+    catch (cause) { throw new SaveError('validation', 'Save screenshot validation failed', { cause }); }
     const header = {
       format: 'pointlesh-save' as const, formatVersion: 1 as const, gameId: this.options.gameId,
       version: this.options.version, savedAt: (this.options.now?.() ?? new Date()).toISOString(), state: candidate,
+      ...(preview.screenshot !== undefined ? { screenshot: preview.screenshot } : {}),
     };
     const serialized = JSON.stringify({ ...header, checksum: checksum(header) });
     try { this.options.storage.setItem(key, serialized); }
     catch (cause) { throw new SaveError('storage', `Could not save slot "${slot}"`, { cause }); }
-    return { slot, savedAt: header.savedAt, version: header.version, gameId: header.gameId };
+    return metadata(slot, header);
   }
 
   load(slot: string): T | null {
@@ -145,7 +163,7 @@ export class SaveStore<T extends GameState = GameState> {
       try {
         const slot = decodeURIComponent(key.slice(this.prefix.length));
         const record = this.read(slot);
-        if (record) result.push({ slot, savedAt: record.savedAt, version: record.version, gameId: record.gameId });
+        if (record) result.push(metadata(slot, record));
       } catch (error) {
         if (error instanceof SaveError && error.code === 'storage') throw error;
       }
@@ -189,6 +207,7 @@ export class SaveStore<T extends GameState = GameState> {
       }
       const { checksum: storedChecksum, ...header } = parsed;
       if (checksum(header) !== storedChecksum) throw new Error('Checksum mismatch');
+      assertScreenshot(parsed.screenshot);
       record = parsed as unknown as SaveEnvelope;
     } catch (cause) { throw new SaveError('corrupt', `Save slot "${slot}" is damaged or has an unknown format`, { cause }); }
     if (record.gameId !== this.options.gameId) throw new SaveError('incompatible', 'Save belongs to a different game');

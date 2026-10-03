@@ -40,6 +40,30 @@ test('malformed and checksum-damaged saves throw without changing the live state
   assert.deepEqual(saves.list(), []);
 });
 
+test('optional screenshots persist atomically with the state, and older slots remain compatible', () => {
+  const storage = new MemorySaveStorage(), saves = create(storage), state = makeState();
+  saves.save('old', state);
+  const screenshot = 'data:image/jpeg;base64,YWJj';
+  assert.equal(saves.save('new', state, { screenshot }).screenshot, screenshot);
+  const fresh = create(storage);
+  assert.equal(fresh.list().find(save => save.slot === 'new').screenshot, screenshot);
+  assert.equal(fresh.list().find(save => save.slot === 'old').screenshot, undefined);
+  assert.deepEqual(fresh.load('new'), state);
+  assert.deepEqual(fresh.load('old'), state);
+  const key = storage.keys().find(key => key.endsWith(':new')), before = storage.getItem(key);
+  for (const invalid of ['https://example.com/image.png', 'data:image/svg+xml;base64,YWJj', 'data:image/png;base64,' + 'A'.repeat(512 * 1024)]) {
+    assert.throws(() => saves.save('new', state, { screenshot: invalid }), error => error.code === 'validation');
+    assert.equal(storage.getItem(key), before);
+  }
+  const record = JSON.parse(before); record.screenshot = 'data:image/jpeg;base64,ZGVm';
+  storage.setItem(key, JSON.stringify(record));
+  assert.throws(() => fresh.load('new'), error => error.code === 'corrupt');
+  assert.deepEqual(fresh.list().map(save => save.slot), ['old']);
+  saves.save('old', { ...state, roomId: 'camp' }, { screenshot });
+  assert.equal(fresh.list().find(save => save.slot === 'old').screenshot, screenshot);
+  assert.equal(fresh.load('old').roomId, 'camp');
+});
+
 test('foreign-game and future-version records are rejected even with intact checksums', () => {
   const storage = new MemorySaveStorage();
   create(storage, { gameId: 'other-game' }).save('quick', makeState());

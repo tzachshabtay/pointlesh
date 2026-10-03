@@ -109,6 +109,8 @@ const state: GameState = {
   characters: {}, extensions: { journal: ['Find the king.'], guardClock: 0 },
 };
 saves.save('first', state);
+// Optional small thumbnail, captured by your renderer; retained in saves.list().
+saves.save('second', state, { screenshot: thumbnailDataUrl });
 const candidate = saves.load('first'); // Detached, validated data or null for a missing slot.
 ```
 

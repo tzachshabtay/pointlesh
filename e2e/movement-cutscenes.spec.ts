@@ -126,6 +126,7 @@ test('animated intro moves real sprites, restores a timed save checkpoint, and c
   await page.locator('#cutscene-next').click();
   await expect.poll(async () => (await cinematicView(page))?.stepIndex).toBe(saved.stepIndex + 1);
   await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.getByRole('button', { name: 'Load', exact: true }).click();
   const loadSlot = page.getByRole('button', { name: 'load slot 2', exact: true });
   // Observe after the real load handler, before the next animation frame. A
