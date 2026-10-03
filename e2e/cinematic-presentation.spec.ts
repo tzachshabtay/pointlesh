@@ -57,8 +57,8 @@ test('the king faces front after the homecoming walk and retains that pose on lo
   await openAdventure(page);
   const result = await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    scene.game.loop.sleep(); scene.story.introStep = 4; scene.story.endingStep = 3;
-    scene.introRunner.restore({ cutsceneId: 'forest.intro', version: 1, stepIndex: 4, elapsedMs: 0 });
+    scene.game.loop.sleep(); scene.story.introStep = 3; scene.story.endingStep = 3;
+    scene.introRunner.restore({ cutsceneId: 'forest.intro', version: 1, stepIndex: 3, elapsedMs: 0 });
     scene.endingRunner.restore({ cutsceneId: 'forest.ending', version: 1, stepIndex: 3, elapsedMs: 5400 });
     scene.renderCutscene();
     const king = () => scene.children.getByName('pointlesh-cinematic').list[0].getByName('cinematic-king');

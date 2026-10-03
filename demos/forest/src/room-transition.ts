@@ -17,13 +17,13 @@ export type RoomPortal = {
   openingWaypoint?: number;
 };
 // close-exit and open-entry remain readable for saves made by the old sequence.
-export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'entry' | 'close-entry' | 'peek-entry';
+export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'opening-entry' | 'entry' | 'close-entry' | 'peek-entry';
 export type RoomTransitionCheckpoint = {
   from: RoomPortal; to: RoomPortal; phase: RoomTransitionPhase; elapsedMs: number; waypoint: number;
   campStealth?: boolean;
   closingElapsedMs?: number;
 };
-const phases: RoomTransitionPhase[] = ['open-exit', 'exit', 'close-exit', 'open-entry', 'entry', 'close-entry', 'peek-entry'];
+const phases: RoomTransitionPhase[] = ['open-exit', 'exit', 'close-exit', 'open-entry', 'opening-entry', 'entry', 'close-entry', 'peek-entry'];
 
 export function assertRoomTransitionCheckpoint(value: unknown): asserts value is RoomTransitionCheckpoint {
   const state = value as RoomTransitionCheckpoint;
@@ -85,6 +85,15 @@ export class RoomTransitionController {
     this.state = cloneJSON(state);
     this.walk();
   }
+  /** Start in the destination, opening its door before walking out onto its floor. */
+  arrive(from: RoomPortal, to: RoomPortal): void {
+    const state: RoomTransitionCheckpoint = { from, to, phase: 'opening-entry', elapsedMs: 0, waypoint: 0 };
+    assertRoomTransitionCheckpoint(state);
+    if (this.active) throw new Error('A room transition is already active');
+    this.state = cloneJSON(state);
+    const path = this.route();
+    this.character.place(path[0]!); this.character.face(path[1]!);
+  }
   snapshot(): RoomTransitionCheckpoint | null { return this.state ? cloneJSON(this.state) : null; }
   /** Restore the character snapshot as well; its remaining path resumes normally. */
   restore(state: RoomTransitionCheckpoint | null): void {
@@ -96,6 +105,11 @@ export class RoomTransitionController {
     if (!Number.isFinite(deltaMs) || deltaMs < 0) throw new Error('Invalid room transition time');
     const state = this.state;
     if (!state) return;
+    if (state.phase === 'opening-entry') {
+      state.elapsedMs += deltaMs;
+      if (state.elapsedMs < (this.portal?.doorId ? this.portal.doorDurationMs ?? 900 : 0)) return;
+      this.next('entry'); this.state!.waypoint = 1; this.walk(); return;
+    }
     if (state.phase === 'open-exit') {
       state.elapsedMs += deltaMs;
       if (this.character.isWalking) return;

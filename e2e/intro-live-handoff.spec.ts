@@ -1,60 +1,71 @@
 import { expect, test } from '@playwright/test';
-import { writeFile } from 'node:fs/promises';
+import { isWalkable } from '@pointlesh/core';
 import { openAdventure } from './start-helpers';
 
-for (const restored of [false, true]) test(`the unpaused ${restored ? 'restored' : 'new'} intro retains rendered cast placement after gameplay resumes`, async ({ page }, testInfo) => {
-  await page.setViewportSize({ width: 1910, height: 1074 });
+for (const finish of ['natural', 'begin'] as const) test(`camp fades into Borin's normal gameplay entrance (${finish})`, async ({ page }, testInfo) => {
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await openAdventure(page);
-  await page.evaluate(() => {
+  await page.evaluate(finish => {
     const scene = (window as any).pointleshDemo.scene;
-    const proof = { before: null, after: null } as any;
-    (window as any).introLiveProof = proof;
-    let resumedAt: number | undefined;
-    const frame = (cinematic: boolean) => {
-      const world = scene.children.getByName('pointlesh-cinematic')?.list[0];
-      const elder = [...scene.npcActors.values()].find((npc: any) => npc.actorName === 'elder') as any;
-      const camera = scene.cameras.main;
-      const sprites = cinematic ? ['borin', 'elder'].map(id => world.getByName('cinematic-' + id)) : [scene.actor, elder.sprite];
-      return { image: scene.game.canvas.toDataURL(), zoom: camera.zoom, scroll: [camera.scrollX, camera.scrollY],
-        cast: sprites.map((sprite: any) => {
-          const matrix = sprite.getWorldTransformMatrix();
-          return { x: sprite.x, y: sprite.y, sx: cinematic ? matrix.tx : 480*(1-camera.zoom)-camera.scrollX*camera.zoom+sprite.x*camera.zoom,
-            sy: cinematic ? matrix.ty : 270*(1-camera.zoom)-camera.scrollY*camera.zoom+sprite.y*camera.zoom,
-            width: sprite.displayWidth * (cinematic ? world.scaleX : camera.zoom),
-            height: sprite.displayHeight * (cinematic ? world.scaleY : camera.zoom),
-            animation: sprite.anims.currentAnim?.key, origin: [sprite.originX,sprite.originY] };
-        }) };
-    };
-    const capture = () => {
-      if (scene.story.introStep === 3 && scene.introRunner.snapshot().elapsedMs > 8000) proof.before = frame(true);
-      if (proof.before && scene.story.introStep === 4 && !scene.cutsceneCrossfade && !scene.cinematic) {
-        resumedAt ??= performance.now();
-        // Keep gameplay running after the overlay disappears, so a later
-        // controller or camera update cannot silently undo the handoff.
-        if (performance.now() - resumedAt < 750) return;
-        proof.after = frame(false); scene.game.events.off('postrender', capture);
+    scene.scene.pause(); scene.story.introStep = 2;
+    scene.introRunner.restore({ cutsceneId: 'forest.intro', version: 1, stepIndex: 2, elapsedMs: finish === 'natural' ? 5900 : 2500 });
+    scene.renderCutscene();
+    (window as any).arrivalProof = { samples: [], restored: false, originalActor: scene.actor };
+    scene.events.on('postupdate', () => {
+      const proof = (window as any).arrivalProof;
+      if (scene.introArrival !== 'walking' || scene.cutsceneCrossfade) return;
+      proof.samples.push({ position: { ...scene.character.state.position }, floors: scene.walkables(),
+        animation: scene.actor.anims.currentAnim?.key, phase: scene.roomTransition.phase,
+        door: scene.roomTransition.doorProgress, sameActor: scene.actor === proof.originalActor,
+        cinematic: !!scene.cinematic, parent: !!scene.actor.parentContainer });
+      if (scene.character.isWalking && !proof.restored) {
+        const saved = scene.snapshot(), position = { ...scene.character.state.position };
+        scene.restore(saved); proof.restored = true;
+        proof.resumeMatches = JSON.stringify(position) === JSON.stringify(scene.character.state.position);
       }
-    };
-    scene.game.events.on('postrender', capture);
+    });
+  }, finish);
+  await expect(page.locator('#cutscene-location')).toContainText('ORC ENCAMPMENT');
+  await page.screenshot({ path: testInfo.outputPath('camp-before-fade.png') });
+  if (finish === 'begin') await page.getByRole('button', { name: 'Begin adventure' }).click();
+  await page.evaluate(() => (window as any).pointleshDemo.scene.scene.resume());
+  await expect(page.locator('#cutscene')).toBeHidden();
+  await expect(page.locator('#speech')).toHaveText('An army would wake the whole camp. One dwarf? I will bring him home.');
+  await expect(page.locator('#speaker')).toHaveText('Borin');
+  const proof = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene, proof = (window as any).arrivalProof;
+    const save = scene.snapshot(); scene.restore(save);
+    return { samples: proof.samples, resumeMatches: proof.resumeMatches, savedPhase: save.extensions.introArrival,
+      restoredPhase: scene.introArrival, position: scene.character.state.position, authored: scene.playerDefinition().position,
+      actorStable: scene.actor === proof.originalActor, transition: scene.roomTransition.active, cinematic: !!scene.cinematic };
   });
-  if (restored) await page.evaluate(() => {
-    const scene = (window as any).pointleshDemo.scene, checkpoint = scene.snapshot();
-    // A checkpoint created before editing the scene still has its older player
-    // position. The visible cinematic must own the handoff, not that old pose.
-    checkpoint.characters.borin.position = { x: 620, y: 475 };
-    checkpoint.cutscene.introStep = 3; checkpoint.cutscene.introElapsedMs = 7800;
-    scene.restore(checkpoint);
+  expect(proof).toMatchObject({ resumeMatches: true, savedPhase: 'speech', restoredPhase: 'speech', actorStable: true, transition: false, cinematic: false });
+  expect(proof.position).toEqual(proof.authored);
+  expect(proof.samples.length).toBeGreaterThan(10);
+  expect(proof.samples.some(sample => sample.phase === 'opening-entry' && sample.door > 0 && sample.door < 1)).toBe(true);
+  expect(proof.samples.some(sample => sample.animation?.startsWith('borin.walk-'))).toBe(true);
+  for (const sample of proof.samples) {
+    expect(isWalkable(sample.position, sample.floors)).toBe(true);
+    expect(sample).toMatchObject({ sameActor: true, cinematic: false, parent: false });
+  }
+  await page.screenshot({ path: testInfo.outputPath('normal-game-arrival.png') });
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page.locator('#dialog')).toBeHidden();
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.blocked())).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test('old completed saves stay completed and old cottage shots become normal entrances', async ({ page }) => {
+  await openAdventure(page);
+  const migrated = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene; scene.scene.pause();
+    const saved = scene.snapshot(); delete saved.cutscene.introVersion;
+    saved.cutscene.introStep = 4; saved.cutscene.introElapsedMs = 0;
+    scene.restore(saved);
+    const completed = { introStep: scene.story.introStep, arrival: scene.introArrival ?? null, cinematic: !!scene.cinematic };
+    saved.cutscene.introStep = 3; saved.cutscene.introElapsedMs = 5000;
+    scene.restore(saved);
+    return { completed, arrival: scene.introArrival, phase: scene.roomTransition.phase, cinematic: !!scene.cinematic };
   });
-  else for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Next scene' }).click();
-  await page.waitForFunction(() => (window as any).introLiveProof.after, undefined, { timeout: 25000 });
-  const proof = await page.evaluate(() => (window as any).introLiveProof);
-  for (const key of ['before', 'after']) {
-    await writeFile(testInfo.outputPath(key + '.png'), Buffer.from(proof[key].image.split(',')[1], 'base64'));
-    await testInfo.attach(key, { path: testInfo.outputPath(key + '.png'), contentType: 'image/png' });
-    delete proof[key].image;
-  }
-  await writeFile(testInfo.outputPath('poses.json'), JSON.stringify(proof, null, 2));
-  for (let i = 0; i < 2; i++) for (const key of ['x', 'y', 'sx', 'sy', 'width', 'height']) {
-    expect(proof.after.cast[i][key], `${i === 0 ? 'Borin' : 'Rowan'} ${key}`).toBeCloseTo(proof.before.cast[i][key], 3);
-  }
+  expect(migrated).toEqual({ completed: { introStep: 3, arrival: null, cinematic: false }, arrival: 'walking', phase: 'opening-entry', cinematic: false });
 });

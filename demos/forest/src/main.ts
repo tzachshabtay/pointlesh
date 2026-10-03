@@ -10,7 +10,7 @@ import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses } from './content';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
-import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, introArrivalLine, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors, ForestMusic } from './sprites';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
@@ -28,12 +28,13 @@ import { addLampAssets, addLamps } from './lamp-assets';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId } from './interface-assets';
-import { CINEMATIC_DURATIONS, INTRO_HANDOFF_MS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
+import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { installViewportLayout } from './viewport-layout';
 import './style.css';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
 import { ForestDialogPortrait } from './dialog-portrait';
+import { cottageDeparture } from './cinematic-paths';
 import { CutsceneCrossfade } from './cutscene-crossfade';
 
 const disposeViewportLayout = installViewportLayout(document.documentElement);
@@ -70,7 +71,7 @@ function modal(title: string) {
 }
 
 const cutsceneDefinition = (kind: 'intro' | 'ending') => ({ id: `forest.${kind}`, version: 1, steps: (kind === 'intro' ? intro : ending).map((step, index) => ({ id: `${kind}-${index}`, ...step, durationMs: CINEMATIC_DURATIONS[kind][index] })) });
-type ForestCheckpoint = { introStep: number; endingStep: number; introElapsedMs?: number; endingElapsedMs?: number };
+type ForestCheckpoint = { introVersion?: 2; introStep: number; endingStep: number; introElapsedMs?: number; endingElapsedMs?: number };
 const arrowDirections: Record<string, { x: number; y: number }> = { ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 }, ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 } };
 const editingText = (target: EventTarget | null) => target instanceof HTMLElement && !!target.closest('input,textarea,select,[contenteditable="true"],[role="textbox"]');
 
@@ -110,6 +111,8 @@ class ForestAdventure extends Phaser.Scene {
   endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
   cinematic?: ForestCinematic;
   cutsceneCrossfade?: CutsceneCrossfade;
+  introArrival?: 'walking' | 'speech';
+  private skipIntroArrival = false;
   endingOpening?: EndingOpening;
   roomTransition!: RoomTransitionController;
   campStealth!: CampStealth;
@@ -157,13 +160,20 @@ class ForestAdventure extends Phaser.Scene {
     this.roomTransition = new RoomTransitionController(this.character, {
       enterRoom: portal => this.changeRoom(portal.roomId as RoomId, false, true),
       onComplete: () => {
+        if (this.introArrival === 'walking') {
+          this.character.face(this.authoredFacing(this.playerDefinition()!));
+          this.introArrival = 'speech'; this.say(introArrivalLine);
+        }
         if (this.campRestricted()) this.campStealth.start(this.character.state.position);
         else if (this.story.roomId === 'camp' && !walkablePolygons(this.resolved()).some(floor => pointInPolygon(this.character.state.position, floor))) {
           this.campStealth.start(this.character.state.position); this.campStealth.release(this.campClearance());
         }
         this.binding.sync(); this.render();
       },
-      onBlocked: () => { this.syncTransitionDoors(); this.renderNearby(); toast('That entrance is blocked. Check its transition points and corridor.'); },
+      onBlocked: () => {
+        if (this.introArrival === 'walking') this.introArrival = undefined;
+        this.syncTransitionDoors(); this.renderNearby(); toast('That entrance is blocked. Check its transition points and corridor.');
+      },
     });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
@@ -316,7 +326,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked() { return !this.started || !!this.cutsceneCrossfade || this.roomTransition?.active || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  blocked() { return !this.started || !!this.cutsceneCrossfade || this.roomTransition?.active || !!this.introArrival || this.campStealth?.busy || this.worldEditorOpen() || this.editing || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);
@@ -779,39 +789,26 @@ class ForestAdventure extends Phaser.Scene {
       }));
     }
   }
-  renderCinematicShot(index: number, elapsedMs: number) {
-    this.cinematic?.render(index, elapsedMs);
-    if (this.adoptIntroCast()) this.cinematic?.render(index, elapsedMs);
+  beginIntroArrival() {
+    const departure = cottageDeparture(authoredScenes);
+    const path = [...departure.path].reverse();
+    this.introArrival = 'walking';
+    this.roomTransition.arrive(forestPortal(authoredScenes, 'house', 'village'), {
+      ...departure.portal, path, handoffIndex: path.length - 1,
+    });
+    this.binding.sync(); this.roomCamera.snap(); this.syncTransitionDoors(); this.renderNearby();
   }
-  adoptIntroCast(): boolean {
-    const shot = this.cinematic?.snapshot();
-    if (!shot?.visible || shot.kind !== 'intro' || shot.stepIndex !== intro.length - 1 || shot.elapsedMs < INTRO_HANDOFF_MS) return false;
-    let changed = false;
-    // The intro has its own cast controllers. A restored checkpoint can still
-    // hold an older gameplay pose, so the visible final shot owns the handoff.
-    for (const actor of shot.cast) {
-      if (!actor.visible || (actor.id !== 'borin' && actor.id !== 'elder')) continue;
-      const npc = [...this.npcActors.values()].find(npc => npc.actorName === actor.id);
-      const controller = actor.id === 'borin' ? this.character : npc?.controller;
-      const definition = actor.id === 'borin' ? this.playerDefinition() : this.resolved().objects.find(object => object.properties.actorName === actor.id);
-      if (!controller || !definition) continue;
-      const facing = this.authoredFacing(definition);
-      if (controller.state.position.x === actor.x && controller.state.position.y === actor.y && controller.state.facing === facing) continue;
-      controller.place({ x: actor.x, y: actor.y }, facing);
-      (actor.id === 'borin' ? this.binding : npc!.binding).sync();
-      changed = true;
-    }
-    // Align the outgoing camera again in this frame, before the renderer takes
-    // the crossfade snapshot, when adopting a pose changes the gameplay zoom.
-    if (changed) this.roomCamera.snap();
-    return changed;
+  continueSpeech() {
+    if (this.conversationActive) { this.conversation.advance(); return; }
+    this.dismissSpeech();
+    if (this.introArrival === 'speech') this.introArrival = undefined;
   }
   renderCutscene() {
     const isEnding = this.story.endingStep >= 0;
     const index = isEnding ? this.story.endingStep : this.story.introStep;
     const sequence = isEnding ? ending : intro;
     const runner = isEnding ? this.endingRunner : this.introRunner;
-    if (runner.snapshot().stepIndex !== index) runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: index, elapsedMs: 0 });
+    if (runner.snapshot().stepIndex !== index) runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: Math.min(index, sequence.length), elapsedMs: 0 });
     el('cutscene').hidden = index >= sequence.length;
     if (index >= sequence.length) {
       if (isEnding) {
@@ -831,8 +828,8 @@ class ForestAdventure extends Phaser.Scene {
       }
       if (this.cinematic && !this.cutsceneCrossfade) {
         const outgoing = this.cinematic;
-        const shot = outgoing.snapshot();
-        this.renderCinematicShot(shot.stepIndex, shot.elapsedMs);
+        if (!this.skipIntroArrival) this.beginIntroArrival();
+        this.skipIntroArrival = false;
         this.cutsceneCrossfade = new CutsceneCrossfade(this);
         this.cutsceneCrossfade.start(el('game').parentElement!, el('cinematic-portrait'), () => {
           outgoing.destroy(); this.cinematic = undefined;
@@ -853,7 +850,7 @@ class ForestAdventure extends Phaser.Scene {
       this.clearMovementKeys(); this.character.stop(); this.hover();
     }
     document.body.classList.add('cinematic-playing');
-    this.renderCinematicShot(index, runner.snapshot().elapsedMs);
+    this.cinematic.render(index, runner.snapshot().elapsedMs);
     el('cutscene-location').textContent = this.cinematic.locationName;
     el('cutscene-kicker').textContent = isEnding ? 'THE JOURNEY HOME' : 'THE STORY BEGINS';
     const step = runner.current()!;
@@ -865,21 +862,13 @@ class ForestAdventure extends Phaser.Scene {
     el('skip-intro').hidden = false;
     el('skip-intro').textContent = isEnding ? 'Skip to homecoming' : 'Skip introduction';
     el('cutscene-next').firstChild!.textContent = index === sequence.length - 1 ? isEnding ? 'Home at last ' : 'Begin adventure ' : 'Next scene ';
-    this.syncCutsceneAdvance();
-  }
-  syncCutsceneAdvance() {
-    el<HTMLButtonElement>('cutscene-next').disabled = this.story.endingStep < 0 && this.story.introStep === intro.length - 1 && this.introRunner.snapshot().elapsedMs < INTRO_HANDOFF_MS;
+    el<HTMLButtonElement>('cutscene-next').disabled = false;
   }
   advanceCutscene(skip = false) {
     if (!this.cinematic) return;
     const isEnding = this.story.endingStep >= 0;
     const runner = isEnding ? this.endingRunner : this.introRunner;
-    if (!isEnding && this.story.introStep === intro.length - 1) {
-      if (!skip && runner.snapshot().elapsedMs < INTRO_HANDOFF_MS) return;
-      // Explicitly skipping this shot omits its remaining motion. Capture its
-      // settled pose, rather than dissolving a mid-walk actor into another spot.
-      if (skip) this.renderCinematicShot(intro.length - 1, CINEMATIC_DURATIONS.intro.at(-1)! - 1);
-    }
+    if (!isEnding) this.skipIntroArrival = skip;
     if (skip) runner.skip(); else runner.advance();
     if (isEnding) this.story.endingStep = runner.snapshot().stepIndex;
     else this.story.introStep = runner.snapshot().stepIndex;
@@ -933,7 +922,7 @@ class ForestAdventure extends Phaser.Scene {
     const controller = new CharacterController({ ...this.character.config,
       position: actor?.position ?? { x: 471, y: 462 }, facing: actor ? this.authoredFacing(actor) : 'down' });
     this.restore({ roomId: story.roomId, inventory: [], flags: {}, characters: { borin: controller.snapshot() }, selectedItem: null, dialog: null,
-      cutscene: { introStep: 0, endingStep: -1, introElapsedMs: 0, endingElapsedMs: 0 },
+      cutscene: { introVersion: 2, introStep: 0, endingStep: -1, introElapsedMs: 0, endingElapsedMs: 0 },
       extensions: { journal: story.journal, guardClock: 0, speech: '' } });
     this.showHotspots = false; el('hotspots').classList.remove('active'); this.drawHotspots();
     this.enterGame();
@@ -941,8 +930,9 @@ class ForestAdventure extends Phaser.Scene {
   snapshot(): GameState {
     return { roomId: this.story.roomId, inventory: [...this.story.inventory], flags: { ...this.story.flags }, characters: { borin: this.character.snapshot() }, selectedItem: this.selected ?? null,
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
-      cutscene: { introStep: this.story.introStep, endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
+      cutscene: { introVersion: 2, introStep: Math.min(this.story.introStep, intro.length), endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
+        ...(this.introArrival ? { introArrival: this.introArrival } : {}),
         ...(this.endingOpening ? { endingOpening: this.endingOpening as unknown as JSONValue } : {}),
         ...(this.roomTransition.active ? { roomTransition: this.roomTransition.snapshot() as unknown as JSONValue } : {}),
         ...(this.campStealth.snapshot() ? { campStealth: this.campStealth.snapshot() as unknown as JSONValue } : {}),
@@ -955,12 +945,18 @@ class ForestAdventure extends Phaser.Scene {
   validateSave(save: GameState) {
     if (!roomIds.includes(save.roomId as RoomId) || !save.characters.borin || Object.keys(save.characters).length !== 1 || save.inventory.some(item => !(item in items)) || Object.values(save.flags).some(flag => typeof flag !== 'boolean')) throw new Error('Save references unknown adventure content');
     const cutscene = save.cutscene as ForestCheckpoint;
-    if (!cutscene || !Number.isInteger(cutscene.introStep) || cutscene.introStep < 0 || cutscene.introStep > intro.length || !Number.isInteger(cutscene.endingStep) || cutscene.endingStep < -1 || cutscene.endingStep > ending.length) throw new Error('Invalid cutscene checkpoint');
+    // Older introductions had a fourth cottage shot. Version two saves keep
+    // that entrance in the normal character/door checkpoints instead.
+    if (!cutscene || cutscene.introVersion !== undefined && cutscene.introVersion !== 2 || !Number.isInteger(cutscene.introStep) || cutscene.introStep < 0 || cutscene.introStep > (cutscene.introVersion === 2 ? intro.length : 4) || !Number.isInteger(cutscene.endingStep) || cutscene.endingStep < -1 || cutscene.endingStep > ending.length) throw new Error('Invalid cutscene checkpoint');
     for (const kind of ['intro', 'ending'] as const) {
       const stepIndex = cutscene[`${kind}Step`];
-      new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, stepIndex), elapsedMs: restoreCinematicElapsed(kind, stepIndex, cutscene[`${kind}ElapsedMs`] ?? 0) });
+      const elapsedMs = cutscene[`${kind}ElapsedMs`] ?? 0;
+      if (!Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid cutscene elapsed time');
+      new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.min(Math.max(0, stepIndex), (kind === 'intro' ? intro : ending).length), elapsedMs: restoreCinematicElapsed(kind, stepIndex, elapsedMs) });
     }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
+    const arrival = save.extensions.introArrival;
+    if (arrival !== undefined && (arrival !== 'walking' && arrival !== 'speech' || save.roomId !== 'village' || cutscene.introStep < intro.length || cutscene.endingStep >= 0 || arrival === 'walking' && !save.extensions.roomTransition || arrival === 'speech' && !save.extensions.speech)) throw new Error('Invalid intro arrival checkpoint');
     if (save.extensions.guardPatrol !== undefined) assertGuardPatrolSnapshot(save.extensions.guardPatrol);
     if (save.extensions.campStealth !== undefined) {
       assertCampStealthCheckpoint(save.extensions.campStealth);
@@ -991,12 +987,14 @@ class ForestAdventure extends Phaser.Scene {
     const conversation = new AdventureDialog(dialogs, assets); const turn = conversation.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const checkpoint = save.cutscene as ForestCheckpoint;
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
+    this.skipIntroArrival = false;
+    this.introArrival = save.extensions.introArrival as typeof this.introArrival;
     endingModal = false; el('modal-close').hidden = false;
     this.endingOpening = save.extensions.endingOpening as unknown as EndingOpening | undefined;
     this.cutsceneCrossfade?.destroy(); this.cutsceneCrossfade = undefined;
     this.cinematic?.destroy(); this.cinematic = undefined;
-    this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: checkpoint.introStep, endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
-    for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.max(0, checkpoint[`${kind}Step`]), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
+    this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: Math.min(checkpoint.introStep, intro.length), endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
+    for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.min(Math.max(0, checkpoint[`${kind}Step`]), (kind === 'intro' ? intro : ending).length), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.guardPatrol = undefined;
     this.guardCheckpoint = save.extensions.guardPatrol as unknown as GuardPatrolSnapshot | undefined;
@@ -1010,6 +1008,7 @@ class ForestAdventure extends Phaser.Scene {
     this.roomTransition.restore((save.extensions.roomTransition ?? null) as RoomTransitionCheckpoint | null);
     this.campStealth.restore((save.extensions.campStealth ?? null) as CampStealthCheckpoint | null);
     if (this.campRestricted() && !this.roomTransition.active && !save.extensions.campStealth) this.campStealth.takeCover(this.campCover(), this.campClearance());
+    if (checkpoint.introVersion === undefined && checkpoint.introStep === 3 && checkpoint.endingStep < 0 && save.roomId === 'village' && !this.roomTransition.active) this.beginIntroArrival();
     this.syncTransitionDoors();
     this.binding.sync(); this.render(); this.renderCutscene(); this.renderTyingGuard();
     this.renderPeek();
@@ -1032,8 +1031,7 @@ class ForestAdventure extends Phaser.Scene {
         const checkpoint = runner.snapshot();
         if (isEnding) this.story.endingStep = checkpoint.stepIndex; else this.story.introStep = checkpoint.stepIndex;
         if (checkpoint.stepIndex !== previousStep) this.renderCutscene();
-        else this.renderCinematicShot(checkpoint.stepIndex, checkpoint.elapsedMs);
-        this.syncCutsceneAdvance();
+        else this.cinematic.render(checkpoint.stepIndex, checkpoint.elapsedMs);
       }
     }
     if (!modalOpen && this.story.chestOpening) {
@@ -1090,7 +1088,7 @@ function setupControls() {
     el('character-lighting').setAttribute('aria-pressed', String(enabled));
     el('character-lighting').textContent = `Lighting ${enabled ? 'on' : 'off'}`;
   };
-  el('dialog-next').onclick = () => gameScene.conversationActive ? gameScene.conversation.advance() : gameScene.dismissSpeech();
+  el('dialog-next').onclick = () => gameScene.continueSpeech();
   el('cutscene-next').onclick = () => gameScene.advanceCutscene();
   el('skip-intro').onclick = () => gameScene.advanceCutscene(true);
   el('hotspots').onclick = () => { gameScene.showHotspots = !gameScene.showHotspots; el('hotspots').classList.toggle('active', gameScene.showHotspots); gameScene.drawHotspots(); };

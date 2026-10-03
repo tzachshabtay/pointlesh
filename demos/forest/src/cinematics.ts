@@ -11,21 +11,20 @@ import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, res
 import { INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
 import { activatePointleshAreas } from './room-transition';
 import { CAGE_APPROACH_AREA } from './transition-content';
-import { campRescue, forestHomeward, villageHomecoming, cottageDeparture, forestMarch, villageAbduction, sampleWalk, walkLength } from './cinematic-paths';
+import { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, sampleWalk, walkLength } from './cinematic-paths';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 
 export type CinematicKind = 'intro' | 'ending';
 export type EndingOpening = { position: Point; facing: Direction; zoom: number; x: number; y: number };
 export const CINEMATIC_DURATIONS = {
-  intro: [6000, 4500, 6000, 8500],
+  intro: [6000, 4500, 6000],
   ending: [6200, 6200, 5600, 6500],
 } as const;
-/** The cottage door and walk must finish before control passes to gameplay. */
-export const INTRO_HANDOFF_MS = 7100;
 
 /** Older saves can be partway through the former ten-second forest shot. */
 export function restoreCinematicElapsed(kind: CinematicKind, step: number, elapsedMs: number): number {
+  if (kind === 'intro' && step >= CINEMATIC_DURATIONS.intro.length) return 0;
   return kind === 'intro' && step === 1 && elapsedMs >= CINEMATIC_DURATIONS.intro[1] && elapsedMs < 10000
     ? CINEMATIC_DURATIONS.intro[1] - 1 : elapsedMs;
 }
@@ -80,7 +79,6 @@ export class ForestCinematic {
   private homecoming?: ReturnType<typeof villageHomecoming>;
   private march?: ReturnType<typeof forestMarch>;
   private abduction?: ReturnType<typeof villageAbduction>;
-  private departure?: ReturnType<typeof cottageDeparture>;
   private overlayRoom?: string;
   private readonly foreground: Phaser.GameObjects.Graphics;
   private readonly fade: Phaser.GameObjects.Rectangle;
@@ -127,16 +125,16 @@ export class ForestCinematic {
 
   render(stepIndex: number, elapsedMs: number): void {
     if (this.destroyed) return;
-    if (!Number.isInteger(stepIndex) || stepIndex < 0 || stepIndex > 4 || !Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid cinematic checkpoint');
+    if (!Number.isInteger(stepIndex) || stepIndex < 0 || stepIndex > CINEMATIC_DURATIONS[this.kind].length || !Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid cinematic checkpoint');
     this.stepIndex = stepIndex;
     this.elapsedMs = elapsedMs;
-    if (stepIndex === 4) { this.setVisible(false); return; }
+    if (stepIndex === CINEMATIC_DURATIONS[this.kind].length) { this.setVisible(false); return; }
     const manifest = this.getManifest();
     if (manifest !== this.authoredManifest) {
       this.definitions = new Map(Object.keys(manifest.scenes).map(id => [id, resolvePointleshScene(manifest, id)]));
       this.authoredManifest = manifest;
       this.rescue = undefined; this.homeward = undefined; this.homecoming = undefined;
-      this.march = undefined; this.departure = undefined; this.abduction = undefined;
+      this.march = undefined; this.abduction = undefined;
       this.overlayRoom = undefined;
     }
     this.excludeGameplayObjects();
@@ -152,7 +150,7 @@ export class ForestCinematic {
       id => this.ambient.find(light => light.sprite.name === `ambient-${id}`)?.sprite), this.world);
     // Short cuts connect actual animated shots; the opening starts visibly in motion.
     const inFade = stepIndex === 0 ? 0 : 1 - clamp(elapsedMs / 220);
-    const outFade = this.kind === 'intro' && stepIndex === 3 ? 0 : clamp((elapsedMs - duration + 280) / 280);
+    const outFade = this.kind === 'intro' && stepIndex === CINEMATIC_DURATIONS.intro.length - 1 ? 0 : clamp((elapsedMs - duration + 280) / 280);
     this.fade.setAlpha(Math.max(inFade, outFade));
   }
 
@@ -286,8 +284,7 @@ export class ForestCinematic {
             : characterId === 'borin' ? borinActionSize(this.assets.manifest.assets[assetId], !!actor.action)
               : guardAnimationSize(this.assets.manifest.assets[assetId], actor.sleeping),
           areas: () => actor.definition!.properties.ignoreScaling ? [] : activatePointleshAreas(this.definitions.get(this.room)?.areas ?? [],
-            this.room === 'camp' ? [CAGE_APPROACH_AREA]
-              : this.kind === 'intro' && this.stepIndex === 3 && id === 'borin' ? ['village.transition.to-house'] : actor.transitionAreas ?? []),
+            this.room === 'camp' ? [CAGE_APPROACH_AREA] : actor.transitionAreas ?? []),
           origin: () => ({ x: actor.definition!.anchorX, y: 1 - actor.definition!.anchorY }),
           angle: () => actor.definition!.rotation,
           animations: () => actor.action === 'point-spear' || actor.action === 'hands-up' ? introAnimation(assetId, actor.action)
@@ -387,28 +384,6 @@ export class ForestCinematic {
       this.pose('guard-rear', { x: lerp(433, 616, entry), y: 437, walking: t < 0.70 });
       this.cage(1 - segment(t, 0.69, 0.87));
       this.mist(0x75928b, 0.045);
-    } else {
-      this.shot('village', 'BRAMBLEHOLLOW · A QUIETER HERO', lerp(1.07, 1.18, t), 487, 292);
-      const departure = this.departure ??= cottageDeparture(this.authoredManifest!);
-      const length = walkLength(departure.path), openingMs = 900, walkMs = INTRO_HANDOFF_MS - openingMs;
-      const travelled = length * segment(this.elapsedMs, openingMs, openingMs + walkMs);
-      const clearMs = openingMs + walkMs * departure.clearDistance / length;
-      this.roomDoor(departure.portal.doorId!, segment(this.elapsedMs, 0, openingMs) * (1 - segment(this.elapsedMs, clearMs, clearMs + 900)));
-      this.pose('elder', { ...departure.elderPosition, facing: authoredFacing(departure.elderFacing) });
-      // The closed leaf hides him until it opens; each subsequent foot position
-      // follows the authored corridor and the connected village floor.
-      if (this.elapsedMs >= openingMs) {
-        const pose = sampleWalk(departure.path, travelled);
-        this.pose('borin', { ...pose, walking: travelled < length, facing: travelled < length ? pose.facing : authoredFacing(departure.playerFacing) });
-      }
-      // Land on the gameplay camera's exact view before dissolving the two
-      // rendered layers; equal world coordinates alone still shift on screen.
-      const camera = this.scene.cameras.main;
-      const blend = smooth(segment(this.elapsedMs, INTRO_HANDOFF_MS - 1000, INTRO_HANDOFF_MS));
-      this.world.setPosition(lerp(this.world.x, W / 2 * (1 - camera.zoom) - camera.scrollX * camera.zoom, blend),
-        lerp(this.world.y, H / 2 * (1 - camera.zoom) - camera.scrollY * camera.zoom, blend))
-        .setScale(lerp(this.world.scaleX, camera.zoom, blend));
-      this.mist(0xa4bd8b, 0.035);
     }
   }
 

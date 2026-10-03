@@ -20,15 +20,15 @@ test('intro and ending use authored character clips, live previews, and determin
         animation: sprite.anims.currentAnim?.key, flip: sprite.flipX, x: sprite.x, y: sprite.y,
         scaleX: sprite.scaleX, scaleY: sprite.scaleY, originX: sprite.originX, originY: sprite.originY }));
     const shot = (kind: string, stepIndex: number, elapsedMs = 230) => {
-      scene.story.introStep = kind === 'intro' ? stepIndex : 4;
+      scene.story.introStep = kind === 'intro' ? stepIndex : 3;
       scene.story.endingStep = kind === 'ending' ? stepIndex : -1;
       const other = kind === 'intro' ? 'ending' : 'intro';
-      scene[`${other}Runner`].restore({ cutsceneId: `forest.${other}`, version: 1, stepIndex: other === 'intro' ? 4 : 0, elapsedMs: 0 });
+      scene[`${other}Runner`].restore({ cutsceneId: `forest.${other}`, version: 1, stepIndex: other === 'intro' ? 3 : 0, elapsedMs: 0 });
       scene[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex, elapsedMs });
       scene.renderCutscene();
       return cast();
     };
-    const intro = [0, 1, 2, 3].map(index => shot('intro', index));
+    const intro = [0, 1, 2].map(index => shot('intro', index));
     const ending = [0, 1, 2, 3].map(index => shot('ending', index));
     const savedPose = shot('ending', 2, 1234);
     const checkpoint = scene.snapshot();
@@ -54,10 +54,10 @@ test('intro and ending use authored character clips, live previews, and determin
     const promoted = shot('intro', 0);
     const sprites = scene.children.getByName('pointlesh-cinematic').list[0].list
       .filter((object: any) => object.name.startsWith('cinematic-'));
+    (window as any).outgoingCinematicSprites = sprites;
     scene.advanceCutscene(true);
-    const destroyed = sprites.every((sprite: any) => !sprite.scene);
     scene.game.loop.wake();
-    return { intro, ending, savedPose, restoredPose, overridden, preview, promoted, destroyed };
+    return { intro, ending, savedPose, restoredPose, overridden, preview, promoted };
   });
 
   for (const shot of [...result.intro, ...result.ending]) {
@@ -70,15 +70,15 @@ test('intro and ending use authored character clips, live previews, and determin
   const actor = (shot: any[], id: string) => shot.find(value => value.id === `cinematic-${id}`);
   expect(actor(result.intro[0], 'guard-front')).toMatchObject({ animation: 'guard.walk-left', flip: false });
   expect(actor(result.intro[0], 'guard-rear')).toMatchObject({ animation: 'guard.walk-left', flip: true });
-  expect(actor(result.intro[3], 'elder').animation).toBe('elder.speak-front');
-  expect(actor(result.ending[3], 'elder').animation).toBe('elder.speak-front');
+  expect(result.intro).toHaveLength(3);
+  expect(actor(result.ending[3], 'elder').animation).toBe('elder.idle-front');
   expect(result.restoredPose).toEqual(result.savedPose);
   for (const id of ['guard-front', 'guard-rear']) {
     expect(actor(result.overridden, id).animation).toBe('borin.walk-front');
     expect(actor(result.preview, id).texture).toBe('cinematic-preview');
     expect(actor(result.promoted, id).texture).toBe('borin.walk-front');
   }
-  expect(result.destroyed).toBe(true);
   await expectCinematicCleanup(page);
+  expect(await page.evaluate(() => (window as any).outgoingCinematicSprites.every((sprite: any) => !sprite.scene))).toBe(true);
   expect(errors).toEqual([]);
 });

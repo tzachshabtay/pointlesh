@@ -47,6 +47,31 @@ test('every door/walk phase resumes from its exact checkpoint without replaying 
   assert.equal(restoredPhases.size, 4);
 });
 
+test('a gameplay arrival opens the destination door once and resumes each phase without switching rooms', () => {
+  const original = setup(), incoming = { ...to, handoffIndex: 1, doorClearance: 15 };
+  original.transition.arrive(from, incoming);
+  assert.deepEqual(original.character.state.position, incoming.path[1]);
+  assert.equal(original.character.isWalking, false);
+  original.tick();
+  assert.ok(original.transition.doorProgress > 0 && original.transition.doorProgress < 1);
+  assert.equal(original.character.isWalking, false, 'wait inside until the opening is clear');
+  const phases = new Set();
+  for (let i = 0; i < 1000 && original.transition.active; i++) {
+    const phase = original.transition.phase;
+    if (!phases.has(phase)) {
+      const copy = setup(); copy.character.restore(original.character.snapshot()); copy.transition.restore(original.transition.snapshot());
+      assert.equal(copy.transition.doorProgress, original.transition.doorProgress);
+      for (let j = 0; j < 1000 && copy.transition.active; j++) copy.tick();
+      assert.deepEqual(copy.events, ['done']);
+      assert.deepEqual(copy.character.state.position, incoming.path[0]);
+      phases.add(phase);
+    }
+    original.tick();
+  }
+  assert.deepEqual([...phases], ['opening-entry', 'entry', 'close-entry']);
+  assert.deepEqual(original.events, ['done']);
+});
+
 test('doorway handoff switches at the sill and immediately continues walking with the destination open', () => {
   const run = setup(), outgoing = { ...from, handoffIndex: 1 }, incoming = { ...to, handoffIndex: 1 };
   let exitPosition, doorAtSwitch;

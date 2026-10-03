@@ -192,9 +192,9 @@ export function hint(state: StoryState): string {
 export const intro = [
   { speaker: 'Bramblehollow · before dawn', text: 'The orcs found the king’s road.' },
   { speaker: 'King Aldric', text: 'Run home! Tell Rowan… tell him I may be late for breakfast.' },
-  { speaker: 'The eastern camp', text: 'By nightfall, their captain would return. The king was running out of time.' },
-  { speaker: 'Borin', text: 'An army would wake the whole camp. One dwarf? I will bring him home.' }
+  { speaker: 'The eastern camp', text: 'By nightfall, their captain would return. The king was running out of time.' }
 ];
+export const introArrivalLine = 'An army would wake the whole camp. One dwarf? I will bring him home.';
 export const ending = [
   { speaker: 'Borin', text: 'One good strike. Keep snoring, Grub.' },
   { speaker: 'King Aldric', text: 'A locked cage for me, a stout rope for him. A fair exchange, Borin.' },
