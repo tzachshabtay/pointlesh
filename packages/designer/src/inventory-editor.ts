@@ -45,7 +45,8 @@ export function inventoryItemEditor(options: {
   if (url) {
     const image = document.createElement('img'); image.src = url; image.alt = 'Inventory item preview'; image.draggable = false;
     preview.append(image, marker); root.append(preview);
-    let drag: { id: number; start: PointleshPoint } | undefined;
+    let drag: { id: number } | undefined;
+    const window = document.defaultView!;
     const move = (event: PointerEvent) => {
       const bounds = preview.getBoundingClientRect();
       if (bounds.width && bounds.height) point = {
@@ -54,22 +55,35 @@ export function inventoryItemEditor(options: {
       };
       redraw();
     };
+    const finish = (event?: PointerEvent) => {
+      if (!drag || (event && event.pointerId !== drag.id)) return;
+      if (event?.type === 'pointerup' && marker.isConnected) move(event);
+      const id = drag.id; drag = undefined;
+      window.removeEventListener('pointermove', onMove, true);
+      window.removeEventListener('pointerup', finish, true);
+      window.removeEventListener('pointercancel', finish, true);
+      window.removeEventListener('blur', onBlur);
+      if (marker.hasPointerCapture(id)) marker.releasePointerCapture(id);
+      // Keep the last visible edit even if focus/capture is lost or the panel rerenders.
+      commitPoint();
+    };
+    const onBlur = () => finish();
+    const onMove = (event: PointerEvent) => {
+      if (!drag || event.pointerId !== drag.id) return;
+      if (!(event.buttons & 1)) { finish(event); return; }
+      event.preventDefault(); move(event);
+    };
     marker.addEventListener('pointerdown', event => {
       if (event.button !== 0) return;
       event.preventDefault(); event.stopPropagation();
-      drag = { id: event.pointerId, start: { ...point } }; marker.setPointerCapture(event.pointerId);
+      drag = { id: event.pointerId }; marker.setPointerCapture(event.pointerId);
+      window.addEventListener('pointermove', onMove, true);
+      window.addEventListener('pointerup', finish, true);
+      window.addEventListener('pointercancel', finish, true);
+      window.addEventListener('blur', onBlur);
     });
-    marker.addEventListener('pointermove', event => {
-      if (!drag || event.pointerId !== drag.id) return;
-      if (!(event.buttons & 1)) { drag = undefined; commitPoint(); return; }
-      event.preventDefault(); move(event);
-    });
-    marker.addEventListener('pointerup', event => {
-      if (!drag || event.pointerId !== drag.id) return;
-      move(event); drag = undefined; marker.releasePointerCapture(event.pointerId); commitPoint();
-    });
-    const cancel = () => { if (drag) { point = drag.start; drag = undefined; redraw(); } };
-    marker.addEventListener('pointercancel', cancel); marker.addEventListener('lostpointercapture', cancel);
+    marker.addEventListener('lostpointercapture', finish);
+    marker.addEventListener('click', event => { event.preventDefault(); event.stopPropagation(); });
     marker.addEventListener('keydown', event => {
       const offset = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
       if (!offset) return;

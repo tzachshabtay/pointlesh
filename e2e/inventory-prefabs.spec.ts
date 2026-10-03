@@ -57,6 +57,41 @@ test('inventory prefabs expose an enlarged preview and a draggable point with on
   expect(errors).toEqual([]);
 });
 
+test('interaction point drags survive lost capture and inspector refresh without reverting', async ({ page }) => {
+  await ready(page, true); const browser = await inventoryFolder(page);
+  await browser.getByRole('button', { name: 'Climbing rope', exact: true }).click();
+  const properties = page.getByRole('region', { name: 'Pointlesh properties', exact: true });
+  const original = await authoredPoint(page);
+  await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click();
+  for (const refresh of [false, true]) {
+    const marker = properties.getByRole('button', { name: 'Interaction point', exact: true });
+    const bounds = (await page.locator('.pointlesh-inventory-preview').boundingBox())!, handle = (await marker.boundingBox())!;
+    await page.mouse.move(handle.x + handle.width / 2, handle.y + handle.height / 2); await page.mouse.down();
+    await page.mouse.move(bounds.x + bounds.width * .15, bounds.y + bounds.height * .8, { steps: 10 });
+    if (refresh) await page.evaluate(() => {
+      const s = (window as any).pointleshDemo.scene;
+      s.sceneDesigner.inspector.setAiAssets(s.aiRuntime.manifest);
+    });
+    else await marker.evaluate(button => {
+      // Reproduce capture being taken away while the mouse is still pressed.
+      // The pointer id for Playwright's mouse is 1.
+      if (button.hasPointerCapture(1)) button.releasePointerCapture(1);
+    });
+    await page.mouse.up();
+    await expect.poll(async () => (await authoredPoint(page)).x).toBeCloseTo(.15, 2);
+    expect((await authoredPoint(page)).y).toBeCloseTo(.8, 2);
+    const slot = (await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).boundingBox())!;
+    const pointer = { x: slot.x + slot.width / 2, y: slot.y + slot.height / 2 };
+    await page.mouse.move(pointer.x, pointer.y);
+    const cursor = (await page.locator('.pointlesh-adventure-cursor').boundingBox())!;
+    expect(Math.abs(cursor.x + cursor.width * .15 - pointer.x)).toBeLessThanOrEqual(.5);
+    expect(Math.abs(cursor.y + cursor.height * .8 - pointer.y)).toBeLessThanOrEqual(.5);
+    await properties.getByRole('button', { name: 'Undo', exact: true }).click();
+    expect(await authoredPoint(page)).toEqual(original);
+    await expect(properties.getByRole('button', { name: 'Undo', exact: true })).toBeDisabled();
+  }
+});
+
 test.describe('inventory cursor targeting', () => {
   test.use({ deviceScaleFactor: 2 });
   test('the chosen point and animated crosshair stay at the pointer through sizing, zoom, clicks and consumption', async ({ page }, testInfo) => {
@@ -196,6 +231,14 @@ test('selecting inventory keeps the item idle while the yellow crosshair loops b
   const cursor = page.locator('.pointlesh-adventure-cursor');
   await expect(cursor).toHaveAttribute('data-asset-id', 'inventory.rope');
   await expect(cursor).toHaveAttribute('data-state', 'idle');
+  // The entire bottom bar belongs to the selected item cursor, including its text and gaps.
+  for (const selector of ['.satchel-label', '#inventory-hint', '#clear-item', '.inventory-bar']) {
+    const b = (await page.locator(selector).boundingBox())!;
+    await page.mouse.move(b.x + 3, b.y + 3);
+    await expect(cursor).toBeVisible();
+    await expect(cursor).toHaveAttribute('data-asset-id', 'inventory.rope');
+    await expect(page.locator('.pointlesh-adventure-crosshair')).toBeVisible();
+  }
   const bounds = (await page.locator('#game canvas').boundingBox())!;
   await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height * .7);
   await expect.poll(() => page.evaluate(() => {

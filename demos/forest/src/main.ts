@@ -213,10 +213,11 @@ class ForestAdventure extends Phaser.Scene {
       resolve: target => {
         if (!this.started || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
         const inventory = target.closest('#inventory button, #nearby button');
+        const itemCursorBar = this.selected && target.closest('.inventory-bar');
         const dialog = target.closest('#dialog');
-        if (target !== this.game.canvas && !inventory && !dialog) return undefined;
+        if (target !== this.game.canvas && !inventory && !itemCursorBar && !dialog) return undefined;
         // Inventory stays usable while authoring; canvas editing keeps its native tools.
-        if ((this.editing || this.worldEditorOpen()) && !target.closest('#inventory button') && !(this.selected && !this.editing)) return undefined;
+        if ((this.editing || this.worldEditorOpen()) && !target.closest('.inventory-bar') && !(this.selected && !this.editing)) return undefined;
         if (this.talking || dialog) return 'cursor.interact';
         return this.selected ? this.inventoryCursor(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
       },

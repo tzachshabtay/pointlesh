@@ -10446,7 +10446,7 @@
     "cursor.crosshair": {
       "id": "cursor.crosshair",
       "kind": "image",
-      "prompt": "A small, hollow-centered, warm gold pixel-art crosshair on a transparent 16 by 16 canvas. Four short symmetrical arms with a dark outline; keep the center unobstructed and exactly centered.",
+      "prompt": "The tiny five-pixel yellow sparkle from the inventory click animation, centered on a transparent 16 by 16 canvas. A single pixel with four adjacent one-pixel rays, pale yellow #ffeca4, no outline. Keep it small and precisely centered.",
       "dimensions": {
         "width": 16,
         "height": 16
@@ -10456,7 +10456,7 @@
         "original": {
           "name": "original",
           "file": "art/interface/cursor.crosshair.png",
-          "prompt": "A small, hollow-centered, warm gold pixel-art crosshair on a transparent 16 by 16 canvas. Four short symmetrical arms with a dark outline; keep the center unobstructed and exactly centered.",
+          "prompt": "The tiny five-pixel yellow sparkle from the inventory click animation, centered on a transparent 16 by 16 canvas. A single pixel with four adjacent one-pixel rays, pale yellow #ffeca4, no outline. Keep it small and precisely centered.",
           "createdAt": "2026-10-03T00:00:00.000Z",
           "model": "authored-pixel-art",
           "notes": "Regenerate with demos/forest/scripts/generate-crosshair.mjs. Editable in AI Assets."
@@ -10464,7 +10464,7 @@
       },
       "linkedAnimationAssets": {
         "idle": {
-          "label": "Subtle glow",
+          "label": "Yellow sparkle",
           "assetId": "cursor.crosshair.idle"
         }
       },
@@ -10476,7 +10476,7 @@
     "cursor.crosshair.idle": {
       "id": "cursor.crosshair.idle",
       "kind": "animation",
-      "prompt": "A small, hollow-centered, warm gold pixel-art crosshair on a transparent 16 by 16 canvas. Four short symmetrical arms with a dark outline; keep the center unobstructed and exactly centered. Eight-frame seamless loop: gently brighten and dim the gold, with no movement or change in size. Preserve the exact center and silhouette in every frame.",
+      "prompt": "The tiny five-pixel yellow sparkle from the inventory click animation, centered on a transparent 16 by 16 canvas. A single pixel with four adjacent one-pixel rays, pale yellow #ffeca4, no outline. Keep it small and precisely centered. Eight-frame seamless loop: gently brighten and dim the yellow glint, with no movement or change in size. Preserve the exact center and silhouette in every frame.",
       "dimensions": {
         "width": 128,
         "height": 16
@@ -10510,7 +10510,7 @@
         "original": {
           "name": "original",
           "file": "art/interface/cursor.crosshair.idle.png",
-          "prompt": "Eight baked frames of a subtle crosshair glow.",
+          "prompt": "Eight baked frames of the small yellow glint pulsing.",
           "createdAt": "2026-10-03T00:00:00.000Z",
           "model": "authored-pixel-art",
           "notes": "Regenerate with demos/forest/scripts/generate-crosshair.mjs. Editable in AI Assets."
