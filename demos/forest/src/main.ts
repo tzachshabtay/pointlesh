@@ -36,6 +36,8 @@ import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './
 import { ForestDialogPortrait } from './dialog-portrait';
 import { cottageDeparture } from './cinematic-paths';
 import { CutsceneCrossfade } from './cutscene-crossfade';
+import { addJournalAssets } from './journal-assets';
+import { ForestJournal, renderJournal } from './journal';
 
 const disposeViewportLayout = installViewportLayout(document.documentElement);
 if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
@@ -66,6 +68,7 @@ function closeModal() {
 function modal(title: string) {
   modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   gameScene?.clearMovementKeys(); el('start-screen').inert = !gameScene?.started;
+  el('modal-backdrop').querySelector('.modal')!.classList.remove('journal-modal');
   el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false;
   modalOpen = true; el('modal-close').focus(); return el('modal-body');
 }
@@ -123,6 +126,7 @@ class ForestAdventure extends Phaser.Scene {
   inventoryIcons = new Map<ItemId, PhaserAdventureIcon>();
   portrait!: ForestDialogPortrait;
   cinematicPortrait!: ForestDialogPortrait;
+  journal!: ForestJournal;
   hoveredTarget?: string;
   epoch = 0;
   editing = false;
@@ -135,6 +139,8 @@ class ForestAdventure extends Phaser.Scene {
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
     this.portrait = new ForestDialogPortrait(this, this.aiRuntime, el('dialog-portrait'), () => !this.started || modalOpen);
     this.cinematicPortrait = new ForestDialogPortrait(this, this.aiRuntime, el('cinematic-portrait'), () => !this.started || modalOpen);
+    this.journal = new ForestJournal(this, this.aiRuntime, el('journal-notification'), el('clue-dot'));
+    this.journal.reset(this.story.journal);
     this.characterLighting = new PhaserAdventureLighting(this);
     for (const room of roomIds) this.drawRoomTexture(room);
     createPixelActors(this);
@@ -679,6 +685,7 @@ class ForestAdventure extends Phaser.Scene {
     for (const icon of this.inventoryIcons.values()) icon.refresh();
     this.portrait?.refresh();
     this.cinematicPortrait?.refresh();
+    this.journal?.refresh();
   }
   installTools() {
     this.sceneDesigner = installPhaserPointleshDesigner({
@@ -898,8 +905,10 @@ class ForestAdventure extends Phaser.Scene {
     el('objective').textContent = this.story.flags.won ? 'King Aldric is home. Well done, Borin.' : this.story.flags.guardAsleep ? this.story.flags.guardBound ? 'Free the king from his cage.' : 'Tie up Grub before breaking the lock.' : 'Find the king. Bring him home.';
     this.syncEntities();
     this.renderNearby(); this.drawHotspots();
+    this.journal.observe(this.story.journal);
   }
   showStartScreen() {
+    this.journal.clearNotification();
     this.started = false; this.epoch++; this.clearMovementKeys(); this.hover();
     if (!this.roomTransition.active && !this.campStealth.busy) this.character.stop();
     closeModal(); clearTimeout(toastTimer); el('toast').hidden = true;
@@ -994,6 +1003,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cutsceneCrossfade?.destroy(); this.cutsceneCrossfade = undefined;
     this.cinematic?.destroy(); this.cinematic = undefined;
     this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: Math.min(checkpoint.introStep, intro.length), endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
+    this.journal.reset(this.story.journal);
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.min(Math.max(0, checkpoint[`${kind}Step`]), (kind === 'intro' ? intro : ending).length), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.guardPatrol = undefined;
@@ -1100,7 +1110,11 @@ function setupControls() {
     else { document.querySelectorAll<HTMLButtonElement>('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"], [aria-label="Toggle scene minimap"][aria-pressed="true"]').forEach(node => node.click()); gameScene.editing = false; }
   };
   el('sound').onclick = () => { const active = music.toggle(); el('sound').setAttribute('aria-pressed', String(active)); el('sound').querySelector('span')!.textContent = active ? 'Sound on' : 'Sound off'; };
-  el('journal').onclick = () => { const body = modal('Borin’s field notes'); const list = document.createElement('ol'); for (const note of gameScene.story.journal) { const row = document.createElement('li'); row.textContent = note; list.append(row); } body.append(list); el('clue-dot').hidden = true; };
+  el('journal').onclick = () => {
+    const body = modal('Borin’s field notes');
+    el('modal-backdrop').querySelector('.modal')!.classList.add('journal-modal');
+    renderJournal(body, gameScene.story.journal); gameScene.journal.markRead();
+  };
   el('map').onclick = () => {
     const body = modal('A corner of the Elderwood'); const grid = document.createElement('div'); grid.className = 'map-grid';
     for (const id of roomIds) { const card = document.createElement('div'); card.className = 'map-room'; const image = document.createElement('img'); image.src = gameScene.textures.get(`room.${id}`).getSourceImage() instanceof HTMLCanvasElement ? (gameScene.textures.get(`room.${id}`).getSourceImage() as HTMLCanvasElement).toDataURL() : ''; image.alt = roomNames[id]; const label = document.createElement('span'); label.textContent = roomNames[id]; const sub = document.createElement('small'); sub.textContent = id === gameScene.story.roomId ? 'YOU ARE HERE' : ({ village:'Pub · Cottage · Forest',pub:'From Bramblehollow',house:'From Bramblehollow',forest:'Village · Mine · Camp',mine:'From the Whispering Wood',camp:'From the Whispering Wood' })[id]; label.append(sub); card.append(image, label); grid.append(card); } body.append(grid);
@@ -1165,6 +1179,7 @@ addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
+addJournalAssets(assets);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
 addCharacterPortraits(authoredScenes);

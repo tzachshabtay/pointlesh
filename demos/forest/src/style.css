@@ -134,3 +134,69 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
   .start-actions { grid-template-columns:1fr 1fr; width:min(300px,100%); }
   #start-status { margin-top:12px; }
 }
+
+/* Borin's notebook: local handwriting, parchment leaves and a worn leather cover. */
+@font-face {
+  font-family:'Borin Hand'; src:url('/fonts/Caveat.ttf') format('truetype');
+  font-style:normal; font-weight:400 700; font-display:swap;
+}
+.modal.journal-modal {
+  width:min(920px,95vw); padding:14px 14px 0; border:1px solid #a27a4d; border-radius:12px 15px 15px 12px;
+  background:repeating-linear-gradient(105deg,#ffffff04 0 1px,transparent 1px 5px),linear-gradient(110deg,#493122,#705035 45%,#3e291e);
+  box-shadow:0 24px 90px #000a,inset 0 0 0 5px #25180f66,inset 0 0 0 7px #a0794933;
+  color:#3f2e20;
+}
+.journal-modal>.eyebrow { display:none; }
+.journal-modal>#modal-title { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); }
+.journal-modal #modal-close { z-index:2; top:24px; right:30px; color:#73553a; font-size:25px; line-height:1; }
+.journal-modal #modal-close:hover { color:#301c10; }
+.journal-modal :is(button,a):focus-visible { outline-color:#865934; }
+.journal-spread { display:grid; grid-template-columns:1fr 1fr; position:relative; border-radius:3px 7px 7px 3px; overflow:hidden; box-shadow:0 3px 0 #cbb68c,0 5px 0 #998367,0 7px 12px #140c0955; }
+.journal-spread::after { content:''; position:absolute; top:0; bottom:0; left:50%; width:32px; transform:translateX(-50%); background:linear-gradient(90deg,transparent,#78543521 40%,#51392066 49%,#533a2166 51%,#fff9e426 72%,transparent); pointer-events:none; }
+.journal-leaf {
+  position:relative; min-height:530px; padding:36px 39px 56px; overflow-wrap:anywhere;
+  background:radial-gradient(ellipse at 8% 0%,#b8955755,transparent 45%),radial-gradient(ellipse at 90% 97%,#a77d4533,transparent 40%),repeating-linear-gradient(10deg,#a8834010 0 1px,transparent 1px 4px),#eedfbb;
+}
+.journal-leaf:first-child { background-color:#e6d4ad; box-shadow:inset 5px 0 10px #8f69341a; }
+.journal-leaf:last-child { box-shadow:inset -4px 0 12px #8f69342a; }
+.journal-page-heading { min-height:142px; border-bottom:1px solid #92663c44; margin-bottom:27px; }
+.journal-kicker { display:block; font:8px/1.6 Georgia,'Times New Roman',serif; letter-spacing:1.7px; color:#8a6745; }
+.journal-page-heading h3 { font:600 39px/1.1 'Borin Hand',cursive; margin:15px 0 8px; color:#493222; letter-spacing:-.5px; }
+.journal-modal .journal-page-heading p { font:400 21px/1.2 'Borin Hand',cursive; color:#806448; margin:0 0 22px; max-width:250px; }
+.journal-notes { margin:0; padding:0; list-style:none; }
+.journal-modal .journal-note { position:relative; margin:0 0 27px; padding:0 0 0 21px; }
+.journal-note-number { position:absolute; left:0; top:7px; color:#a17a52; font:10px/1.5 Georgia,'Times New Roman',serif; }
+.journal-modal .journal-note p { font:500 26px/1.23 'Borin Hand',cursive; color:#433122; margin:0; }
+.journal-modal .journal-blank { font:400 25px/1.3 'Borin Hand',cursive; color:#9b8060; margin:56px 10px; transform:rotate(-2deg); }
+.journal-folio { position:absolute; bottom:24px; left:50%; color:#9a7954; font:11px Georgia,'Times New Roman',serif; }
+.journal-pagination { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:19px 12px 15px; color:#e4cfab; font:11px Georgia,'Times New Roman',serif; }
+.journal-pagination button { padding:6px 0; color:#f1d6a1; }
+.journal-pagination button:hover { color:#fff1cd; }
+.journal-pagination>span { color:#bda17b; font-size:10px; text-align:center; }
+#journal-notification {
+  position:absolute; top:15px; right:16px; z-index:6; display:flex; align-items:center; gap:2px;
+  width:min(325px,calc(100% - 32px)); padding:2px 16px 2px 0; pointer-events:none;
+  background:linear-gradient(105deg,#172219c9,#142119f2); border:1px solid #b2925866; border-radius:6px;
+  box-shadow:0 6px 20px #0004; color:#e5cca0;
+}
+.journal-quill { flex:0 0 104px; height:104px; }
+.journal-notification-title { display:block; margin-bottom:6px; font:9px/1.4 Georgia,'Times New Roman',serif; letter-spacing:1px; text-transform:uppercase; color:#b9aa83; }
+.journal-notification-note { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font:500 21px/1.1 'Borin Hand',cursive; }
+@media(max-width:640px) {
+  #modal-backdrop:has(.journal-modal) { padding:12px; }
+  .modal.journal-modal { width:100%; padding:10px 10px 0; max-height:calc(var(--preview-height,100dvh) - 24px); }
+  .journal-spread { grid-template-columns:1fr; }
+  .journal-spread::after { display:none; }
+  .journal-leaf { min-height:400px; padding:28px 26px 50px; }
+  .journal-leaf+.journal-leaf { border-top:1px solid #a3815b66; }
+  .journal-page-heading { min-height:130px; margin-bottom:22px; }
+  .journal-page-heading h3 { font-size:35px; }
+  .journal-modal .journal-note p { font-size:25px; }
+  .journal-pagination { padding:15px 3px 12px; font-size:10px; }
+  .journal-modal #modal-close { top:20px; right:23px; }
+  #journal-notification { top:9px; right:9px; width:min(275px,calc(100% - 18px)); padding-right:12px; }
+  .journal-quill { flex-basis:78px; height:78px; }
+  .journal-quill canvas { width:78px!important; height:78px!important; }
+  .journal-notification-note { font-size:19px; }
+  .journal-notification-title { font-size:8px; }
+}

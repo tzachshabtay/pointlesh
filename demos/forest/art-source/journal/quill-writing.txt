@@ -1,0 +1,9 @@
+Generated with the built-in image_gen tool, 2026-10-02.
+
+Use case: stylized-concept
+Asset type: production sprite sheet animation for a pixel-art fantasy adventure game's new journal note notification.
+Primary request: a white ivory feather quill with a dark ink nib writing a short note on a small warm parchment page. No hands, no person. A tasteful dwarf travel journal emblem with ochre parchment, brown-black ink and an ivory feather. Clear handcrafted pixel art, crisp pixel clusters, no blur. Actual transparent background outside every sprite.
+Composition: EXACTLY 16 sequential animation frames arranged in a perfectly regular 4 columns by 4 rows square sprite sheet, read left-to-right then top-to-bottom. Identical square cells, consistent scale, same page position and same feather design throughout, fixed camera. Keep each complete sprite comfortably within its own cell with 12% empty transparent padding all around; no cell borders or labels.
+Motion: the page stays absolutely still. The quill tip traces three short handwritten illegible ink lines in the page, with small natural feather tilts and dips as it writes. Frame 1 blank parchment with feather nib at start of first line; frames 2-5 write the first line; frames 6-10 write second line; frames 11-14 write third line; frames 15-16 quill finishes with a slight lift, completed note. No readable text, no numbers, no sparkles, no extra objects, no watermark. This will display at roughly 100 pixels per frame in the top-right corner of the game, so use simple strong silhouettes and keep the quill and parchment large in each cell.
+
+Packing: scripts/pack-journal-art.mjs finds transparent row gutters within each column, uses one fixed scale for all frames, and registers the stationary parchment's lower edge and center. The generated feather motion and ink are preserved. No synthesized animation frames.

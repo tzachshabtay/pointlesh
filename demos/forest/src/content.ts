@@ -19,6 +19,7 @@ import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { withForestLighting } from './environment-lighting';
 import { addPortraitAssets } from './portrait-assets';
+import { addJournalAssets } from './journal-assets';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
 
@@ -170,6 +171,7 @@ addDoorAssets(assets);
 addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
+addJournalAssets(assets);
 addBrewAssets(assets);
 
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
