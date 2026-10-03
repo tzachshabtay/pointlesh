@@ -84,6 +84,11 @@ test.describe('inventory cursor targeting', () => {
     }, position);
     expect((await alignment()).item).toBeLessThanOrEqual(.5); expect((await alignment()).crosshair).toBeLessThanOrEqual(.5);
     await expect.poll(() => page.evaluate(() => new Set((window as any).crosshairFrames).size)).toBeGreaterThan(2);
+    await expect.poll(() => page.evaluate(() => {
+      const frames = (window as any).crosshairFrames as string[];
+      const end = frames.indexOf('7');
+      return end >= 0 && frames.slice(end + 1).includes('0');
+    })).toBe(true); // The crosshair keeps looping without clicking the item.
     await page.evaluate(() => {
       const s = (window as any).pointleshDemo.scene, image = document.createElement('canvas'); image.width = 96; image.height = 48;
       image.getContext('2d')!.fillRect(0, 0, 96, 48); s.textures.addCanvas('inventory-test-preview', image);

@@ -3583,6 +3583,333 @@
           }
         }
       }
+    },
+    "pointlesh.inventory-item": {
+      "id": "pointlesh.inventory-item",
+      "name": "Inventory item",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "properties": {
+          "enabled": true,
+          "itemId": "",
+          "assetId": "",
+          "label": "Inventory item",
+          "description": "",
+          "crosshairAssetId": "",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {},
+        "editor": {
+          "template": true
+        }
+      }
+    },
+    "forest.inventory.coin": {
+      "id": "forest.inventory.coin",
+      "name": "Copper coin",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "editor": {
+          "folderPath": [
+            "Inventory items"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "itemId": "coin",
+          "assetId": "inventory.coin",
+          "label": "Copper coin",
+          "description": "One copper. A small fortune before breakfast.",
+          "crosshairAssetId": "cursor.crosshair",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.inventory.rope": {
+      "id": "forest.inventory.rope",
+      "name": "Climbing rope",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "editor": {
+          "folderPath": [
+            "Inventory items"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "itemId": "rope",
+          "assetId": "inventory.rope",
+          "label": "Climbing rope",
+          "description": "Strong dwarven rope. A few good knots should hold even an orc.",
+          "crosshairAssetId": "cursor.crosshair",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.inventory.stout": {
+      "id": "forest.inventory.stout",
+      "name": "Honey stout",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "editor": {
+          "folderPath": [
+            "Inventory items"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "itemId": "stout",
+          "assetId": "inventory.stout",
+          "label": "Honey stout",
+          "description": "Orcs cannot resist the smell. Combine it with something soporific.",
+          "crosshairAssetId": "cursor.crosshair",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.inventory.mushroom": {
+      "id": "forest.inventory.mushroom",
+      "name": "Dreamcap",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "editor": {
+          "folderPath": [
+            "Inventory items"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "itemId": "mushroom",
+          "assetId": "inventory.mushroom",
+          "label": "Dreamcap",
+          "description": "A harmless sleeping mushroom. Best served in a drink.",
+          "crosshairAssetId": "cursor.crosshair",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.inventory.sleepyStout": {
+      "id": "forest.inventory.sleepyStout",
+      "name": "Dreamcap stout",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "editor": {
+          "folderPath": [
+            "Inventory items"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "itemId": "sleepyStout",
+          "assetId": "inventory.sleepyStout",
+          "label": "Dreamcap stout",
+          "description": "An exceptionally relaxing brew.",
+          "crosshairAssetId": "cursor.crosshair",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
+    },
+    "forest.inventory.pickaxe": {
+      "id": "forest.inventory.pickaxe",
+      "name": "Goldroot pickaxe",
+      "attributes": [
+        {
+          "id": "interactionX",
+          "name": "Interaction point X",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        },
+        {
+          "id": "interactionY",
+          "name": "Interaction point Y",
+          "number": {
+            "value": 0.5,
+            "min": 0,
+            "max": 1,
+            "step": 0.01
+          },
+          "kind": "number"
+        }
+      ],
+      "pointlesh": {
+        "kind": "inventory-item",
+        "editor": {
+          "folderPath": [
+            "Inventory items"
+          ]
+        },
+        "properties": {
+          "enabled": true,
+          "itemId": "pickaxe",
+          "assetId": "inventory.pickaxe",
+          "label": "Goldroot pickaxe",
+          "description": "The dwarven answer to a stubborn lock.",
+          "crosshairAssetId": "cursor.crosshair",
+          "crosshairAnimationKey": "idle"
+        },
+        "behaviors": [],
+        "propertySchema": {}
+      }
     }
   },
   "scenes": {
