@@ -1,0 +1,15 @@
+Corrects the pinched trousers and detached-looking boots in manual-v4.
+
+Source: art/borin.walk-left.promoted-1790377807996.png
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs
+
+Each leg is one textured mesh from hip through knee into the original boot.
+Mesh bands share their edges, including the boot cuff, to prevent gaps.
+The hips have distinct positions beneath the tunic; both legs use the same source pixels.
+A trouser overlap sits under the moving tunic hem without copying its gold trim.
+The generator checks a continuous opaque path from each hip to its own boot
+before layering the two legs, so the other leg cannot hide a disconnected shoe.
+
+Original upper-body frames, color palette, 8-frame alternating step sequence,
+100x140 frame cells, 10 fps playback and mirrored right walk are unchanged.
+Body bob remains 0,+2,0,-2 repeated.

@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import assert from 'node:assert/strict';
 
 const sourcePath = new URL('../public/art/borin.walk-left.promoted-1790377807996.png', import.meta.url).pathname;
 const sourceFrames = await Promise.all(Array.from({ length: 8 }, (_, n) => sharp(sourcePath)
@@ -33,18 +34,6 @@ function over(out, x, y, sx, sy, pixels = source) {
   out[t + 3] = Math.round(alpha * 255);
 }
 
-function bone(out, from, to, sourceTop, sourceBottom, width) {
-  const dx = to[0] - from[0], dy = to[1] - from[1], length = Math.hypot(dx, dy);
-  for (let y = Math.floor(Math.min(from[1], to[1]) - width); y <= Math.ceil(Math.max(from[1], to[1]) + width); y++) {
-    for (let x = Math.floor(Math.min(from[0], to[0]) - width); x <= Math.ceil(Math.max(from[0], to[0]) + width); x++) {
-      const along = ((x - from[0]) * dx + (y - from[1]) * dy) / (length * length);
-      const across = ((x - from[0]) * dy - (y - from[1]) * dx) / length;
-      if (along < -0.08 || along > 1.08 || Math.abs(across) > width / 2) continue;
-      over(out, x, y, 46 + across, sourceTop + Math.max(0, Math.min(1, along)) * (sourceBottom - sourceTop));
-    }
-  }
-}
-
 function knee(hip, foot) {
   const dx = foot[0] - hip[0], dy = foot[1] - hip[1], distance = Math.hypot(dx, dy);
   const bend = Math.sqrt(Math.max(0, 11 * 11 - distance * distance / 4));
@@ -61,6 +50,62 @@ function boot(out, pivot, angle) {
   }
 }
 
+// One connected piece of the original trousers and boot. Shared mesh edges
+// keep the knee and ankle attached; independent clipped bone strips did not.
+const legMask = [[38, 91], [62, 91], [58, 100], [54, 106], [54, 121], [29, 121], [29, 114], [36, 110], [39, 106], [39, 100]];
+function triangle(out, original, target) {
+  const [a, b, c] = target;
+  const denominator = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1]);
+  const left = Math.max(0, Math.floor(Math.min(...target.map(p => p[0]))));
+  const right = Math.min(W - 1, Math.ceil(Math.max(...target.map(p => p[0]))));
+  const top = Math.max(0, Math.floor(Math.min(...target.map(p => p[1]))));
+  const bottom = Math.min(H - 1, Math.ceil(Math.max(...target.map(p => p[1]))));
+  for (let y = top; y <= bottom; y++) for (let x = left; x <= right; x++) {
+    const u = ((b[1] - c[1]) * (x - c[0]) + (c[0] - b[0]) * (y - c[1])) / denominator;
+    const v = ((c[1] - a[1]) * (x - c[0]) + (a[0] - c[0]) * (y - c[1])) / denominator;
+    const w = 1 - u - v;
+    if (Math.min(u, v, w) < -1e-8) continue;
+    const sx = u * original[0][0] + v * original[1][0] + w * original[2][0];
+    const sy = u * original[0][1] + v * original[1][1] + w * original[2][1];
+    if (!inside(sx, sy, legMask)) continue;
+    // The hidden hip overlap uses trouser pixels, not the tunic's gold hem.
+    const s = (Math.max(95, Math.round(sy)) * W + Math.round(sx)) * 4;
+    source.copy(out, (y * W + x) * 4, s, s + 4);
+  }
+}
+
+function leg(out, hip, joint, foot, angle) {
+  const pixels = Buffer.alloc(W * H * 4);
+  const cos = Math.cos(angle), sin = Math.sin(angle);
+  const rows = [91, 100, 106, 121];
+  const original = rows.map(y => [[25, y], [65, y]]);
+  const target = rows.map((y, row) => [25, 65].map(x => {
+    if (row === 0) return [hip[0] + x - 50, hip[1]];
+    if (row === 1) return [joint[0] + x - 48, joint[1]];
+    return [foot[0] + (x - 46) * cos - (y - 112) * sin, foot[1] + (x - 46) * sin + (y - 112) * cos];
+  }));
+  for (let row = 0; row < rows.length - 1; row++) {
+    for (const indices of [[[row, 0], [row, 1], [row + 1, 0]], [[row, 1], [row + 1, 1], [row + 1, 0]]]) {
+      triangle(pixels, indices.map(([r, c]) => original[r][c]), indices.map(([r, c]) => target[r][c]));
+    }
+  }
+  // Check each leg before overlap with the other leg can conceal a gap.
+  const start = Math.round(hip[1]) * W + Math.round(hip[0]);
+  const end = Math.round(foot[1]) * W + Math.round(foot[0]);
+  const connected = new Set([start]), queue = [start];
+  assert(pixels[start * 4 + 3] > 127, 'Missing trouser pixels at the hip');
+  for (let i = 0; i < queue.length; i++) {
+    const p = queue[i], x = p % W, y = Math.floor(p / W);
+    for (const [nx, ny] of [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]) {
+      const n = ny * W + nx;
+      if (nx < 0 || nx >= W || ny < 0 || ny >= H || connected.has(n) || pixels[n * 4 + 3] <= 127) continue;
+      connected.add(n); queue.push(n);
+    }
+  }
+  assert(connected.has(end), 'The boot must be connected to its own trouser leg');
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) over(out, x, y, x, y, pixels);
+}
+
 // Lock the stance sole to the ground, not the whole sprite's bounding box.
 // This preserves the intentionally different head heights across the cycle.
 for (let phase = 0; phase <= 4; phase++) {
@@ -74,13 +119,11 @@ for (let phase = 0; phase <= 4; phase++) {
 for (let frame = 0; frame < 8; frame++) {
   const out = Buffer.alloc(W * H * 4);
   const record = { frame, bob: bob[frame], legs: [] };
-  for (const [name, phase, hipX] of [['far', (frame + 4) % 8, 52], ['near', frame, 54]]) {
-    const hip = [hipX, 94 + bob[frame]];
+  for (const [name, phase, hipX] of [['far', (frame + 4) % 8, 56], ['near', frame, 49]]) {
+    const hip = [hipX, 91 + bob[frame]];
     const foot = ankle[phase];
     const joint = knee(hip, foot);
-    bone(out, hip, joint, 95, 103, 13);
-    bone(out, joint, foot, 101, 108, 11);
-    boot(out, foot, bootAngle[phase]);
+    leg(out, hip, joint, foot, bootAngle[phase]);
     record.legs.push({ name, phase, hip, knee: joint, ankle: foot });
   }
   // Reuse the original arm poses, registering the helmet so differences in
@@ -103,7 +146,7 @@ const packed = Buffer.alloc(W * 3 * H * 3 * 4);
 for (const [index, frame] of frames.entries()) for (let y = 0; y < H; y++) {
   frame.copy(packed, ((Math.floor(index / 3) * H + y) * W * 3 + index % 3 * W) * 4, y * W * 4, (y + 1) * W * 4);
 }
-const output = new URL('../public/art/borin.walk-left.manual-v4.png', import.meta.url).pathname;
+const output = new URL('../public/art/borin.walk-left.manual-v5.png', import.meta.url).pathname;
 await sharp(packed, { raw: { width: W * 3, height: H * 3, channels: 4 } }).png().toFile(output);
 console.log(output);
 if (process.argv.includes('--joints')) console.log(JSON.stringify(joints, null, 2));

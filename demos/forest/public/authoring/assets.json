@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v4",
+      "activeVersion": "manual-v5",
       "versions": {
         "original": {
           "name": "original",
@@ -2405,6 +2405,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "promoted-1790377807996",
           "notes": "No AI redraw or color grading. Reuses original upper-body poses and the same original leather pixels for both jointed legs. Native body bob: 0,+2,0,-2 repeated; planted soles remain at y=120. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs."
+        },
+        "manual-v5": {
+          "name": "manual-v5",
+          "file": "art/borin.walk-left.manual-v5.png",
+          "prompt": "Repair the manually animated walk: preserve full trouser volume under the tunic and keep each boot continuously attached to its leg through every pose. Retain original pixel colors, alternating steps and subtle body bob.",
+          "createdAt": "2026-10-04T22:36:21.003Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v4",
+          "notes": "Continuous shared-edge trouser-to-boot meshes replace clipped limb pieces. Separate hip positions restore trouser volume. The generator verifies each boot connects to its own hip before compositing legs. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs."
         }
       },
       "tags": [
