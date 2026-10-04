@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v6",
+      "activeVersion": "manual-v7",
       "versions": {
         "original": {
           "name": "original",
@@ -2423,6 +2423,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "manual-v5",
           "notes": "Knees are positioned between hip and boot cuff, preventing inverted calf bands. Near/far passing poses have distinct foot tracks and a higher swing. Same eight frames, 100x140 cells and mirrored right direction. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs."
+        },
+        "manual-v7": {
+          "name": "manual-v7",
+          "file": "art/borin.walk-left.manual-v7.png",
+          "prompt": "Repair the top of the trousers: follow the actual tunic hem of each body pose, remove fragments of the original legs and add a continuous waistband underneath the tunic and both moving hips. Retain the existing steps, palette and body bob.",
+          "createdAt": "2026-10-04T23:10:06.646Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v6",
+          "notes": "Per-pose tunic hem masks replace the horizontal torso cut. A shared waistband joins both hips beneath the tunic. Numbered frames and the matching loop are in demos/forest/art-source/borin-side-walk/manual-v7. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
         }
       },
       "tags": [

@@ -1,5 +1,6 @@
 import sharp from 'sharp';
 import assert from 'node:assert/strict';
+import { mkdir } from 'node:fs/promises';
 
 const sourcePath = new URL('../public/art/borin.walk-left.promoted-1790377807996.png', import.meta.url).pathname;
 const sourceFrames = await Promise.all(Array.from({ length: 8 }, (_, n) => sharp(sourcePath)
@@ -15,6 +16,22 @@ const bootAngle = [0, 0, 0, -0.12, -0.14, 0.15, 0.05, 0];
 // poses or making the two half-strides different lengths.
 const trackWeight = [0, 0.5, 1, 0.5, 0, 0.5, 1, 0.5];
 const bodyPose = [1, 3, 7, 0, 2, 5, 7, 0];
+// Trace each reused tunic's lower edge rather than retaining a horizontal
+// slice of its old trousers, which left detached ledges above the new hips.
+const hems = {
+  0: [[0, 95], [37, 97], [42, 97], [50, 94], [59, 94], [65, 96], [70, 96], [100, 96]],
+  1: [[0, 96], [55, 96], [60, 95], [66, 95], [70, 92], [100, 92]],
+  2: [[0, 96], [37, 97], [43, 97], [50, 95], [58, 94], [63, 94], [70, 92], [100, 92]],
+  3: [[0, 95], [40, 96], [52, 96], [59, 95], [66, 93], [70, 90], [100, 90]],
+  5: [[0, 96], [40, 97], [47, 96], [54, 93], [62, 92], [68, 90], [100, 90]],
+  7: [[0, 95], [38, 96], [45, 96], [50, 94], [57, 94], [64, 95], [70, 95], [100, 95]],
+};
+function hemY(pose, x) {
+  const points = hems[pose];
+  const index = points.findIndex(p => p[0] > x);
+  const [a, b] = [points[index - 1], points[index]];
+  return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]);
+}
 const frames = [];
 const joints = [];
 
@@ -122,6 +139,12 @@ for (let phase = 0; phase <= 4; phase++) {
 
 for (let frame = 0; frame < 8; frame++) {
   const out = Buffer.alloc(W * H * 4);
+  // A single waistband sits beneath the entire tunic and both articulated
+  // thighs. It moves with the body, so no transparent slit can open at a hip.
+  const waist = [[39, 85], [65, 85], [70, 92], [68, 97], [61, 100], [44, 100], [36, 95], [36, 90]];
+  for (let y = 85; y <= 100; y++) for (let x = 36; x <= 70; x++) {
+    if (inside(x, y, waist)) over(out, x, y + bob[frame], 40 + (x - 36) * 28 / 34, 95 + Math.max(0, y - 91) * 0.5);
+  }
   const record = { frame, bob: bob[frame], legs: [] };
   for (const [name, phase, hipX, trackX, trackY] of [['far', (frame + 4) % 8, 57, 4, -1], ['near', frame, 48, -4, 0]]) {
     const hip = [hipX, 91 + bob[frame]];
@@ -144,7 +167,9 @@ for (let frame = 0; frame < 8; frame++) {
   }
   const offsetX = 44 - Math.round((headLeft + headRight) / 2);
   const offsetY = 21 - headTop + bob[frame];
-  for (let y = 0; y < 96; y++) for (let x = 0; x < W; x++) over(out, x + offsetX, y + offsetY, x, y, upper);
+  for (let y = 0; y < 98; y++) for (let x = 0; x < W; x++) {
+    if (y < hemY(bodyPose[frame], x)) over(out, x + offsetX, y + offsetY, x, y, upper);
+  }
   frames.push(out);
   joints.push(record);
 }
@@ -155,7 +180,28 @@ const packed = Buffer.alloc(W * 3 * H * 3 * 4);
 for (const [index, frame] of frames.entries()) for (let y = 0; y < H; y++) {
   frame.copy(packed, ((Math.floor(index / 3) * H + y) * W * 3 + index % 3 * W) * 4, y * W * 4, (y + 1) * W * 4);
 }
-const output = new URL('../public/art/borin.walk-left.manual-v6.png', import.meta.url).pathname;
+const output = new URL('../public/art/borin.walk-left.manual-v7.png', import.meta.url).pathname;
 await sharp(packed, { raw: { width: W * 3, height: H * 3, channels: 4 } }).png().toFile(output);
 console.log(output);
 if (process.argv.includes('--joints')) console.log(JSON.stringify(joints, null, 2));
+
+// Review the actual packed frame cells without individual auto-cropping or
+// alignment, so frame numbers, waist joins and the body bob are inspectable.
+if (process.argv.includes('--review')) {
+  const directory = new URL('../art-source/borin-side-walk/manual-v7/', import.meta.url).pathname;
+  await mkdir(directory, { recursive: true });
+  const phases = ['Contact', 'Recoil', 'Passing', 'High point'];
+  const cards = [];
+  for (let index = 0; index < frames.length; index++) {
+    const sprite = await sharp(frames[index], { raw: { width: W, height: H, channels: 4 } })
+      .resize(300, 420, { kernel: 'nearest' }).png().toBuffer();
+    const label = Buffer.from(`<svg width="320" height="460"><text x="160" y="28" text-anchor="middle" font-family="sans-serif" font-size="20" fill="white">Frame ${index + 1} · ${phases[index % 4]}</text></svg>`);
+    const card = await sharp({ create: { width: 320, height: 460, channels: 4, background: '#7f929e' } })
+      .composite([{ input: sprite, left: 10, top: 40 }, { input: label, left: 0, top: 0 }]).png().toBuffer();
+    await sharp(card).toFile(`${directory}frame-${String(index + 1).padStart(2, '0')}.png`);
+    cards.push({ input: card, left: 0, top: index * 460 });
+  }
+  const pages = await sharp({ create: { width: 320, height: 460 * 8, channels: 4, background: '#7f929e' } }).composite(cards).raw().toBuffer();
+  await sharp(pages, { raw: { width: 320, height: 460 * 8, channels: 4, pageHeight: 460 } })
+    .gif({ loop: 0, delay: 100, colours: 256 }).toFile(`${directory}walk.gif`);
+}

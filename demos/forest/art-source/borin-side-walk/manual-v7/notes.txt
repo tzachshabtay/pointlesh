@@ -1,0 +1,15 @@
+Repairs the top-of-trouser seam from manual-v6.
+
+Source: art/borin.walk-left.promoted-1790377807996.png
+Rebuild asset and numbered review: node demos/forest/scripts/animate-borin-side-walk.mjs --review
+
+Each reused upper-body pose now follows its actual tunic hem instead of a
+horizontal cut at row 96 that retained fragments of the original trousers.
+A continuous waistband joins the tunic to both articulated hips.
+Foot tracks, leg poses, body bob, palette and playback rate are unchanged.
+
+Review frames are numbered 1 through 8 in playback order.
+Frames 1 and 5: contact; 2 and 6: recoil; 3 and 7: passing; 4 and 8: high point.
+walk.gif plays at the same 10 fps as the game.
+The PNG cards show complete 100x140 cells enlarged 3x with nearest sampling.
+Right walking mirrors these same frames.
