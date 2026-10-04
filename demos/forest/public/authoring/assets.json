@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790377807996",
+      "activeVersion": "stride-v2",
       "versions": {
         "original": {
           "name": "original",
@@ -2378,6 +2378,15 @@
           "voiceSettings": {},
           "parentVersion": "promoted-1789163510860",
           "notes": "Promoted from the AI asset designer."
+        },
+        "stride-v2": {
+          "name": "stride-v2",
+          "file": "art/borin.walk-left.stride-v2.png",
+          "prompt": "A SINGLE HORIZONTAL STRIP of EIGHT consecutive animation frames of this dwarf walking toward SCREEN LEFT. One row, eight columns. The head faces left in EVERY frame. No right-facing figures. Keep this dwarf's identity, short stocky proportions, bronze helmet, orange beard, green tunic, belt and brown boots. Pixel art. This is one complete loop of TWO alternating steps. The first step leads with the near leg; the second leads with the far leg. Show CONTACT, RECOIL, PASSING, HIGH, CONTACT, RECOIL, PASSING, HIGH poses from the second reference. Show bent knees and a lifted swinging boot in passing poses. Counter-swing arms. Stable body size and shared ground baseline. Equal cells, transparent margins around every full-body dwarf. Transparent background. No text or labels.",
+          "createdAt": "2026-10-04T04:13:31.420Z",
+          "model": "built-in-imagegen",
+          "parentVersion": "promoted-1790377807996",
+          "notes": "Reference-guided eight-frame side walk. Packed at the existing 100x140 frame size with a common scale and foot baseline. Source and prompt: demos/forest/art-source/borin-side-walk. Right-facing walk mirrors this animation."
         }
       },
       "tags": [

@@ -1,0 +1,10 @@
+Generated with the built-in image generation tool.
+Identity reference: Borin idle-left, promoted-1790377563289, first frame.
+Motion reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+The motion diagram was mirrored to face left before generation.
+
+A SINGLE HORIZONTAL STRIP of EIGHT consecutive animation frames of this dwarf walking toward SCREEN LEFT. One row, eight columns. The head faces left in EVERY frame. No right-facing figures. Keep this dwarf's identity, short stocky proportions, bronze helmet, orange beard, green tunic, belt and brown boots. Pixel art. This is one complete loop of TWO alternating steps. The first step leads with the near leg; the second leads with the far leg. Show CONTACT, RECOIL, PASSING, HIGH, CONTACT, RECOIL, PASSING, HIGH poses from the second reference. Show bent knees and a lifted swinging boot in passing poses. Counter-swing arms. Stable body size and shared ground baseline. Equal cells, transparent margins around every full-body dwarf. Transparent background. No text or labels.
+
+Packing: node demos/forest/scripts/pack-borin-side-walk.mjs
+Eight poses use a common scale and ground baseline, registered by the helmet.
+The game mirrors this same animation for the right-facing walk.
