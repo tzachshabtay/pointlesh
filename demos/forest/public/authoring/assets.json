@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v5",
+      "activeVersion": "manual-v6",
       "versions": {
         "original": {
           "name": "original",
@@ -2414,6 +2414,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "manual-v4",
           "notes": "Continuous shared-edge trouser-to-boot meshes replace clipped limb pieces. Separate hip positions restore trouser volume. The generator verifies each boot connects to its own hip before compositing legs. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs."
+        },
+        "manual-v6": {
+          "name": "manual-v6",
+          "file": "art/borin.walk-left.manual-v6.png",
+          "prompt": "Correct lifted rear boots and crowded passing poses: articulate trousers to the boot cuff without folding the calf, separate the projected foot paths and lift the swinging foot clearly. Preserve original pixel colors, compact contact poses and subtle body bob.",
+          "createdAt": "2026-10-04T22:59:24.483Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v5",
+          "notes": "Knees are positioned between hip and boot cuff, preventing inverted calf bands. Near/far passing poses have distinct foot tracks and a higher swing. Same eight frames, 100x140 cells and mirrored right direction. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs."
         }
       },
       "tags": [

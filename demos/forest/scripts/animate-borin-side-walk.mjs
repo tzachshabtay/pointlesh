@@ -9,8 +9,11 @@ const W = 100, H = 140;
 const bob = [0, 2, 0, -2, 0, 2, 0, -2];
 // Ankle positions for one leg: stance moves back, then the bent knee swings
 // the airborne foot forward. The other leg is four frames out of phase.
-const ankle = [[43, 112], [48, 112], [54, 112], [63, 111], [62, 111], [63, 108], [55, 108], [44, 110]];
+const ankle = [[45, 112], [49, 112], [54, 112], [61, 111], [62, 111], [61, 106], [54, 105], [45, 108]];
 const bootAngle = [0, 0, 0, -0.12, -0.14, 0.15, 0.05, 0];
+// Separate the projected legs most at passing, without widening the contact
+// poses or making the two half-strides different lengths.
+const trackWeight = [0, 0.5, 1, 0.5, 0, 0.5, 1, 0.5];
 const bodyPose = [1, 3, 7, 0, 2, 5, 7, 0];
 const frames = [];
 const joints = [];
@@ -34,10 +37,11 @@ function over(out, x, y, sx, sy, pixels = source) {
   out[t + 3] = Math.round(alpha * 255);
 }
 
-function knee(hip, foot) {
-  const dx = foot[0] - hip[0], dy = foot[1] - hip[1], distance = Math.hypot(dx, dy);
-  const bend = Math.sqrt(Math.max(0, 11 * 11 - distance * distance / 4));
-  return [(hip[0] + foot[0]) / 2 - dy / distance * bend, (hip[1] + foot[1]) / 2 + dx / distance * bend];
+function knee(hip, cuff, phase) {
+  // The trouser leg ends at the cuff, not at the sole or ankle pivot. Solving
+  // against the ankle folded the calf mesh when a raised boot passed the knee.
+  const bend = [0, 1, 1, 1, 0, 2, 3, 2][phase];
+  return [(hip[0] + cuff[0]) / 2 - bend, (hip[1] + cuff[1]) / 2];
 }
 
 const bootMask = [[39, 106], [53, 106], [54, 116], [51, 121], [29, 121], [29, 114], [36, 110]];
@@ -119,10 +123,15 @@ for (let phase = 0; phase <= 4; phase++) {
 for (let frame = 0; frame < 8; frame++) {
   const out = Buffer.alloc(W * H * 4);
   const record = { frame, bob: bob[frame], legs: [] };
-  for (const [name, phase, hipX] of [['far', (frame + 4) % 8, 56], ['near', frame, 49]]) {
+  for (const [name, phase, hipX, trackX, trackY] of [['far', (frame + 4) % 8, 57, 4, -1], ['near', frame, 48, -4, 0]]) {
     const hip = [hipX, 91 + bob[frame]];
-    const foot = ankle[phase];
-    const joint = knee(hip, foot);
+    // At passing, show the raised near foot in front of the support leg and
+    // the raised far foot behind it, matching the sprite's three-quarter view.
+    const passingX = name === 'far' ? 9 : -7;
+    const foot = [ankle[phase][0] + (phase === 6 ? passingX : trackX * trackWeight[phase]), ankle[phase][1] + trackY];
+    const cuff = [foot[0] + 6 * Math.sin(bootAngle[phase]), foot[1] - 6 * Math.cos(bootAngle[phase])];
+    const joint = knee(hip, cuff, phase);
+    assert(hip[1] < joint[1] && joint[1] < cuff[1], 'Trouser mesh must not fold back above the knee');
     leg(out, hip, joint, foot, bootAngle[phase]);
     record.legs.push({ name, phase, hip, knee: joint, ankle: foot });
   }
@@ -146,7 +155,7 @@ const packed = Buffer.alloc(W * 3 * H * 3 * 4);
 for (const [index, frame] of frames.entries()) for (let y = 0; y < H; y++) {
   frame.copy(packed, ((Math.floor(index / 3) * H + y) * W * 3 + index % 3 * W) * 4, y * W * 4, (y + 1) * W * 4);
 }
-const output = new URL('../public/art/borin.walk-left.manual-v5.png', import.meta.url).pathname;
+const output = new URL('../public/art/borin.walk-left.manual-v6.png', import.meta.url).pathname;
 await sharp(packed, { raw: { width: W * 3, height: H * 3, channels: 4 } }).png().toFile(output);
 console.log(output);
 if (process.argv.includes('--joints')) console.log(JSON.stringify(joints, null, 2));

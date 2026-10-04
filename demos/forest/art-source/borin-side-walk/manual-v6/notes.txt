@@ -1,0 +1,12 @@
+Repairs the folded calf mesh and crowded passing poses from manual-v5.
+
+Source: art/borin.walk-left.promoted-1790377807996.png
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs
+
+The knee now sits between the hip and boot cuff. The old ankle-based solve
+could place the knee below the cuff of a lifted boot, inverting the calf band.
+Near and far feet now follow separate projected paths through passing poses,
+with greater swing clearance and a one-pixel depth offset for the far foot.
+Contact poses remain compact; the upper body, palette and bob are unchanged.
+Each leg is checked for a connected hip-to-boot silhouette and ordered joints.
+The right walk still mirrors the same eight-frame sheet.
