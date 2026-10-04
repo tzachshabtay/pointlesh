@@ -16,13 +16,14 @@ test('promoting interactions persists speech alongside the latest generated asse
   const service = createInteractionDevServer({ manifestPath, aiAssetsManifestPath, port: 0 });
   try {
     const address = await service.listen(), url = `http://127.0.0.1:${address.port}/manifest`;
-    const updated = { ...initial, cells: { chest: { 'verb:look': { kind: 'simple', text: 'Golden runes.' } } } };
+    const updated = { ...initial, cells: { chest: { 'verb:look': { kind: 'simple', text: 'Golden runes.' } }, defaults: { 'verb:look': { kind: 'simple', mode: 'rotation', sentences: ['Nothing unusual.', 'Still nothing unusual.'] } } } };
     const response = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json', Origin: 'http://127.0.0.1:5186' }, body: JSON.stringify(updated) });
     const responseText = await response.text(); assert.equal(response.status, 200, responseText); assert.deepEqual(JSON.parse(responseText), updated);
     const saved = JSON.parse(await readFile(aiAssetsManifestPath, 'utf8'));
     assert.deepEqual(saved.assets.art, assetManifest.assets.art);
     const id = interactionVoiceLineId('chest', 'verb:look'); assert.equal(saved.assets[id].voiceSettings.text, 'Golden runes.');
     assert.equal(saved.assets.hero.linkedAnimationAssets[id].assetId, id);
+    assert.equal(saved.assets[interactionVoiceLineId('defaults', 'verb:look', 1)].voiceSettings.text, 'Still nothing unusual.');
     assert.deepEqual(await (await fetch(url)).json(), updated);
     const invalid = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...updated, verbs: [] }) });
     assert.equal(invalid.status, 400); assert.deepEqual(JSON.parse(await readFile(manifestPath, 'utf8')), updated);

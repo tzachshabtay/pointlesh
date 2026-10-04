@@ -42,7 +42,7 @@ import { CutsceneCrossfade } from './cutscene-crossfade';
 import { addJournalAssets } from './journal-assets';
 import { ForestJournal, renderJournal } from './journal';
 import { captureSavePreview } from './save-preview';
-import { assertInteractionManifest, syncInteractionVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, interactionVoiceLineId, type InteractionManifest, type ResolvedPointleshEntity } from '@pointlesh/core';
+import { assertInteractionManifest, syncInteractionVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, resolveInteraction, selectInteractionSpeech, createInteractionPlaybackState, type InteractionManifest, type InteractionSpeechLine } from '@pointlesh/core';
 import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
 import { createForestInteractions } from './interactions';
 
@@ -92,6 +92,8 @@ const editingText = (target: EventTarget | null) => target instanceof HTMLElemen
 class ForestAdventure extends Phaser.Scene {
   interactionDesigner?: InteractionDesigner;
   private interactionSound?: Phaser.Sound.BaseSound;
+  private interactionPlayback = createInteractionPlaybackState();
+  private interactionSpeechQueue: InteractionSpeechLine[] = [];
   started = false;
   story = newStory();
   selected?: ItemId;
@@ -455,17 +457,20 @@ class ForestAdventure extends Phaser.Scene {
   }
   /** Only a star delegates to the existing game handler; every other state is fully data-driven. */
   authoredInteraction(row: string, column: string): boolean {
-    const cell = interactions.cells[row]?.[column];
+    const { cell, sourceRow } = resolveInteraction(interactions, row, column);
     if (cell?.kind === 'code') return false;
     if (cell?.kind === 'simple') {
-      this.say(cell.text);
-      const id = interactionVoiceLineId(row, column), asset = assets.assets[id];
-      const key = this.aiRuntime.key(id);
-      if (asset?.versions[asset.activeVersion]?.file && this.cache.audio.exists(key)) {
-        this.interactionSound = this.sound.add(key); this.interactionSound.play();
-      }
+      this.playInteractionSpeech(selectInteractionSpeech(cell, sourceRow, column, this.interactionPlayback));
     }
     return true;
+  }
+  private playInteractionSpeech(lines: InteractionSpeechLine[]) {
+    const [line, ...remaining] = lines; if (!line) return;
+    this.say(line.text); this.interactionSpeechQueue = remaining;
+    const asset = assets.assets[line.lineAssetId], key = this.aiRuntime.key(line.lineAssetId);
+    if (asset?.versions[asset.activeVersion]?.file && this.cache.audio.exists(key)) {
+      this.interactionSound = this.sound.add(key); this.interactionSound.play();
+    }
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
     if (!transitioning) this.roomTransition?.cancel();
@@ -820,6 +825,7 @@ class ForestAdventure extends Phaser.Scene {
     else portrait.hide();
   }
   say(text: string, speaker = 'Borin') {
+    this.interactionSpeechQueue = [];
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.epoch++; this.clearMovementKeys(); this.talking = true;
     this.speakingVoice = Object.entries(portraitCharacters).find(([id, name]) => id === speaker || name === speaker)?.[0] ?? 'borin';
@@ -830,7 +836,7 @@ class ForestAdventure extends Phaser.Scene {
     el('choices').replaceChildren(); el('dialog-next').hidden = false;
     this.showDialogPortrait(this.speakingVoice, true);
   }
-  dismissSpeech() { this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
+  dismissSpeech() { this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
     this.clearMovementKeys();
     if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
@@ -864,6 +870,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   continueSpeech() {
     if (this.conversationActive) { this.conversation.advance(); return; }
+    if (this.interactionSpeechQueue.length) { this.playInteractionSpeech(this.interactionSpeechQueue); return; }
     this.dismissSpeech();
     if (this.introArrival === 'speech') this.introArrival = undefined;
   }
@@ -1008,6 +1015,8 @@ class ForestAdventure extends Phaser.Scene {
       dialog: this.conversationActive ? this.conversation.snapshot() as unknown as JSONValue : null,
       cutscene: { introVersion: 2, introStep: Math.min(this.story.introStep, intro.length), endingStep: this.story.endingStep, introElapsedMs: this.introRunner.snapshot().elapsedMs, endingElapsedMs: this.endingRunner.snapshot().elapsedMs },
       extensions: { journal: [...this.story.journal], guardClock: this.story.guardClock,
+        interactionRotations: { ...this.interactionPlayback.rotations },
+        interactionSpeechQueue: this.interactionSpeechQueue.map(line => ({ ...line })),
         ...(this.introArrival ? { introArrival: this.introArrival } : {}),
         ...(this.endingOpening ? { endingOpening: this.endingOpening as unknown as JSONValue } : {}),
         ...(this.roomTransition.active ? { roomTransition: this.roomTransition.snapshot() as unknown as JSONValue } : {}),
@@ -1031,6 +1040,9 @@ class ForestAdventure extends Phaser.Scene {
       new CutsceneRunner(cutsceneDefinition(kind)).restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.min(Math.max(0, stepIndex), (kind === 'intro' ? intro : ending).length), elapsedMs: restoreCinematicElapsed(kind, stepIndex, elapsedMs) });
     }
     if (!Array.isArray(save.extensions.journal) || !save.extensions.journal.every(line => typeof line === 'string') || typeof save.extensions.guardClock !== 'number' || save.extensions.guardClock < 0 || typeof save.extensions.speech !== 'string') throw new Error('Invalid adventure extension data');
+    const rotations = save.extensions.interactionRotations, speechQueue = save.extensions.interactionSpeechQueue;
+    if (rotations !== undefined && (!rotations || typeof rotations !== 'object' || Array.isArray(rotations) || Object.values(rotations).some(value => !Number.isSafeInteger(value) || Number(value) < 0))) throw new Error('Invalid interaction rotation checkpoint');
+    if (speechQueue !== undefined && (!Array.isArray(speechQueue) || speechQueue.some(line => !line || typeof line !== 'object' || Array.isArray(line) || typeof line.text !== 'string' || typeof line.lineAssetId !== 'string'))) throw new Error('Invalid interaction speech checkpoint');
     const arrival = save.extensions.introArrival;
     if (arrival !== undefined && (arrival !== 'walking' && arrival !== 'speech' || save.roomId !== 'village' || cutscene.introStep < intro.length || cutscene.endingStep >= 0 || arrival === 'walking' && !save.extensions.roomTransition || arrival === 'speech' && !save.extensions.speech)) throw new Error('Invalid intro arrival checkpoint');
     if (save.extensions.guardPatrol !== undefined) assertGuardPatrolSnapshot(save.extensions.guardPatrol);
@@ -1079,6 +1091,8 @@ class ForestAdventure extends Phaser.Scene {
     this.conversation = conversation; conversation.onTurn(next => this.renderTurn(next));
     if (turn && turn.type !== 'end') this.renderTurn(turn);
     else if (save.extensions.speech) this.say(save.extensions.speech as string, typeof save.extensions.speechSpeaker === 'string' ? save.extensions.speechSpeaker : 'Borin');
+    this.interactionPlayback = { rotations: { ...(save.extensions.interactionRotations as Record<string, number> ?? {}) } };
+    this.interactionSpeechQueue = this.talking && !this.conversationActive ? structuredClone((save.extensions.interactionSpeechQueue ?? []) as InteractionSpeechLine[]) : [];
     // Rebuilding dialog UI may start speech. Adopt the saved pose and animation
     // phase last, then let the binding select that activity's authored clip.
     this.character.restore(save.characters.borin);

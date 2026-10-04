@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
-import { assertInteractionManifest, interactionTargets, interactionVoiceLineId, runInteraction, syncInteractionVoiceLines } from '../dist/index.js';
+import { assertInteractionManifest, createInteractionPlaybackState, interactionTargets, interactionVoiceLineId, runInteraction, syncInteractionVoiceLines } from '../dist/index.js';
 
 const make = () => ({ schemaVersion: 1, heroVoiceAssetId: 'hero', verbs: [{ id: 'look', label: 'Look' }, { id: 'push', label: 'Push' }, { id: 'talk', label: 'Talk' }],
   cells: { chest: { 'verb:look': { kind: 'simple', text: 'A stubborn chest.' }, 'verb:push': { kind: 'code' }, 'item:chest': { kind: 'impossible' } } } });
@@ -49,4 +49,57 @@ test('game catalog includes scene hotspots and inventory, and deduplicates share
   assert.ok(rows.some(row => row.kind === 'hotspot' && row.name === 'Stew cauldron'));
   assert.equal(new Set(rows.map(row => row.id)).size, rows.length);
   assert.ok(!rows.some(row => row.id === 'prefab:pointlesh.inventory-item'));
+});
+
+test('empty cells inherit column defaults, while explicit speech, code and impossible override them', async () => {
+  const manifest = make(), calls = [];
+  manifest.cells.defaults = { 'verb:talk': { kind: 'simple', text: 'Hello?' }, 'verb:push': { kind: 'code' }, 'item:rope': { kind: 'simple', text: 'No knot needed.' } };
+  const handlers = { say: (...args) => calls.push(args), code: (...args) => calls.push(args) };
+  await runInteraction(manifest, 'chest', 'verb:talk', handlers);
+  assert.deepEqual(calls.pop(), ['Hello?', interactionVoiceLineId('defaults', 'verb:talk')]);
+  await runInteraction(manifest, 'other', 'verb:push', handlers);
+  assert.deepEqual(calls.pop(), ['other', 'verb:push']); // Code still receives the actual target.
+  await runInteraction(manifest, 'other', 'item:rope', handlers);
+  assert.equal(calls.pop()[0], 'No knot needed.');
+  manifest.cells.chest['verb:talk'] = { kind: 'impossible' };
+  await runInteraction(manifest, 'chest', 'verb:talk', handlers); assert.equal(calls.length, 0);
+  manifest.cells.chest['verb:talk'] = { kind: 'simple', text: 'A chest reply.' };
+  await runInteraction(manifest, 'chest', 'verb:talk', handlers); assert.equal(calls.pop()[0], 'A chest reply.');
+  delete manifest.cells.chest['verb:talk']; delete manifest.cells.defaults['verb:talk'];
+  assert.equal(await runInteraction(manifest, 'chest', 'verb:talk', handlers), false);
+});
+
+test('random selects one sentence, rotation wraps per source cell, and sequence awaits every line', async () => {
+  const manifest = make(), state = createInteractionPlaybackState(), spoken = [];
+  const cell = manifest.cells.chest['verb:look'] = { kind: 'simple', sentences: ['One', 'Two', 'Three'], mode: 'random' };
+  const say = text => spoken.push(text);
+  for (const random of [() => 0, () => .5, () => .999]) await runInteraction(manifest, 'chest', 'verb:look', { say }, { state, random });
+  assert.deepEqual(spoken.splice(0), ['One', 'Two', 'Three']);
+  cell.mode = 'rotation';
+  for (let i = 0; i < 5; i++) await runInteraction(manifest, 'chest', 'verb:look', { say }, { state });
+  assert.deepEqual(spoken.splice(0), ['One', 'Two', 'Three', 'One', 'Two']);
+  const restored = JSON.parse(JSON.stringify(state));
+  await runInteraction(manifest, 'chest', 'verb:look', { say }, { state: restored }); assert.equal(spoken.pop(), 'Three');
+  manifest.cells.defaults = { 'verb:talk': { ...cell, sentences: ['A', 'B'] } };
+  await runInteraction(manifest, 'first', 'verb:talk', { say }, { state });
+  await runInteraction(manifest, 'second', 'verb:talk', { say }, { state });
+  assert.deepEqual(spoken.splice(0), ['A', 'B']);
+  cell.mode = 'sequence'; let resume;
+  const running = runInteraction(manifest, 'chest', 'verb:look', { say: text => { spoken.push(text); return new Promise(resolve => { resume = resolve; }); } });
+  assert.deepEqual(spoken, ['One']); resume(); await Promise.resolve(); assert.deepEqual(spoken, ['One', 'Two']);
+  resume(); await Promise.resolve(); assert.deepEqual(spoken, ['One', 'Two', 'Three']); resume(); await running;
+  for (const invalid of [{ sentences: [] }, { sentences: [''] }, { sentences: ['ok'], mode: 'nope' }, { sentences: ['ok'], text: 'ambiguous' }]) {
+    assert.throws(() => assertInteractionManifest({ ...manifest, cells: { chest: { 'verb:look': { kind: 'simple', ...invalid } } } }));
+  }
+});
+
+test('each sentence and default has its own linked voice line, retaining the original first-line id', () => {
+  const manifest = make();
+  manifest.cells.defaults = { 'verb:look': { kind: 'simple', mode: 'sequence', sentences: ['Default first', 'Default second'] } };
+  manifest.cells.chest['verb:look'] = { kind: 'simple', mode: 'rotation', sentences: ['A stubborn chest.', 'Still stubborn.'] };
+  const synced = syncInteractionVoiceLines(manifest, assets()); assertManifest(synced);
+  assert.equal(synced.assets[interactionVoiceLineId('chest', 'verb:look')].voiceSettings.text, 'A stubborn chest.');
+  assert.equal(synced.assets[interactionVoiceLineId('chest', 'verb:look', 1)].voiceSettings.text, 'Still stubborn.');
+  assert.equal(synced.assets[interactionVoiceLineId('defaults', 'verb:look', 1)].voiceSettings.text, 'Default second');
+  assert.match(synced.assets.hero.linkedAnimationAssets[interactionVoiceLineId('defaults', 'verb:look', 1)].label, /Defaults.*Sentence 2/);
 });

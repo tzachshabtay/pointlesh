@@ -1,5 +1,5 @@
 import { registerInGameDesignerPanel, type AiAssetManifest } from '@ai-game-assets/core';
-import { assertInteractionManifest, interactionTargets, itemInteractionColumn, syncInteractionVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget } from '@pointlesh/core';
+import { assertInteractionManifest, DEFAULT_INTERACTION_TARGET, interactionSentences, interactionTargets, itemInteractionColumn, syncInteractionVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget, type InteractionSpeechMode } from '@pointlesh/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 
 export class InteractionDesignerDebugClient {
@@ -48,7 +48,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   });
   tools.append(search, kinds, undo, redo, exportButton, promote); root.append(tools);
   const legend = document.createElement('p'); legend.className = 'pointlesh-interactions-legend';
-  legend.innerHTML = '<span>Empty · unassigned</span><span>★ Game code</span><span class="simple">✓ Hero speech</span><span class="impossible">✕ Should not happen</span>';
+  legend.innerHTML = '<span>Empty · use Defaults</span><span>★ Game code</span><span class="simple">✓ Hero speech</span><span class="impossible">✕ Should not happen</span>';
   root.append(legend);
   const scroll = document.createElement('div'); scroll.className = 'pointlesh-interactions-scroll'; root.append(scroll);
   const count = document.createElement('p'); count.className = 'pointlesh-interactions-count'; root.append(count);
@@ -102,17 +102,19 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       const small = document.createElement('small'); small.textContent = column.type; th.append(label, small); head.append(th); }
     const body = table.createTBody();
     const visible = rows.filter(row => (!kind || row.kind === kind) && `${row.name} ${row.locations.map(location => location.sceneName).join(' ')}`.toLowerCase().includes(filter));
-    for (const row of visible) {
+    const defaults: InteractionTarget = { id: DEFAULT_INTERACTION_TARGET, name: 'Defaults', kind: 'object', properties: {}, locations: [] };
+    for (const row of [defaults, ...visible]) {
       const tr = body.insertRow(), th = document.createElement('th'); th.scope = 'row';
+      if (row.id === DEFAULT_INTERACTION_TARGET) tr.className = 'pointlesh-interaction-defaults';
       const name = document.createElement('span'); name.textContent = row.name;
-      const detail = document.createElement('small'); detail.textContent = row.kind === 'inventory-item' ? 'Inventory item' : `${row.kind} · ${[...new Set(row.locations.map(location => location.sceneName))].join(', ')}`;
+      const detail = document.createElement('small'); detail.textContent = row.id === DEFAULT_INTERACTION_TARGET ? 'Fallback for empty cells' : row.kind === 'inventory-item' ? 'Inventory item' : `${row.kind} · ${[...new Set(row.locations.map(location => location.sceneName))].join(', ')}`;
       th.append(name, detail); tr.append(th);
       for (const column of columns) {
         const cell = manifest.cells[row.id]?.[column.id], td = tr.insertCell();
         const state = cell?.kind ?? 'empty', label = state === 'code' ? 'Game code' : state === 'simple' ? 'Hero speech' : state === 'impossible' ? 'Should not happen' : 'Empty';
         const b = makeButton(state === 'code' ? '★' : state === 'simple' ? '✓' : state === 'impossible' ? '✕' : '', () => edit(row, column));
         b.className = state; b.dataset.target = row.id; b.dataset.column = column.id; b.dataset.state = state;
-        b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`); b.title = cell?.kind === 'simple' ? cell.text : label; td.append(b);
+        b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`); b.title = cell?.kind === 'simple' ? interactionSentences(cell).join('\n') : !cell && row.id !== DEFAULT_INTERACTION_TARGET ? 'Uses Defaults when assigned' : label; td.append(b);
       }
     }
     scroll.replaceChildren(table); count.textContent = `${visible.length} of ${rows.length} targets · ${columns.length} actions${dirty ? ' · Local draft' : ''}`;
@@ -124,8 +126,22 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     const select = document.createElement('select'); select.setAttribute('aria-label', 'Interaction state');
     for (const [value, text] of [['', 'Choose a state…'], ['code', 'Game code ★'], ['simple', 'Simple speech ✓'], ['impossible', 'Should not happen ✕']]) select.add(new Option(text, value));
     select.value = cell?.kind ?? ''; label.append(select);
-    const textLabel = document.createElement('label'); textLabel.textContent = 'What the hero says';
-    const text = document.createElement('textarea'); text.rows = 5; text.setAttribute('aria-label', 'Hero speech'); text.value = cell?.kind === 'simple' ? cell.text : ''; textLabel.append(text);
+    const speech = document.createElement('div');
+    const modeLabel = document.createElement('label'); modeLabel.textContent = 'Sentence playback';
+    const mode = document.createElement('select'); mode.setAttribute('aria-label', 'Sentence playback');
+    for (const value of ['random', 'rotation', 'sequence']) mode.add(new Option(value[0]!.toUpperCase() + value.slice(1), value));
+    mode.value = cell?.kind === 'simple' ? cell.mode ?? 'sequence' : 'sequence'; modeLabel.append(mode);
+    const sentenceList = document.createElement('div'); sentenceList.className = 'pointlesh-interaction-sentences';
+    const inputs: HTMLTextAreaElement[] = [];
+    const addSentence = (value = '') => {
+      const entry = document.createElement('div'), label = document.createElement('label'), text = document.createElement('textarea');
+      const caption = document.createElement('span'); label.append(caption, text); text.rows = 2; text.value = value;
+      inputs.push(text); text.oninput = () => refresh();
+      const remove = makeButton('Remove', () => { inputs.splice(inputs.indexOf(text), 1); entry.remove(); refresh(); });
+      entry.append(label, remove); sentenceList.append(entry); return text;
+    };
+    for (const value of cell?.kind === 'simple' ? interactionSentences(cell) : ['']) addSentence(value);
+    speech.append(modeLabel, sentenceList, makeButton('+ Add sentence', () => { const input = addSentence(); refresh(); input.focus(); }));
     const help = document.createElement('p'); const actions = document.createElement('div'); actions.className = 'pointlesh-interaction-actions';
     const clear = makeButton('× Clear interaction', () => {
       const next = structuredClone(manifest); delete next.cells[row.id]?.[column.id];
@@ -133,19 +149,27 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       change(next); dialog.close();
     });
     const apply = makeButton('Apply', () => {
+      const sentences = inputs.map(input => input.value.trim());
       const next = structuredClone(manifest); (next.cells[row.id] ??= {})[column.id] = select.value === 'simple'
-        ? { kind: 'simple', text: text.value.trim() } : { kind: select.value as 'code' | 'impossible' };
+        ? { kind: 'simple', ...(sentences.length === 1 ? { text: sentences[0]! } : { sentences }), mode: mode.value as InteractionSpeechMode } : { kind: select.value as 'code' | 'impossible' };
       try { change(next); dialog.close(); } catch (error) { help.textContent = error instanceof Error ? error.message : String(error); }
     });
     const refresh = () => {
-      textLabel.hidden = select.value !== 'simple'; apply.disabled = !select.value || (select.value === 'simple' && !text.value.trim());
-      help.textContent = select.value === 'simple' ? `Automatically linked to ${manifest.heroVoiceAssetId}. Generate its recording in Assets → Voices.`
+      speech.hidden = select.value !== 'simple'; apply.disabled = !select.value || (select.value === 'simple' && (!inputs.length || inputs.some(input => !input.value.trim())));
+      inputs.forEach((input, index) => {
+        input.setAttribute('aria-label', index === 0 ? 'Hero speech' : `Hero speech ${index + 1}`);
+        input.previousElementSibling!.textContent = `Sentence ${index + 1}`;
+        const remove = input.parentElement!.nextElementSibling as HTMLButtonElement;
+        remove.disabled = inputs.length === 1; remove.setAttribute('aria-label', `Remove sentence ${index + 1}`);
+      });
+      const modeHelp = mode.value === 'random' ? 'Chooses one sentence at random each time.' : mode.value === 'rotation' ? 'Says the next sentence each time, wrapping back to the first.' : 'Says every sentence in order, one after another.';
+      help.textContent = select.value === 'simple' ? `${modeHelp} Each sentence is linked to ${manifest.heroVoiceAssetId} in Assets → Voices.`
         : select.value === 'code' ? 'Runs the interaction handler registered by the game. This does not generate or edit code.'
         : select.value === 'impossible' ? 'This combination is intentionally unavailable and will not run an interaction.' : 'Choose how this action should behave.';
     };
-    select.onchange = refresh; text.oninput = refresh;
-    actions.append(clear, makeButton('Cancel', () => dialog.close()), apply); dialog.append(h, label, textLabel, help, actions); refresh(); dialog.showModal();
-    if (cell?.kind === 'simple') text.focus(); else select.focus();
+    select.onchange = refresh; mode.onchange = refresh;
+    actions.append(clear, makeButton('Cancel', () => dialog.close()), apply); dialog.append(h, label, speech, help, actions); refresh(); dialog.showModal();
+    if (cell?.kind === 'simple') inputs[0]!.focus(); else select.focus();
   }
   render(); if (dirty) publish();
   return { root, open: () => dock.open(), close: () => dock.close(), isOpen: () => dock.isOpen(), refresh: render,
@@ -165,5 +189,6 @@ const styles = `
 .pointlesh-interactions table{border-collapse:separate;border-spacing:0;width:100%;table-layout:auto}.pointlesh-interactions th,.pointlesh-interactions td{border-bottom:1px solid #2d3647;border-right:1px solid #2d3647;padding:0;text-align:center;min-width:110px}
 .pointlesh-interactions th{padding:10px;background:#202938;font-weight:600}.pointlesh-interactions thead th{position:sticky;top:0;z-index:2}.pointlesh-interactions tbody th{position:sticky;left:0;z-index:1;text-align:left;min-width:235px;max-width:300px}.pointlesh-interactions thead th:first-child{left:0;z-index:3;min-width:235px}.pointlesh-interactions small{display:block;font-size:10px;font-weight:400;color:#99a8bf;margin-top:5px}
 .pointlesh-interactions td button{display:block;border:0;border-radius:0;width:100%;height:51px;font-size:21px;background:#171e29}.pointlesh-interactions tr:nth-child(even) td button{background:#1b2330}.pointlesh-interactions td button:hover{background:#35435a}.pointlesh-interactions-count{font-size:11px;color:#aab6ca;margin:0;flex:none}
-.pointlesh-interaction-edit{width:min(540px,90vw);padding:24px;color:#e6eaf2;background:#192230;border:1px solid #677a99;border-radius:10px;font:13px system-ui}.pointlesh-interaction-edit::backdrop{background:#060b1399}.pointlesh-interaction-edit h3{margin:0 0 20px;font-size:17px}.pointlesh-interaction-edit label{display:grid;gap:8px;margin-bottom:16px}.pointlesh-interaction-edit label[hidden]{display:none}.pointlesh-interaction-edit textarea{resize:vertical;min-height:100px}.pointlesh-interaction-edit p{color:#aab9cf;line-height:1.5}.pointlesh-interaction-actions{display:flex;gap:8px;justify-content:flex-end}.pointlesh-interaction-actions button:first-child{margin-right:auto}
+.pointlesh-interaction-defaults th,.pointlesh-interactions .pointlesh-interaction-defaults td button{background:#283449;border-bottom:2px solid #6883a8}.pointlesh-interaction-sentences>div{display:flex;align-items:center;gap:10px}.pointlesh-interaction-sentences label{flex:1}.pointlesh-interaction-edit [hidden]{display:none!important}
+.pointlesh-interaction-edit{max-height:85vh;overflow:auto;width:min(540px,90vw);padding:24px;color:#e6eaf2;background:#192230;border:1px solid #677a99;border-radius:10px;font:13px system-ui}.pointlesh-interaction-edit::backdrop{background:#060b1399}.pointlesh-interaction-edit h3{margin:0 0 20px;font-size:17px}.pointlesh-interaction-edit label{display:grid;gap:8px;margin-bottom:16px}.pointlesh-interaction-edit label[hidden]{display:none}.pointlesh-interaction-edit textarea{resize:vertical;min-height:100px}.pointlesh-interaction-edit p{color:#aab9cf;line-height:1.5}.pointlesh-interaction-actions{display:flex;gap:8px;justify-content:flex-end}.pointlesh-interaction-actions button:first-child{margin-right:auto}
 `;
