@@ -1,0 +1,48 @@
+Generated with the built-in image generation tool.
+Identity reference: borin.idle-left promoted-1790377563289, first frame.
+Motion reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+
+Red guide leg = near leg; blue guide leg = far leg.
+Final near leg = warm brown; final far leg = dark brown.
+Frames 1-4: near leg supports, far leg swings.
+Frames 5-8: far leg supports, near leg swings.
+Poses in each half: contact, recoil, passing, high point.
+The recoloring initially swapped leg shading in frame 4; the final edit corrects only that frame.
+
+PROMPT 1
+Create a TWO-POSE animation keyframe study of this exact pixel-art dwarf, on transparent background. TWO full-body dwarves side by side, both facing SCREEN LEFT. Same identity, helmet, beard, green coat, belt, boots and proportions. Same ground baseline, scale and body angle.
+
+These are the TWO OPPOSITE CONTACT POSES in a walk cycle. The foreground leg is the leg connected to the hip nearest the viewer, underneath the visible belt pouch on the RIGHT side of the torso in the picture.
+
+LEFT FIGURE: foreground leg reaches diagonally FORWARD towards SCREEN LEFT; foreground boot is the LEFTMOST boot. Background leg stretches diagonally BACK towards SCREEN RIGHT.
+RIGHT FIGURE: foreground leg reaches diagonally BACK towards SCREEN RIGHT; foreground boot is the RIGHTMOST boot. Background leg stretches diagonally FORWARD towards SCREEN LEFT. The two legs cross in front of one another with their occlusion order preserved. THE RIGHT FIGURE MUST NOT COPY THE LEFT FIGURE'S LEGS.
+
+Temporary animation-check colors: render the ENTIRE FOREGROUND LEG AND ITS BOOT in RED, and render the ENTIRE BACKGROUND LEG AND ITS BOOT in BLUE. Keep all upper-body art its original colors. Color is a deliberate temporary guide so we can verify leg identity. Left figure red foot at left/blue at right. Right figure BLUE foot at left/RED at right. Both boots always point left. Arms counter-swing opposite each leading leg. Wide readable contact stance, heels on floor/toe-off back foot, no marching, no floating, no background, no text.
+
+PROMPT 2
+Build an eight-frame walking loop from these two contact poses. BOTH characters are the same dwarf facing LEFT. Left reference pose is frame 1. Right reference pose is frame 5. Keep the colored legs: RED is always the NEAR leg and BLUE always the FAR leg. Keep this exact character, upper body colors, pixel style, costume and scale. Four columns, two rows, eight full-body sprites on transparent background, equal cells with generous padding. All 8 face LEFT. All ground baselines align.
+
+Frame 1: exactly left reference contact: red foot forward at LEFT, blue foot behind at RIGHT.
+Frame 2 RECOIL: red foot plants at LEFT and knee bends bearing weight. Blue heel lifts behind at RIGHT and blue leg starts swinging.
+Frame 3 PASSING: red stance leg straightens directly UNDER HIP, red foot planted. Blue knee passes it, blue boot AIRBORNE and tucked beside/behind red ankle, no blue sole on the ground.
+Frame 4 HIGH: red stance leg now extends BACK to RIGHT on toe; blue knee lifts FORWARD LEFT and blue boot swings forward off ground.
+Frame 5: exactly right reference contact: BLUE foot forward at LEFT, RED foot behind at RIGHT.
+Frame 6 RECOIL: BLUE foot plants at LEFT with bent knee, RED heel lifts behind at RIGHT.
+Frame 7 PASSING: BLUE stance leg straight directly UNDER HIP, blue foot planted. RED knee passes it, RED boot airborne beside/behind blue ankle.
+Frame 8 HIGH: BLUE stance leg extends BACK to RIGHT on toe; RED knee lifts FORWARD LEFT and RED boot swings forward off ground, ready for frame 1.
+
+Crucial: the red foot goes LEFT -> center -> RIGHT -> LEFT over the cycle. The blue foot does the opposite. Do not keep the red leg ahead for all frames. The lower row is NOT a duplicate of upper row; swap supporting and swinging legs while preserving red=near and blue=far. Natural restrained head bob and counter-swing arms. No labels, ground, glow or background.
+
+PROMPT 3
+Recolor this eight-frame dwarf spritesheet ONLY. Preserve the EXACT position, silhouette, shape and overlap of EVERY limb in EVERY frame. Do not redraw the poses. The red and blue are temporary animation guide colors; they must become the dwarf's normal brown clothing.
+
+Replace ALL RED LEGS AND RED BOOTS with warm medium-brown leather/trousers, similar to his brown wrist bracers. This is the near leg: clear warm bronze-brown highlights.
+Replace ALL BLUE LEGS AND BLUE BOOTS with DARK cool chocolate-brown leather/trousers, about 35% darker than the near leg. This is the far leg: visibly shadowed, with subdued highlights, never bright.
+Preserve the distinction: in top-left frame the brighter brown leg is FORWARD at left; in bottom-left frame the brighter brown leg is BACK at right. This swap is essential. Dark far leg in front when it leads, but do not change its depth layering at overlaps.
+
+No blue or red coloration may remain on the legs, soles or surrounding pixels. All upper-body pixels, facial identity, green coat, orange beard, bronze helmet, leather arms, frame layout, equal size and baseline remain unchanged. Four columns, two rows, eight frames. True transparent alpha background, no glow, no drop shadow, no painted background, no text.
+
+PROMPT 4
+Tiny correction to ONE sprite only. In this 4-by-2 spritesheet, edit ONLY the TOP-RIGHT dwarf, row 1 column 4. His legs have their shading reversed. In that ONE frame, the LIFTED boot/knee at SCREEN LEFT must be DARK cool chocolate brown (far leg), and the PLANTED boot/leg extended behind at SCREEN RIGHT must be WARM lighter bronze-brown (near leg). Swap those two leather palettes within that single sprite, maintaining highlights. Preserve every silhouette, limb position, pixel-art shape, character, all other frames, layout and transparency exactly. Do not change ANY of the other seven sprites. This corrects leg identity in the walk cycle. No background/glow.
+
+Pack: node demos/forest/scripts/pack-borin-alternating-walk.mjs
