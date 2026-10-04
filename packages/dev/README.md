@@ -1,6 +1,6 @@
 # @pointlesh/dev
 
-Local authoring services and project JSON persistence for Pointlesh. This package composes the established AI Assets, Scene Designer and Dialog Designer development servers; it does not create a fourth competing manifest format.
+Local authoring services and project JSON persistence for Pointlesh. This package composes the established AI Assets, Scene Designer and Dialog Designer development servers, plus Pointlesh's interaction-matrix persistence service.
 
 ## CLI
 
@@ -10,7 +10,7 @@ After building the workspace, run:
 pointlesh-dev serve --project=./authoring --assets-dir=./public/art --port=4287
 ```
 
-The project directory supplies `assets.json`, `scenes.json` and `dialogs.json`. AI Assets uses the supplied assets directory. Ports are consecutive: AI Assets on 4287, Scene Designer on 4288 and Dialog Designer on 4289. Set a different starting port with `--port`; accepted values are 1024–65533. `SIGINT` and `SIGTERM` close all three services.
+The project directory supplies `assets.json`, `scenes.json`, `dialogs.json` and `interactions.json`. AI Assets uses the supplied assets directory. Ports are consecutive: AI Assets on 4287, Scene Designer on 4288, Dialog Designer on 4289 and Interactions on 4290. Set a different starting port with `--port`; accepted values are 1024–65532. `SIGINT` and `SIGTERM` close all four services.
 
 For the included demo, use `npm run dev:server` at repository root. Start `npm run dev` separately to serve the game at `http://127.0.0.1:5186`. These services support local promotion and asset authoring; the built demo can be hosted as static files without them.
 
@@ -31,13 +31,19 @@ const tools = createPointleshDevServer({
     manifestPath: './authoring/dialogs.json',
     aiAssetsManifestPath: './authoring/assets.json', port: 4289,
   },
+  interactions: {
+    manifestPath: './authoring/interactions.json',
+    aiAssetsManifestPath: './authoring/assets.json', port: 4290,
+  },
 });
 await tools.listen();
 // On shutdown:
 await tools.close();
 ```
 
-Options are the upstream `AiAssetDevServerOptions`, `SceneDesignerDevServerOptions` and `DialogDesignerDevServerOptions`. The returned `services` array exposes those individual services. Startup is sequential; if a later service fails, already-started services are closed. Errors such as occupied ports propagate to the caller.
+Options are the upstream `AiAssetDevServerOptions`, `SceneDesignerDevServerOptions` and `DialogDesignerDevServerOptions`, plus optional `InteractionDevServerOptions`. The returned `services` array exposes those individual services. Startup is sequential; if a later service fails, already-started services are closed. Errors such as occupied ports propagate to the caller.
+
+`createInteractionDevServer` can also run separately. Its `GET /manifest` reads interaction data; `PUT /manifest` validates edits, merges linked voice lines into the latest asset manifest, and writes both files atomically per file. Existing generated versions are retained. Supply `scenesManifestPath` for human-readable voice-line labels; the combined server defaults it to the scenes service's path. Promotion requests are serialized, limited to 2 MB, and accept browser requests only from localhost origins. The service generates no audio; use the existing AI Assets voice tools afterward.
 
 The provider factories read `OPENAI_API_KEY` and `ELEVENLABS_API_KEY` from the server's environment, or accept an explicit `apiKey` option. Load your local environment before creating the services. The forest demo's entrypoint loads its optional `demos/forest/.env` automatically; shell variables take precedence.
 

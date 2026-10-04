@@ -11,3 +11,5 @@ export type {
 } from "./inspector.js";
 export { installSceneDesigner, SceneDesignerDebugClient } from "@scene-designer/designer";
 export type { SceneDesigner, SceneDesignerOptions } from "@scene-designer/designer";
+export { installInteractionDesigner, InteractionDesignerDebugClient } from './interactions.js';
+export type { InteractionDesignerOptions, InteractionDesigner } from './interactions.js';

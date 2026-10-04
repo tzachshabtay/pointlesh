@@ -42,6 +42,9 @@ import { CutsceneCrossfade } from './cutscene-crossfade';
 import { addJournalAssets } from './journal-assets';
 import { ForestJournal, renderJournal } from './journal';
 import { captureSavePreview } from './save-preview';
+import { assertInteractionManifest, syncInteractionVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, interactionVoiceLineId, type InteractionManifest, type ResolvedPointleshEntity } from '@pointlesh/core';
+import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
+import { createForestInteractions } from './interactions';
 
 const disposeViewportLayout = installViewportLayout(document.documentElement);
 if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
@@ -58,6 +61,7 @@ class ForestAssetDebugClient extends AiAssetDebugClient {
   }
 }
 let authoredScenes: SceneDesignerManifest = scenes;
+let interactions: InteractionManifest;
 let gameScene: ForestAdventure;
 let modalOpen = false;
 let modalRevision = 0;
@@ -86,6 +90,8 @@ const arrowDirections: Record<string, { x: number; y: number }> = { ArrowLeft: {
 const editingText = (target: EventTarget | null) => target instanceof HTMLElement && !!target.closest('input,textarea,select,[contenteditable="true"],[role="textbox"]');
 
 class ForestAdventure extends Phaser.Scene {
+  interactionDesigner?: InteractionDesigner;
+  private interactionSound?: Phaser.Sound.BaseSound;
   started = false;
   story = newStory();
   selected?: ItemId;
@@ -379,6 +385,7 @@ class ForestAdventure extends Phaser.Scene {
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
     this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
+    if (this.authoredInteraction(sceneInteractionTarget(this.story.roomId, entity), verbInteractionColumn('look'))) return;
     const target = targets[this.story.roomId].find(target => target.id === targetId);
     this.say(typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name);
   }
@@ -389,6 +396,7 @@ class ForestAdventure extends Phaser.Scene {
     if (!entity) return;
     this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
     const selected = this.selected;
+    if (this.authoredInteraction(sceneInteractionTarget(this.story.roomId, entity), selected ? itemInteractionColumn(inventoryPrefabId(selected)) : verbInteractionColumn('interact'))) return;
     // Door and approach clocks start together; the transition waits at the safe
     // inside point until the leaf is clear before crossing the sill.
     if (targets[this.story.roomId].some(target => target.id === targetId && target.exit)) { this.applyInteraction(targetId); return; }
@@ -444,6 +452,20 @@ class ForestAdventure extends Phaser.Scene {
       this.epoch++; this.character.stop(); this.dismissSpeech(); this.renderCutscene();
     }
     this.render();
+  }
+  /** Only a star delegates to the existing game handler; every other state is fully data-driven. */
+  authoredInteraction(row: string, column: string): boolean {
+    const cell = interactions.cells[row]?.[column];
+    if (cell?.kind === 'code') return false;
+    if (cell?.kind === 'simple') {
+      this.say(cell.text);
+      const id = interactionVoiceLineId(row, column), asset = assets.assets[id];
+      const key = this.aiRuntime.key(id);
+      if (asset?.versions[asset.activeVersion]?.file && this.cache.audio.exists(key)) {
+        this.interactionSound = this.sound.add(key); this.interactionSound.play();
+      }
+    }
+    return true;
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
     if (!transitioning) this.roomTransition?.cancel();
@@ -726,6 +748,7 @@ class ForestAdventure extends Phaser.Scene {
         authoredScenes = manifest; this.resolvedCache = undefined;
         for (const [id, icon] of this.inventoryIcons) icon.setAsset(this.inventoryDefinition(id).assetId || inventoryAssetId(id));
         this.cursor.refresh();
+        this.interactionDesigner?.refresh();
         // Eye/lock edits must not reset placements, interrupt walks or rebuild game objects.
         const gameplay = (room: ReturnType<typeof resolvePointleshScene>) => JSON.stringify({
           ...room, points: room.points.map(({ visible, ...point }) => point),
@@ -741,11 +764,25 @@ class ForestAdventure extends Phaser.Scene {
       if (!assetId.startsWith('background.')) return;
       for (const room of roomIds.filter(room => atlasRooms[room].asset === assetId)) this.drawRoomTexture(room, textureKey);
     };
+    let assetDesignerManifest: import('@ai-game-assets/core').AiAssetManifest = assets;
     installAiAssetDesigner({ scene: this, manifest: assets, autoFirstDrafts: false, generationRecoveryKey: 'pointlesh-forest', client: new ForestAssetDebugClient('http://127.0.0.1:4287'), ...callbacks,
       onPreview: (id, key, asset) => { callbacks.onPreview(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
       onAssetReady: (id, key, asset) => { callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
-      onManifestUpdated: manifest => { Object.assign(assets, manifest); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations(); },
+      onManifestUpdated: manifest => {
+        assetDesignerManifest = manifest;
+        Object.assign(manifest, syncInteractionVoiceLines(interactions, manifest, interactionTargets(authoredScenes)));
+        Object.assign(assets, manifest); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations();
+      },
     });
+    this.interactionDesigner = installInteractionDesigner({
+      manifest: interactions, getScenes: () => authoredScenes, getAiAssets: () => assets,
+      client: new InteractionDesignerDebugClient(), storageKey: 'pointlesh.forest.interactions.draft.v1',
+      onChange: (manifest, nextAssets) => {
+        interactions = manifest; Object.assign(assets, nextAssets); Object.assign(assetDesignerManifest, nextAssets); callbacks.onManifestUpdated(assets);
+        this.sceneDesigner?.inspector.setAiAssets(assets);
+      },
+    });
+    this.events.once('shutdown', () => this.interactionDesigner?.destroy());
   }
   drawHotspots() {
     this.markers.clear(); for (const label of this.labels) label.destroy(); this.labels = [];
@@ -783,6 +820,7 @@ class ForestAdventure extends Phaser.Scene {
     else portrait.hide();
   }
   say(text: string, speaker = 'Borin') {
+    this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.epoch++; this.clearMovementKeys(); this.talking = true;
     this.speakingVoice = Object.entries(portraitCharacters).find(([id, name]) => id === speaker || name === speaker)?.[0] ?? 'borin';
     this.conversationActive = false; this.character.stop();
@@ -792,7 +830,7 @@ class ForestAdventure extends Phaser.Scene {
     el('choices').replaceChildren(); el('dialog-next').hidden = false;
     this.showDialogPortrait(this.speakingVoice, true);
   }
-  dismissSpeech() { this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
+  dismissSpeech() { this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
     this.clearMovementKeys();
     if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
@@ -909,12 +947,22 @@ class ForestAdventure extends Phaser.Scene {
       const node = button('', () => {
         // Selecting an item also previews its cursor while editing its prefab.
         if (this.blocked(false)) return;
-        if (this.selected && this.selected !== id) { const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text); }
-        else this.selected = this.selected === id ? undefined : id;
+        const row = prefabInteractionTarget(inventoryPrefabId(id));
+        if (this.selected && this.selected !== id) {
+          if (this.authoredInteraction(row, itemInteractionColumn(inventoryPrefabId(this.selected)))) return;
+          const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text);
+        } else {
+          if (this.authoredInteraction(row, verbInteractionColumn('interact'))) return;
+          this.selected = this.selected === id ? undefined : id;
+        }
         this.render();
         this.cursor.refresh();
       });
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
+      node.addEventListener('contextmenu', event => {
+        event.preventDefault();
+        if (!this.blocked(false) && !this.authoredInteraction(prefabInteractionTarget(inventoryPrefabId(id)), verbInteractionColumn('look'))) this.say(items[id].description);
+      });
       const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: this.inventoryDefinition(id).assetId || inventoryAssetId(id), width: 36, height: 36, idleAnimation: 'idle', paused: () => !this.started || modalOpen });
       this.inventoryIcons.set(id, icon); node.append(icon.canvas);
       const label = document.createElement('span'); label.className = 'item-label'; label.textContent = items[id].name; node.append(label); el('inventory').append(node);
@@ -1247,6 +1295,11 @@ addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
 addCharacterPortraits(authoredScenes);
+interactions = createForestInteractions(authoredScenes);
+const interactionResponse = await fetch(`${import.meta.env.BASE_URL}authoring/interactions.json`);
+if (interactionResponse.ok) { const value = await interactionResponse.json(); assertInteractionManifest(value); interactions = value; }
+else if (interactionResponse.status !== 404) throw new Error(`Could not load authored interactions: ${interactionResponse.status}`);
+Object.assign(assets, syncInteractionVoiceLines(interactions, assets, interactionTargets(authoredScenes)));
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });

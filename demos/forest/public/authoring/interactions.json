@@ -1,0 +1,868 @@
+{
+  "schemaVersion": 1,
+  "verbs": [
+    {
+      "id": "interact",
+      "label": "Interact"
+    },
+    {
+      "id": "look",
+      "label": "Look"
+    }
+  ],
+  "heroVoiceAssetId": "voice.borin",
+  "cells": {
+    "prefab:forest.character.elder": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The oldest beard in Bramblehollow. He knows every story."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.character.guard": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "An enormous orc with a well-worn route between the cage and the stew."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "code"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.character.king": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "code"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.character.innkeeper": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A brewer, a storyteller, and a formidable keeper of tabs."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "code"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.character.miner": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Orrin warms his boots and guards the mine’s secrets."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "scene:[\"mine\",\"mine-exit\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Cool air drifts in from the forest."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "scene:[\"forest\",\"forest-exit\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The path home winds between the roots."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "scene:[\"forest\",\"mushroom\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Violet caps with silver spots. Mara will know what they do."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "scene:[\"village\",\"forest-path\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Fresh orc tracks head east beneath the ancient trees."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "scene:[\"mine\",\"gold\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "All that glitters. It can wait until the king is safe."
+      },
+      "verb:interact": {
+        "kind": "simple",
+        "text": "All that glitters. It can wait until the king is safe."
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "scene:[\"camp\",\"cauldron\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The orcs’ supper. Even a sleeping potion would improve it."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "code"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.inventory.rope": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Strong dwarven rope. A few good knots should hold even an orc."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "prefab:forest.inventory.coin": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "One copper. A small fortune before breakfast."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "prefab:forest.inventory.mushroom": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A harmless sleeping mushroom. Best served in a drink."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "code"
+      }
+    },
+    "prefab:forest.inventory.sleepyStout": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "An exceptionally relaxing brew."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "prefab:forest.inventory.pickaxe": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The dwarven answer to a stubborn lock."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "prefab:forest.inventory.stout": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Orcs cannot resist the smell. Combine it with something soporific."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "code"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.cage-door": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "code"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.object.rope": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A coil of good dwarven climbing rope on the old chest."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.object.coin": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "My emergency breakfast fund."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "prefab:forest.object.door.pub": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The morning air might clear my head."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.door.village-pub": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The windows glow with breakfast, gossip, and questionable decisions."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.door.house": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "There is a king out there who needs me."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.door.village-house": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "Home. I should take supplies before venturing into the wood."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.door.forest-mine": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A lantern flickers in the old gold mine."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.door.forest-camp": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A crooked palisade. Smoke. Terrible singing."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.door.camp": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A discreet retreat is also a kind of strategy."
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
+      }
+    },
+    "prefab:forest.object.tool-chest": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "The inscription reads: “What does the mountain remember?”"
+      },
+      "verb:interact": {
+        "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I cannot see how that would help here."
+      }
+    }
+  }
+}

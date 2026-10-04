@@ -126,6 +126,19 @@ The envelope includes a format version, game version, game ID, timestamp and che
 
 ## Dialog, cutscene and behavior integration
 
+`InteractionManifest` stores configurable `{ id, label }` verbs, a `heroVoiceAssetId`, and sparse interaction cells. `interactionTargets(sceneManifest)` discovers the matrix rows. Resolve scene targets with `sceneInteractionTarget(sceneId, entity)` and inventory rows with `prefabInteractionTarget(prefabId)`; columns use `verbInteractionColumn(verbId)` or `itemInteractionColumn(prefabId)`.
+
+```ts
+await runInteraction(interactions, targetId, columnId, {
+  say(text, lineAssetId) { return hero.say(text, lineAssetId); },
+  code(row, column) { return gameInteractionHandlers.run(row, column); },
+});
+```
+
+Simple cells contain `{ kind: 'simple', text }`, code cells `{ kind: 'code' }`, and intentionally unavailable cells `{ kind: 'impossible' }`. Missing cells return `false` without effects. Assigned cells return `true`; code requires a game handler, and impossible does nothing unless an optional `impossible` callback is supplied. Movement, puzzle state and scripted actions stay in the game.
+
+`syncInteractionVoiceLines(interactions, assets, targets?)` returns a cloned AI Assets manifest with native voice lines linked under the hero's voice. `interactionVoiceLineId(row, column)` is stable across text/name edits. Changed text disables stale active audio without discarding generated history. The interaction designer invokes this sync automatically; renderer integrations choose how to display speech and play the linked recording.
+
 `AdventureDialog(dialogManifest, assetManifest, options?)` wraps Dialog Designer's runtime with `start`, `advance`, `choose`, `current`, `onTurn`, `snapshot`, `restore` and `setManifest`. Checkpoints record the dialog ID, commands and their external enablement evaluations. Restore replays recorded checks without calling current predicates or emitting gameplay events, so a choice may hide itself after selection without breaking its saved reply. Future commands use live conditions. Subscribe to `AdventureDialog.onTurn` for game effects. Checkpoints must remain compatible with authored content or be migrated by the client.
 
 `CutsceneRunner({ id, version, steps }, options?)` supports player-advanced and timed steps. `onCompleteStep` applies final step effects; watching and `skip()` use the same callback. `snapshot` stores the step index and elapsed time. `restore` updates presentation without replaying effects. Timed steps require positive `durationMs`; omit it for player advancement. Game-specific visual/audio presentation remains in the client.

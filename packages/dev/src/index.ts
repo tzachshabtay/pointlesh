@@ -5,6 +5,9 @@ import { assertJSON } from '@pointlesh/core';
 import { createSceneDesignerDevServer, type SceneDesignerDevServerOptions } from '@scene-designer/dev';
 import { createDialogDesignerDevServer, type DialogDesignerDevServerOptions } from '@dialog-designer/dev';
 import { createAiAssetDevServer, type AiAssetDevServerOptions } from '@ai-game-assets/dev';
+import { createInteractionDevServer, type InteractionDevServerOptions } from './interactions.js';
+export { createInteractionDevServer } from './interactions.js';
+export type { InteractionDevServerOptions } from './interactions.js';
 
 export { createSceneDesignerDevServer, createDialogDesignerDevServer, createAiAssetDevServer };
 export { createOpenAiImageProvider, createElevenLabsAudioProvider } from '@ai-game-assets/dev';
@@ -35,11 +38,13 @@ export type PointleshDevOptions = {
   scenes: SceneDesignerDevServerOptions;
   dialogs: DialogDesignerDevServerOptions;
   assets: AiAssetDevServerOptions;
+  interactions?: InteractionDevServerOptions;
 };
 
-/** A single lifecycle for all three established authoring services. */
+/** A single lifecycle for the native authoring services and optional interaction editor. */
 export function createPointleshDevServer(options: PointleshDevOptions) {
   const services = [createAiAssetDevServer(options.assets), createSceneDesignerDevServer(options.scenes), createDialogDesignerDevServer(options.dialogs)];
+  if (options.interactions) services.push(createInteractionDevServer({ scenesManifestPath: options.scenes.manifestPath, ...options.interactions }));
   return {
     services,
     async listen() {

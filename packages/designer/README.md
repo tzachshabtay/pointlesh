@@ -50,3 +50,13 @@ Hotspots and sprite entities expose a **Walk point** selector over enabled point
 Inventory definitions live under **Prefabs → Inventory items** and are omitted from the scene placement picker. Select one to edit its graphic and drag the **Interaction point** on the enlarged preview. Arrow keys move the focused point by one source pixel. X/Y fields use normalized top-left coordinates, so changing the asset size retains the same relative target. Each drag is one undo step; export and promotion preserve the point.
 
 Choose an optional **Crosshair graphic** and its looping animation. These settings belong to the prefab and are independent of character/object ground pivots. The Phaser installer supplies current decoded asset previews, including live previews; other hosts can provide `assetPreviewUrl(assetId)` or `assetBaseUrl`.
+
+## Interactions
+
+`installInteractionDesigner({ manifest, getScenes, getAiAssets, onChange, client?, storageKey?, mount? })` adds a movable, resizable **Interactions** tab to the shared designer toolbar. It discovers characters, objects, scene hotspots and inventory items from Scene Designer. Shared prefab instances share a row; scene-owned hotspots have independent rows. Verbs come from `manifest.verbs`, and each inventory prefab adds a column automatically.
+
+Click a cell to choose **Game code** (★), **Simple speech** (green ✓), or **Should not happen** (red ✕). **Clear interaction** returns it to empty. Simple speech has an editable hero line and is linked automatically to `manifest.heroVoiceAssetId` in AI Assets. Code cells delegate to game-owned handlers; the editor does not create those handlers. Scene input/hit testing remains the host's responsibility, including whether a decorative object is interactive.
+
+`onChange(interactions, assets)` previews edits immediately; adopt both manifests in the host and update its asset designer/runtime. Optional `storageKey` keeps a local draft across reloads of the same promoted source. Undo/redo and JSON export are available. **Promote** persists through `InteractionDesignerDebugClient` (default `http://127.0.0.1:4290`), including the linked voice lines. Failed promotions retain the draft. Changed speech clears an outdated active recording but keeps every generated version; clearing a cell also retains its voice history.
+
+The returned controller exposes `open`, `close`, `isOpen`, `refresh`, `getManifest`, `promote` and `destroy`. Call `refresh()` after editing scene/prefab definitions. Use the core `runInteraction` helper when dispatching player input.

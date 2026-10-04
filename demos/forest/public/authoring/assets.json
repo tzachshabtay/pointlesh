@@ -857,7 +857,505 @@
       "kind": "voice",
       "prompt": "Warm fantasy storytelling voice for Borin.",
       "activeVersion": "",
-      "versions": {}
+      "versions": {},
+      "linkedAnimationAssets": {
+        "voice.line.interaction.22bf93240c78e2ed": {
+          "assetId": "voice.line.interaction.22bf93240c78e2ed",
+          "label": "Elder Rowan · Look"
+        },
+        "voice.line.interaction.4d94f9bfc6d1749d": {
+          "assetId": "voice.line.interaction.4d94f9bfc6d1749d",
+          "label": "Elder Rowan · Climbing rope"
+        },
+        "voice.line.interaction.86cb8fc6ca031118": {
+          "assetId": "voice.line.interaction.86cb8fc6ca031118",
+          "label": "Elder Rowan · Copper coin"
+        },
+        "voice.line.interaction.22be086b4f145e67": {
+          "assetId": "voice.line.interaction.22be086b4f145e67",
+          "label": "Elder Rowan · Dreamcap"
+        },
+        "voice.line.interaction.01e482d54189c142": {
+          "assetId": "voice.line.interaction.01e482d54189c142",
+          "label": "Elder Rowan · Dreamcap stout"
+        },
+        "voice.line.interaction.63536d4563c7c9e6": {
+          "assetId": "voice.line.interaction.63536d4563c7c9e6",
+          "label": "Elder Rowan · Goldroot pickaxe"
+        },
+        "voice.line.interaction.e3ab96a1d90c5f1c": {
+          "assetId": "voice.line.interaction.e3ab96a1d90c5f1c",
+          "label": "Elder Rowan · Honey stout"
+        },
+        "voice.line.interaction.fc1880f66ba309f0": {
+          "assetId": "voice.line.interaction.fc1880f66ba309f0",
+          "label": "Grub the guard · Look"
+        },
+        "voice.line.interaction.43752f855987864f": {
+          "assetId": "voice.line.interaction.43752f855987864f",
+          "label": "Grub the guard · Copper coin"
+        },
+        "voice.line.interaction.cd0b439a2208d184": {
+          "assetId": "voice.line.interaction.cd0b439a2208d184",
+          "label": "Grub the guard · Dreamcap"
+        },
+        "voice.line.interaction.59e849786fe74577": {
+          "assetId": "voice.line.interaction.59e849786fe74577",
+          "label": "Grub the guard · Dreamcap stout"
+        },
+        "voice.line.interaction.97ca58039f69e6af": {
+          "assetId": "voice.line.interaction.97ca58039f69e6af",
+          "label": "Grub the guard · Goldroot pickaxe"
+        },
+        "voice.line.interaction.f45bd2e1c0b3a945": {
+          "assetId": "voice.line.interaction.f45bd2e1c0b3a945",
+          "label": "Grub the guard · Honey stout"
+        },
+        "voice.line.interaction.7386bca48ed74a6a": {
+          "assetId": "voice.line.interaction.7386bca48ed74a6a",
+          "label": "King Aldric · Look"
+        },
+        "voice.line.interaction.04b6a13ff8b45818": {
+          "assetId": "voice.line.interaction.04b6a13ff8b45818",
+          "label": "King Aldric · Climbing rope"
+        },
+        "voice.line.interaction.a099d65e8705d7ad": {
+          "assetId": "voice.line.interaction.a099d65e8705d7ad",
+          "label": "King Aldric · Copper coin"
+        },
+        "voice.line.interaction.5d0c7e053095d62e": {
+          "assetId": "voice.line.interaction.5d0c7e053095d62e",
+          "label": "King Aldric · Dreamcap"
+        },
+        "voice.line.interaction.5a90a869a78532d9": {
+          "assetId": "voice.line.interaction.5a90a869a78532d9",
+          "label": "King Aldric · Dreamcap stout"
+        },
+        "voice.line.interaction.167b4a01a2701d7b": {
+          "assetId": "voice.line.interaction.167b4a01a2701d7b",
+          "label": "King Aldric · Honey stout"
+        },
+        "voice.line.interaction.d91e516891111570": {
+          "assetId": "voice.line.interaction.d91e516891111570",
+          "label": "Mara the innkeeper · Look"
+        },
+        "voice.line.interaction.dd184d49633e98be": {
+          "assetId": "voice.line.interaction.dd184d49633e98be",
+          "label": "Mara the innkeeper · Climbing rope"
+        },
+        "voice.line.interaction.6f8725687472e404": {
+          "assetId": "voice.line.interaction.6f8725687472e404",
+          "label": "Mara the innkeeper · Dreamcap"
+        },
+        "voice.line.interaction.f48c5a0f6c9ca0f7": {
+          "assetId": "voice.line.interaction.f48c5a0f6c9ca0f7",
+          "label": "Mara the innkeeper · Dreamcap stout"
+        },
+        "voice.line.interaction.c92aea303c254a2f": {
+          "assetId": "voice.line.interaction.c92aea303c254a2f",
+          "label": "Mara the innkeeper · Goldroot pickaxe"
+        },
+        "voice.line.interaction.04c8230c44cfe0c5": {
+          "assetId": "voice.line.interaction.04c8230c44cfe0c5",
+          "label": "Mara the innkeeper · Honey stout"
+        },
+        "voice.line.interaction.eeed6b0b8e442f46": {
+          "assetId": "voice.line.interaction.eeed6b0b8e442f46",
+          "label": "Orrin the miner · Look"
+        },
+        "voice.line.interaction.a15a3638b59a768c": {
+          "assetId": "voice.line.interaction.a15a3638b59a768c",
+          "label": "Orrin the miner · Climbing rope"
+        },
+        "voice.line.interaction.4827d4785b6b0ea1": {
+          "assetId": "voice.line.interaction.4827d4785b6b0ea1",
+          "label": "Orrin the miner · Copper coin"
+        },
+        "voice.line.interaction.cba6ee9c13980baa": {
+          "assetId": "voice.line.interaction.cba6ee9c13980baa",
+          "label": "Orrin the miner · Dreamcap"
+        },
+        "voice.line.interaction.c7e21d5617e8eced": {
+          "assetId": "voice.line.interaction.c7e21d5617e8eced",
+          "label": "Orrin the miner · Dreamcap stout"
+        },
+        "voice.line.interaction.3ceacffa41427889": {
+          "assetId": "voice.line.interaction.3ceacffa41427889",
+          "label": "Orrin the miner · Goldroot pickaxe"
+        },
+        "voice.line.interaction.482f1c96da009b47": {
+          "assetId": "voice.line.interaction.482f1c96da009b47",
+          "label": "Orrin the miner · Honey stout"
+        },
+        "voice.line.interaction.231144e59c2d3d52": {
+          "assetId": "voice.line.interaction.231144e59c2d3d52",
+          "label": "Back to the wood · Look"
+        },
+        "voice.line.interaction.34409c0ebc2ea8ea": {
+          "assetId": "voice.line.interaction.34409c0ebc2ea8ea",
+          "label": "Bramblehollow · Look"
+        },
+        "voice.line.interaction.6910ccf251e283f0": {
+          "assetId": "voice.line.interaction.6910ccf251e283f0",
+          "label": "Dreamcap mushrooms · Look"
+        },
+        "voice.line.interaction.6ef6722a6aa23c3e": {
+          "assetId": "voice.line.interaction.6ef6722a6aa23c3e",
+          "label": "Dreamcap mushrooms · Climbing rope"
+        },
+        "voice.line.interaction.191fb1461bc7544f": {
+          "assetId": "voice.line.interaction.191fb1461bc7544f",
+          "label": "Dreamcap mushrooms · Copper coin"
+        },
+        "voice.line.interaction.c47866d8a9747f84": {
+          "assetId": "voice.line.interaction.c47866d8a9747f84",
+          "label": "Dreamcap mushrooms · Dreamcap"
+        },
+        "voice.line.interaction.4aeabf7bbd787f77": {
+          "assetId": "voice.line.interaction.4aeabf7bbd787f77",
+          "label": "Dreamcap mushrooms · Dreamcap stout"
+        },
+        "voice.line.interaction.3b5e8b4b906c80af": {
+          "assetId": "voice.line.interaction.3b5e8b4b906c80af",
+          "label": "Dreamcap mushrooms · Goldroot pickaxe"
+        },
+        "voice.line.interaction.44e44d6bd31eb345": {
+          "assetId": "voice.line.interaction.44e44d6bd31eb345",
+          "label": "Dreamcap mushrooms · Honey stout"
+        },
+        "voice.line.interaction.c239ff16ffc934ae": {
+          "assetId": "voice.line.interaction.c239ff16ffc934ae",
+          "label": "Forest path · Look"
+        },
+        "voice.line.interaction.0492ff22c892ddbe": {
+          "assetId": "voice.line.interaction.0492ff22c892ddbe",
+          "label": "Gold seam · Look"
+        },
+        "voice.line.interaction.8804aef3d3d0250f": {
+          "assetId": "voice.line.interaction.8804aef3d3d0250f",
+          "label": "Gold seam · Interact"
+        },
+        "voice.line.interaction.5646ad851f27c964": {
+          "assetId": "voice.line.interaction.5646ad851f27c964",
+          "label": "Gold seam · Climbing rope"
+        },
+        "voice.line.interaction.1b04e3afad782859": {
+          "assetId": "voice.line.interaction.1b04e3afad782859",
+          "label": "Gold seam · Copper coin"
+        },
+        "voice.line.interaction.749d6a7f376d9962": {
+          "assetId": "voice.line.interaction.749d6a7f376d9962",
+          "label": "Gold seam · Dreamcap"
+        },
+        "voice.line.interaction.0ea63edb217a8e75": {
+          "assetId": "voice.line.interaction.0ea63edb217a8e75",
+          "label": "Gold seam · Dreamcap stout"
+        },
+        "voice.line.interaction.a8083c18e78b3011": {
+          "assetId": "voice.line.interaction.a8083c18e78b3011",
+          "label": "Gold seam · Goldroot pickaxe"
+        },
+        "voice.line.interaction.c558d2fb37658d2f": {
+          "assetId": "voice.line.interaction.c558d2fb37658d2f",
+          "label": "Gold seam · Honey stout"
+        },
+        "voice.line.interaction.03e325e77215787c": {
+          "assetId": "voice.line.interaction.03e325e77215787c",
+          "label": "Stew cauldron · Look"
+        },
+        "voice.line.interaction.7c2490edc332fed2": {
+          "assetId": "voice.line.interaction.7c2490edc332fed2",
+          "label": "Stew cauldron · Climbing rope"
+        },
+        "voice.line.interaction.446b32dcaa454613": {
+          "assetId": "voice.line.interaction.446b32dcaa454613",
+          "label": "Stew cauldron · Copper coin"
+        },
+        "voice.line.interaction.d6d0cc23b03483d0": {
+          "assetId": "voice.line.interaction.d6d0cc23b03483d0",
+          "label": "Stew cauldron · Dreamcap"
+        },
+        "voice.line.interaction.b50f08a1d28eecb3": {
+          "assetId": "voice.line.interaction.b50f08a1d28eecb3",
+          "label": "Stew cauldron · Goldroot pickaxe"
+        },
+        "voice.line.interaction.38f71152cb50a931": {
+          "assetId": "voice.line.interaction.38f71152cb50a931",
+          "label": "Stew cauldron · Honey stout"
+        },
+        "voice.line.interaction.52c25f58d2521ba8": {
+          "assetId": "voice.line.interaction.52c25f58d2521ba8",
+          "label": "Climbing rope · Look"
+        },
+        "voice.line.interaction.49bd99b8379368e7": {
+          "assetId": "voice.line.interaction.49bd99b8379368e7",
+          "label": "Climbing rope · Copper coin"
+        },
+        "voice.line.interaction.30e74c3f7047549c": {
+          "assetId": "voice.line.interaction.30e74c3f7047549c",
+          "label": "Climbing rope · Dreamcap"
+        },
+        "voice.line.interaction.318f4af874bb875f": {
+          "assetId": "voice.line.interaction.318f4af874bb875f",
+          "label": "Climbing rope · Dreamcap stout"
+        },
+        "voice.line.interaction.94b1b56ebe0a7537": {
+          "assetId": "voice.line.interaction.94b1b56ebe0a7537",
+          "label": "Climbing rope · Goldroot pickaxe"
+        },
+        "voice.line.interaction.bfcfe0657de80dad": {
+          "assetId": "voice.line.interaction.bfcfe0657de80dad",
+          "label": "Climbing rope · Honey stout"
+        },
+        "voice.line.interaction.7f34477cb85cf5dd": {
+          "assetId": "voice.line.interaction.7f34477cb85cf5dd",
+          "label": "Copper coin · Look"
+        },
+        "voice.line.interaction.172d9e3de9951bad": {
+          "assetId": "voice.line.interaction.172d9e3de9951bad",
+          "label": "Copper coin · Climbing rope"
+        },
+        "voice.line.interaction.652e830b16f731d7": {
+          "assetId": "voice.line.interaction.652e830b16f731d7",
+          "label": "Copper coin · Dreamcap"
+        },
+        "voice.line.interaction.c5ff5494cd633912": {
+          "assetId": "voice.line.interaction.c5ff5494cd633912",
+          "label": "Copper coin · Dreamcap stout"
+        },
+        "voice.line.interaction.80982f3272966196": {
+          "assetId": "voice.line.interaction.80982f3272966196",
+          "label": "Copper coin · Goldroot pickaxe"
+        },
+        "voice.line.interaction.842b68fffa41edcc": {
+          "assetId": "voice.line.interaction.842b68fffa41edcc",
+          "label": "Copper coin · Honey stout"
+        },
+        "voice.line.interaction.4dd02ee36a9cf542": {
+          "assetId": "voice.line.interaction.4dd02ee36a9cf542",
+          "label": "Dreamcap · Look"
+        },
+        "voice.line.interaction.551b30110c99e510": {
+          "assetId": "voice.line.interaction.551b30110c99e510",
+          "label": "Dreamcap · Climbing rope"
+        },
+        "voice.line.interaction.e453f5b85d0d0c45": {
+          "assetId": "voice.line.interaction.e453f5b85d0d0c45",
+          "label": "Dreamcap · Copper coin"
+        },
+        "voice.line.interaction.d8779d30740b3181": {
+          "assetId": "voice.line.interaction.d8779d30740b3181",
+          "label": "Dreamcap · Dreamcap stout"
+        },
+        "voice.line.interaction.11931bc5319ff3dd": {
+          "assetId": "voice.line.interaction.11931bc5319ff3dd",
+          "label": "Dreamcap · Goldroot pickaxe"
+        },
+        "voice.line.interaction.041a8e933e4ac395": {
+          "assetId": "voice.line.interaction.041a8e933e4ac395",
+          "label": "Dreamcap stout · Look"
+        },
+        "voice.line.interaction.e98b40cd3d8d6145": {
+          "assetId": "voice.line.interaction.e98b40cd3d8d6145",
+          "label": "Dreamcap stout · Climbing rope"
+        },
+        "voice.line.interaction.af659aa2fdbe69a0": {
+          "assetId": "voice.line.interaction.af659aa2fdbe69a0",
+          "label": "Dreamcap stout · Copper coin"
+        },
+        "voice.line.interaction.816fa7c6a33bb00f": {
+          "assetId": "voice.line.interaction.816fa7c6a33bb00f",
+          "label": "Dreamcap stout · Dreamcap"
+        },
+        "voice.line.interaction.189549d0dd20c77e": {
+          "assetId": "voice.line.interaction.189549d0dd20c77e",
+          "label": "Dreamcap stout · Goldroot pickaxe"
+        },
+        "voice.line.interaction.f8b7925dda90abb4": {
+          "assetId": "voice.line.interaction.f8b7925dda90abb4",
+          "label": "Dreamcap stout · Honey stout"
+        },
+        "voice.line.interaction.7de6abacee0ebe9d": {
+          "assetId": "voice.line.interaction.7de6abacee0ebe9d",
+          "label": "Goldroot pickaxe · Look"
+        },
+        "voice.line.interaction.838400f711befe6d": {
+          "assetId": "voice.line.interaction.838400f711befe6d",
+          "label": "Goldroot pickaxe · Climbing rope"
+        },
+        "voice.line.interaction.56c7cb6bae68d9a8": {
+          "assetId": "voice.line.interaction.56c7cb6bae68d9a8",
+          "label": "Goldroot pickaxe · Copper coin"
+        },
+        "voice.line.interaction.5cce288d3be55b97": {
+          "assetId": "voice.line.interaction.5cce288d3be55b97",
+          "label": "Goldroot pickaxe · Dreamcap"
+        },
+        "voice.line.interaction.6ff9e8eee53c10d2": {
+          "assetId": "voice.line.interaction.6ff9e8eee53c10d2",
+          "label": "Goldroot pickaxe · Dreamcap stout"
+        },
+        "voice.line.interaction.04b7e9bc189c198c": {
+          "assetId": "voice.line.interaction.04b7e9bc189c198c",
+          "label": "Goldroot pickaxe · Honey stout"
+        },
+        "voice.line.interaction.739998b5dedad277": {
+          "assetId": "voice.line.interaction.739998b5dedad277",
+          "label": "Honey stout · Look"
+        },
+        "voice.line.interaction.e558d0c6482ef857": {
+          "assetId": "voice.line.interaction.e558d0c6482ef857",
+          "label": "Honey stout · Climbing rope"
+        },
+        "voice.line.interaction.5dd8af201e1b2fa6": {
+          "assetId": "voice.line.interaction.5dd8af201e1b2fa6",
+          "label": "Honey stout · Copper coin"
+        },
+        "voice.line.interaction.1a2e054caef0a8dc": {
+          "assetId": "voice.line.interaction.1a2e054caef0a8dc",
+          "label": "Honey stout · Dreamcap stout"
+        },
+        "voice.line.interaction.db76c6d0eb45cd04": {
+          "assetId": "voice.line.interaction.db76c6d0eb45cd04",
+          "label": "Honey stout · Goldroot pickaxe"
+        },
+        "voice.line.interaction.2b678acfae8d8528": {
+          "assetId": "voice.line.interaction.2b678acfae8d8528",
+          "label": "Cage door · Look"
+        },
+        "voice.line.interaction.3cce28994f2896d6": {
+          "assetId": "voice.line.interaction.3cce28994f2896d6",
+          "label": "Cage door · Climbing rope"
+        },
+        "voice.line.interaction.c4f8c934b284cd67": {
+          "assetId": "voice.line.interaction.c4f8c934b284cd67",
+          "label": "Cage door · Copper coin"
+        },
+        "voice.line.interaction.c6704bc7274f411c": {
+          "assetId": "voice.line.interaction.c6704bc7274f411c",
+          "label": "Cage door · Dreamcap"
+        },
+        "voice.line.interaction.a30e6a11fb2d80df": {
+          "assetId": "voice.line.interaction.a30e6a11fb2d80df",
+          "label": "Cage door · Dreamcap stout"
+        },
+        "voice.line.interaction.16c610ea6615d32d": {
+          "assetId": "voice.line.interaction.16c610ea6615d32d",
+          "label": "Cage door · Honey stout"
+        },
+        "voice.line.interaction.48d664168fe33e7f": {
+          "assetId": "voice.line.interaction.48d664168fe33e7f",
+          "label": "Climbing rope · Look"
+        },
+        "voice.line.interaction.b1b672376875227f": {
+          "assetId": "voice.line.interaction.b1b672376875227f",
+          "label": "Climbing rope · Climbing rope"
+        },
+        "voice.line.interaction.5984489e689fb7ee": {
+          "assetId": "voice.line.interaction.5984489e689fb7ee",
+          "label": "Climbing rope · Copper coin"
+        },
+        "voice.line.interaction.6ac8cb921df17ab9": {
+          "assetId": "voice.line.interaction.6ac8cb921df17ab9",
+          "label": "Climbing rope · Dreamcap"
+        },
+        "voice.line.interaction.68f88f5939505b54": {
+          "assetId": "voice.line.interaction.68f88f5939505b54",
+          "label": "Climbing rope · Dreamcap stout"
+        },
+        "voice.line.interaction.4997851d7388941c": {
+          "assetId": "voice.line.interaction.4997851d7388941c",
+          "label": "Climbing rope · Goldroot pickaxe"
+        },
+        "voice.line.interaction.2b47d69fb50ad542": {
+          "assetId": "voice.line.interaction.2b47d69fb50ad542",
+          "label": "Climbing rope · Honey stout"
+        },
+        "voice.line.interaction.b95e9288459f6c56": {
+          "assetId": "voice.line.interaction.b95e9288459f6c56",
+          "label": "Copper coin · Look"
+        },
+        "voice.line.interaction.268eb0cee72cd2fc": {
+          "assetId": "voice.line.interaction.268eb0cee72cd2fc",
+          "label": "Copper coin · Climbing rope"
+        },
+        "voice.line.interaction.6443c9bccf7b7411": {
+          "assetId": "voice.line.interaction.6443c9bccf7b7411",
+          "label": "Copper coin · Copper coin"
+        },
+        "voice.line.interaction.bb9732dde7d3157a": {
+          "assetId": "voice.line.interaction.bb9732dde7d3157a",
+          "label": "Copper coin · Dreamcap"
+        },
+        "voice.line.interaction.426b7aa6623b631d": {
+          "assetId": "voice.line.interaction.426b7aa6623b631d",
+          "label": "Copper coin · Dreamcap stout"
+        },
+        "voice.line.interaction.f2a897ece9a81399": {
+          "assetId": "voice.line.interaction.f2a897ece9a81399",
+          "label": "Copper coin · Goldroot pickaxe"
+        },
+        "voice.line.interaction.031601ca0ae28f57": {
+          "assetId": "voice.line.interaction.031601ca0ae28f57",
+          "label": "Copper coin · Honey stout"
+        },
+        "voice.line.interaction.9709cddf563dc3a2": {
+          "assetId": "voice.line.interaction.9709cddf563dc3a2",
+          "label": "Copper Tankard door · inside · Look"
+        },
+        "voice.line.interaction.9429aa516cbb20db": {
+          "assetId": "voice.line.interaction.9429aa516cbb20db",
+          "label": "Copper Tankard door · outside · Look"
+        },
+        "voice.line.interaction.ee8ecc8d05bd46f5": {
+          "assetId": "voice.line.interaction.ee8ecc8d05bd46f5",
+          "label": "Cottage door · inside · Look"
+        },
+        "voice.line.interaction.3bf5e371bacbf7c0": {
+          "assetId": "voice.line.interaction.3bf5e371bacbf7c0",
+          "label": "Cottage door · outside · Look"
+        },
+        "voice.line.interaction.ee6c5f159b853272": {
+          "assetId": "voice.line.interaction.ee6c5f159b853272",
+          "label": "Goldroot Mine gate · Look"
+        },
+        "voice.line.interaction.f26f7716fa86307c": {
+          "assetId": "voice.line.interaction.f26f7716fa86307c",
+          "label": "Orc camp gate · Look"
+        },
+        "voice.line.interaction.101c05c9fdd0db6c": {
+          "assetId": "voice.line.interaction.101c05c9fdd0db6c",
+          "label": "Orc camp gate · inside · Look"
+        },
+        "voice.line.interaction.9d6f0afb0eaf9ce9": {
+          "assetId": "voice.line.interaction.9d6f0afb0eaf9ce9",
+          "label": "Runed tool chest · Look"
+        },
+        "voice.line.interaction.fc2414d86ae47821": {
+          "assetId": "voice.line.interaction.fc2414d86ae47821",
+          "label": "Runed tool chest · Climbing rope"
+        },
+        "voice.line.interaction.c024903e546f018c": {
+          "assetId": "voice.line.interaction.c024903e546f018c",
+          "label": "Runed tool chest · Copper coin"
+        },
+        "voice.line.interaction.a4ac86277517c023": {
+          "assetId": "voice.line.interaction.a4ac86277517c023",
+          "label": "Runed tool chest · Dreamcap"
+        },
+        "voice.line.interaction.4d5723fea42abd26": {
+          "assetId": "voice.line.interaction.4d5723fea42abd26",
+          "label": "Runed tool chest · Dreamcap stout"
+        },
+        "voice.line.interaction.bd50bfe5cf73b7da": {
+          "assetId": "voice.line.interaction.bd50bfe5cf73b7da",
+          "label": "Runed tool chest · Goldroot pickaxe"
+        },
+        "voice.line.interaction.bf9293e8939c1e08": {
+          "assetId": "voice.line.interaction.bf9293e8939c1e08",
+          "label": "Runed tool chest · Honey stout"
+        }
+      }
     },
     "voice.elder": {
       "id": "voice.elder",
@@ -10520,6 +11018,1370 @@
         "forest",
         "cursor"
       ]
+    },
+    "voice.line.interaction.22bf93240c78e2ed": {
+      "id": "voice.line.interaction.22bf93240c78e2ed",
+      "kind": "voice-line",
+      "prompt": "The oldest beard in Bramblehollow. He knows every story.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The oldest beard in Bramblehollow. He knows every story."
+      }
+    },
+    "voice.line.interaction.4d94f9bfc6d1749d": {
+      "id": "voice.line.interaction.4d94f9bfc6d1749d",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.86cb8fc6ca031118": {
+      "id": "voice.line.interaction.86cb8fc6ca031118",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.22be086b4f145e67": {
+      "id": "voice.line.interaction.22be086b4f145e67",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.01e482d54189c142": {
+      "id": "voice.line.interaction.01e482d54189c142",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.63536d4563c7c9e6": {
+      "id": "voice.line.interaction.63536d4563c7c9e6",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.e3ab96a1d90c5f1c": {
+      "id": "voice.line.interaction.e3ab96a1d90c5f1c",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.fc1880f66ba309f0": {
+      "id": "voice.line.interaction.fc1880f66ba309f0",
+      "kind": "voice-line",
+      "prompt": "An enormous orc with a well-worn route between the cage and the stew.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An enormous orc with a well-worn route between the cage and the stew."
+      }
+    },
+    "voice.line.interaction.43752f855987864f": {
+      "id": "voice.line.interaction.43752f855987864f",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.cd0b439a2208d184": {
+      "id": "voice.line.interaction.cd0b439a2208d184",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.59e849786fe74577": {
+      "id": "voice.line.interaction.59e849786fe74577",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.97ca58039f69e6af": {
+      "id": "voice.line.interaction.97ca58039f69e6af",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.f45bd2e1c0b3a945": {
+      "id": "voice.line.interaction.f45bd2e1c0b3a945",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.7386bca48ed74a6a": {
+      "id": "voice.line.interaction.7386bca48ed74a6a",
+      "kind": "voice-line",
+      "prompt": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
+      }
+    },
+    "voice.line.interaction.04b6a13ff8b45818": {
+      "id": "voice.line.interaction.04b6a13ff8b45818",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.a099d65e8705d7ad": {
+      "id": "voice.line.interaction.a099d65e8705d7ad",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.5d0c7e053095d62e": {
+      "id": "voice.line.interaction.5d0c7e053095d62e",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.5a90a869a78532d9": {
+      "id": "voice.line.interaction.5a90a869a78532d9",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.167b4a01a2701d7b": {
+      "id": "voice.line.interaction.167b4a01a2701d7b",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.d91e516891111570": {
+      "id": "voice.line.interaction.d91e516891111570",
+      "kind": "voice-line",
+      "prompt": "A brewer, a storyteller, and a formidable keeper of tabs.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A brewer, a storyteller, and a formidable keeper of tabs."
+      }
+    },
+    "voice.line.interaction.dd184d49633e98be": {
+      "id": "voice.line.interaction.dd184d49633e98be",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.6f8725687472e404": {
+      "id": "voice.line.interaction.6f8725687472e404",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.f48c5a0f6c9ca0f7": {
+      "id": "voice.line.interaction.f48c5a0f6c9ca0f7",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c92aea303c254a2f": {
+      "id": "voice.line.interaction.c92aea303c254a2f",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.04c8230c44cfe0c5": {
+      "id": "voice.line.interaction.04c8230c44cfe0c5",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.eeed6b0b8e442f46": {
+      "id": "voice.line.interaction.eeed6b0b8e442f46",
+      "kind": "voice-line",
+      "prompt": "Orrin warms his boots and guards the mine’s secrets.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Orrin warms his boots and guards the mine’s secrets."
+      }
+    },
+    "voice.line.interaction.a15a3638b59a768c": {
+      "id": "voice.line.interaction.a15a3638b59a768c",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.4827d4785b6b0ea1": {
+      "id": "voice.line.interaction.4827d4785b6b0ea1",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.cba6ee9c13980baa": {
+      "id": "voice.line.interaction.cba6ee9c13980baa",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c7e21d5617e8eced": {
+      "id": "voice.line.interaction.c7e21d5617e8eced",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.3ceacffa41427889": {
+      "id": "voice.line.interaction.3ceacffa41427889",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.482f1c96da009b47": {
+      "id": "voice.line.interaction.482f1c96da009b47",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.231144e59c2d3d52": {
+      "id": "voice.line.interaction.231144e59c2d3d52",
+      "kind": "voice-line",
+      "prompt": "Cool air drifts in from the forest.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cool air drifts in from the forest."
+      }
+    },
+    "voice.line.interaction.34409c0ebc2ea8ea": {
+      "id": "voice.line.interaction.34409c0ebc2ea8ea",
+      "kind": "voice-line",
+      "prompt": "The path home winds between the roots.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The path home winds between the roots."
+      }
+    },
+    "voice.line.interaction.6910ccf251e283f0": {
+      "id": "voice.line.interaction.6910ccf251e283f0",
+      "kind": "voice-line",
+      "prompt": "Violet caps with silver spots. Mara will know what they do.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Violet caps with silver spots. Mara will know what they do."
+      }
+    },
+    "voice.line.interaction.6ef6722a6aa23c3e": {
+      "id": "voice.line.interaction.6ef6722a6aa23c3e",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.191fb1461bc7544f": {
+      "id": "voice.line.interaction.191fb1461bc7544f",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c47866d8a9747f84": {
+      "id": "voice.line.interaction.c47866d8a9747f84",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.4aeabf7bbd787f77": {
+      "id": "voice.line.interaction.4aeabf7bbd787f77",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.3b5e8b4b906c80af": {
+      "id": "voice.line.interaction.3b5e8b4b906c80af",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.44e44d6bd31eb345": {
+      "id": "voice.line.interaction.44e44d6bd31eb345",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c239ff16ffc934ae": {
+      "id": "voice.line.interaction.c239ff16ffc934ae",
+      "kind": "voice-line",
+      "prompt": "Fresh orc tracks head east beneath the ancient trees.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Fresh orc tracks head east beneath the ancient trees."
+      }
+    },
+    "voice.line.interaction.0492ff22c892ddbe": {
+      "id": "voice.line.interaction.0492ff22c892ddbe",
+      "kind": "voice-line",
+      "prompt": "All that glitters. It can wait until the king is safe.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "All that glitters. It can wait until the king is safe."
+      }
+    },
+    "voice.line.interaction.8804aef3d3d0250f": {
+      "id": "voice.line.interaction.8804aef3d3d0250f",
+      "kind": "voice-line",
+      "prompt": "All that glitters. It can wait until the king is safe.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "All that glitters. It can wait until the king is safe."
+      }
+    },
+    "voice.line.interaction.5646ad851f27c964": {
+      "id": "voice.line.interaction.5646ad851f27c964",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.1b04e3afad782859": {
+      "id": "voice.line.interaction.1b04e3afad782859",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.749d6a7f376d9962": {
+      "id": "voice.line.interaction.749d6a7f376d9962",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.0ea63edb217a8e75": {
+      "id": "voice.line.interaction.0ea63edb217a8e75",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.a8083c18e78b3011": {
+      "id": "voice.line.interaction.a8083c18e78b3011",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c558d2fb37658d2f": {
+      "id": "voice.line.interaction.c558d2fb37658d2f",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.03e325e77215787c": {
+      "id": "voice.line.interaction.03e325e77215787c",
+      "kind": "voice-line",
+      "prompt": "The orcs’ supper. Even a sleeping potion would improve it.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The orcs’ supper. Even a sleeping potion would improve it."
+      }
+    },
+    "voice.line.interaction.7c2490edc332fed2": {
+      "id": "voice.line.interaction.7c2490edc332fed2",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.446b32dcaa454613": {
+      "id": "voice.line.interaction.446b32dcaa454613",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.d6d0cc23b03483d0": {
+      "id": "voice.line.interaction.d6d0cc23b03483d0",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.b50f08a1d28eecb3": {
+      "id": "voice.line.interaction.b50f08a1d28eecb3",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.38f71152cb50a931": {
+      "id": "voice.line.interaction.38f71152cb50a931",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.52c25f58d2521ba8": {
+      "id": "voice.line.interaction.52c25f58d2521ba8",
+      "kind": "voice-line",
+      "prompt": "Strong dwarven rope. A few good knots should hold even an orc.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Strong dwarven rope. A few good knots should hold even an orc."
+      }
+    },
+    "voice.line.interaction.49bd99b8379368e7": {
+      "id": "voice.line.interaction.49bd99b8379368e7",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.30e74c3f7047549c": {
+      "id": "voice.line.interaction.30e74c3f7047549c",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.318f4af874bb875f": {
+      "id": "voice.line.interaction.318f4af874bb875f",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.94b1b56ebe0a7537": {
+      "id": "voice.line.interaction.94b1b56ebe0a7537",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.bfcfe0657de80dad": {
+      "id": "voice.line.interaction.bfcfe0657de80dad",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.7f34477cb85cf5dd": {
+      "id": "voice.line.interaction.7f34477cb85cf5dd",
+      "kind": "voice-line",
+      "prompt": "One copper. A small fortune before breakfast.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "One copper. A small fortune before breakfast."
+      }
+    },
+    "voice.line.interaction.172d9e3de9951bad": {
+      "id": "voice.line.interaction.172d9e3de9951bad",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.652e830b16f731d7": {
+      "id": "voice.line.interaction.652e830b16f731d7",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.c5ff5494cd633912": {
+      "id": "voice.line.interaction.c5ff5494cd633912",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.80982f3272966196": {
+      "id": "voice.line.interaction.80982f3272966196",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.842b68fffa41edcc": {
+      "id": "voice.line.interaction.842b68fffa41edcc",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.4dd02ee36a9cf542": {
+      "id": "voice.line.interaction.4dd02ee36a9cf542",
+      "kind": "voice-line",
+      "prompt": "A harmless sleeping mushroom. Best served in a drink.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A harmless sleeping mushroom. Best served in a drink."
+      }
+    },
+    "voice.line.interaction.551b30110c99e510": {
+      "id": "voice.line.interaction.551b30110c99e510",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.e453f5b85d0d0c45": {
+      "id": "voice.line.interaction.e453f5b85d0d0c45",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.d8779d30740b3181": {
+      "id": "voice.line.interaction.d8779d30740b3181",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.11931bc5319ff3dd": {
+      "id": "voice.line.interaction.11931bc5319ff3dd",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.041a8e933e4ac395": {
+      "id": "voice.line.interaction.041a8e933e4ac395",
+      "kind": "voice-line",
+      "prompt": "An exceptionally relaxing brew.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An exceptionally relaxing brew."
+      }
+    },
+    "voice.line.interaction.e98b40cd3d8d6145": {
+      "id": "voice.line.interaction.e98b40cd3d8d6145",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.af659aa2fdbe69a0": {
+      "id": "voice.line.interaction.af659aa2fdbe69a0",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.816fa7c6a33bb00f": {
+      "id": "voice.line.interaction.816fa7c6a33bb00f",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.189549d0dd20c77e": {
+      "id": "voice.line.interaction.189549d0dd20c77e",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.f8b7925dda90abb4": {
+      "id": "voice.line.interaction.f8b7925dda90abb4",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.7de6abacee0ebe9d": {
+      "id": "voice.line.interaction.7de6abacee0ebe9d",
+      "kind": "voice-line",
+      "prompt": "The dwarven answer to a stubborn lock.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The dwarven answer to a stubborn lock."
+      }
+    },
+    "voice.line.interaction.838400f711befe6d": {
+      "id": "voice.line.interaction.838400f711befe6d",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.56c7cb6bae68d9a8": {
+      "id": "voice.line.interaction.56c7cb6bae68d9a8",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.5cce288d3be55b97": {
+      "id": "voice.line.interaction.5cce288d3be55b97",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.6ff9e8eee53c10d2": {
+      "id": "voice.line.interaction.6ff9e8eee53c10d2",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.04b7e9bc189c198c": {
+      "id": "voice.line.interaction.04b7e9bc189c198c",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.739998b5dedad277": {
+      "id": "voice.line.interaction.739998b5dedad277",
+      "kind": "voice-line",
+      "prompt": "Orcs cannot resist the smell. Combine it with something soporific.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Orcs cannot resist the smell. Combine it with something soporific."
+      }
+    },
+    "voice.line.interaction.e558d0c6482ef857": {
+      "id": "voice.line.interaction.e558d0c6482ef857",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.5dd8af201e1b2fa6": {
+      "id": "voice.line.interaction.5dd8af201e1b2fa6",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.1a2e054caef0a8dc": {
+      "id": "voice.line.interaction.1a2e054caef0a8dc",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.db76c6d0eb45cd04": {
+      "id": "voice.line.interaction.db76c6d0eb45cd04",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here."
+      }
+    },
+    "voice.line.interaction.2b678acfae8d8528": {
+      "id": "voice.line.interaction.2b678acfae8d8528",
+      "kind": "voice-line",
+      "prompt": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A heavy lock keeps the king in this wooden cage. One good strike should open it."
+      }
+    },
+    "voice.line.interaction.3cce28994f2896d6": {
+      "id": "voice.line.interaction.3cce28994f2896d6",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c4f8c934b284cd67": {
+      "id": "voice.line.interaction.c4f8c934b284cd67",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c6704bc7274f411c": {
+      "id": "voice.line.interaction.c6704bc7274f411c",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.a30e6a11fb2d80df": {
+      "id": "voice.line.interaction.a30e6a11fb2d80df",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.16c610ea6615d32d": {
+      "id": "voice.line.interaction.16c610ea6615d32d",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.48d664168fe33e7f": {
+      "id": "voice.line.interaction.48d664168fe33e7f",
+      "kind": "voice-line",
+      "prompt": "A coil of good dwarven climbing rope on the old chest.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A coil of good dwarven climbing rope on the old chest."
+      }
+    },
+    "voice.line.interaction.b1b672376875227f": {
+      "id": "voice.line.interaction.b1b672376875227f",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.5984489e689fb7ee": {
+      "id": "voice.line.interaction.5984489e689fb7ee",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.6ac8cb921df17ab9": {
+      "id": "voice.line.interaction.6ac8cb921df17ab9",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.68f88f5939505b54": {
+      "id": "voice.line.interaction.68f88f5939505b54",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.4997851d7388941c": {
+      "id": "voice.line.interaction.4997851d7388941c",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.2b47d69fb50ad542": {
+      "id": "voice.line.interaction.2b47d69fb50ad542",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.b95e9288459f6c56": {
+      "id": "voice.line.interaction.b95e9288459f6c56",
+      "kind": "voice-line",
+      "prompt": "My emergency breakfast fund.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "My emergency breakfast fund."
+      }
+    },
+    "voice.line.interaction.268eb0cee72cd2fc": {
+      "id": "voice.line.interaction.268eb0cee72cd2fc",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.6443c9bccf7b7411": {
+      "id": "voice.line.interaction.6443c9bccf7b7411",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.bb9732dde7d3157a": {
+      "id": "voice.line.interaction.bb9732dde7d3157a",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.426b7aa6623b631d": {
+      "id": "voice.line.interaction.426b7aa6623b631d",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.f2a897ece9a81399": {
+      "id": "voice.line.interaction.f2a897ece9a81399",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.031601ca0ae28f57": {
+      "id": "voice.line.interaction.031601ca0ae28f57",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.9709cddf563dc3a2": {
+      "id": "voice.line.interaction.9709cddf563dc3a2",
+      "kind": "voice-line",
+      "prompt": "The morning air might clear my head.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The morning air might clear my head."
+      }
+    },
+    "voice.line.interaction.9429aa516cbb20db": {
+      "id": "voice.line.interaction.9429aa516cbb20db",
+      "kind": "voice-line",
+      "prompt": "The windows glow with breakfast, gossip, and questionable decisions.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The windows glow with breakfast, gossip, and questionable decisions."
+      }
+    },
+    "voice.line.interaction.ee8ecc8d05bd46f5": {
+      "id": "voice.line.interaction.ee8ecc8d05bd46f5",
+      "kind": "voice-line",
+      "prompt": "There is a king out there who needs me.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "There is a king out there who needs me."
+      }
+    },
+    "voice.line.interaction.3bf5e371bacbf7c0": {
+      "id": "voice.line.interaction.3bf5e371bacbf7c0",
+      "kind": "voice-line",
+      "prompt": "Home. I should take supplies before venturing into the wood.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Home. I should take supplies before venturing into the wood."
+      }
+    },
+    "voice.line.interaction.ee6c5f159b853272": {
+      "id": "voice.line.interaction.ee6c5f159b853272",
+      "kind": "voice-line",
+      "prompt": "A lantern flickers in the old gold mine.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A lantern flickers in the old gold mine."
+      }
+    },
+    "voice.line.interaction.f26f7716fa86307c": {
+      "id": "voice.line.interaction.f26f7716fa86307c",
+      "kind": "voice-line",
+      "prompt": "A crooked palisade. Smoke. Terrible singing.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A crooked palisade. Smoke. Terrible singing."
+      }
+    },
+    "voice.line.interaction.101c05c9fdd0db6c": {
+      "id": "voice.line.interaction.101c05c9fdd0db6c",
+      "kind": "voice-line",
+      "prompt": "A discreet retreat is also a kind of strategy.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A discreet retreat is also a kind of strategy."
+      }
+    },
+    "voice.line.interaction.9d6f0afb0eaf9ce9": {
+      "id": "voice.line.interaction.9d6f0afb0eaf9ce9",
+      "kind": "voice-line",
+      "prompt": "The inscription reads: “What does the mountain remember?”",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The inscription reads: “What does the mountain remember?”"
+      }
+    },
+    "voice.line.interaction.fc2414d86ae47821": {
+      "id": "voice.line.interaction.fc2414d86ae47821",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.c024903e546f018c": {
+      "id": "voice.line.interaction.c024903e546f018c",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.a4ac86277517c023": {
+      "id": "voice.line.interaction.a4ac86277517c023",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.4d5723fea42abd26": {
+      "id": "voice.line.interaction.4d5723fea42abd26",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.bd50bfe5cf73b7da": {
+      "id": "voice.line.interaction.bd50bfe5cf73b7da",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
+    },
+    "voice.line.interaction.bf9293e8939c1e08": {
+      "id": "voice.line.interaction.bf9293e8939c1e08",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here."
+      }
     }
   },
   "styleGuide": {
@@ -11261,6 +13123,378 @@
     "cursor.crosshair.idle": [
       "Graphics",
       "Cursors"
+    ],
+    "voice.line.interaction.22bf93240c78e2ed": [
+      "Voices"
+    ],
+    "voice.line.interaction.4d94f9bfc6d1749d": [
+      "Voices"
+    ],
+    "voice.line.interaction.86cb8fc6ca031118": [
+      "Voices"
+    ],
+    "voice.line.interaction.22be086b4f145e67": [
+      "Voices"
+    ],
+    "voice.line.interaction.01e482d54189c142": [
+      "Voices"
+    ],
+    "voice.line.interaction.63536d4563c7c9e6": [
+      "Voices"
+    ],
+    "voice.line.interaction.e3ab96a1d90c5f1c": [
+      "Voices"
+    ],
+    "voice.line.interaction.fc1880f66ba309f0": [
+      "Voices"
+    ],
+    "voice.line.interaction.43752f855987864f": [
+      "Voices"
+    ],
+    "voice.line.interaction.cd0b439a2208d184": [
+      "Voices"
+    ],
+    "voice.line.interaction.59e849786fe74577": [
+      "Voices"
+    ],
+    "voice.line.interaction.97ca58039f69e6af": [
+      "Voices"
+    ],
+    "voice.line.interaction.f45bd2e1c0b3a945": [
+      "Voices"
+    ],
+    "voice.line.interaction.7386bca48ed74a6a": [
+      "Voices"
+    ],
+    "voice.line.interaction.04b6a13ff8b45818": [
+      "Voices"
+    ],
+    "voice.line.interaction.a099d65e8705d7ad": [
+      "Voices"
+    ],
+    "voice.line.interaction.5d0c7e053095d62e": [
+      "Voices"
+    ],
+    "voice.line.interaction.5a90a869a78532d9": [
+      "Voices"
+    ],
+    "voice.line.interaction.167b4a01a2701d7b": [
+      "Voices"
+    ],
+    "voice.line.interaction.d91e516891111570": [
+      "Voices"
+    ],
+    "voice.line.interaction.dd184d49633e98be": [
+      "Voices"
+    ],
+    "voice.line.interaction.6f8725687472e404": [
+      "Voices"
+    ],
+    "voice.line.interaction.f48c5a0f6c9ca0f7": [
+      "Voices"
+    ],
+    "voice.line.interaction.c92aea303c254a2f": [
+      "Voices"
+    ],
+    "voice.line.interaction.04c8230c44cfe0c5": [
+      "Voices"
+    ],
+    "voice.line.interaction.eeed6b0b8e442f46": [
+      "Voices"
+    ],
+    "voice.line.interaction.a15a3638b59a768c": [
+      "Voices"
+    ],
+    "voice.line.interaction.4827d4785b6b0ea1": [
+      "Voices"
+    ],
+    "voice.line.interaction.cba6ee9c13980baa": [
+      "Voices"
+    ],
+    "voice.line.interaction.c7e21d5617e8eced": [
+      "Voices"
+    ],
+    "voice.line.interaction.3ceacffa41427889": [
+      "Voices"
+    ],
+    "voice.line.interaction.482f1c96da009b47": [
+      "Voices"
+    ],
+    "voice.line.interaction.231144e59c2d3d52": [
+      "Voices"
+    ],
+    "voice.line.interaction.34409c0ebc2ea8ea": [
+      "Voices"
+    ],
+    "voice.line.interaction.6910ccf251e283f0": [
+      "Voices"
+    ],
+    "voice.line.interaction.6ef6722a6aa23c3e": [
+      "Voices"
+    ],
+    "voice.line.interaction.191fb1461bc7544f": [
+      "Voices"
+    ],
+    "voice.line.interaction.c47866d8a9747f84": [
+      "Voices"
+    ],
+    "voice.line.interaction.4aeabf7bbd787f77": [
+      "Voices"
+    ],
+    "voice.line.interaction.3b5e8b4b906c80af": [
+      "Voices"
+    ],
+    "voice.line.interaction.44e44d6bd31eb345": [
+      "Voices"
+    ],
+    "voice.line.interaction.c239ff16ffc934ae": [
+      "Voices"
+    ],
+    "voice.line.interaction.0492ff22c892ddbe": [
+      "Voices"
+    ],
+    "voice.line.interaction.8804aef3d3d0250f": [
+      "Voices"
+    ],
+    "voice.line.interaction.5646ad851f27c964": [
+      "Voices"
+    ],
+    "voice.line.interaction.1b04e3afad782859": [
+      "Voices"
+    ],
+    "voice.line.interaction.749d6a7f376d9962": [
+      "Voices"
+    ],
+    "voice.line.interaction.0ea63edb217a8e75": [
+      "Voices"
+    ],
+    "voice.line.interaction.a8083c18e78b3011": [
+      "Voices"
+    ],
+    "voice.line.interaction.c558d2fb37658d2f": [
+      "Voices"
+    ],
+    "voice.line.interaction.03e325e77215787c": [
+      "Voices"
+    ],
+    "voice.line.interaction.7c2490edc332fed2": [
+      "Voices"
+    ],
+    "voice.line.interaction.446b32dcaa454613": [
+      "Voices"
+    ],
+    "voice.line.interaction.d6d0cc23b03483d0": [
+      "Voices"
+    ],
+    "voice.line.interaction.b50f08a1d28eecb3": [
+      "Voices"
+    ],
+    "voice.line.interaction.38f71152cb50a931": [
+      "Voices"
+    ],
+    "voice.line.interaction.52c25f58d2521ba8": [
+      "Voices"
+    ],
+    "voice.line.interaction.49bd99b8379368e7": [
+      "Voices"
+    ],
+    "voice.line.interaction.30e74c3f7047549c": [
+      "Voices"
+    ],
+    "voice.line.interaction.318f4af874bb875f": [
+      "Voices"
+    ],
+    "voice.line.interaction.94b1b56ebe0a7537": [
+      "Voices"
+    ],
+    "voice.line.interaction.bfcfe0657de80dad": [
+      "Voices"
+    ],
+    "voice.line.interaction.7f34477cb85cf5dd": [
+      "Voices"
+    ],
+    "voice.line.interaction.172d9e3de9951bad": [
+      "Voices"
+    ],
+    "voice.line.interaction.652e830b16f731d7": [
+      "Voices"
+    ],
+    "voice.line.interaction.c5ff5494cd633912": [
+      "Voices"
+    ],
+    "voice.line.interaction.80982f3272966196": [
+      "Voices"
+    ],
+    "voice.line.interaction.842b68fffa41edcc": [
+      "Voices"
+    ],
+    "voice.line.interaction.4dd02ee36a9cf542": [
+      "Voices"
+    ],
+    "voice.line.interaction.551b30110c99e510": [
+      "Voices"
+    ],
+    "voice.line.interaction.e453f5b85d0d0c45": [
+      "Voices"
+    ],
+    "voice.line.interaction.d8779d30740b3181": [
+      "Voices"
+    ],
+    "voice.line.interaction.11931bc5319ff3dd": [
+      "Voices"
+    ],
+    "voice.line.interaction.041a8e933e4ac395": [
+      "Voices"
+    ],
+    "voice.line.interaction.e98b40cd3d8d6145": [
+      "Voices"
+    ],
+    "voice.line.interaction.af659aa2fdbe69a0": [
+      "Voices"
+    ],
+    "voice.line.interaction.816fa7c6a33bb00f": [
+      "Voices"
+    ],
+    "voice.line.interaction.189549d0dd20c77e": [
+      "Voices"
+    ],
+    "voice.line.interaction.f8b7925dda90abb4": [
+      "Voices"
+    ],
+    "voice.line.interaction.7de6abacee0ebe9d": [
+      "Voices"
+    ],
+    "voice.line.interaction.838400f711befe6d": [
+      "Voices"
+    ],
+    "voice.line.interaction.56c7cb6bae68d9a8": [
+      "Voices"
+    ],
+    "voice.line.interaction.5cce288d3be55b97": [
+      "Voices"
+    ],
+    "voice.line.interaction.6ff9e8eee53c10d2": [
+      "Voices"
+    ],
+    "voice.line.interaction.04b7e9bc189c198c": [
+      "Voices"
+    ],
+    "voice.line.interaction.739998b5dedad277": [
+      "Voices"
+    ],
+    "voice.line.interaction.e558d0c6482ef857": [
+      "Voices"
+    ],
+    "voice.line.interaction.5dd8af201e1b2fa6": [
+      "Voices"
+    ],
+    "voice.line.interaction.1a2e054caef0a8dc": [
+      "Voices"
+    ],
+    "voice.line.interaction.db76c6d0eb45cd04": [
+      "Voices"
+    ],
+    "voice.line.interaction.2b678acfae8d8528": [
+      "Voices"
+    ],
+    "voice.line.interaction.3cce28994f2896d6": [
+      "Voices"
+    ],
+    "voice.line.interaction.c4f8c934b284cd67": [
+      "Voices"
+    ],
+    "voice.line.interaction.c6704bc7274f411c": [
+      "Voices"
+    ],
+    "voice.line.interaction.a30e6a11fb2d80df": [
+      "Voices"
+    ],
+    "voice.line.interaction.16c610ea6615d32d": [
+      "Voices"
+    ],
+    "voice.line.interaction.48d664168fe33e7f": [
+      "Voices"
+    ],
+    "voice.line.interaction.b1b672376875227f": [
+      "Voices"
+    ],
+    "voice.line.interaction.5984489e689fb7ee": [
+      "Voices"
+    ],
+    "voice.line.interaction.6ac8cb921df17ab9": [
+      "Voices"
+    ],
+    "voice.line.interaction.68f88f5939505b54": [
+      "Voices"
+    ],
+    "voice.line.interaction.4997851d7388941c": [
+      "Voices"
+    ],
+    "voice.line.interaction.2b47d69fb50ad542": [
+      "Voices"
+    ],
+    "voice.line.interaction.b95e9288459f6c56": [
+      "Voices"
+    ],
+    "voice.line.interaction.268eb0cee72cd2fc": [
+      "Voices"
+    ],
+    "voice.line.interaction.6443c9bccf7b7411": [
+      "Voices"
+    ],
+    "voice.line.interaction.bb9732dde7d3157a": [
+      "Voices"
+    ],
+    "voice.line.interaction.426b7aa6623b631d": [
+      "Voices"
+    ],
+    "voice.line.interaction.f2a897ece9a81399": [
+      "Voices"
+    ],
+    "voice.line.interaction.031601ca0ae28f57": [
+      "Voices"
+    ],
+    "voice.line.interaction.9709cddf563dc3a2": [
+      "Voices"
+    ],
+    "voice.line.interaction.9429aa516cbb20db": [
+      "Voices"
+    ],
+    "voice.line.interaction.ee8ecc8d05bd46f5": [
+      "Voices"
+    ],
+    "voice.line.interaction.3bf5e371bacbf7c0": [
+      "Voices"
+    ],
+    "voice.line.interaction.ee6c5f159b853272": [
+      "Voices"
+    ],
+    "voice.line.interaction.f26f7716fa86307c": [
+      "Voices"
+    ],
+    "voice.line.interaction.101c05c9fdd0db6c": [
+      "Voices"
+    ],
+    "voice.line.interaction.9d6f0afb0eaf9ce9": [
+      "Voices"
+    ],
+    "voice.line.interaction.fc2414d86ae47821": [
+      "Voices"
+    ],
+    "voice.line.interaction.c024903e546f018c": [
+      "Voices"
+    ],
+    "voice.line.interaction.a4ac86277517c023": [
+      "Voices"
+    ],
+    "voice.line.interaction.4d5723fea42abd26": [
+      "Voices"
+    ],
+    "voice.line.interaction.bd50bfe5cf73b7da": [
+      "Voices"
+    ],
+    "voice.line.interaction.bf9293e8939c1e08": [
+      "Voices"
     ]
   }
 }

@@ -16,7 +16,7 @@ The repository follows the same four-package structure as the existing libraries
 | --- | --- |
 | [`@pointlesh/core`](packages/core/README.md) | Native scene prefabs, polygon navigation, deterministic characters, behavior dispatch, dialogue/cutscene checkpoints and versioned saves. No Phaser dependency. |
 | [`@pointlesh/designer`](packages/designer/README.md) | Engine-independent adventure inspector composed with the native Scene Designer. |
-| [`@pointlesh/dev`](packages/dev/README.md) | Local authoring services for all three existing libraries, project JSON persistence and CLI. |
+| [`@pointlesh/dev`](packages/dev/README.md) | Local asset, scene, dialog and interaction authoring services, project JSON persistence and CLI. |
 | [`@pointlesh/phaser`](packages/phaser/README.md) | Sprite, camera, walk-behind mask, asset, speech and native designer adapters for Phaser 4. |
 
 ## Run the forest adventure
@@ -38,7 +38,7 @@ To promote designer edits to project files, run this in a second terminal:
 npm run dev:server
 ```
 
-The local services use ports **4287** (AI Assets), **4288** (Scene Designer), and **4289** (Dialog Designer). The demo's designer panels target those addresses. Start or load a game, then click **Designer** to edit the scene. The older `?designer=1` URL also opens the title screen and no longer skips the intro. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
+The local services use ports **4287** (AI Assets), **4288** (Scene Designer), **4289** (Dialog Designer), and **4290** (Interactions). The demo's designer panels target those addresses. Start or load a game, then click **Designer** to edit the scene. The older `?designer=1` URL also opens the title screen and no longer skips the intro. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
 
 Keep the preview web server running while using the designer: Current images and version previews load from its public art files. Opening **Assets** keeps the game playing, including walking, speaking, and camera follow. Scene and prefab panels reserve canvas gestures and camera navigation for editing while animations and simulation keep running. Designer drawings appear above game UI without hiding it; typing in designer fields does not move the character.
 
@@ -61,6 +61,8 @@ Dialogs show an animated close-up face above the speech card. **Assets → Graph
 Speaking cutscene characters also show their portrait at the top left. Door movement overlaps the safe approach and departure walk, and the rescue cutscene inherits Borin's live position and camera. The ending offers **Play again**, which clears the story and restarts the intro. The mine chest has four joke answers both before and after learning its password; the correct answer becomes available after Orrin's clue. Dreamcap stout bubbles purple in the satchel and selected cursor, and Borin plays **Pour brew · back** before consuming it at the cauldron. These sequences and puzzle rules belong to the demo.
 
 **Scaled variants...** in the Current panel manages alternate resolutions of an image or animation. Enter width and height (per frame for animations), then generate three candidates, animate them if applicable, and select one to Promote or Save and close. Edit a saved size to regenerate it, use Touch up, or delete it. OpenAI upscaling uses the existing `OPENAI_API_KEY`; strict nearest-neighbor and smooth resizing need no API. Animation upscaling sends the whole sheet and shares normal generation's row/column alignment, respecting the asset's alignment setting. The runtime selects the closest available resolution for the displayed physical size, including zoom, while retaining authored object sizes and timing. The demo renders at display resolution to avoid a second pixelated scaling pass, and room backgrounds and walk-behind overlays switch together.
+
+The **Interactions** tab shows every character, object, hotspot and inventory item against the game’s verbs and inventory items. Click a cell to assign game code (★), hero speech (green ✓), or an unavailable combination (red ✕); clear it to leave it unassigned. Speech edits create native voice lines under Borin’s voice automatically. Changes preview immediately, persist as local drafts, and are written to the project with **Promote**. Search and target-type filters help navigate the matrix.
 
 Under **Assets → Voices**, select a speaker and use **Line** to switch between the base voice and its dialogue lines. Generate and promote the base voice first, then generate individual lines or use **Regenerate all lines**. The dialogue designer and runtime keep referring to those same line assets.
 
