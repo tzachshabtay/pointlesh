@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "alternating-v3",
+      "activeVersion": "manual-v4",
       "versions": {
         "original": {
           "name": "original",
@@ -2396,6 +2396,15 @@
           "model": "built-in-imagegen",
           "parentVersion": "stride-v2",
           "notes": "Corrected alternating legs. A red/blue guide locks leg identity through both half-cycles before restoring leather colors. Eight 100x140 frames at the existing frame rate; right direction mirrors left."
+        },
+        "manual-v4": {
+          "name": "manual-v4",
+          "file": "art/borin.walk-left.manual-v4.png",
+          "prompt": "Manually animate the original Borin pixels in a compact eight-frame walk. Alternate physical legs across two four-frame halves: contact, recoil, passing and high point. Preserve the original palette and proportions; bend the knees for a two-pixel body bob.",
+          "createdAt": "2026-10-04T19:54:39.416Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "promoted-1790377807996",
+          "notes": "No AI redraw or color grading. Reuses original upper-body poses and the same original leather pixels for both jointed legs. Native body bob: 0,+2,0,-2 repeated; planted soles remain at y=120. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs."
         }
       },
       "tags": [

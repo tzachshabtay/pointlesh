@@ -1,0 +1,19 @@
+Manual pixel animation, explicitly requested after reviewing generated alternatives.
+
+Source: art/borin.walk-left.promoted-1790377807996.png
+Motion reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs
+Inspect joints: add --joints to the rebuild command.
+
+Eight frames: contact, recoil, passing, high point, repeated with the other leg supporting.
+Near and far legs use the same original leather pixels, four frames out of phase.
+Both legs have independently positioned hip, knee, ankle and boot transforms.
+The far leg is drawn first; the near leg occludes it where they cross.
+No palette changes, relighting, new AI generation or per-frame body scaling.
+Original upper-body frames provide the counter-swinging arm poses.
+
+Body bob in native pixels: 0, +2, 0, -2, 0, +2, 0, -2.
+Helmet top by frame: 21, 23, 21, 19, 21, 23, 21, 19.
+Ground contact stays at y=120; airborne feet pass above it.
+The original 100x140 frame cells, 3x3 packing and playback speed are retained.
+The character prefab mirrors the same sheet for walking right.
