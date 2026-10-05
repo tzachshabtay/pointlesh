@@ -1,0 +1,50 @@
+Eight-pose rebuild against the supplied walk reference.
+
+Motion reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+The source diagram credits Idleworm animation tutorials.
+Reference poses are individually mirrored to face left; their order is unchanged.
+Gray reference limbs are called near; unfilled limbs are called far.
+The ninth reference pose repeats contact and is omitted from the eight-frame loop.
+
+Original pixels: art/borin.walk-left.promoted-1790377807996.png
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs --review
+The original upper-body poses are no longer shuffled and relabeled as phases.
+Both arms have separate shoulder/elbow/wrist positions. Legs have explicit
+hip/knee/ankle positions and foot angles. Tall boot cuffs overlap folded calves.
+The original face, clothing and leather pixels supply the art; there is no AI
+redraw or color grading. Body bob remains 0,+2,0,-2, repeated for the second step.
+The same eight 100x140 cells play at 10 fps. Right walking mirrors this sheet.
+
+Pose audit, facing left:
+
+1 CONTACT
+  Near leg forward, heel planted and toe raised; far leg behind on its toe.
+  Near arm back, elbow bent with fist down; far arm forward, forearm bent up.
+2 RECOIL
+  Near support foot flat, knee bending as the body lowers.
+  Far leg lifted behind with the knee bent and toe hanging down.
+  Near arm stays back; far arm stays forward, with a smaller swing.
+3 PASSING
+  Near leg supports beneath the body. Far knee passes ahead with its foot raised.
+  Arms return toward the body; the near forearm angles slightly forward and down.
+4 HIGH POINT
+  Near support leg trails with heel raised. Far knee leads, foot raised and angled down.
+  Near arm swings forward with a bent-up forearm; far arm swings back and down.
+5 CONTACT
+  Far leg forward, heel planted and toe raised; near leg behind on its toe.
+  Near arm forward with forearm bent up; far arm back with fist down.
+6 RECOIL
+  Far support foot flat, knee bending as the body lowers.
+  Near leg lifted behind with the knee bent and toe hanging down.
+  Near arm remains forward; far arm remains back, with a smaller swing.
+7 PASSING
+  Far leg supports beneath the body. Near knee passes ahead with its foot raised.
+  Arms return toward the body; near wrist hangs below and behind its elbow.
+8 HIGH POINT
+  Far support leg trails with heel raised. Near knee leads with its foot raised.
+  Near arm swings back and down; far arm swings forward with a bent-up forearm.
+
+The dwarf's short legs, heavy boots and coat overlap more than the stick figure.
+The comparison preserves the full cell and body bob rather than independently
+scaling or registering each pose. poses.json records the actual joint locations.
+Generation checks each arm and leg independently for opaque attachment continuity.

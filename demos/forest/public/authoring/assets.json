@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v7",
+      "activeVersion": "manual-v8",
       "versions": {
         "original": {
           "name": "original",
@@ -2432,6 +2432,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "manual-v6",
           "notes": "Per-pose tunic hem masks replace the horizontal torso cut. A shared waistband joins both hips beneath the tunic. Numbered frames and the matching loop are in demos/forest/art-source/borin-side-walk/manual-v7. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
+        },
+        "manual-v8": {
+          "name": "manual-v8",
+          "file": "art/borin.walk-left.manual-v8.png",
+          "prompt": "Rebuild all eight poses against the supplied walk-cycle reference. Keep near/far limb identity: near leading heel and opposite raised arm at first contact, then reverse for the second contact. Match recoil, passing and high point with explicit bent elbows, knees, heel strikes, toe-offs and lifted feet. Preserve original Borin pixel colors and proportions.",
+          "createdAt": "2026-10-05T01:16:44.483Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v7",
+          "notes": "Separately articulated arms replace reused upper-body poses; explicit foot angles and knee poses replace the approximate cycle. Original sprite pixels are used for all pieces. Full pose audit, numbered frames, reference comparisons and loop: demos/forest/art-source/borin-side-walk/manual-v8. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
         }
       },
       "tags": [
