@@ -100,20 +100,30 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 .modal { max-width:100%; max-height:calc(var(--preview-height,100dvh) - 48px); }
 #toast { left:calc(var(--preview-left,0px) + var(--preview-width,100vw) / 2); top:calc(var(--preview-top,0px) + var(--preview-height,100dvh) - 25px); bottom:auto; transform:translate(-50%,-100%); }
 
-/* Fill the browser pane while keeping the scene at its native 16:9 proportions. */
+/* Full screen fills the pane by default; players can preserve 16:9 in the menu. */
 .game-fullscreen { overflow:hidden; }
 .game-fullscreen #game-header,.game-fullscreen .title-row,.game-fullscreen .under-game,.game-fullscreen #nearby,.game-fullscreen footer { display:none; }
 .game-fullscreen #game-content { position:fixed; left:var(--preview-left,0px); top:var(--preview-top,0px); width:var(--preview-width,100vw); height:var(--preview-height,100dvh); max-width:none; margin:0; padding:0; }
 .game-fullscreen .game-shell { display:grid; grid-template-rows:auto minmax(0,1fr) auto; width:100%; height:100%; border:0; border-radius:0; box-shadow:none; }
 .game-fullscreen .stage-frame { container-type:size; min-width:0; min-height:0; display:grid; place-items:center; background:#080e0b; }
-.game-fullscreen .stage-wrap { width:min(100cqw,calc(100cqh * 16 / 9)); min-height:0; aspect-ratio:16/9; }
+.game-fullscreen .stage-wrap { width:100%; height:100%; min-height:0; aspect-ratio:auto; }
+.game-fullscreen.game-fit .stage-wrap { width:min(100cqw,calc(100cqh * 16 / 9)); height:auto; aspect-ratio:16/9; }
+#game canvas { outline:none; margin:0!important; object-fit:fill; }
+.screen-fit-setting { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:24px; padding-top:20px; border-top:1px solid #435238; color:#c6cdb5; font-size:12px; }
+.screen-fit-setting select { min-width:0; max-width:65%; font:inherit; color:#eadabb; background:#17241e; border:1px solid #61704c; border-radius:4px; padding:10px; }
+.screen-fit-setting select:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
 @media(max-width:600px) { #fullscreen-label { display:none; } #fullscreen>span:first-child { font-size:18px; } }
 
 /* The title screen owns startup; the loaded game stays laid out but inactive behind it. */
 .menu-open #game-header,.menu-open #game-content { visibility:hidden; }
 .menu-open { overflow:hidden; }
 #start-screen { position:fixed; inset:0; z-index:50; width:var(--preview-width,100%); left:var(--preview-left,0px); top:var(--preview-top,0px); height:var(--preview-height,100dvh); min-height:0; container-type:size; display:grid; place-items:center; overflow:auto; isolation:isolate; background:#101b17; text-align:center; padding:60px 24px; }
-.start-art { position:absolute; inset:0; z-index:-1; background:linear-gradient(#09140db3,#0b171366 35%,#09140dec),var(--start-art) center/cover; image-rendering:pixelated; }
+.start-art { position:absolute; inset:0; z-index:-1; background:var(--start-art) center/cover; image-rendering:pixelated; }
+.start-art::after { content:''; position:absolute; inset:0; background:linear-gradient(#09140db3,#0b171366 35%,#09140dec); }
+#start-screen.start-departing { background:transparent; overflow:hidden; pointer-events:auto; }
+.start-departing .start-art { right:auto; bottom:auto; width:100%; height:100%; }
+.start-departing .start-art::after { opacity:0; transition:opacity 1200ms ease-in-out; }
+@media(prefers-reduced-motion:reduce) { .start-departing .start-art::after { transition:none; } }
 .start-content { max-width:680px; padding:40px 28px; text-shadow:0 3px 24px #000; }
 #start-title { color:#f4e6c2; font-size:clamp(38px,min(8cqw,10cqh),84px); line-height:1.04; letter-spacing:-1.8px; }
 .start-content .eyebrow { font-size:10px; letter-spacing:3px; margin-bottom:26px; }

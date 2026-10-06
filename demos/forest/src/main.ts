@@ -44,12 +44,22 @@ import { captureSavePreview } from './save-preview';
 import { assertInteractionManifest, syncInteractionVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, resolveInteraction, selectInteractionSpeech, createInteractionPlaybackState, type InteractionManifest, type InteractionSpeechLine } from '@pointlesh/core';
 import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
 import { createForestInteractions } from './interactions';
+import { playTitleDeparture } from './title-departure';
 
 const disposeViewportLayout = installViewportLayout(document.documentElement);
 if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
+type ScreenFit = 'stretch' | 'fit';
+let screenFit: ScreenFit = 'stretch';
+try { if (localStorage.getItem('pointlesh.screen-fit') === 'fit') screenFit = 'fit'; } catch { /* Storage may be unavailable. */ }
+function setScreenFit(value: ScreenFit) {
+  screenFit = value;
+  document.body.classList.toggle('game-fit', value === 'fit');
+  try { localStorage.setItem('pointlesh.screen-fit', value); } catch { /* The setting still works for this session. */ }
+}
+setScreenFit(screenFit);
 function setFullScreen(enabled: boolean) {
   document.body.classList.toggle('game-fullscreen', enabled);
   const label = enabled ? 'Exit full screen' : 'Enter full screen';
@@ -98,6 +108,7 @@ const arrowDirections: Record<string, { x: number; y: number }> = { ArrowLeft: {
 const editingText = (target: EventTarget | null) => target instanceof HTMLElement && !!target.closest('input,textarea,select,[contenteditable="true"],[role="textbox"]');
 
 class ForestAdventure extends Phaser.Scene {
+  cancelTitleDeparture?: () => void;
   interactionDesigner?: InteractionDesigner;
   private interactionSound?: Phaser.Sound.BaseSound;
   private interactionPlayback = createInteractionPlaybackState();
@@ -990,6 +1001,7 @@ class ForestAdventure extends Phaser.Scene {
     this.journal.observe(this.story.journal);
   }
   showStartScreen() {
+    this.cancelTitleDeparture?.(); this.cancelTitleDeparture = undefined;
     setFullScreen(false);
     this.journal.clearNotification();
     this.started = false; this.epoch++; this.clearMovementKeys(); this.hover();
@@ -1000,15 +1012,25 @@ class ForestAdventure extends Phaser.Scene {
     el('game-header').inert = true; el('game-content').inert = true;
     el('start-screen').hidden = false; el('new-game').focus({ preventScroll: true }); window.scrollTo(0, 0);
   }
-  enterGame() {
+  enterGame(animateTitle = false) {
+    this.cancelTitleDeparture?.(); this.cancelTitleDeparture = undefined;
     if (!this.started) setFullScreen(true);
-    this.started = true; el('start-screen').hidden = true; document.body.classList.remove('menu-open');
-    el('game-header').inert = false; el('game-content').inert = false;
+    this.started = true; el('start-screen').hidden = !animateTitle; document.body.classList.remove('menu-open');
+    el('game-header').inert = false; el('game-content').inert = animateTitle;
     this.game.canvas.setAttribute('tabindex', '-1');
+    if (animateTitle) {
+      this.cancelTitleDeparture = playTitleDeparture(el('start-screen'), el('game').parentElement!, () => {
+        this.cancelTitleDeparture = undefined;
+        el('game-content').inert = false;
+        this.game.canvas.focus({ preventScroll: true });
+      });
+      return;
+    }
     if (endingModal) el('modal-body').querySelector('button')?.focus();
     else this.game.canvas.focus({ preventScroll: true });
   }
   newGame() {
+    const fromTitle = !el('start-screen').hidden;
     setFullScreen(true);
     endingModal = false; el('modal-close').hidden = false; closeModal(); this.endingOpening = undefined;
     const story = newStory();
@@ -1019,7 +1041,7 @@ class ForestAdventure extends Phaser.Scene {
       cutscene: { introVersion: 2, introStep: 0, endingStep: -1, introElapsedMs: 0, endingElapsedMs: 0 },
       extensions: { journal: story.journal, guardClock: 0, speech: '' } });
     this.showHotspots = false; el('hotspots').classList.remove('active'); this.drawHotspots();
-    this.enterGame();
+    this.enterGame(fromTitle);
   }
   snapshot(): GameState {
     return { roomId: this.story.roomId, inventory: [...this.story.inventory], flags: { ...this.story.flags }, characters: { borin: this.character.snapshot() }, selectedItem: this.selected ?? null,
@@ -1223,6 +1245,15 @@ function setupControls() {
     actions.append(button('Resume adventure', closeModal), save, load,
       button('Return to title', () => gameScene.showStartScreen()));
     body.append(actions);
+    const display = document.createElement('label'); display.className = 'screen-fit-setting';
+    const caption = document.createElement('span'); caption.textContent = 'Full-screen display';
+    const select = document.createElement('select'); select.id = 'screen-fit';
+    for (const [value, text] of [['stretch', 'Stretch to fill'], ['fit', 'Fit original proportions']] as const) {
+      const option = document.createElement('option'); option.value = value; option.textContent = text; select.append(option);
+    }
+    select.value = screenFit;
+    select.onchange = () => setScreenFit(select.value === 'fit' ? 'fit' : 'stretch');
+    display.append(caption, select); body.append(display);
   }
   function saveMenu(mode: 'save' | 'load') {
     if (mode === 'save' && !gameScene.started) return;
@@ -1271,6 +1302,7 @@ function setupControls() {
   }
   el('modal-close').onclick = closeModal; el('modal-backdrop').onclick = event => { if (event.target === el('modal-backdrop')) closeModal(); };
   document.addEventListener('keydown', event => {
+    if (gameScene.cancelTitleDeparture) return;
     if (editingText(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
     if (!gameScene.started) { if (event.key === 'Escape' && modalOpen) closeModal(); return; }
     if (arrowDirections[event.key]) {
