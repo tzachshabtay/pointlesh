@@ -109,6 +109,14 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 #start-title { color:#f4e6c2; font-size:clamp(38px,min(8cqw,10cqh),84px); line-height:1.04; letter-spacing:-1.8px; }
 .start-content .eyebrow { font-size:10px; letter-spacing:3px; margin-bottom:26px; }
 .start-premise { font:18px/1.7 Georgia,'Times New Roman',serif; color:#d0d7bd; margin:24px 0 32px; }
+.start-controls { display:grid; place-items:center; min-height:112px; }
+.start-progress { position:relative; width:64px; height:64px; display:grid; place-items:center; }
+.start-progress-ring { position:absolute; inset:0; border:2px solid #d4b77a24; border-top-color:#e5cf95; border-right-color:#d4b77a88; border-radius:50%; animation:start-progress-orbit 1.6s linear infinite; }
+.start-progress-ring::after { content:''; position:absolute; top:6px; right:6px; width:5px; height:5px; border-radius:50%; background:#f4e6c2; box-shadow:0 0 10px #e5cf95aa; }
+.start-progress-spark { color:#e5cf95; font-size:26px; text-shadow:0 0 18px #d4b77a66; animation:start-progress-glow 2s ease-in-out infinite; }
+@keyframes start-progress-orbit { to { transform:rotate(360deg); } }
+@keyframes start-progress-glow { 0%,100% { opacity:.45; transform:scale(.85); } 50% { opacity:1; transform:scale(1); } }
+@media(prefers-reduced-motion:reduce) { .start-progress-ring,.start-progress-spark { animation:none; } }
 .start-actions { display:grid; gap:12px; width:230px; margin:auto; }
 #start-screen .start-actions button { padding:15px 24px; border:1px solid #9e9c6b; border-radius:4px; font-size:15px; background:#16271dea; box-shadow:0 5px 22px #0005; transition:background .15s,border-color .15s; }
 #start-screen #new-game { color:#17251a; background:#d4b77a; border-color:#e5cf95; font-weight:650; }
@@ -128,6 +136,7 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
   #start-status { margin-top:18px; }
 }
 @container (max-height: 450px) {
+  .start-controls { min-height:64px; }
   .start-content .eyebrow { margin-bottom:10px; }
   #start-title { font-size:36px; }
   .start-premise { margin:12px 0; font-size:14px; }

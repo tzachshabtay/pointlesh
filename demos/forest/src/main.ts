@@ -269,6 +269,9 @@ class ForestAdventure extends Phaser.Scene {
     el('start-screen').style.setProperty('--start-art', `url("${cover.toDataURL()}")`);
     el<HTMLButtonElement>('new-game').disabled = false;
     el<HTMLButtonElement>('start-load').disabled = false;
+    el('start-progress').hidden = true;
+    el('start-actions').hidden = false;
+    el('start-controls').setAttribute('aria-busy', 'false');
     el('start-status').textContent = 'A point-and-click adventure in the Elderwood';
     this.showStartScreen();
     if (import.meta.env.DEV) Object.assign(window, { pointleshDemo: {

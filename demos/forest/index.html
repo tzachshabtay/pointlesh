@@ -19,7 +19,10 @@
         <p class="eyebrow">A SMALL DWARF. A RATHER LARGE ADVENTURE.</p>
         <h1 id="start-title">The King Under<br>the Mountain</h1>
         <p class="start-premise">A stolen king. An ancient forest.<br>One dwarf with a long way to go.</p>
-        <div class="start-actions"><button id="new-game" disabled>New game <span aria-hidden="true">→</span></button><button id="start-load" disabled>Load</button></div>
+        <div id="start-controls" class="start-controls" aria-busy="true">
+          <div id="start-progress" class="start-progress" aria-hidden="true"><span class="start-progress-ring"></span><span class="start-progress-spark">✦</span></div>
+          <div id="start-actions" class="start-actions" hidden><button id="new-game" disabled>New game <span aria-hidden="true">→</span></button><button id="start-load" disabled>Load</button></div>
+        </div>
         <p id="start-status" role="status">Lighting the lanterns…</p>
       </div>
       <p class="start-credit">An adventure made with <strong>pointlesh</strong></p>
