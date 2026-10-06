@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v11",
+      "activeVersion": "manual-v12",
       "versions": {
         "original": {
           "name": "original",
@@ -2468,6 +2468,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "manual-v10",
           "notes": "Arm-layer edge finishing using original sprite colors. Numbered frames, reference comparisons and loop in demos/forest/art-source/borin-side-walk/manual-v11. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
+        },
+        "manual-v12": {
+          "name": "manual-v12",
+          "file": "art/borin.walk-left.manual-v12.png",
+          "prompt": "Remove the thick arm and hand rim, not merely its color. Trace the actual source hand and sleeve boundaries, excluding surrounding clothing pixels. Use thin coverage antialiasing like the helmet and original idle/speaking hands; preserve original interior pixels, all joint poses and timing.",
+          "createdAt": "2026-10-06T00:37:06.947Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v11",
+          "notes": "Retraced arm cutouts with subpixel edge coverage; removed arm border recoloring. Edge comparison, numbered frames and loop in demos/forest/art-source/borin-side-walk/manual-v12. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
         }
       },
       "tags": [

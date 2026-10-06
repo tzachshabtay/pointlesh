@@ -7,7 +7,7 @@ const sourceFrames = await Promise.all(Array.from({ length: 8 }, (_, n) => sharp
   .extract({ left: n % 3 * 100, top: Math.floor(n / 3) * 140, width: 100, height: 140 }).ensureAlpha().raw().toBuffer()));
 const source = sourceFrames[0];
 const W = 100, H = 140;
-const version = 'manual-v11';
+const version = 'manual-v12';
 const phases = ['Contact', 'Recoil', 'Passing', 'High point'];
 const bob = [0, 2, 0, -2, 0, 2, 0, -2];
 // The reference's gray limbs are the near limbs. Frames 1–4 support on the
@@ -109,14 +109,6 @@ function jointNormal(a, b, c) {
   const sign = u[0] + v[0] < 0 ? -1 : 1;
   return [sign * (u[0] + v[0]) / length, sign * (u[1] + v[1]) / length];
 }
-function ribbon(pixels, original, target, mask, trouser) {
-  for (let row = 0; row < original.length - 1; row++) {
-    for (const indices of [[[row, 0], [row, 1], [row + 1, 0]], [[row, 1], [row + 1, 1], [row + 1, 0]]]) {
-      triangle(pixels, indices.map(([r, c]) => original[r][c]), indices.map(([r, c]) => target[r][c]), mask, trouser);
-    }
-  }
-}
-
 function assertConnected(pixels, from, to, label) {
   const start = Math.round(from[1]) * W + Math.round(from[0]);
   const end = Math.round(to[1]) * W + Math.round(to[0]);
@@ -136,7 +128,7 @@ function assertConnected(pixels, from, to, label) {
 // Warping and overlapping the source cutouts makes their dark edge pixels
 // accumulate into an opaque border. Restore a narrow, material-colored edge
 // like the authored idle/speak sprites, without brightening interior shadows.
-function finishOutline(pixels, armLayer = false) {
+function finishOutline(pixels, armCoverage) {
   const original = Buffer.from(pixels);
   const depth = new Uint8Array(W * H).fill(255);
   const queue = [];
@@ -154,33 +146,95 @@ function finishOutline(pixels, armLayer = false) {
   }
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const p = y * W + x, s = p * 4;
-    if (!depth[p] || depth[p] > (armLayer ? 3 : 2)) continue;
+    if (armCoverage[p]) continue;
+    if (!depth[p] || depth[p] > 2) continue;
     const luma = original[s] * 0.2126 + original[s + 1] * 0.7152 + original[s + 2] * 0.0722;
-    if (luma >= (armLayer ? 78 : 48)) continue;
+    if (luma >= 48) continue;
     const color = [0, 0, 0]; let weight = 0;
-    const radius = armLayer ? 5 : 3;
-    for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) {
+    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
       const nx = x + dx, ny = y + dy, distance = dx * dx + dy * dy;
-      if (!distance || distance > (armLayer ? 25 : 10) || nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+      if (!distance || distance > 10 || nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
       const n = ny * W + nx;
       if (depth[n] < 3 || original[n * 4 + 3] < 240) continue;
-      const sampleLuma = original[n * 4] * 0.2126 + original[n * 4 + 1] * 0.7152 + original[n * 4 + 2] * 0.0722;
-      if (armLayer && sampleLuma < luma + 12) continue;
       const w = 1 / distance;
       weight += w;
       for (let c = 0; c < 3; c++) color[c] += original[n * 4 + c] * w;
     }
     if (weight) {
-      const amount = armLayer ? [0, 1, 0.9, 0.65][depth[p]] : depth[p] === 1 ? 0.55 : 0.35;
+      const amount = depth[p] === 1 ? 0.55 : 0.35;
       for (let c = 0; c < 3; c++) pixels[s + c] = Math.round(original[s + c] * (1 - amount) + color[c] / weight * amount);
     }
-    if (depth[p] === 1) pixels[s + 3] = Math.round(original[s + 3] * (armLayer ? 0.65 : 0.55));
+    if (depth[p] === 1) pixels[s + 3] = Math.round(original[s + 3] * 0.55);
   }
 }
 
-const armMask = [[55, 48], [66, 46], [73, 53], [77, 63], [76, 78], [75, 86], [73, 91], [68, 94], [60, 93], [57, 89], [57, 83], [59, 72], [53, 65], [50, 56]];
-function arm(out, shoulder, elbow, wrist, scale = 1) {
+// Trace the actual sleeve and fist. Rows 91–94 in the source are the tunic
+// behind the hand, not fingers; the old cutout carried those pixels as a rim.
+const armMask = [[55, 48], [65.5, 47], [72, 53], [75, 62.5], [75.5, 70], [73.5, 79], [72.5, 84.5], [71.5, 87], [69.5, 89], [68, 90.4], [61, 90.4], [59.5, 87.8], [57.6, 87.3], [57.6, 83.8], [59, 81.5], [60, 76], [58.5, 70], [53, 64], [50.5, 56]];
+
+function antialiasedArm(original, target) {
+  const triangles = [];
+  for (let row = 0; row < original.length - 1; row++) {
+    for (const indices of [[[row, 0], [row, 1], [row + 1, 0]], [[row, 1], [row + 1, 1], [row + 1, 0]]]) {
+      const src = indices.map(([r, c]) => original[r][c]);
+      const [a, b, c] = indices.map(([r, c]) => target[r][c]);
+      const denominator = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1]);
+      triangles.push({ src, a, b, c, denominator });
+    }
+  }
   const pixels = Buffer.alloc(W * H * 4);
+  const left = Math.max(0, Math.floor(Math.min(...target.flat().map(p => p[0]))));
+  const right = Math.min(W - 1, Math.ceil(Math.max(...target.flat().map(p => p[0]))));
+  const top = Math.max(0, Math.floor(Math.min(...target.flat().map(p => p[1]))));
+  const bottom = Math.min(H - 1, Math.ceil(Math.max(...target.flat().map(p => p[1]))));
+  for (let y = top; y <= bottom; y++) for (let x = left; x <= right; x++) {
+    const total = [0, 0, 0, 0];
+    let covered = 0, sourceX = 0, sourceY = 0;
+    // Subpixel coverage gives a narrow edge without dilation, recoloring or
+    // blurring the whole arm. Shared triangle edges are sampled only once.
+    for (let iy = 0; iy < 4; iy++) for (let ix = 0; ix < 4; ix++) {
+      const px = x + (ix + 0.5) / 4 - 0.5, py = y + (iy + 0.5) / 4 - 0.5;
+      for (const { src, a, b, c, denominator } of triangles) {
+        const u = ((b[1] - c[1]) * (px - c[0]) + (c[0] - b[0]) * (py - c[1])) / denominator;
+        const v = ((c[1] - a[1]) * (px - c[0]) + (a[0] - c[0]) * (py - c[1])) / denominator;
+        const w = 1 - u - v;
+        if (Math.min(u, v, w) < -1e-8) continue;
+        const sx = u * src[0][0] + v * src[1][0] + w * src[2][0];
+        const sy = u * src[0][1] + v * src[1][1] + w * src[2][1];
+        if (!inside(sx, sy, armMask)) continue;
+        const x0 = Math.floor(sx), y0 = Math.floor(sy), color = [0, 0, 0, 0];
+        let weight = 0;
+        for (let dy = 0; dy <= 1; dy++) for (let dx = 0; dx <= 1; dx++) {
+          const nx = x0 + dx, ny = y0 + dy;
+          if (!inside(nx, ny, armMask)) continue;
+          const blend = (dx ? sx - x0 : 1 - sx + x0) * (dy ? sy - y0 : 1 - sy + y0);
+          const p = (ny * W + nx) * 4, alpha = source[p + 3] / 255;
+          for (let channel = 0; channel < 3; channel++) color[channel] += source[p + channel] * alpha * blend;
+          color[3] += alpha * blend; weight += blend;
+        }
+        if (weight) {
+          for (let channel = 0; channel < 4; channel++) total[channel] += color[channel] / weight;
+          covered++; sourceX += sx; sourceY += sy;
+        }
+        break;
+      }
+    }
+    const p = (y * W + x) * 4;
+    if (total[3]) {
+      for (let channel = 0; channel < 3; channel++) pixels[p + channel] = Math.round(total[channel] / total[3]);
+      pixels[p + 3] = Math.round(total[3] * 255 / 16);
+      // Keep native pixel texture in fully covered cells. Only the silhouette
+      // needs filtered coverage; averaging the interior softens the sleeve.
+      if (covered === 16) {
+        const sx = Math.round(sourceX / covered), sy = Math.round(sourceY / covered);
+        if (inside(sx, sy, armMask)) source.copy(pixels, p, (sy * W + sx) * 4, (sy * W + sx) * 4 + 3);
+      }
+    }
+  }
+  return pixels;
+}
+
+function arm(out, shoulder, elbow, wrist, scale, coverage) {
   const upper = unit(shoulder, elbow), lower = unit(elbow, wrist);
   // Perspective narrows the far sleeve, but retain the original fist's size
   // and complete knuckle outline instead of shrinking its fingers as well.
@@ -189,14 +243,12 @@ function arm(out, shoulder, elbow, wrist, scale = 1) {
   const rows = [48, 56, 71, 84, 94], sourceX = [60, 60, 65, 65, 65];
   const original = rows.map(y => [[45, y], [80, y]]);
   const target = rows.map((_, row) => [45, 80].map(x => [centers[row][0] + normals[row][0] * (x - sourceX[row]) * (row >= 3 ? 1 : scale), centers[row][1] + normals[row][1] * (x - sourceX[row]) * (row >= 3 ? 1 : scale)]));
-  ribbon(pixels, original, target, armMask, false);
-  // Clean each arm in isolation: its dark cutout edge can overlap the tunic,
-  // where the final whole-sprite silhouette pass cannot reach it. Preserve
-  // the complete hand silhouette; replace the border with nearby skin or
-  // sleeve colors instead of eroding the fingers.
-  finishOutline(pixels, true);
+  const pixels = antialiasedArm(original, target);
   assertConnected(pixels, shoulder, wrist, 'Shoulder to wrist');
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) over(out, x, y, x, y, pixels);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    if (pixels[(y * W + x) * 4 + 3]) coverage[y * W + x] = 1;
+    over(out, x, y, x, y, pixels);
+  }
 }
 
 function leg(out, hip, joint, foot, angle) {
@@ -251,8 +303,9 @@ for (let phase = 0; phase < 8; phase++) {
 
 for (let frame = 0; frame < 8; frame++) {
   const out = Buffer.alloc(W * H * 4);
+  const armCoverage = Buffer.alloc(W * H);
   const shiftedArm = points => points.map(([x, y]) => [x, y + bob[frame]]);
-  arm(out, ...shiftedArm(farArm[frame]), 0.78);
+  arm(out, ...shiftedArm(farArm[frame]), 0.78, armCoverage);
   // A single waistband sits beneath the entire tunic and both articulated
   // thighs. It moves with the body, so no transparent slit can open at a hip.
   const waist = [[39, 85], [65, 85], [70, 92], [68, 97], [61, 100], [44, 100], [36, 95], [36, 90]];
@@ -295,8 +348,8 @@ for (let frame = 0; frame < 8; frame++) {
       continue;
     } else over(out, x + offsetX, y + offsetY, x, y, upper);
   }
-  arm(out, ...shiftedArm(nearArm[frame]));
-  finishOutline(out);
+  arm(out, ...shiftedArm(nearArm[frame]), 1, armCoverage);
+  finishOutline(out, armCoverage);
   frames.push(out);
   joints.push(record);
 }
