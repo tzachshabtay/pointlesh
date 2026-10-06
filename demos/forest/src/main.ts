@@ -34,7 +34,6 @@ import type { AdventureCursorAppearance } from '@pointlesh/phaser';
 import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { installViewportLayout } from './viewport-layout';
-import './style.css';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
 import { ForestDialogPortrait } from './dialog-portrait';
 import { cottageDeparture } from './cinematic-paths';
