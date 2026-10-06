@@ -1,0 +1,13 @@
+Borin side walk — manual-v11
+
+Refines manual-v10: remove heavy dark borders from hands and arms before compositing each arm onto the torso.
+The prior whole-sprite edge pass could not reach borders overlapping the body.
+Replace the dark outer three pixels with nearby skin or sleeve colors and soften the outermost pixel.
+Preserve complete hand silhouettes and all joint poses, leg art, body bob and timing.
+
+Source pixels: borin.walk-left.promoted-1790377807996.png
+8 frames, 100 × 140 each, 3 × 3 sheet, 10 fps. Right walk mirrors this sheet.
+Reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+Reference diagram credited to Idleworm. First eight poses individually mirrored to face left.
+
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs --review

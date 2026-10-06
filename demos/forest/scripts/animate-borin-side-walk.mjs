@@ -7,7 +7,7 @@ const sourceFrames = await Promise.all(Array.from({ length: 8 }, (_, n) => sharp
   .extract({ left: n % 3 * 100, top: Math.floor(n / 3) * 140, width: 100, height: 140 }).ensureAlpha().raw().toBuffer()));
 const source = sourceFrames[0];
 const W = 100, H = 140;
-const version = 'manual-v10';
+const version = 'manual-v11';
 const phases = ['Contact', 'Recoil', 'Passing', 'High point'];
 const bob = [0, 2, 0, -2, 0, 2, 0, -2];
 // The reference's gray limbs are the near limbs. Frames 1–4 support on the
@@ -136,7 +136,7 @@ function assertConnected(pixels, from, to, label) {
 // Warping and overlapping the source cutouts makes their dark edge pixels
 // accumulate into an opaque border. Restore a narrow, material-colored edge
 // like the authored idle/speak sprites, without brightening interior shadows.
-function finishOutline(pixels) {
+function finishOutline(pixels, armLayer = false) {
   const original = Buffer.from(pixels);
   const depth = new Uint8Array(W * H).fill(255);
   const queue = [];
@@ -154,24 +154,27 @@ function finishOutline(pixels) {
   }
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const p = y * W + x, s = p * 4;
-    if (!depth[p] || depth[p] > 2) continue;
+    if (!depth[p] || depth[p] > (armLayer ? 3 : 2)) continue;
     const luma = original[s] * 0.2126 + original[s + 1] * 0.7152 + original[s + 2] * 0.0722;
-    if (luma >= 48) continue;
+    if (luma >= (armLayer ? 78 : 48)) continue;
     const color = [0, 0, 0]; let weight = 0;
-    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
+    const radius = armLayer ? 5 : 3;
+    for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) {
       const nx = x + dx, ny = y + dy, distance = dx * dx + dy * dy;
-      if (!distance || distance > 10 || nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+      if (!distance || distance > (armLayer ? 25 : 10) || nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
       const n = ny * W + nx;
       if (depth[n] < 3 || original[n * 4 + 3] < 240) continue;
+      const sampleLuma = original[n * 4] * 0.2126 + original[n * 4 + 1] * 0.7152 + original[n * 4 + 2] * 0.0722;
+      if (armLayer && sampleLuma < luma + 12) continue;
       const w = 1 / distance;
       weight += w;
       for (let c = 0; c < 3; c++) color[c] += original[n * 4 + c] * w;
     }
     if (weight) {
-      const amount = depth[p] === 1 ? 0.55 : 0.35;
+      const amount = armLayer ? [0, 1, 0.9, 0.65][depth[p]] : depth[p] === 1 ? 0.55 : 0.35;
       for (let c = 0; c < 3; c++) pixels[s + c] = Math.round(original[s + c] * (1 - amount) + color[c] / weight * amount);
     }
-    if (depth[p] === 1) pixels[s + 3] = Math.round(original[s + 3] * 0.55);
+    if (depth[p] === 1) pixels[s + 3] = Math.round(original[s + 3] * (armLayer ? 0.65 : 0.55));
   }
 }
 
@@ -187,6 +190,11 @@ function arm(out, shoulder, elbow, wrist, scale = 1) {
   const original = rows.map(y => [[45, y], [80, y]]);
   const target = rows.map((_, row) => [45, 80].map(x => [centers[row][0] + normals[row][0] * (x - sourceX[row]) * (row >= 3 ? 1 : scale), centers[row][1] + normals[row][1] * (x - sourceX[row]) * (row >= 3 ? 1 : scale)]));
   ribbon(pixels, original, target, armMask, false);
+  // Clean each arm in isolation: its dark cutout edge can overlap the tunic,
+  // where the final whole-sprite silhouette pass cannot reach it. Preserve
+  // the complete hand silhouette; replace the border with nearby skin or
+  // sleeve colors instead of eroding the fingers.
+  finishOutline(pixels, true);
   assertConnected(pixels, shoulder, wrist, 'Shoulder to wrist');
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) over(out, x, y, x, y, pixels);
 }
