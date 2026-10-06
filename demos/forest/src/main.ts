@@ -50,6 +50,15 @@ if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
+function setFullScreen(enabled: boolean) {
+  document.body.classList.toggle('game-fullscreen', enabled);
+  const label = enabled ? 'Exit full screen' : 'Enter full screen';
+  el('fullscreen').setAttribute('aria-pressed', String(enabled));
+  el('fullscreen').setAttribute('aria-label', label);
+  el('fullscreen').title = `${label} (Esc)`;
+  el('fullscreen-label').textContent = enabled ? 'Exit full screen' : 'Full screen';
+  window.scrollTo(0, 0);
+}
 const button = (text: string, action: () => void) => { const node = document.createElement('button'); node.textContent = text; node.onclick = action; return node; };
 const music = new ForestMusic();
 // Authoring requests use the companion service; image previews use the same public files as the game.
@@ -981,6 +990,7 @@ class ForestAdventure extends Phaser.Scene {
     this.journal.observe(this.story.journal);
   }
   showStartScreen() {
+    setFullScreen(false);
     this.journal.clearNotification();
     this.started = false; this.epoch++; this.clearMovementKeys(); this.hover();
     if (!this.roomTransition.active && !this.campStealth.busy) this.character.stop();
@@ -991,6 +1001,7 @@ class ForestAdventure extends Phaser.Scene {
     el('start-screen').hidden = false; el('new-game').focus({ preventScroll: true }); window.scrollTo(0, 0);
   }
   enterGame() {
+    if (!this.started) setFullScreen(true);
     this.started = true; el('start-screen').hidden = true; document.body.classList.remove('menu-open');
     el('game-header').inert = false; el('game-content').inert = false;
     this.game.canvas.setAttribute('tabindex', '-1');
@@ -998,6 +1009,7 @@ class ForestAdventure extends Phaser.Scene {
     else this.game.canvas.focus({ preventScroll: true });
   }
   newGame() {
+    setFullScreen(true);
     endingModal = false; el('modal-close').hidden = false; closeModal(); this.endingOpening = undefined;
     const story = newStory();
     const actor = resolvePointleshScene(authoredScenes, story.roomId).objects.find(object => object.properties.role === 'player');
@@ -1171,6 +1183,7 @@ class ForestAdventure extends Phaser.Scene {
 
 function setupControls() {
   el('new-game').onclick = () => gameScene.newGame();
+  el('fullscreen').onclick = () => setFullScreen(!document.body.classList.contains('game-fullscreen'));
   el('start-load').onclick = () => saveMenu('load');
   el('menu').onclick = gameMenu;
   el('character-lighting').onclick = () => {
@@ -1268,7 +1281,14 @@ function setupControls() {
       }
       return;
     }
-    if (event.key === 'Escape') { if (modalOpen) closeModal(); else if (gameScene.editing) gameScene.sceneDesigner?.designer.close(); else { gameScene.selected = undefined; gameScene.epoch++; gameScene.clearMovementKeys(); gameScene.character.stop(); gameScene.render(); } }
+    if (event.key === 'Escape') {
+      if (event.repeat || event.defaultPrevented) return;
+      if (modalOpen) closeModal();
+      else if (gameScene.editing) gameScene.sceneDesigner?.designer.close();
+      else if (!document.body.classList.contains('tools-visible')) el('fullscreen').click();
+      event.preventDefault();
+      return;
+    }
     if (!modalOpen && !gameScene.editing) {
       if (event.key.toLowerCase() === 'm') el('map').click(); if (event.key.toLowerCase() === 'j') el('journal').click();
       if (event.key === 'Tab' && event.target === document.body) { event.preventDefault(); el('hotspots').click(); }
