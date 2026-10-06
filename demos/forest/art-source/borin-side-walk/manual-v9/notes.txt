@@ -1,0 +1,14 @@
+Borin side walk — manual-v9
+
+Refines manual-v8 in response to arm and hand feedback.
+Right (far) arm: pull elbow and wrist closer to the torso in frames 4, 5, 6.
+Lower raised forearms: right in frames 1, 2, 8; left (near) in frames 5, 6.
+Restore the full original fist outline and original hand size on the far arm, while retaining sleeve perspective.
+Leg poses, boot angles, body bob, costume colors, and timing are unchanged.
+
+Source pixels: borin.walk-left.promoted-1790377807996.png
+8 frames, 100 × 140 each, 3 × 3 sheet, 10 fps. Right walk mirrors this sheet.
+Reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+Reference diagram credited to Idleworm. First eight poses individually mirrored to face left; ninth repeats contact.
+
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs --review

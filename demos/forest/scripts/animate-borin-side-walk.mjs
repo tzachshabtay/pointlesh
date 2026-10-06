@@ -7,7 +7,7 @@ const sourceFrames = await Promise.all(Array.from({ length: 8 }, (_, n) => sharp
   .extract({ left: n % 3 * 100, top: Math.floor(n / 3) * 140, width: 100, height: 140 }).ensureAlpha().raw().toBuffer()));
 const source = sourceFrames[0];
 const W = 100, H = 140;
-const version = 'manual-v8';
+const version = 'manual-v9';
 const phases = ['Contact', 'Recoil', 'Passing', 'High point'];
 const bob = [0, 2, 0, -2, 0, 2, 0, -2];
 // The reference's gray limbs are the near limbs. Frames 1–4 support on the
@@ -21,20 +21,20 @@ const nearArm = [
   [[61, 56], [70, 73], [72, 84]],
   [[61, 56], [63, 76], [57, 86]],
   [[61, 56], [49, 74], [37, 67]],
-  [[61, 56], [44, 73], [33, 63]],
-  [[61, 56], [47, 75], [38, 68]],
+  [[61, 56], [46, 75], [33, 73]],
+  [[61, 56], [49, 77], [37, 77]],
   [[61, 56], [56, 76], [59, 87]],
   [[61, 56], [72, 73], [73, 84]],
 ];
 const farArm = [
-  [[45, 58], [30, 72], [21, 64]],
-  [[45, 58], [31, 75], [23, 68]],
+  [[45, 58], [32, 74], [20, 73]],
+  [[45, 58], [33, 77], [22, 78]],
   [[45, 58], [36, 76], [40, 86]],
-  [[48, 58], [72, 72], [77, 83]],
-  [[48, 58], [74, 69], [79, 81]],
-  [[48, 58], [72, 73], [78, 85]],
+  [[48, 58], [65, 73], [67, 84]],
+  [[48, 58], [67, 71], [70, 83]],
+  [[48, 58], [66, 74], [69, 86]],
   [[45, 58], [43, 76], [42, 86]],
-  [[45, 58], [32, 73], [23, 67]],
+  [[45, 58], [33, 75], [22, 75]],
 ];
 // Trace the retained torso's hem; the original arms and legs are replaced.
 function hemY(x) {
@@ -133,15 +133,17 @@ function assertConnected(pixels, from, to, label) {
   assert(connected.has(end), `${label}: disconnected limb`);
 }
 
-const armMask = [[55, 48], [66, 46], [73, 53], [77, 63], [76, 78], [73, 89], [66, 93], [60, 91], [59, 83], [59, 72], [53, 65], [50, 56]];
+const armMask = [[55, 48], [66, 46], [73, 53], [77, 63], [76, 78], [75, 86], [73, 91], [68, 94], [60, 93], [57, 89], [57, 83], [59, 72], [53, 65], [50, 56]];
 function arm(out, shoulder, elbow, wrist, scale = 1) {
   const pixels = Buffer.alloc(W * H * 4);
   const upper = unit(shoulder, elbow), lower = unit(elbow, wrist);
-  const centers = [[shoulder[0] - upper[0] * 8 * scale, shoulder[1] - upper[1] * 8 * scale], shoulder, elbow, wrist, [wrist[0] + lower[0] * 9 * scale, wrist[1] + lower[1] * 9 * scale]];
+  // Perspective narrows the far sleeve, but retain the original fist's size
+  // and complete knuckle outline instead of shrinking its fingers as well.
+  const centers = [[shoulder[0] - upper[0] * 8 * scale, shoulder[1] - upper[1] * 8 * scale], shoulder, elbow, wrist, [wrist[0] + lower[0] * 10, wrist[1] + lower[1] * 10]];
   const normals = [normal(shoulder, elbow), normal(shoulder, elbow), jointNormal(shoulder, elbow, wrist), normal(elbow, wrist), normal(elbow, wrist)];
-  const rows = [48, 56, 71, 84, 93], sourceX = [60, 60, 65, 65, 65];
+  const rows = [48, 56, 71, 84, 94], sourceX = [60, 60, 65, 65, 65];
   const original = rows.map(y => [[45, y], [80, y]]);
-  const target = rows.map((_, row) => [45, 80].map(x => [centers[row][0] + normals[row][0] * (x - sourceX[row]) * scale, centers[row][1] + normals[row][1] * (x - sourceX[row]) * scale]));
+  const target = rows.map((_, row) => [45, 80].map(x => [centers[row][0] + normals[row][0] * (x - sourceX[row]) * (row >= 3 ? 1 : scale), centers[row][1] + normals[row][1] * (x - sourceX[row]) * (row >= 3 ? 1 : scale)]));
   ribbon(pixels, original, target, armMask, false);
   assertConnected(pixels, shoulder, wrist, 'Shoulder to wrist');
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) over(out, x, y, x, y, pixels);

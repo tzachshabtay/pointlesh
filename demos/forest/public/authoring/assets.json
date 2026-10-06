@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v8",
+      "activeVersion": "manual-v9",
       "versions": {
         "original": {
           "name": "original",
@@ -2441,6 +2441,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "manual-v7",
           "notes": "Separately articulated arms replace reused upper-body poses; explicit foot angles and knee poses replace the approximate cycle. Original sprite pixels are used for all pieces. Full pose audit, numbered frames, reference comparisons and loop: demos/forest/art-source/borin-side-walk/manual-v8. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
+        },
+        "manual-v9": {
+          "name": "manual-v9",
+          "file": "art/borin.walk-left.manual-v9.png",
+          "prompt": "Refine manual-v8 arm poses: pull the right arm closer in frames 4–6; lower raised right forearms in frames 1, 2, 8 and left forearms in 5, 6. Restore full original hand shape and size. Preserve legs, body bob, colors and timing.",
+          "createdAt": "2026-10-06T00:13:26.265Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v8",
+          "notes": "Original sprite pixels. Numbered frames, reference comparisons and loop in demos/forest/art-source/borin-side-walk/manual-v9. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
         }
       },
       "tags": [
