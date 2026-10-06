@@ -1,0 +1,14 @@
+Borin side walk — manual-v10
+
+Refines manual-v9: move frame 3 foreground elbow four pixels forward (left).
+All frames: finish the outer two pixels of the silhouette to remove the heavy black cutout border.
+Dark edges blend toward nearby interior material colors; outermost dark pixels become partially transparent.
+Interior colors and shading remain unchanged. Poses apart from the frame 3 elbow, body bob and timing remain unchanged.
+Compared against current idle-left and speak-left sprites.
+
+Source pixels: borin.walk-left.promoted-1790377807996.png
+8 frames, 100 × 140 each, 3 × 3 sheet, 10 fps. Right walk mirrors this sheet.
+Reference: https://krznmedia.wordpress.com/wp-content/uploads/2013/12/walk-cycle.gif
+Reference diagram credited to Idleworm. First eight poses individually mirrored to face left.
+
+Rebuild: node demos/forest/scripts/animate-borin-side-walk.mjs --review

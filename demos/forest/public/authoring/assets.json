@@ -2315,7 +2315,7 @@
           ]
         }
       ],
-      "activeVersion": "manual-v9",
+      "activeVersion": "manual-v10",
       "versions": {
         "original": {
           "name": "original",
@@ -2450,6 +2450,15 @@
           "model": "manual-pixel-animation",
           "parentVersion": "manual-v8",
           "notes": "Original sprite pixels. Numbered frames, reference comparisons and loop in demos/forest/art-source/borin-side-walk/manual-v9. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
+        },
+        "manual-v10": {
+          "name": "manual-v10",
+          "file": "art/borin.walk-left.manual-v10.png",
+          "prompt": "Move frame 3 elbow slightly forward. Remove the heavy dark silhouette border across all eight frames, matching the softer material-colored edges of the idle and speaking sprites. Preserve other poses, timing and interior shading.",
+          "createdAt": "2026-10-06T00:22:55.949Z",
+          "model": "manual-pixel-animation",
+          "parentVersion": "manual-v9",
+          "notes": "Original sprite pixels with silhouette edge finishing. Numbered frames, reference comparisons and loop in demos/forest/art-source/borin-side-walk/manual-v10. Rebuild with demos/forest/scripts/animate-borin-side-walk.mjs --review."
         }
       },
       "tags": [

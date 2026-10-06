@@ -7,7 +7,7 @@ const sourceFrames = await Promise.all(Array.from({ length: 8 }, (_, n) => sharp
   .extract({ left: n % 3 * 100, top: Math.floor(n / 3) * 140, width: 100, height: 140 }).ensureAlpha().raw().toBuffer()));
 const source = sourceFrames[0];
 const W = 100, H = 140;
-const version = 'manual-v9';
+const version = 'manual-v10';
 const phases = ['Contact', 'Recoil', 'Passing', 'High point'];
 const bob = [0, 2, 0, -2, 0, 2, 0, -2];
 // The reference's gray limbs are the near limbs. Frames 1–4 support on the
@@ -19,7 +19,7 @@ const kneePose = [[45, 101], [43, 103], [52, 102], [58, 98], [61, 96], [63, 101]
 const nearArm = [
   [[61, 56], [73, 69], [73, 81]],
   [[61, 56], [70, 73], [72, 84]],
-  [[61, 56], [63, 76], [57, 86]],
+  [[61, 56], [59, 76], [57, 86]],
   [[61, 56], [49, 74], [37, 67]],
   [[61, 56], [46, 75], [33, 73]],
   [[61, 56], [49, 77], [37, 77]],
@@ -131,6 +131,48 @@ function assertConnected(pixels, from, to, label) {
     }
   }
   assert(connected.has(end), `${label}: disconnected limb`);
+}
+
+// Warping and overlapping the source cutouts makes their dark edge pixels
+// accumulate into an opaque border. Restore a narrow, material-colored edge
+// like the authored idle/speak sprites, without brightening interior shadows.
+function finishOutline(pixels) {
+  const original = Buffer.from(pixels);
+  const depth = new Uint8Array(W * H).fill(255);
+  const queue = [];
+  for (let p = 0; p < W * H; p++) if (original[p * 4 + 3] < 32) {
+    depth[p] = 0; queue.push(p);
+  }
+  for (let i = 0; i < queue.length; i++) {
+    const p = queue[i], x = p % W, y = Math.floor(p / W);
+    for (const [nx, ny] of [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]) {
+      if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+      const n = ny * W + nx;
+      if (depth[n] <= depth[p] + 1) continue;
+      depth[n] = depth[p] + 1; queue.push(n);
+    }
+  }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const p = y * W + x, s = p * 4;
+    if (!depth[p] || depth[p] > 2) continue;
+    const luma = original[s] * 0.2126 + original[s + 1] * 0.7152 + original[s + 2] * 0.0722;
+    if (luma >= 48) continue;
+    const color = [0, 0, 0]; let weight = 0;
+    for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
+      const nx = x + dx, ny = y + dy, distance = dx * dx + dy * dy;
+      if (!distance || distance > 10 || nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+      const n = ny * W + nx;
+      if (depth[n] < 3 || original[n * 4 + 3] < 240) continue;
+      const w = 1 / distance;
+      weight += w;
+      for (let c = 0; c < 3; c++) color[c] += original[n * 4 + c] * w;
+    }
+    if (weight) {
+      const amount = depth[p] === 1 ? 0.55 : 0.35;
+      for (let c = 0; c < 3; c++) pixels[s + c] = Math.round(original[s + c] * (1 - amount) + color[c] / weight * amount);
+    }
+    if (depth[p] === 1) pixels[s + 3] = Math.round(original[s + 3] * 0.55);
+  }
 }
 
 const armMask = [[55, 48], [66, 46], [73, 53], [77, 63], [76, 78], [75, 86], [73, 91], [68, 94], [60, 93], [57, 89], [57, 83], [59, 72], [53, 65], [50, 56]];
@@ -246,6 +288,7 @@ for (let frame = 0; frame < 8; frame++) {
     } else over(out, x + offsetX, y + offsetY, x, y, upper);
   }
   arm(out, ...shiftedArm(nearArm[frame]));
+  finishOutline(out);
   frames.push(out);
   joints.push(record);
 }
