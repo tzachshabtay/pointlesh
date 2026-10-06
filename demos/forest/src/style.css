@@ -104,15 +104,17 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 .game-fullscreen { overflow:hidden; }
 .game-fullscreen #game-header,.game-fullscreen .title-row,.game-fullscreen .under-game,.game-fullscreen #nearby,.game-fullscreen footer { display:none; }
 .game-fullscreen #game-content { position:fixed; left:var(--preview-left,0px); top:var(--preview-top,0px); width:var(--preview-width,100vw); height:var(--preview-height,100dvh); max-width:none; margin:0; padding:0; }
-.game-fullscreen .game-shell { display:grid; grid-template-rows:auto minmax(0,1fr) auto; width:100%; height:100%; border:0; border-radius:0; box-shadow:none; }
+.game-fullscreen .game-shell { position:relative; display:grid; grid-template-rows:minmax(0,1fr); width:100%; height:100%; border:0; border-radius:0; box-shadow:none; overflow:clip; }
 .game-fullscreen .stage-frame { container-type:size; min-width:0; min-height:0; display:grid; place-items:center; background:#080e0b; }
 .game-fullscreen .stage-wrap { width:100%; height:100%; min-height:0; aspect-ratio:auto; }
 .game-fullscreen.game-fit .stage-wrap { width:min(100cqw,calc(100cqh * 16 / 9)); height:auto; aspect-ratio:16/9; }
-/* The green controls overlay the scene; revealing them never changes its size. */
-.game-fullscreen:not(.cinematic-playing) .game-shell { position:relative; grid-template-rows:minmax(0,1fr); overflow:clip; }
-.game-fullscreen:not(.cinematic-playing) :is(.scene-bar,.inventory-bar) { position:absolute; left:0; right:0; z-index:20; transition:transform 220ms ease-out; }
-.game-fullscreen:not(.cinematic-playing) .scene-bar { top:0; transform:translateY(-100%); }
-.game-fullscreen:not(.cinematic-playing) .inventory-bar { bottom:0; transform:translateY(100%); }
+/* Gameplay controls and cutscene bars overlay the same full-size scene. */
+.game-fullscreen :is(.scene-bar,.inventory-bar) { position:absolute; left:0; right:0; z-index:20; }
+.game-fullscreen .scene-bar { top:0; }
+.game-fullscreen .inventory-bar { bottom:0; }
+.game-fullscreen:not(.cinematic-playing) :is(.scene-bar,.inventory-bar) { transition:transform 220ms ease-out; }
+.game-fullscreen:not(.cinematic-playing) .scene-bar { transform:translateY(-100%); }
+.game-fullscreen:not(.cinematic-playing) .inventory-bar { transform:translateY(100%); }
 /* Transparent edge strips remain reachable while the bars are off screen. */
 .game-fullscreen:not(.cinematic-playing) .scene-bar::after,
 .game-fullscreen:not(.cinematic-playing) .inventory-bar::before { content:''; position:absolute; left:0; right:0; height:16px; }
