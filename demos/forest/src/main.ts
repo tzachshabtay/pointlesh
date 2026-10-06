@@ -1204,6 +1204,15 @@ class ForestAdventure extends Phaser.Scene {
 }
 
 function setupControls() {
+  const gameBars = Array.from(document.querySelectorAll<HTMLElement>('.scene-bar,.inventory-bar'));
+  // Touch has no hover: tap an edge to reveal its bar, and tap elsewhere to hide it.
+  document.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse') return;
+    for (const bar of gameBars) bar.classList.toggle('touch-revealed', event.target instanceof Node && bar.contains(event.target));
+  });
+  document.addEventListener('pointermove', event => {
+    if (event.pointerType === 'mouse') for (const bar of gameBars) bar.classList.remove('touch-revealed');
+  });
   el('new-game').onclick = () => gameScene.newGame();
   el('fullscreen').onclick = () => setFullScreen(!document.body.classList.contains('game-fullscreen'));
   el('start-load').onclick = () => saveMenu('load');
