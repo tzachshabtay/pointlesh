@@ -117,7 +117,6 @@ class ForestAdventure extends Phaser.Scene {
   private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
   speakingVoice = 'borin';
   labels: Phaser.GameObjects.Text[] = [];
-  markers!: Phaser.GameObjects.Graphics;
   stars: { image: Phaser.GameObjects.Arc; speed: number; start: number }[] = [];
   overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
   sceneDesigner?: ReturnType<typeof installPhaserPointleshDesigner>;
@@ -214,7 +213,6 @@ class ForestAdventure extends Phaser.Scene {
       footprint: () => this.navigationFootprint(this.playerDefinition()),
     });
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
-    this.markers = this.add.graphics().setDepth(2000);
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
       assetId: 'cursor.walk',
       resolve: target => {
@@ -792,10 +790,9 @@ class ForestAdventure extends Phaser.Scene {
     this.events.once('shutdown', () => this.interactionDesigner?.destroy());
   }
   drawHotspots() {
-    this.markers.clear(); for (const label of this.labels) label.destroy(); this.labels = [];
+    for (const label of this.labels) label.destroy(); this.labels = [];
     if (!this.showHotspots) return;
     for (const area of this.resolved().areas.filter(area => area.kind === 'hotspot' && area.enabled && targetVisible(this.story, area.id))) {
-      this.markers.lineStyle(1.5, 0xe9d596, .8).fillStyle(0xe9d596, .07); this.markers.fillPoints(area.polygon.map(p => new Phaser.Math.Vector2(p.x, p.y)), true).strokePoints(area.polygon.map(p => new Phaser.Math.Vector2(p.x, p.y)), true);
       const target = targets[this.story.roomId].find(target => target.id === area.id);
       if (target) this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
     }
