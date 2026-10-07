@@ -14,6 +14,7 @@ import { CAGE_APPROACH_AREA } from './transition-content';
 import { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, sampleWalk, sampleEntrance, walkLength } from './cinematic-paths';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
+import { liftCinematicWorld } from './cinematic-framing';
 
 export type CinematicKind = 'intro' | 'ending';
 export type EndingOpening = { position: Point; facing: Direction; zoom: number; x: number; y: number };
@@ -145,6 +146,7 @@ export class ForestCinematic {
     const t = clamp(elapsedMs / duration);
     if (this.kind === 'intro') this.intro(stepIndex, t);
     else this.ending(stepIndex, t);
+    this.frameAboveCaption();
     this.world.sort('depth');
     this.lighting?.sync(forestLighting(this.room, this.definitions.get(this.room)?.objects ?? [],
       id => this.ambient.find(light => light.sprite.name === `ambient-${id}`)?.sprite), this.world);
@@ -197,6 +199,19 @@ export class ForestCinematic {
       // modifying child filters; ignoring the outer container already hides it.
       object.cameraFilter |= this.camera.id;
     }
+  }
+
+  private frameAboveCaption(): void {
+    if (!document.body.classList.contains('game-fullscreen')) return;
+    const stage = this.scene.game.canvas.getBoundingClientRect();
+    const caption = document.querySelector('.inventory-bar')?.getBoundingClientRect();
+    if (!caption || stage.height <= 0) return;
+    const coveredBottom = Math.max(0, Math.min(stage.height, stage.bottom - caption.top)) * H / stage.height;
+    // Keep the title tableau and the gameplay-to-ending handoff continuous.
+    const blend = this.stepIndex !== 0 ? 1 : this.kind === 'intro'
+      ? smooth((this.elapsedMs - INTRO_APPROACH_START_MS) / 1000) : smooth(this.elapsedMs / 900);
+    this.world.y = liftCinematicWorld(this.world.y, this.definitions.get(this.room)!.height,
+      this.world.scaleY, H, coveredBottom, (this.room === 'forest' ? 32 : 18) * blend);
   }
 
   private shot(room: string, name: string, zoom: number, focusX = 480, focusY = 285, tint = 0xffffff): void {

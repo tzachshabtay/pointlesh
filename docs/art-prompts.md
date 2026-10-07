@@ -388,3 +388,22 @@ Final generation prompt:
 ```text
 Use case: precise-object-edit. Asset type: production pixel-art object spritesheet for a point-and-click game. Input image is the EXACT existing chest to animate, not a loose style reference. Create ONE transparent PNG spritesheet with exactly NINE separate frames in a 3-column by 3-row grid, ordered left-to-right, top-to-bottom. Each equal square cell has wide transparent gutters. Every frame shows this SAME dwarven oak chest, with the SAME iron bands, latch, three angular amber runes, identical perspective (front and right side visible), identical fixed body size, and identical bottom-foot anchor. The chest base never moves, deforms, shrinks or changes perspective. Leave space above it for the lid; retain crisp pixel-art pixels, oak colors and dark iron. Frame 1: exact closed chest, dim runes. Frame 2: the three runes glow softly amber, light reflected subtly in neighboring wood. Frame 3: brighter amber runes. Frame 4: lid cracks open with amber light from within. Frame 5: lid halfway up, hinges at the rear stay fixed. Frame 6: lid opens farther. Frame 7: lid fully open, one wooden-handled steel dwarven pickaxe visible inside. Frame 8: same fully open chest holding the pickaxe, amber rune glow settling. Frame 9: identical fully open chest but empty after the pickaxe has been collected. Keep all frames isolated on actual transparent alpha, no environment, no floor, no shadows outside the object, no labels, no text, no grid lines, no extra objects. Zero camera movement, fixed chest-body proportions and position in every cell. Preserve this exact chest identity and do not redesign it.
 ```
+
+
+## Cinematic color matching (October 2026)
+
+Built-in image tool, color-only edits with transparent output. The generated sheets were used as palette studies, not replacement geometry. `demos/forest/scripts/match-cinematic-palettes.mjs` transfers only selected material colors back to the original sheets: every alpha pixel, frame dimension, silhouette and anchor stays unchanged. The king's final cloth palette is sampled directly from the promoted front-idle reference (slightly brighter than the generated study); the door uses the generated weathered-timber palette. Recorded HSV medians are in `scripts/cinematic-palettes.json`, which the importer also accepts in place of reference PNGs. Apply to the pre-correction sources, not repeatedly to the corrected outputs.
+
+Final project assets (relative to `demos/forest/public`): `art/characters/king/hands-up.png`, `art/objects/cage-door-open.png`, `art/objects/cage-door.png`. The closed door is copied exactly from frame zero of the corrected sheet.
+
+King prompt (edit target: original hands-up sheet; reference: `art/king.idle-front.promoted-1790370386743.png`):
+
+```text
+Edit image 1 ONLY. This is a production 8-frame sprite sheet, 4 columns x 2 rows, 400x280 pixels (100x140 each). COLOR CORRECTION ONLY: change the blue cloth of the king's tunic and sleeves from its brighter saturated royal blue to the slightly muted dark blue-gray cloth palette shown in reference image 2 (idle animation). Keep EVERY frame, pose, face, hand, gold trim, red cape, shoes, exact silhouette, pixel placement, feet baseline, margins, framing and sprite grid unchanged. Do not redraw or enhance anything. Preserve original resolution if possible. Transparent background and transparent margins. Image 2 is color reference only; never copy its brown background or grid. Output only the edited 4x2 sheet.
+```
+
+Door prompt (edit target: original cage-door-open sheet; reference: `art/camp-doorless.png`):
+
+```text
+Edit image 1 ONLY. Production 8-frame sprite sheet, 4 columns x 2 rows, 960x460 pixels, each cell240x230. COLOR CORRECTION ONLY: match the door timber palette to the stationary cage wood on the right of reference image 2. Current door is too bright golden/orange compared with the cage's muted brown weathered timber. Gently reduce orange saturation and brightness to match that exact cage. Preserve highlights and texture. Keep all 8 frames, geometry, hinges, silhouettes, padlock breaking and falling, opening angles, alpha edges, cell positions, empty space and every pixel's spatial position unchanged. Do NOT redesign, rescale, reposition, remove details or introduce scenery. Image2 is wood COLOR reference only. Output only the corrected same 4x2 sheet with transparent background and transparent gaps between bars.
+```
