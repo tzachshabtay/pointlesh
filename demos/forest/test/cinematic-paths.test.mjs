@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { tsImport } from 'tsx/esm/api';
 import { isWalkable, isSegmentWalkable, resolvePointleshScene, walkablePolygons } from '@pointlesh/core';
-const { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, cottageDeparture, sampleWalk, walkLength } = await tsImport('../src/cinematic-paths.ts', import.meta.url);
+const { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, cottageDeparture, sampleWalk, sampleEntrance, walkLength } = await tsImport('../src/cinematic-paths.ts', import.meta.url);
 const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
 const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url)));
 
@@ -33,6 +33,13 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) {
     assert.equal(rear.y, king.y); assert.equal(front.y, king.y);
     assert.ok(walkLength(paths['guard-front']) >= 140);
     assert.ok(walkLength(paths['guard-front']) < 180);
+    assert.ok(sampleEntrance(paths['guard-rear'], -300).x < -100, 'Rear orc starts completely outside the picture');
+    assert.ok(sampleEntrance(paths['guard-front'], -300).x > 1000, 'Front orc starts completely outside the picture');
+    for (const id of ['guard-rear', 'guard-front']) {
+      const before = sampleEntrance(paths[id], -.01), after = sampleEntrance(paths[id], .01);
+      assert.ok(Math.hypot(before.x - after.x, before.y - after.y) < .021, 'Entrance joins the floor without teleporting');
+      assert.equal(before.facing, after.facing);
+    }
   });
 }
 

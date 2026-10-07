@@ -8,17 +8,17 @@ import { forestLighting } from './environment-lighting';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
 import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
-import { INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
+import { INTRO_APPROACH_START_MS, INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
 import { activatePointleshAreas } from './room-transition';
 import { CAGE_APPROACH_AREA } from './transition-content';
-import { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, sampleWalk, walkLength } from './cinematic-paths';
+import { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, sampleWalk, sampleEntrance, walkLength } from './cinematic-paths';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 
 export type CinematicKind = 'intro' | 'ending';
 export type EndingOpening = { position: Point; facing: Direction; zoom: number; x: number; y: number };
 export const CINEMATIC_DURATIONS = {
-  intro: [6000, 4500, 6000],
+  intro: [8500, 4500, 6000],
   ending: [6200, 6200, 5600, 6500],
 } as const;
 
@@ -345,22 +345,25 @@ export class ForestCinematic {
 
   private intro(step: number, t: number): void {
     if (step === 0) {
-      this.shot('village', 'BRAMBLEHOLLOW · BEFORE DAWN', lerp(1.03, 1.12, t), lerp(465, 450, t), 296, 0xaebbc6);
+      const approachMs = Math.max(0, this.elapsedMs - INTRO_APPROACH_START_MS);
+      const progress = clamp(approachMs / (CINEMATIC_DURATIONS.intro[0] - INTRO_APPROACH_START_MS));
+      this.shot('village', 'BRAMBLEHOLLOW · BEFORE DAWN', lerp(1.03, 1.12, progress), lerp(465, 450, progress), 296, 0xaebbc6);
       const paths = this.abduction ??= villageAbduction(this.authoredManifest!);
-      const travelled = this.elapsedMs * .06;
-      const king = sampleWalk(paths.king, travelled), kingWalking = travelled < walkLength(paths.king);
-      const rear = sampleWalk(paths['guard-rear'], travelled), rearWalking = travelled < walkLength(paths['guard-rear']);
-      const front = sampleWalk(paths['guard-front'], travelled), frontWalking = travelled < walkLength(paths['guard-front']);
-      const elder = sampleWalk(paths.elder, walkLength(paths.elder) * segment(t, .18, .42));
+      const kingDistance = Math.max(0, approachMs - 600) * .08;
+      const travelled = approachMs * .16 - 300;
+      const king = sampleWalk(paths.king, kingDistance), kingWalking = kingDistance > 0 && kingDistance < walkLength(paths.king);
+      const rear = sampleEntrance(paths['guard-rear'], travelled), rearWalking = travelled < walkLength(paths['guard-rear']);
+      const front = sampleEntrance(paths['guard-front'], travelled), frontWalking = travelled < walkLength(paths['guard-front']);
       const spear = this.elapsedMs >= INTRO_SPEAR_START_MS;
       const hands = this.elapsedMs >= INTRO_HANDS_START_MS;
       this.pose('king', { ...king, facing: kingWalking ? king.facing : 'down', walking: kingWalking,
         ...(hands ? { action: 'hands-up', actionElapsedMs: this.elapsedMs - INTRO_HANDS_START_MS } : {}) });
-      this.pose('guard-rear', { ...rear, walking: rearWalking, facing: rearWalking ? rear.facing : 'right',
-        ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
-      this.pose('guard-front', { ...front, walking: frontWalking, facing: frontWalking ? front.facing : 'left',
-        ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
-      this.pose('elder', { ...elder, walking: t > 0.18 && t < 0.42, facing: t < .42 ? elder.facing : 'left' });
+      if (this.elapsedMs >= INTRO_APPROACH_START_MS) {
+        this.pose('guard-rear', { ...rear, walking: rearWalking, facing: rearWalking ? rear.facing : 'right',
+          ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
+        this.pose('guard-front', { ...front, walking: frontWalking, facing: frontWalking ? front.facing : 'left',
+          ...(spear ? { action: 'point-spear', actionElapsedMs: this.elapsedMs - INTRO_SPEAR_START_MS } : {}) });
+      }
       this.mist(0xa9bac3, 0.065);
     } else if (step === 1) {
       const path = this.march ??= forestMarch(this.authoredManifest!);

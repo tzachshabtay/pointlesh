@@ -20,6 +20,14 @@ export function sampleWalk(path: readonly Point[], travelled: number): Point & {
 }
 export const walkLength = (path: readonly Point[]) => path.slice(1).reduce((sum, p, i) => sum + distance(path[i]!, p), 0);
 
+/** Continue the entrance street beyond the frame, then join its walkable route. */
+export function sampleEntrance(path: readonly Point[], travelled: number) {
+  if (travelled >= 0) return sampleWalk(path, travelled);
+  const a = path[0]!, b = path.find(point => distance(a, point) > 0) ?? a;
+  const length = distance(a, b) || 1;
+  return { ...sampleWalk(path, 0), x: a.x + (b.x - a.x) * travelled / length, y: a.y + (b.y - a.y) * travelled / length };
+}
+
 function route(start: Point, end: Point, floors: Polygon[]): Point[] {
   // Designer edits can move a point beyond the floor. Project it before routing,
   // rather than letting a cinematic bypass the game's walkable geometry.
@@ -44,7 +52,6 @@ export function villageAbduction(manifest: SceneDesignerManifest) {
     king: route({ x: 468, y: 427 }, { x: 360, y: 500 }, floors),
     'guard-rear': route({ x: 35, y: 494 }, { x: 130, y: 500 }, floors),
     'guard-front': route({ x: 735, y: 500 }, { x: 590, y: 500 }, floors),
-    elder: route({ x: 324, y: 415 }, { x: 267, y: 435 }, floors),
   };
 }
 

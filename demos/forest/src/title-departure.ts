@@ -14,6 +14,13 @@ export function playTitleDeparture(screen: HTMLElement, stage: HTMLElement, comp
   const fade = { duration: reduced ? duration : 450, easing: 'ease-out', fill: 'forwards' as const };
   const animations = [content, credit].map(element => element.animate(
     [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: reduced ? 'none' : 'translateY(-16px)' }], fade));
+  const reveal = { duration, easing: 'ease-in-out', fill: 'forwards' as const };
+  for (const layer of [art, stage]) animations.push(layer.animate([
+    { filter: 'sepia(1)' }, { filter: 'sepia(0)' },
+  ], reveal));
+  for (const bar of Array.from(stage.closest('.game-shell')!.querySelectorAll<HTMLElement>('.scene-bar,.inventory-bar'))) {
+    animations.push(bar.animate([{ opacity: 0 }, { opacity: 1 }], reveal));
+  }
   if (!reduced) animations.push(art.animate([
     { left: '0px', top: '0px', width: `${from.width}px`, height: `${from.height}px`, backgroundSize: `${coverWidth}px ${coverHeight}px` },
     { left: `${to.left - from.left}px`, top: `${to.top - from.top}px`, width: `${to.width}px`, height: `${to.height}px`, backgroundSize: `${to.width}px ${to.height}px` },

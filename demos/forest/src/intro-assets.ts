@@ -2,8 +2,9 @@ import type { AiAssetDefinition, AiAssetManifest } from '@ai-game-assets/core';
 import type { CharacterAnimations } from '@pointlesh/core';
 
 export type IntroAction = 'point-spear' | 'hands-up';
-export const INTRO_SPEAR_START_MS = 3000;
-export const INTRO_HANDS_START_MS = 3650;
+export const INTRO_APPROACH_START_MS = 2000;
+export const INTRO_SPEAR_START_MS = 5400;
+export const INTRO_HANDS_START_MS = 6050;
 
 function clip(id: string, width: number, height: number, prompt: string): AiAssetDefinition {
   return {

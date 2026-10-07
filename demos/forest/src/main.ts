@@ -283,14 +283,25 @@ class ForestAdventure extends Phaser.Scene {
     this.render();
     el('loading').hidden = true;
     setupControls();
-    const cover = this.textures.get('room.village').getSourceImage() as HTMLCanvasElement;
-    el('start-screen').style.setProperty('--start-art', `url("${cover.toDataURL()}")`);
-    el<HTMLButtonElement>('new-game').disabled = false;
-    el<HTMLButtonElement>('start-load').disabled = false;
-    el('start-progress').hidden = true;
-    el('start-actions').hidden = false;
-    el('start-controls').setAttribute('aria-busy', 'false');
-    el('start-status').textContent = 'A point-and-click adventure in the Elderwood';
+    // Capture the actual opening camera and character pose, rather than a bare
+    // room texture whose framing and cast would jump when the intro starts.
+    const titleShot = new ForestCinematic(this, 'intro', this.aiRuntime, () => authoredScenes, this.characterLighting);
+    // create() can run inside a frame that has already collected its cameras.
+    this.game.events.once('postrender', () => this.game.renderer.snapshot(async image => {
+      titleShot.destroy();
+      const cover = this.textures.get('room.village').getSourceImage() as HTMLCanvasElement;
+      const source = image instanceof HTMLImageElement ? image.src : cover.toDataURL();
+      // A high-density frame can exceed CSS custom-property data URL limits.
+      const titleUrl = URL.createObjectURL(await (await fetch(source)).blob());
+      this.events.once('shutdown', () => URL.revokeObjectURL(titleUrl));
+      el('start-screen').style.setProperty('--start-art', `url("${titleUrl}")`);
+      el<HTMLButtonElement>('new-game').disabled = false;
+      el<HTMLButtonElement>('start-load').disabled = false;
+      el('start-progress').hidden = true;
+      el('start-actions').hidden = false;
+      el('start-controls').setAttribute('aria-busy', 'false');
+      el('start-status').textContent = 'A point-and-click adventure in the Elderwood';
+    }));
     this.showStartScreen();
     if (import.meta.env.DEV) Object.assign(window, { pointleshDemo: {
       snapshot: () => this.snapshot(),
@@ -1147,7 +1158,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cameraWasEditing = cameraEditing;
     if (this.blocked() && this.movementKeys.size) this.clearMovementKeys();
     if (this.cinematic && !this.cutsceneCrossfade) {
-      if (!modalOpen) {
+      if (!modalOpen && !this.cancelTitleDeparture) {
         const isEnding = this.story.endingStep >= 0;
         const runner = isEnding ? this.endingRunner : this.introRunner;
         const previousStep = runner.snapshot().stepIndex;
