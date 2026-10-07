@@ -33,7 +33,6 @@ import { resolveInventoryItemPrefab } from '@pointlesh/core';
 import type { AdventureCursorAppearance } from '@pointlesh/phaser';
 import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
-import { installViewportLayout } from './viewport-layout';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
 import { ForestDialogPortrait } from './dialog-portrait';
 import { cottageDeparture } from './cinematic-paths';
@@ -46,8 +45,6 @@ import { installInteractionDesigner, InteractionDesignerDebugClient, type Intera
 import { createForestInteractions } from './interactions';
 import { playTitleDeparture } from './title-departure';
 
-const disposeViewportLayout = installViewportLayout(document.documentElement);
-if (import.meta.hot) import.meta.hot.dispose(disposeViewportLayout);
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
