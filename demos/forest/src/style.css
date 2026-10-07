@@ -140,11 +140,6 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
 @media(prefers-reduced-motion:reduce) { .start-departing .start-art::after { transition:none; } }
 .start-content { max-width:680px; padding:40px 28px; text-shadow:0 3px 24px #000; }
 #start-title { color:#f4e6c2; font-size:clamp(38px,min(8cqw,10cqh),84px); line-height:1.04; letter-spacing:-1.8px; }
-/* Leave the king visible at the center of the opening composition. */
-@container (min-aspect-ratio:1/1) {
-  .start-content { justify-self:start; width:44cqw; max-width:660px; padding:24px; }
-  #start-title { font-size:clamp(32px,min(5cqw,10cqh),76px); }
-}
 .start-content .eyebrow { font-size:10px; letter-spacing:3px; margin-bottom:26px; }
 .start-premise { font:18px/1.7 Georgia,'Times New Roman',serif; color:#d0d7bd; margin:24px 0 32px; }
 .start-controls { display:grid; place-items:center; min-height:112px; }
