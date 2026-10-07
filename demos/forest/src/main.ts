@@ -294,13 +294,20 @@ class ForestAdventure extends Phaser.Scene {
       // A high-density frame can exceed CSS custom-property data URL limits.
       const titleUrl = URL.createObjectURL(await (await fetch(source)).blob());
       this.events.once('shutdown', () => URL.revokeObjectURL(titleUrl));
+      const titleArt = new Image(); titleArt.src = titleUrl;
+      await titleArt.decode();
       el('start-screen').style.setProperty('--start-art', `url("${titleUrl}")`);
+      el('start-actions').hidden = false;
+      el('start-status').textContent = 'A point-and-click adventure in the Elderwood';
+      // Lay out the complete menu while hidden, including its final fonts and
+      // button rows. Only the centered spinner is visible during startup.
+      await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
       el<HTMLButtonElement>('new-game').disabled = false;
       el<HTMLButtonElement>('start-load').disabled = false;
       el('start-progress').hidden = true;
-      el('start-actions').hidden = false;
       el('start-controls').setAttribute('aria-busy', 'false');
-      el('start-status').textContent = 'A point-and-click adventure in the Elderwood';
+      el('start-screen').classList.remove('start-loading');
     }));
     this.showStartScreen();
     if (import.meta.env.DEV) Object.assign(window, { pointleshDemo: {

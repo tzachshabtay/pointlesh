@@ -27,6 +27,9 @@
 .start-departing .start-art::after { opacity:0; transition:opacity 1200ms ease-in-out; }
 @media(prefers-reduced-motion:reduce) { .start-departing .start-art::after { transition:none; } }
 .start-content { max-width:680px; padding:40px 28px; text-shadow:0 3px 24px #000; }
+/* Keep the menu laid out but unpainted until its final artwork and controls are ready. */
+.start-loading :is(.start-content,.start-credit,.start-art) { visibility:hidden; }
+.start-loading .start-progress { visibility:visible; position:absolute; left:calc(50% - 32px); top:calc(50% - 32px); }
 #start-title { color:#f4e6c2; font-size:clamp(38px,min(8cqw,10cqh),84px); line-height:1.04; letter-spacing:-1.8px; }
 .start-content .eyebrow { font-size:10px; letter-spacing:3px; margin-bottom:26px; }
 .start-premise { font:18px/1.7 Georgia,'Times New Roman',serif; color:#d0d7bd; margin:24px 0 32px; }
@@ -70,7 +73,7 @@
 </head>
 <body class="menu-open">
   <div id="app">
-    <section id="start-screen" aria-labelledby="start-title">
+    <section id="start-screen" class="start-loading" aria-labelledby="start-title">
       <div class="start-art" aria-hidden="true"></div>
       <div class="start-content">
         <p class="eyebrow">A SMALL DWARF. A RATHER LARGE ADVENTURE.</p>
