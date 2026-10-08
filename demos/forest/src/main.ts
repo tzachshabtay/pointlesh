@@ -25,6 +25,7 @@ import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
+import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
 import { inventoryAssetId, addForestInterfaceAssets } from './interface-assets';
@@ -134,7 +135,8 @@ class ForestAdventure extends Phaser.Scene {
   private resolvedCache?: ReturnType<typeof resolvePointleshScene>;
   speakingVoice = 'borin';
   labels: Phaser.GameObjects.Text[] = [];
-  stars: { image: Phaser.GameObjects.Arc; speed: number; start: number }[] = [];
+  private outdoorAtmosphere!: OutdoorAtmosphere;
+  private outdoorElapsedMs = 0;
   overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
   sceneDesigner?: ReturnType<typeof installPhaserPointleshDesigner>;
   aiRuntime!: AiAssetRuntime;
@@ -181,6 +183,7 @@ class ForestAdventure extends Phaser.Scene {
     });
     installPhaserDisplayResolution(this.game);
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000).setDisplaySize(this.roomSize('village').width, this.roomSize('village').height);
+    this.outdoorAtmosphere = new OutdoorAtmosphere(this);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
     this.campStealth = new CampStealth(this.character, {
       pourDurationMs: () => this.binding.animationDurationMs || POUR_DURATION_MS,
@@ -535,9 +538,9 @@ class ForestAdventure extends Phaser.Scene {
       if (this.campRestricted()) { this.character.place(this.campCover(), 'right'); this.campStealth.start(this.campCover()); }
     }
     for (const sprite of this.entitySprites.values()) sprite.destroy(); this.entitySprites.clear(); this.npcActors.clear();
-    for (const star of this.stars) star.image.destroy(); this.stars = [];
+    this.outdoorElapsedMs = 0;
     const size = this.roomSize(room);
-    if (['forest', 'village', 'camp'].includes(room)) for (let i = 0; i < Math.round(17 * size.width / 960); i++) this.stars.push({ image: this.add.circle(70 + (i * 137) % (size.width - 125), 65 + (i * 61) % (size.height - 170), i % 3 === 0 ? 1.8 : 1, 0xebd98a, 0.45).setDepth(1000), speed: .5 + i % 4 * .13, start: i * 27 });
+    this.outdoorAtmosphere.render(room, 0, size.width, size.height);
     if (this.editing || this.worldEditorOpen()) this.cameras.main.setZoom(1);
     this.refreshDesign(); this.render();
     this.roomCamera.snap();
@@ -1214,7 +1217,9 @@ class ForestAdventure extends Phaser.Scene {
     this.renderPeek();
     this.renderPour();
     if (!this.cinematic) this.characterLighting.sync(forestLighting(this.story.roomId, this.resolved().objects, id => this.entitySprites.get(id)));
-    for (const star of this.stars) { star.image.y = 100 + (star.start + this.time.now * .004 * star.speed) % 320; star.image.alpha = .15 + (Math.sin(this.time.now * .001 + star.start) + 1) * .2; }
+    if (!modalOpen) this.outdoorElapsedMs += Math.min(delta, 100);
+    const outdoorSize = this.roomSize(this.story.roomId);
+    this.outdoorAtmosphere.render(this.story.roomId, this.outdoorElapsedMs, outdoorSize.width, outdoorSize.height);
   }
 }
 

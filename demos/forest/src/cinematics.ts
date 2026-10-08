@@ -4,6 +4,7 @@ import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject, type Point, type Direction } from '@pointlesh/core';
 import { intro as introScript, ending as endingScript } from './story';
 import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
+import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting } from './environment-lighting';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
@@ -68,6 +69,7 @@ export class ForestCinematic {
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private readonly background: Phaser.GameObjects.Image;
   private readonly atmosphere: Phaser.GameObjects.Graphics;
+  private readonly outdoorAtmosphere: OutdoorAtmosphere;
   private readonly props: Phaser.GameObjects.Graphics;
   private readonly cageDoor: Phaser.GameObjects.Sprite;
   private doorBinding?: PhaserAdventureCharacter;
@@ -100,6 +102,7 @@ export class ForestCinematic {
     this.root = scene.add.container(0, 0).setName('pointlesh-cinematic').setDepth(5000);
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
+    this.outdoorAtmosphere = new OutdoorAtmosphere(scene, this.world);
     this.background = scene.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000);
     this.atmosphere = scene.add.graphics().setDepth(0);
     this.props = scene.add.graphics().setDepth(850).setName('cutscene-props');
@@ -147,6 +150,8 @@ export class ForestCinematic {
     if (this.kind === 'intro') this.intro(stepIndex, t);
     else this.ending(stepIndex, t);
     this.frameAboveCaption();
+    const roomSize = this.definitions.get(this.room)!;
+    this.outdoorAtmosphere.render(this.room, elapsedMs, roomSize.width, roomSize.height);
     this.world.sort('depth');
     this.lighting?.sync(forestLighting(this.room, this.definitions.get(this.room)?.objects ?? [],
       id => this.ambient.find(light => light.sprite.name === `ambient-${id}`)?.sprite), this.world);
@@ -323,11 +328,6 @@ export class ForestCinematic {
     for (let row = 0; row < 3; row++) {
       const shift = ((time * (12 + row * 4) + row * 217) % 1250) - 170;
       this.atmosphere.fillStyle(tint, alpha).fillEllipse(shift, 343 + row * 42, 590, 29 + row * 9);
-    }
-    for (let i = 0; i < 16; i++) {
-      const x = 40 + (i * 139) % 885 + Math.sin(time * 0.6 + i) * 7;
-      const y = 90 + (i * 67) % 290 + Math.cos(time * 0.7 + i) * 8;
-      this.atmosphere.fillStyle(0xe4d595, 0.25 + (Math.sin(time * 1.4 + i) + 1) * 0.14).fillRect(x, y, i % 4 === 0 ? 3 : 2, 2);
     }
   }
 
