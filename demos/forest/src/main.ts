@@ -17,7 +17,7 @@ import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_P
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
 import { addRescueAssets, borinActionSize, CAGE_DOOR_ID, rescueAnimation } from './rescue-assets';
 import { addIntroAssets } from './intro-assets';
-import { addStealthAssets, peekAnimation, peekSize, PEEK_DOOR_OPEN } from './stealth-assets';
+import { addStealthAssets, peekAnimation, peekSize, PEEK_DOOR_OPEN, PEEK_DURATION_MS } from './stealth-assets';
 import { CampStealth, assertCampStealthCheckpoint, type CampStealthCheckpoint } from './camp-stealth';
 import { RoomTransitionController, activatePointleshAreas, assertRoomTransitionCheckpoint, type RoomTransitionCheckpoint } from './room-transition';
 import { addDoorAssets, addForestTransitions, forestPortal, CAGE_APPROACH_AREA } from './transition-content';
@@ -222,7 +222,7 @@ class ForestAdventure extends Phaser.Scene {
       baseScale: () => { const actor = this.playerDefinition(); return actor ? { x: actor.scaleX, y: actor.scaleY } : 2.4; },
       origin: () => { const actor = this.playerDefinition(); return actor ? { x: actor.anchorX, y: 1 - actor.anchorY } : { x: .5, y: 1 }; },
       angle: () => this.playerDefinition()?.rotation ?? 0,
-      animations: () => this.peeking() ? peekAnimation(this.roomTransition.phase !== 'peek-entry') : this.campStealth.pouring ? rescueAnimation('borin', 'pour-back') : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
+      animations: () => this.peeking() ? peekAnimation(!['peek-entry', 'peek-exit'].includes(this.roomTransition.phase ?? '')) : this.campStealth.pouring ? rescueAnimation('borin', 'pour-back') : this.story.tyingGuard ? rescueAnimation('borin', 'tie-rope-back') : readCharacterAnimations(this.playerDefinition()?.properties ?? {}),
       baseSize: () => this.peeking() ? peekSize(assets.assets.borin) : borinActionSize(assets.assets.borin, !!this.story.tyingGuard || this.campStealth.pouring),
       areas: () => this.playerAreas(), camera: () => this.editing || this.worldEditorOpen() ? undefined : this.cameras.main,
     });
@@ -376,7 +376,7 @@ class ForestAdventure extends Phaser.Scene {
     ]);
   }
   campRestricted() { return this.story.roomId === 'camp' && !this.story.flags.guardAsleep; }
-  peeking() { return this.campRestricted() && (this.roomTransition?.phase === 'peek-entry' || !!this.campStealth?.peeking); }
+  peeking() { return this.roomTransition?.phase === 'peek-exit' || this.campRestricted() && (this.roomTransition?.phase === 'peek-entry' || !!this.campStealth?.peeking); }
   campCover() { const portal = forestPortal(authoredScenes, 'camp', 'forest'); return portal.path[portal.handoffIndex ?? portal.path.length - 1]!; }
   campClearance() {
     const floors = walkablePolygons(this.resolved()), start = floors[0]?.[0], cover = this.campCover();
@@ -469,7 +469,6 @@ class ForestAdventure extends Phaser.Scene {
       this.epoch++; this.clearMovementKeys(); this.hover();
       const from = forestPortal(authoredScenes, this.story.roomId, exit), to = forestPortal(authoredScenes, exit, this.story.roomId);
       const stealth = !this.story.flags.guardAsleep && (from.roomId === 'camp' || to.roomId === 'camp');
-      if (this.campRestricted()) from.path[0] = { ...this.character.state.position };
       this.campStealth.cancel();
       this.roomTransition.begin(from, to, stealth);
       // Activation can change perspective at this position. Keep the rendered
@@ -739,8 +738,12 @@ class ForestAdventure extends Phaser.Scene {
   private renderPeek(): void {
     if (!this.peeking()) return;
     const entering = this.roomTransition.phase === 'peek-entry';
+    const retreating = this.roomTransition.phase === 'peek-exit';
+    const elapsed = retreating
+      ? Math.max(0, 1 - this.roomTransition.peekElapsedMs / PEEK_DURATION_MS) * this.binding.animationDurationMs
+      : entering ? this.roomTransition.peekElapsedMs : this.campStealth.elapsedMs;
     this.binding.renderPose({ position: this.character.state.position, activity: 'idle', facing: 'right' },
-      entering ? this.roomTransition.peekElapsedMs : this.campStealth.elapsedMs, { loop: !entering });
+      elapsed, { loop: !entering && !retreating });
   }
   private renderPour(): void {
     if (!this.campStealth.pouring) return;

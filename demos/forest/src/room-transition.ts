@@ -17,19 +17,20 @@ export type RoomPortal = {
   openingWaypoint?: number;
 };
 // close-exit and open-entry remain readable for saves made by the old sequence.
-export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'opening-entry' | 'entry' | 'close-entry' | 'peek-entry';
+export type RoomTransitionPhase = 'open-exit' | 'exit' | 'close-exit' | 'open-entry' | 'opening-entry' | 'entry' | 'close-entry' | 'peek-entry' | 'peek-exit';
 export type RoomTransitionCheckpoint = {
   from: RoomPortal; to: RoomPortal; phase: RoomTransitionPhase; elapsedMs: number; waypoint: number;
   campStealth?: boolean;
   closingElapsedMs?: number;
 };
-const phases: RoomTransitionPhase[] = ['open-exit', 'exit', 'close-exit', 'open-entry', 'opening-entry', 'entry', 'close-entry', 'peek-entry'];
+const phases: RoomTransitionPhase[] = ['open-exit', 'exit', 'close-exit', 'open-entry', 'opening-entry', 'entry', 'close-entry', 'peek-entry', 'peek-exit'];
 
 export function assertRoomTransitionCheckpoint(value: unknown): asserts value is RoomTransitionCheckpoint {
   const state = value as RoomTransitionCheckpoint;
   if (!state || !phases.includes(state.phase) || !Number.isFinite(state.elapsedMs) || state.elapsedMs < 0 ||
     !Number.isInteger(state.waypoint) || state.waypoint < 0) throw new Error('Invalid room transition checkpoint');
   if (state.campStealth !== undefined && typeof state.campStealth !== 'boolean' || state.phase === 'peek-entry' && (!state.campStealth || state.to.roomId !== 'camp')) throw new Error('Invalid stealth transition');
+  if (state.phase === 'peek-exit' && (!state.campStealth || state.from?.roomId !== 'camp' || state.to?.roomId !== 'forest')) throw new Error('Invalid stealth retreat');
   if (state.closingElapsedMs !== undefined && (!Number.isFinite(state.closingElapsedMs) || state.closingElapsedMs < 0)) throw new Error('Invalid door closing time');
   for (const portal of [state.from, state.to]) {
     if (!portal || typeof portal.roomId !== 'string' || !portal.roomId || typeof portal.areaId !== 'string' || !portal.areaId ||
@@ -66,24 +67,26 @@ export class RoomTransitionController {
   get active(): boolean { return !!this.state; }
   get portal(): RoomPortal | undefined { return this.state && (this.state.phase.includes('entry') ? this.state.to : this.state.from); }
   get phase(): RoomTransitionPhase | undefined { return this.state?.phase; }
-  get closing(): boolean { return !!this.state && (this.state.phase.startsWith('close') || this.state.phase === 'entry' && this.state.closingElapsedMs !== undefined); }
-  get peekElapsedMs(): number { return this.state?.phase === 'peek-entry' ? this.state.elapsedMs : 0; }
+  get closing(): boolean { return !!this.state && (this.state.phase === 'peek-exit' || this.state.phase.startsWith('close') || this.state.phase === 'entry' && this.state.closingElapsedMs !== undefined); }
+  get peekElapsedMs(): number { return this.state?.phase === 'peek-entry' || this.state?.phase === 'peek-exit' ? this.state.elapsedMs : 0; }
   get doorProgress(): number {
     const state = this.state, portal = this.portal;
     if (!state || !portal?.doorId) return 0;
+    if (state.phase === 'peek-exit') return PEEK_DOOR_OPEN * Math.max(0, 1 - state.elapsedMs / PEEK_DURATION_MS);
     if (state.phase === 'entry' && state.closingElapsedMs !== undefined) return Math.max(0, 1 - state.closingElapsedMs / (portal.doorCloseDurationMs ?? portal.doorDurationMs ?? 900));
     const duration = state.phase.startsWith('close') ? portal.doorCloseDurationMs ?? portal.doorDurationMs ?? 900 : portal.doorDurationMs ?? 900;
     const t = Math.min(1, state.elapsedMs / duration);
     return (state.phase.startsWith('open') ? t : state.phase.startsWith('close') ? 1 - t : 1) * (state.campStealth ? PEEK_DOOR_OPEN : 1);
   }
   begin(from: RoomPortal, to: RoomPortal, campStealth = false): void {
-    // Retreating from cover starts at an already ajar gate.
-    const state: RoomTransitionCheckpoint = { from, to, phase: campStealth && from.roomId === 'camp' ? 'exit' : 'open-exit', elapsedMs: 0, waypoint: 0, ...(campStealth ? { campStealth: true } : {}) };
+    // Borin never entered the camp floor while peeking. Withdraw at the same
+    // threshold instead of routing him into the room and back through the gate.
+    const state: RoomTransitionCheckpoint = { from, to, phase: campStealth && from.roomId === 'camp' ? 'peek-exit' : 'open-exit', elapsedMs: 0, waypoint: 0, ...(campStealth ? { campStealth: true } : {}) };
     assertRoomTransitionCheckpoint(state);
     if (this.active) throw new Error('A room transition is already active');
     this.character.stop();
     this.state = cloneJSON(state);
-    this.walk();
+    if (state.phase !== 'peek-exit') this.walk();
   }
   /** Start in the destination, opening its door before walking out onto its floor. */
   arrive(from: RoomPortal, to: RoomPortal): void {
@@ -105,6 +108,18 @@ export class RoomTransitionController {
     if (!Number.isFinite(deltaMs) || deltaMs < 0) throw new Error('Invalid room transition time');
     const state = this.state;
     if (!state) return;
+    if (state.phase === 'peek-exit') {
+      state.elapsedMs += deltaMs;
+      if (state.elapsedMs < PEEK_DURATION_MS) return;
+      // The gate is already closed. Resume outside without another entrance
+      // animation or a walk back out of a room he never stepped into.
+      this.state = undefined;
+      this.options.enterRoom(state.to);
+      this.character.place(state.to.path[0]!);
+      this.character.face(state.to.path[1]!);
+      this.options.onComplete?.();
+      return;
+    }
     if (state.phase === 'opening-entry') {
       state.elapsedMs += deltaMs;
       if (state.elapsedMs < (this.portal?.doorId ? this.portal.doorDurationMs ?? 900 : 0)) return;

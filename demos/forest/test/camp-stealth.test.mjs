@@ -80,11 +80,37 @@ test('a stealth entry opens the gate only partly and finishes at its threshold w
   }
   assert.deepEqual([...phases], ['open-exit', 'exit', 'peek-entry']); assert.equal(entries, 1);
   assert.deepEqual(run.hero.state.position, clear);
-  const retreat = { ...to, path: [clear, clear] };
-  transition.begin(retreat, from, true);
-  assert.equal(transition.phase, 'exit'); assert.equal(transition.doorProgress, PEEK_DOOR_OPEN);
-  for (let i = 0; i < 1000 && transition.active; i++) { run.hero.tick(20); transition.update(20); }
-  assert.equal(transition.active, false); assert.equal(entries, 2);
+});
+test('leaving cover closes the ajar gate in place, with no camp or forest entrance walk, including after load', () => {
+  const from = { roomId: 'camp', areaId: 'camp.gate', path: [pot, clear, cover], doorId: 'inner' };
+  const to = { roomId: 'forest', areaId: 'forest.gate', path: [{ x: 180, y: 160 }, { x: 180, y: 40 }], doorId: 'outer' };
+  const run = setup(); let entries = 0, completions = 0;
+  const transition = new RoomTransitionController(run.hero, {
+    enterRoom: portal => { assert.equal(portal.roomId, 'forest'); entries++; }, onComplete: () => completions++,
+  });
+  transition.begin(from, to, true);
+  assert.equal(transition.phase, 'peek-exit'); assert.equal(transition.doorProgress, PEEK_DOOR_OPEN);
+  let previousProgress = PEEK_DOOR_OPEN;
+  for (let i = 0; i < 100 && transition.active; i++) {
+    assert.equal(run.hero.isWalking, false);
+    assert.deepEqual(run.hero.state.position, cover);
+    assert.equal(transition.closing, true);
+    assert.ok(transition.doorProgress <= previousProgress);
+    previousProgress = transition.doorProgress;
+    // A save at any point resumes the closing phase without adding a walk.
+    const copy = setup(); copy.hero.restore(run.hero.snapshot());
+    const loaded = new RoomTransitionController(copy.hero, { enterRoom: () => {} });
+    loaded.restore(transition.snapshot());
+    assert.equal(loaded.doorProgress, transition.doorProgress);
+    for (let j = 0; j < 100 && loaded.active; j++) {
+      assert.equal(copy.hero.isWalking, false); copy.hero.tick(20); loaded.update(20);
+    }
+    assert.equal(loaded.active, false); assert.deepEqual(copy.hero.state.position, to.path[0]);
+    run.hero.tick(20); transition.update(20);
+  }
+  assert.equal(transition.active, false); assert.equal(entries, 1); assert.equal(completions, 1);
+  assert.equal(transition.doorProgress, 0); assert.equal(run.hero.isWalking, false);
+  assert.deepEqual(run.hero.state.position, to.path[0]);
 });
 test('the peek is an editable linked animation with distinct transparent poses and stable feet', () => {
   const authored = JSON.parse(readFileSync(new URL('../public/authoring/assets.json', import.meta.url)));
