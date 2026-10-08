@@ -201,3 +201,12 @@ body:not(.tools-visible) .ai-game-assets-in-game-designer-dock{display:none!impo
   .slot-preview { grid-row:span 2; }
   .slot-row button { justify-self:start; }
 }
+
+/* Pickup feedback follows the live item artwork from the room to its satchel slot. */
+.inventory-pickup-flight { position:fixed; left:0; top:0; width:112px; height:112px; z-index:80; pointer-events:none; transform-origin:center; will-change:transform; }
+.inventory-pickup-flight::before { content:""; position:absolute; inset:-24px; border-radius:50%; background:radial-gradient(ellipse,#e9cb7930,transparent 68%); }
+.inventory-pickup-flight canvas { position:relative; filter:drop-shadow(0 5px 6px #07110cbc); }
+.inventory-pickup-flight>span { position:absolute; top:115px; left:50%; transform:translateX(-50%); color:#f0deb1; font:14px Georgia,serif; white-space:nowrap; text-shadow:0 2px 4px #000; }
+.inventory-slot.pickup-pending canvas { visibility:hidden; }
+.game-fullscreen:not(.cinematic-playing) .inventory-bar.pickup-revealed { transform:translateY(0); }
+.game-fullscreen .game-shell:has(.inventory-bar.pickup-revealed) #dialog { bottom:calc(var(--pickup-bar-height,87px) + 12px); }

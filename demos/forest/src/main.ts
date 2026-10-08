@@ -25,6 +25,7 @@ import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
+import { InventoryPickup, type PickupOrigin } from './inventory-pickup';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting, withForestLighting } from './environment-lighting';
 import { addForestObjectAssets, updateForestInteractions, updateRescueAssetText } from './scene-content-updates';
@@ -156,6 +157,8 @@ class ForestAdventure extends Phaser.Scene {
   showHotspots = false;
   cursor!: PhaserAdventureCursor;
   inventoryIcons = new Map<ItemId, PhaserAdventureIcon>();
+  private inventoryPickup!: InventoryPickup;
+  private pickupOrigin?: PickupOrigin;
   portrait!: ForestDialogPortrait;
   cinematicPortrait!: ForestDialogPortrait;
   journal!: ForestJournal;
@@ -247,6 +250,14 @@ class ForestAdventure extends Phaser.Scene {
         return this.selected ? this.inventoryCursor(this.selected) : inventory || this.hoveredTarget ? 'cursor.interact' : 'cursor.walk';
       },
     });
+    this.inventoryPickup = new InventoryPickup(this, this.aiRuntime, {
+      asset: id => this.inventoryDefinition(id as ItemId).assetId || inventoryAssetId(id as ItemId),
+      name: id => items[id as ItemId].name,
+      slot: id => Array.from(el('inventory').querySelectorAll<HTMLElement>('[data-item-id]')).find(node => node.dataset.itemId === id),
+      origin: () => this.pickupScreenPoint(), stage: this.game.canvas, bar: document.querySelector<HTMLElement>('.inventory-bar')!,
+      paused: () => !this.started || modalOpen,
+    });
+    this.inventoryPickup.reset(this.story.inventory);
     this.behaviors.register('forest.interact', { handle: context => this.applyInteraction(context.targetId, context.item) });
     this.behaviors.register('forest.rescue', { handle: () => {} });
     this.conversation.onTurn(turn => this.renderTurn(turn));
@@ -274,7 +285,7 @@ class ForestAdventure extends Phaser.Scene {
               catch (error) { toast(error instanceof Error ? error.message : String(error)); }
             }
           },
-          onLook: () => { if (target) this.look(target.id); },
+          onLook: () => { if (this.putAwayItem()) return; if (target) this.look(target.id); },
         };
       },
     });
@@ -420,8 +431,25 @@ class ForestAdventure extends Phaser.Scene {
     // Environmental scenery can share a story action with a character, such as the king's cage.
     return this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled && area.closed && area.properties.interactive !== false) ?? object;
   }
+  putAwayItem(): boolean {
+    if (!this.selected) return false;
+    this.selected = undefined; this.render(); this.hover(this.hoveredTarget); this.cursor.refresh();
+    return true;
+  }
+  private pickupScreenPoint(targetId?: string): PickupOrigin {
+    const entity = targetId ? this.interactionEntity(targetId) : undefined;
+    const sprite = entity && 'position' in entity ? this.entitySprites.get(entity.id) : undefined;
+    const point = sprite ? { x: sprite.x, y: sprite.y - sprite.displayHeight / 2 }
+      : entity && 'polygon' in entity ? { x: entity.polygon.reduce((n, p) => n + p.x, 0) / entity.polygon.length,
+        y: entity.polygon.reduce((n, p) => n + p.y, 0) / entity.polygon.length }
+      : { x: this.actor.x, y: this.actor.y - this.actor.displayHeight / 2 };
+    const camera = this.cameras.main, rect = this.game.canvas.getBoundingClientRect();
+    const screen = { x: camera.x + (point.x - camera.worldView.x) * camera.zoom,
+      y: camera.y + (point.y - camera.worldView.y) * camera.zoom };
+    return { x: rect.left + screen.x / this.scale.width * rect.width, y: rect.top + screen.y / this.scale.height * rect.height };
+  }
   look(targetId: string, instanceId?: string) {
-    if (this.blocked()) return;
+    if (this.putAwayItem() || this.blocked()) return;
     const entity = this.interactionEntity(targetId, instanceId);
     if (!entity) return;
     this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
@@ -477,6 +505,7 @@ class ForestAdventure extends Phaser.Scene {
       this.renderNearby();
       return;
     }
+    this.pickupOrigin = this.pickupScreenPoint(targetId);
     const result = interact(this.story, targetId, selected);
     if (selected && !this.story.inventory.includes(selected)) this.selected = undefined;
     if (result.room) this.changeRoom(result.room);
@@ -1005,9 +1034,11 @@ class ForestAdventure extends Phaser.Scene {
         this.render();
         this.cursor.refresh();
       });
+      node.dataset.itemId = id;
       node.className = `inventory-slot${id === this.selected ? ' selected' : ''}`; node.setAttribute('aria-label', items[id].name); node.setAttribute('aria-pressed', String(id === this.selected)); node.title = items[id].description;
       node.addEventListener('contextmenu', event => {
         event.preventDefault();
+        if (this.putAwayItem()) return;
         if (!this.blocked(false) && !this.authoredInteraction(prefabInteractionTarget(inventoryPrefabId(id)), verbInteractionColumn('look'))) this.say(items[id].description);
       });
       const icon = new PhaserAdventureIcon(this, this.aiRuntime, { assetId: this.inventoryDefinition(id).assetId || inventoryAssetId(id), width: 36, height: 36, idleAnimation: 'idle', paused: () => !this.started || modalOpen });
@@ -1020,11 +1051,13 @@ class ForestAdventure extends Phaser.Scene {
     this.syncEntities();
     this.renderNearby(); this.drawHotspots();
     this.journal.observe(this.story.journal);
+    this.inventoryPickup.observe(this.story.inventory, this.pickupOrigin); this.pickupOrigin = undefined;
   }
   showStartScreen() {
     this.cancelTitleDeparture?.(); this.cancelTitleDeparture = undefined;
     setFullScreen(false);
     this.journal.clearNotification();
+    this.inventoryPickup.cancel();
     this.started = false; this.epoch++; this.clearMovementKeys(); this.hover();
     if (!this.roomTransition.active && !this.campStealth.busy) this.character.stop();
     closeModal(); clearTimeout(toastTimer); el('toast').hidden = true;
@@ -1137,6 +1170,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cinematic?.destroy(); this.cinematic = undefined;
     this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: Math.min(checkpoint.introStep, intro.length), endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
     this.journal.reset(this.story.journal);
+    this.inventoryPickup.reset(this.story.inventory); this.pickupOrigin = undefined;
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.min(Math.max(0, checkpoint[`${kind}Step`]), (kind === 'intro' ? intro : ending).length), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
     this.selected = (save.selectedItem ?? undefined) as ItemId | undefined;
     this.guardPatrol = undefined;
@@ -1249,7 +1283,11 @@ function setupControls() {
   el('cutscene-next').onclick = () => gameScene.advanceCutscene();
   el('skip-intro').onclick = () => gameScene.advanceCutscene(true);
   el('hotspots').onclick = () => { gameScene.showHotspots = !gameScene.showHotspots; el('hotspots').classList.toggle('active', gameScene.showHotspots); gameScene.drawHotspots(); };
-  el('clear-item').onclick = () => { gameScene.selected = undefined; gameScene.render(); };
+  el('clear-item').onclick = () => { gameScene.putAwayItem(); };
+  document.querySelector('.game-shell')!.addEventListener('contextmenu', event => {
+    if (!gameScene?.selected) return;
+    event.preventDefault(); event.stopImmediatePropagation(); gameScene.putAwayItem();
+  }, true);
   el('hint').onclick = () => gameScene.say(hint(gameScene.story), 'A little nudge');
   el('designer').onclick = () => {
     const visible = document.body.classList.toggle('tools-visible');
@@ -1267,7 +1305,7 @@ function setupControls() {
     const body = modal('A corner of the Elderwood'); const grid = document.createElement('div'); grid.className = 'map-grid';
     for (const id of roomIds) { const card = document.createElement('div'); card.className = 'map-room'; const image = document.createElement('img'); image.src = gameScene.textures.get(`room.${id}`).getSourceImage() instanceof HTMLCanvasElement ? (gameScene.textures.get(`room.${id}`).getSourceImage() as HTMLCanvasElement).toDataURL() : ''; image.alt = roomNames[id]; const label = document.createElement('span'); label.textContent = roomNames[id]; const sub = document.createElement('small'); sub.textContent = id === gameScene.story.roomId ? 'YOU ARE HERE' : ({ village:'Pub · Cottage · Forest',pub:'From Bramblehollow',house:'From Bramblehollow',forest:'Village · Mine · Camp',mine:'From the Whispering Wood',camp:'From the Whispering Wood' })[id]; label.append(sub); card.append(image, label); grid.append(card); } body.append(grid);
   };
-  el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click or tap a person to talk, or an object to interact. Nearby buttons also interact and work with the keyboard.', 'Right-click or press and hold for half a second to look at a person, object, or hotspot. Holding works with touch, mouse, or trackpad.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Put away clears your selection.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
+  el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click or tap a person to talk, or an object to interact. Nearby buttons also interact and work with the keyboard.', 'Right-click or press and hold for half a second to look at a person, object, or hotspot. Holding works with touch, mouse, or trackpad.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Right-click or Put away clears your selection without looking at the target.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
   function gameMenu() {
     if (!gameScene.started) return;
     const body = modal('A moment on the trail');
