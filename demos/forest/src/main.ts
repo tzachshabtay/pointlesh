@@ -25,6 +25,7 @@ import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
+import { MINE_OVERSCAN_ASSET, MINE_EDGE_PADDING, addMineOverscanAsset, drawMineEdgeBlend, mineOverscanBounds } from './mine-overscan';
 import { InventoryPickup, type PickupOrigin } from './inventory-pickup';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting, withForestLighting } from './environment-lighting';
@@ -123,6 +124,8 @@ class ForestAdventure extends Phaser.Scene {
   roomCamera!: PhaserRoomCamera;
   private cameraWasEditing = false;
   background!: Phaser.GameObjects.Image;
+  private mineOverscan!: Phaser.GameObjects.Image;
+  private mineEdgeBlend!: Phaser.GameObjects.Image;
   private roomTextureSources = new Map<RoomId, string>();
   private roomTextureRevision = 0;
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
@@ -182,9 +185,13 @@ class ForestAdventure extends Phaser.Scene {
     installPhaserTextureScaling(this, {
       default: 'nearest', canvas: 'auto',
       // Continuous room zoom needs smooth texel boundaries; actors retain crisp pixels.
-      resolve: texture => texture.key.startsWith('room.') ? 'smooth-pixel-art' : undefined,
+      resolve: texture => texture.key.startsWith('room.') || texture.key.includes(MINE_OVERSCAN_ASSET) ? 'smooth-pixel-art' : undefined,
     });
     installPhaserDisplayResolution(this.game);
+    this.mineOverscan = this.add.image(0, 0, this.aiRuntime.key(MINE_OVERSCAN_ASSET)).setOrigin(0).setDepth(-1001).setVisible(false);
+    const overscanBinding = this.aiRuntime.bindTexture(this.mineOverscan, MINE_OVERSCAN_ASSET);
+    this.events.once('shutdown', () => overscanBinding.destroy());
+    this.mineEdgeBlend = this.add.image(-MINE_EDGE_PADDING, -MINE_EDGE_PADDING, 'room.mine-edge').setOrigin(0).setDepth(-1000.5).setVisible(false);
     this.background = this.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000).setDisplaySize(this.roomSize('village').width, this.roomSize('village').height);
     this.outdoorAtmosphere = new OutdoorAtmosphere(this);
     this.character = new CharacterController({ id: 'borin', position: { x: 471, y: 462 }, speed: 165, walkStep: 16, frameDurationMs: 100, frameCount: 4, movementLinkedToAnimation: true, directions: 4 });
@@ -371,6 +378,14 @@ class ForestAdventure extends Phaser.Scene {
     texture.context.clearRect(0, 0, pixels.width, pixels.height);
     texture.context.drawImage(source, 0, spec.row === null ? 0 : spec.row * (frameHeight + divider), source.width, frameHeight, 0, 0, pixels.width, pixels.height);
     texture.refresh();
+    if (room === 'mine') {
+      const edgeKey = 'room.mine-edge';
+      const edge = (this.textures.exists(edgeKey) ? this.textures.get(edgeKey) : this.textures.createCanvas(edgeKey, size.width + MINE_EDGE_PADDING * 2, size.height + MINE_EDGE_PADDING * 2)) as Phaser.Textures.CanvasTexture;
+      edge.setSize(size.width + MINE_EDGE_PADDING * 2, size.height + MINE_EDGE_PADDING * 2);
+      drawMineEdgeBlend(edge.context, texture.canvas, size.width, size.height);
+      edge.setSmoothPixelArt(true);
+      edge.refresh();
+    }
     this.roomTextureRevision++;
     this.roomTextureSources.set(room, signature);
     if (this.background && this.story.roomId === room) {
@@ -580,6 +595,9 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera.setRoom(size);
     this.drawRoomTexture(this.story.roomId);
     this.background.setDisplaySize(size.width, size.height);
+    this.mineEdgeBlend.setVisible(this.story.roomId === 'mine');
+    const overscan = mineOverscanBounds(size.width, size.height);
+    this.mineOverscan.setVisible(this.story.roomId === 'mine').setPosition(overscan.x, overscan.y).setDisplaySize(overscan.width, overscan.height);
     for (const overlay of this.overlays) overlay.destroy(); this.overlays = [];
     for (const area of this.resolved().areas.filter(area => pointleshAreaCapabilities(area).walkBehind && area.enabled)) {
       const image = this.add.image(0, 0, `room.${this.story.roomId}`).setOrigin(0).setDisplaySize(size.width, size.height);
@@ -1425,6 +1443,7 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addMineOverscanAsset(assets);
 addForestInterfaceAssets(assets);
 addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);

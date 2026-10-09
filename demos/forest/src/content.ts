@@ -19,6 +19,7 @@ import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { withForestLighting } from './environment-lighting';
 import { addPortraitAssets } from './portrait-assets';
+import { addMineOverscanAsset } from './mine-overscan';
 import { addJournalAssets } from './journal-assets';
 import { addForestInventoryPrefabs } from './inventory-prefabs';
 
@@ -173,6 +174,7 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addMineOverscanAsset(assets);
 addBrewAssets(assets);
 
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });

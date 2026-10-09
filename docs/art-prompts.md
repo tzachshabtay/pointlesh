@@ -407,3 +407,14 @@ Door prompt (edit target: original cage-door-open sheet; reference: `art/camp-do
 ```text
 Edit image 1 ONLY. Production 8-frame sprite sheet, 4 columns x 2 rows, 960x460 pixels, each cell240x230. COLOR CORRECTION ONLY: match the door timber palette to the stationary cage wood on the right of reference image 2. Current door is too bright golden/orange compared with the cage's muted brown weathered timber. Gently reduce orange saturation and brightness to match that exact cage. Preserve highlights and texture. Keep all 8 frames, geometry, hinges, silhouettes, padlock breaking and falling, opening angles, alpha edges, cell positions, empty space and every pixel's spatial position unchanged. Do NOT redesign, rescale, reposition, remove details or introduce scenery. Image2 is wood COLOR reference only. Output only the corrected same 4x2 sheet with transparent background and transparent gaps between bars.
 ```
+
+
+## Goldroot Mine overscan (October 8, 2026)
+
+Mode: built-in image-generation tool, precise-object-edit/outpainting.
+
+Source: `demos/forest/public/art/atlas-mine-camp-lamps.png`, top 1182×664 room. Preparation: place that unchanged crop at (177,180) inside a 1536×1024 canvas with gray padding. Final asset: `demos/forest/public/art/mine-overscan.png`. The existing `room.mine` texture is still drawn above the outpaint at (0,0), so none of the original visible scene pixels, object positions, masks, or authored camera/area values change. Only the backing artwork extends outside the room. A 48-world-pixel reflected edge fades into the outpainting outside the original image to avoid hard joins; none of that blend covers the normal room.
+
+Final prompt (edge-continuity refinement):
+
+> Use case: precise-object-edit / outpainting. Fill ONLY the gray margin of this exact 1536x1024 pixel-art image. The central 1182x664 rectangle starts at (177,180); lock it completely. Do not change any pixel inside it, do not scale or move it. Extend the EXISTING textures directly outward with continuous rock edges and continuous floor shading, so there is absolutely NO visible rectangular boundary when the original center is overlaid again. Critical: at the lower left original edge there is flat DARK BROWN FLOOR, not a gold rock pile. Continue that exact dark brown floor into the left and lower padding with its existing shadow and brightness; do NOT insert golden boulders there. The lower right floor is also subdued, do not brighten it. Match border pixels' colors and geometry precisely all around. All existing objects remain exactly in place. Just a modest continuation of the ceiling, walls, floor into the gray border. No new beams, new props, objects, lamps, paths, details or landmarks. No reframing or creative reinterpretation. Output exact same 1536x1024 opaque size.
