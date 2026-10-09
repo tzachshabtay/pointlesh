@@ -258,7 +258,7 @@
         "properties": {
           "enabled": true,
           "label": "character",
-          "interactive": true,
+          "interactive": false,
           "ignoreScaling": false,
           "movementLinkedToAnimation": true,
           "facing": "down",

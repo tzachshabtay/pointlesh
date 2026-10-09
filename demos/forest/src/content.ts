@@ -182,7 +182,7 @@ addBrewAssets(assets);
 const base = pointleshPrefabs({ characterAssetId: 'borin', objectAssetId: 'coin' });
 base['pointlesh.character'].pointlesh!.properties.animations = characterAnimations('borin');
 base['forest.rescue-character'] = extendPointleshPrefab(base['pointlesh.character'], {
-  id: 'forest.rescue-character', name: 'Rescue character', properties: { role: 'player', courage: 10, portraitAssetId: 'portrait.borin' }, behaviors: ['forest.rescue'],
+  id: 'forest.rescue-character', name: 'Rescue character', properties: { role: 'player', interactive: false, courage: 10, portraitAssetId: 'portrait.borin' }, behaviors: ['forest.rescue'],
   propertySchema: { courage: { type: 'number', label: 'Courage', min: 0, max: 100 }, role: { type: 'string', label: 'Story role' } }
 });
 const rectangle = (x: number, y: number, width: number, height: number) => [

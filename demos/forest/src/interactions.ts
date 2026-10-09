@@ -2,6 +2,11 @@ import { interactionTargets, itemInteractionColumn, verbInteractionColumn, type 
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { items, targets, type ItemId } from './story';
 
+/** Story aliases are optional; every placed entity can be an interaction target. */
+export function entityInteractionId(entity: { id: string; properties: Record<string, unknown> }): string {
+  return typeof entity.properties.targetId === 'string' && entity.properties.targetId ? entity.properties.targetId : entity.id;
+}
+
 /** One-time seed. Authored edits, including deliberately cleared cells, take precedence. */
 export function createForestInteractions(scenes: SceneDesignerManifest): InteractionManifest {
   const manifest: InteractionManifest = { schemaVersion: 1, verbs: [{ id: 'interact', label: 'Interact' }, { id: 'look', label: 'Look' }], heroVoiceAssetId: 'voice.borin', cells: {} };
@@ -19,6 +24,10 @@ export function createForestInteractions(scenes: SceneDesignerManifest): Interac
           : [itemId, other].includes('stout') && [itemId, other].includes('mushroom') ? { kind: 'code' }
           : { kind: 'simple', text: 'An inspired idea. Unfortunately, inspiration is not enough here.' };
       }
+    } else if (row.properties.role === 'player') {
+      cells[verbInteractionColumn('look')] = { kind: 'simple', text: 'A fine beard, sturdy boots, and only a slightly unreasonable rescue plan.' };
+      cells[verbInteractionColumn('interact')] = { kind: 'simple', text: 'Come on, Borin. There is a king to rescue.' };
+      for (const item of inventory) cells[itemInteractionColumn(item.id.slice('prefab:'.length))] = { kind: 'simple', text: 'I had better save that for the rescue.' };
     } else if (target && row.properties.interactive !== false) {
       cells[verbInteractionColumn('look')] = { kind: 'simple', text: typeof row.properties.description === 'string' ? row.properties.description : target.description };
       cells[verbInteractionColumn('interact')] = targetId === 'gold'

@@ -47,7 +47,7 @@ import { ForestJournal, renderJournal } from './journal';
 import { captureSavePreview } from './save-preview';
 import { assertInteractionManifest, syncInteractionVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, resolveInteraction, selectInteractionSpeech, createInteractionPlaybackState, type InteractionManifest, type InteractionSpeechLine } from '@pointlesh/core';
 import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
-import { createForestInteractions } from './interactions';
+import { createForestInteractions, entityInteractionId } from './interactions';
 import { playTitleDeparture } from './title-departure';
 
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
@@ -230,6 +230,7 @@ class ForestAdventure extends Phaser.Scene {
       },
     });
     this.actor = this.add.sprite(471, 462, 'actor.borin', 4).setOrigin(0.5, 0.94);
+    this.bindEntityInteraction(this.actor, () => this.playerDefinition());
     this.binding = new PhaserAdventureCharacter(this, this.character, this.actor, {
       autoUpdate: false, aiRuntime: this.aiRuntime, assetId: 'borin',
       lighting: () => this.playerDefinition()?.properties.receiveLighting !== false,
@@ -438,16 +439,16 @@ class ForestAdventure extends Phaser.Scene {
     try { this.character.setMovementDirection(direction.x || direction.y ? direction : null); }
     catch (error) { this.clearMovementKeys(); toast(error instanceof Error ? error.message : String(error)); }
   }
-  hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
+  hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && area.properties.interactive !== false && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
   hover(id?: string) {
     this.hoveredTarget = id;
-    const target = id ? targets[this.story.roomId].find(target => target.id === id) ?? this.resolved().objects.find(object => object.properties.targetId === id) : undefined;
+    const target = id ? targets[this.story.roomId].find(target => target.id === id) ?? this.resolved().objects.find(object => entityInteractionId(object) === id) : undefined;
     el('hover-label').textContent = target ? this.selected ? `Use ${items[this.selected].name} with ${target.name}` : target.name : '';
     el('hover-label').classList.toggle('visible', !!target);
   }
   interactionEntity(targetId: string, instanceId?: string) {
     if (!targetVisible(this.story, targetId)) return undefined;
-    const object = this.resolved().objects.find(entity => entity.enabled && entity.properties.interactive !== false && entity.properties.targetId === targetId && (!instanceId || entity.id === instanceId));
+    const object = this.resolved().objects.find(entity => entity.enabled && entity.properties.interactive !== false && entityInteractionId(entity) === targetId && (!instanceId || entity.id === instanceId));
     if (instanceId) return object;
     // Environmental scenery can share a story action with a character, such as the king's cage.
     return this.resolved().areas.find(area => area.id === targetId && area.kind === 'hotspot' && area.enabled && area.closed && area.properties.interactive !== false) ?? object;
@@ -621,6 +622,17 @@ class ForestAdventure extends Phaser.Scene {
     if (this.talking) this.showDialogPortrait(this.speakingVoice || 'borin', !!this.speakingVoice);
     this.drawHotspots();
   }
+  bindEntityInteraction(sprite: Phaser.GameObjects.Sprite, current: () => ResolvedPointleshObject | undefined) {
+    bindAdventureSpriteInteraction(sprite, {
+      enabled: () => {
+        const entity = current();
+        return !!entity && !this.blocked() && entity.enabled && entity.properties.interactive !== false && targetVisible(this.story, entityInteractionId(entity));
+      },
+      onHover: hovered => { const entity = current(); this.hover(hovered && entity ? entityInteractionId(entity) : undefined); },
+      onInteract: () => { const entity = current(); if (entity) void this.act(entityInteractionId(entity), entity.id); },
+      onLook: () => { const entity = current(); if (entity) this.look(entityInteractionId(entity), entity.id); },
+    });
+  }
   syncEntities() {
     const objects = this.resolved().objects.filter(object => object.properties.role !== 'player');
     const ids = new Set(objects.map(object => object.id));
@@ -648,12 +660,7 @@ class ForestAdventure extends Phaser.Scene {
           properties: () => current().properties,
           footprint: () => this.navigationFootprint(current()),
         });
-        bindAdventureSpriteInteraction(sprite, {
-          enabled: () => !this.blocked() && current().enabled && current().properties.interactive !== false && typeof current().properties.targetId === 'string' && targetVisible(this.story, String(current().properties.targetId)),
-          onHover: hovered => this.hover(hovered ? String(current().properties.targetId) : undefined),
-          onInteract: () => { void this.act(String(current().properties.targetId), current().id); },
-          onLook: () => this.look(String(current().properties.targetId), current().id),
-        });
+        this.bindEntityInteraction(sprite, current);
         sprite.once('destroy', () => {
           this.doorForegrounds.delete(object.id);
           this.objectTextureBindings.get(object.id)?.binding.destroy();
@@ -891,14 +898,14 @@ class ForestAdventure extends Phaser.Scene {
   drawHotspots() {
     for (const label of this.labels) label.destroy(); this.labels = [];
     if (!this.showHotspots) return;
-    for (const area of this.resolved().areas.filter(area => area.kind === 'hotspot' && area.enabled && targetVisible(this.story, area.id))) {
+    for (const area of this.resolved().areas.filter(area => area.kind === 'hotspot' && area.enabled && area.properties.interactive !== false && targetVisible(this.story, area.id))) {
       const target = targets[this.story.roomId].find(target => target.id === area.id);
       if (target) this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
     }
-    for (const object of this.resolved().objects.filter(object => object.enabled && object.properties.interactive !== false && typeof object.properties.targetId === 'string')) {
-      const target = targets[this.story.roomId].find(target => target.id === object.properties.targetId);
-      const sprite = this.entitySprites.get(object.id);
-      if (!target || !sprite?.visible || !targetVisible(this.story, target.id)) continue;
+    for (const object of this.resolved().objects.filter(object => object.enabled && object.properties.interactive !== false)) {
+      const target = targets[this.story.roomId].find(target => target.id === entityInteractionId(object)) ?? object;
+      const sprite = object.id === this.playerDefinition()?.id ? this.actor : this.entitySprites.get(object.id);
+      if (!sprite?.visible || !targetVisible(this.story, entityInteractionId(object))) continue;
       const bounds = sprite.getBounds();
       this.labels.push(this.add.text(bounds.centerX, bounds.top - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setOrigin(.5, 0).setDepth(2100));
     }
@@ -1466,10 +1473,13 @@ addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
 addCharacterPortraits(authoredScenes);
-interactions = createForestInteractions(authoredScenes);
+const seededInteractions = createForestInteractions(authoredScenes);
+interactions = seededInteractions;
 const interactionResponse = await fetch(`${import.meta.env.BASE_URL}authoring/interactions.json`);
 if (interactionResponse.ok) { const value = await interactionResponse.json(); assertInteractionManifest(value); interactions = value; }
 else if (interactionResponse.status !== 404) throw new Error(`Could not load authored interactions: ${interactionResponse.status}`);
+// Introduce the newly supported player row once; preserve authored cells and cleared rows.
+interactions.cells['prefab:forest.character.borin'] ??= seededInteractions.cells['prefab:forest.character.borin'];
 Object.assign(assets, syncInteractionVoiceLines(interactions, assets, interactionTargets(authoredScenes)));
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
