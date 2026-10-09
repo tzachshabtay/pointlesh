@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
+import { createLayer, defineSceneManifest } from '@scene-designer/core';
+import { createCharacterPrefab, createObjectPrefab, createHotspotPrefab, createInventoryItemPrefab, createPointleshInstance } from '../dist/index.js';
 import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
 import { assertInteractionManifest, createInteractionPlaybackState, interactionTargets, interactionVoiceLineId, runInteraction, syncInteractionVoiceLines } from '../dist/index.js';
 
@@ -102,4 +104,41 @@ test('each sentence and default has its own linked voice line, retaining the ori
   assert.equal(synced.assets[interactionVoiceLineId('chest', 'verb:look', 1)].voiceSettings.text, 'Still stubborn.');
   assert.equal(synced.assets[interactionVoiceLineId('defaults', 'verb:look', 1)].voiceSettings.text, 'Default second');
   assert.match(synced.assets.hero.linkedAnimationAssets[interactionVoiceLineId('defaults', 'verb:look', 1)].label, /Defaults.*Sentence 2/);
+});
+
+
+test('interactive matrix targets respect prefab and instance settings without discarding authored data', () => {
+  const prefabs = [
+    createCharacterPrefab({ id: 'borin', properties: { interactive: false } }),
+    createObjectPrefab({ id: 'lamp', properties: { interactive: false } }),
+    createObjectPrefab({ id: 'chest' }),
+    createHotspotPrefab({ id: 'door', properties: { interactive: false } }),
+    createInventoryItemPrefab({ id: 'rope' }),
+  ];
+  const first = createLayer({ id: 'first' }), second = createLayer({ id: 'second' });
+  first.prefabs = ['borin', 'lamp', 'chest', 'door'].map(prefabId => createPointleshInstance({ id: prefabId, prefabId }));
+  // A prefab can be decorative in one scene and interactive in another.
+  second.prefabs = [createPointleshInstance({ id: 'other-borin', prefabId: 'borin', properties: { interactive: true } })];
+  const scenes = defineSceneManifest({ schemaVersion: 2, prefabs: Object.fromEntries(prefabs.map(p => [p.id, p])), scenes: {
+    first: { id: 'first', name: 'First', width: 320, height: 180, layers: [first] },
+    second: { id: 'second', name: 'Second', width: 320, height: 180, layers: [second] },
+  } });
+  const manifest = make();
+  manifest.cells['prefab:borin'] = { 'verb:look': { kind: 'simple', text: 'Ready for adventure.' } };
+  const before = structuredClone(manifest);
+  const shown = () => interactionTargets(scenes, { interactiveOnly: true });
+  assert.deepEqual(shown().map(row => row.id).sort(), ['prefab:borin', 'prefab:chest', 'prefab:rope']);
+  assert.deepEqual(shown().find(row => row.id === 'prefab:borin').locations.map(location => location.sceneId), ['second']);
+  assert.equal(interactionTargets(scenes).length, 5, 'full catalog remains available for voice labels');
+  second.prefabs[0].pointlesh.properties.interactive = false;
+  assert.ok(!shown().some(row => row.id === 'prefab:borin'));
+  scenes.prefabs.borin.pointlesh.properties.interactive = true;
+  assert.deepEqual(shown().find(row => row.id === 'prefab:borin').locations.map(location => location.sceneId), ['first']);
+  first.prefabs.find(p => p.prefabId === 'chest').pointlesh = { properties: { interactive: false } };
+  assert.ok(!shown().some(row => row.id === 'prefab:chest'));
+  scenes.prefabs.door.pointlesh.properties.interactive = true;
+  assert.ok(shown().some(row => row.id === 'prefab:door'));
+  assert.deepEqual(manifest, before);
+  const synced = syncInteractionVoiceLines(manifest, assets(), interactionTargets(scenes));
+  assert.equal(synced.assets[interactionVoiceLineId('prefab:borin', 'verb:look')].voiceSettings.text, 'Ready for adventure.');
 });

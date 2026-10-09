@@ -53,7 +53,7 @@ Choose an optional **Crosshair graphic** and its looping animation. These settin
 
 ## Interactions
 
-`installInteractionDesigner({ manifest, getScenes, getAiAssets, onChange, client?, storageKey?, mount? })` adds a movable, resizable **Interactions** tab to the shared designer toolbar. It discovers characters, objects, scene hotspots and inventory items from Scene Designer. Shared prefab instances share a row; scene-owned hotspots have independent rows. Verbs come from `manifest.verbs`, and each inventory prefab adds a column automatically.
+`installInteractionDesigner({ manifest, getScenes, getAiAssets, onChange, client?, storageKey?, mount? })` adds a movable, resizable **Interactions** tab to the shared designer toolbar. It discovers characters, objects, scene hotspots and inventory items from Scene Designer. Only targets with Interactive enabled are shown. Shared prefab instances share a row when at least one instance is interactive; scene-owned hotspots have independent rows. Turning Interactive off hides the row without deleting its cells or voice lines, and re-enabling it restores them. Verbs come from `manifest.verbs`, and each inventory prefab adds a column automatically.
 
 Click a cell to choose **Game code** (★), **Simple speech** (green ✓), or **Should not happen** (red ✕). **Clear interaction** returns it to empty. Simple speech has an editable hero line and is linked automatically to `manifest.heroVoiceAssetId` in AI Assets. Code cells delegate to game-owned handlers; the editor does not create those handlers. Scene input/hit testing remains the host's responsibility, including whether a decorative object is interactive.
 

@@ -48,13 +48,16 @@ export const prefabInteractionTarget = (prefabId: string) => `prefab:${prefabId}
 export const sceneInteractionTarget = (sceneId: string, entity: Pick<ResolvedPointleshEntity, 'id' | 'prefabId'>) =>
   entity.prefabId ? prefabInteractionTarget(entity.prefabId) : `scene:${JSON.stringify([sceneId, entity.id])}`;
 
-/** Shared characters/objects appear once; scene-local hotspots remain distinct. */
-export function interactionTargets(scenes: SceneDesignerManifest): InteractionTarget[] {
+/** Shared characters/objects appear once; scene-local hotspots remain distinct.
+ * interactiveOnly respects resolved instance overrides, independently of editor visibility.
+ * The full catalog remains available for retaining authored interactions and voice labels. */
+export function interactionTargets(scenes: SceneDesignerManifest, options: { interactiveOnly?: boolean } = {}): InteractionTarget[] {
   const targets = new Map<string, InteractionTarget>();
   for (const sceneId of Object.keys(scenes.scenes)) {
     const scene = resolvePointleshScene(scenes, sceneId);
     for (const entity of [...scene.objects, ...scene.areas.filter(area => area.kind === 'hotspot')]) {
       if (!['character', 'object', 'hotspot'].includes(entity.kind)) continue;
+      if (options.interactiveOnly && entity.properties.interactive === false) continue;
       const id = sceneInteractionTarget(sceneId, entity);
       const row = targets.get(id) ?? { id, name: entity.name, kind: entity.kind as InteractionTarget['kind'], properties: entity.properties, locations: [] };
       row.locations.push({ sceneId, sceneName: scenes.scenes[sceneId]!.name, entityId: entity.id });
@@ -63,6 +66,7 @@ export function interactionTargets(scenes: SceneDesignerManifest): InteractionTa
   }
   for (const prefab of Object.values(scenes.prefabs ?? {})) {
     if (isPointleshPrefab(prefab) && prefab.pointlesh.kind === 'inventory-item' && !prefab.pointlesh.editor?.template) {
+      if (options.interactiveOnly && prefab.pointlesh.properties.interactive === false) continue;
       const id = prefabInteractionTarget(prefab.id);
       targets.set(id, { id, name: prefab.name, kind: 'inventory-item', properties: prefab.pointlesh.properties, locations: [] });
     }

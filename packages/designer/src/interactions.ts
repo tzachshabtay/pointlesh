@@ -26,7 +26,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   assertInteractionManifest(options.manifest);
   const document = (options.mount ?? globalThis.document.body).ownerDocument;
   let manifest = structuredClone(options.manifest), base = JSON.stringify(options.manifest), destroyed = false;
-  let rows: InteractionTarget[] = [], filter = '', kind = '', dirty = false;
+  let rows: InteractionTarget[] = [], interactiveRows: InteractionTarget[] = [], filter = '', kind = '', dirty = false;
   const past: InteractionManifest[] = [], future: InteractionManifest[] = [];
   const root = document.createElement('section'); root.className = 'pointlesh-interactions'; root.setAttribute('aria-label', 'Interaction designer');
   const style = document.createElement('style'); style.textContent = styles; root.append(style);
@@ -89,7 +89,9 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   }
   function render() {
     if (destroyed) return;
-    rows = interactionTargets(options.getScenes());
+    const scenes = options.getScenes();
+    rows = interactionTargets(scenes);
+    interactiveRows = interactionTargets(scenes, { interactiveOnly: true });
     undo.disabled = !past.length; redo.disabled = !future.length;
     renderTable();
   }
@@ -101,7 +103,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     for (const column of columns) { const th = document.createElement('th'); th.scope = 'col'; const label = document.createElement('span'); label.textContent = column.name;
       const small = document.createElement('small'); small.textContent = column.type; th.append(label, small); head.append(th); }
     const body = table.createTBody();
-    const visible = rows.filter(row => (!kind || row.kind === kind) && `${row.name} ${row.locations.map(location => location.sceneName).join(' ')}`.toLowerCase().includes(filter));
+    const visible = interactiveRows.filter(row => (!kind || row.kind === kind) && `${row.name} ${row.locations.map(location => location.sceneName).join(' ')}`.toLowerCase().includes(filter));
     const defaults: InteractionTarget = { id: DEFAULT_INTERACTION_TARGET, name: 'Defaults', kind: 'object', properties: {}, locations: [] };
     for (const row of [defaults, ...visible]) {
       const tr = body.insertRow(), th = document.createElement('th'); th.scope = 'row';
@@ -117,7 +119,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
         b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`); b.title = cell?.kind === 'simple' ? interactionSentences(cell).join('\n') : !cell && row.id !== DEFAULT_INTERACTION_TARGET ? 'Uses Defaults when assigned' : label; td.append(b);
       }
     }
-    scroll.replaceChildren(table); count.textContent = `${visible.length} of ${rows.length} targets · ${columns.length} actions${dirty ? ' · Local draft' : ''}`;
+    scroll.replaceChildren(table); count.textContent = `${visible.length} of ${interactiveRows.length} interactive targets · ${columns.length} actions${dirty ? ' · Local draft' : ''}`;
   }
   function edit(row: InteractionTarget, column: { id: string; name: string }) {
     const cell = manifest.cells[row.id]?.[column.id]; dialog.replaceChildren();
