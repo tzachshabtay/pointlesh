@@ -1,5 +1,5 @@
 import { applyAiAnimationFrameTransform, createAiAnimations, type AiAssetRuntime, type AiAssetAnimationPlayback, type AiAssetTextureBinding } from "@ai-game-assets/phaser";
-import { resolveCharacterAnimation, type CharacterAnimations, type CharacterAnimationAssignment, type CharacterController, type CharacterSnapshot, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
+import { resolveCharacterAnimation, type CharacterAnimations, type CharacterAnimationAssignment, type CharacterController, type CharacterTickOptions, type CharacterSnapshot, type Point, type ResolvedPointleshArea } from "@pointlesh/core";
 import type Phaser from "phaser";
 import { resolveTargetAssetId } from '@ai-game-assets/core';
 import { evaluatePointleshAreaEffects, type PointleshAreaEffects } from "./effects.js";
@@ -85,7 +85,7 @@ export class PhaserAdventureCharacter {
   }
 
   /** Apply perspective scale before ticking so the controller also scales walking distance. */
-  update(deltaMs: number): void {
+  update(deltaMs: number, options: CharacterTickOptions = {}): void {
     if (this.destroyed) return;
     this.syncAuthoredPose();
     const effects = this.effects();
@@ -93,10 +93,10 @@ export class PhaserAdventureCharacter {
     this.prepareAnimation();
     const speechRemaining = this.controller.state.speech?.remainingMs;
     if (speechRemaining !== undefined && speechRemaining < deltaMs) {
-      if (speechRemaining > 0) this.controller.tick(speechRemaining); else this.controller.finishSpeech();
+      if (speechRemaining > 0) this.controller.tick(speechRemaining, options); else this.controller.finishSpeech();
       this.prepareAnimation();
-      this.controller.tick(deltaMs - speechRemaining);
-    } else this.controller.tick(deltaMs);
+      this.controller.tick(deltaMs - speechRemaining, options);
+    } else this.controller.tick(deltaMs, options);
     this.render(this.effects(), deltaMs);
   }
 

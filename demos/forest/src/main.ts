@@ -27,6 +27,7 @@ import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { MINE_OVERSCAN_ASSET, MINE_EDGE_PADDING, addMineOverscanAsset, drawMineEdgeBlend, mineOverscanBounds } from './mine-overscan';
 import { FOREST_OVERSCAN_ASSET, addForestOverscanAsset, createForestOverscan, drawForestEdgeTextures } from './forest-overscan';
+import { ScrollingWalkExperiment } from './scrolling-walk-experiment';
 import { InventoryPickup, type PickupOrigin } from './inventory-pickup';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting, withForestLighting } from './environment-lighting';
@@ -124,6 +125,7 @@ class ForestAdventure extends Phaser.Scene {
   navigation!: PhaserAdventureNavigation;
   roomCamera!: PhaserRoomCamera;
   private cameraWasEditing = false;
+  private readonly scrollingWalk = new ScrollingWalkExperiment();
   background!: Phaser.GameObjects.Image;
   private mineOverscan!: Phaser.GameObjects.Image;
   private mineEdgeBlend!: Phaser.GameObjects.Image;
@@ -1242,14 +1244,19 @@ class ForestAdventure extends Phaser.Scene {
     }
     if (!modalOpen) this.updateTyingGuard(Math.min(delta, 100));
     const paused = modalOpen || !!this.cutsceneCrossfade || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0;
+    this.scrollingWalk.begin(this.story.roomId, !paused && !cameraEditing);
     if (!paused) {
-      this.binding.update(Math.min(delta, 100));
+      const cameraBefore = { x: this.cameras.main.scrollX, y: this.cameras.main.scrollY };
+      this.binding.update(Math.min(delta, 100), { smoothLinkedMovement: this.scrollingWalk.active });
       const previousRoom = this.story.roomId;
       this.roomTransition.update(Math.min(delta, 100));
       if (!this.talking) this.campStealth.update(Math.min(delta, 100));
       if (!this.campRestricted() && this.campStealth.peeking) this.campStealth.release(this.campClearance());
       if (previousRoom !== this.story.roomId) { this.binding.sync(); this.roomCamera.snap(); }
       this.roomCamera.update(Math.min(delta, 100));
+      if (previousRoom !== this.story.roomId) this.scrollingWalk.begin(this.story.roomId, false);
+      else if (!cameraEditing) this.scrollingWalk.observe(cameraBefore,
+        { x: this.cameras.main.scrollX, y: this.cameras.main.scrollY }, Math.min(delta, 100), this.cameras.main.zoom);
       if (!this.talking && this.story.roomId === 'camp' && !this.story.flags.guardAsleep) this.story.guardClock += Math.min(delta, 100);
     }
     for (const npc of this.npcActors.values()) {

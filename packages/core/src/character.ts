@@ -16,6 +16,11 @@ export interface CharacterConfig {
   directions?: 4 | 8;
 }
 
+export interface CharacterTickOptions {
+  /** Temporary smooth travel at the linked animation's average speed; preserves the authored config and animation clock. */
+  smoothLinkedMovement?: boolean;
+}
+
 export interface ApproachTarget { position: Point; walkPoint?: Point; facing?: Direction }
 export interface WalkToOptions { /** Snap an unreachable click to the nearest reachable point. Defaults to true. */ snap?: boolean }
 export interface CharacterNavigation { walkables: readonly Polygon[]; obstacles?: readonly Polygon[] }
@@ -207,13 +212,13 @@ export class CharacterController {
     completion?.();
   }
 
-  tick(dtMs: number): void {
+  tick(dtMs: number, options: CharacterTickOptions = {}): void {
     if (!Number.isFinite(dtMs) || dtMs < 0) throw new Error('tick requires a finite, nonnegative duration');
     if (dtMs === 0 || (this.state.activity === 'idle' && !this.directionalMovement && !this.animationDurations)) return;
     if (this.state.activity === 'speaking' && this.state.speech && this.state.speech.remainingMs < dtMs) {
       const remaining = this.state.speech.remainingMs;
-      if (remaining > 0) this.tick(remaining); else this.finishSpeech();
-      this.tick(dtMs - remaining);
+      if (remaining > 0) this.tick(remaining, options); else this.finishSpeech();
+      this.tick(dtMs - remaining, options);
       return;
     }
     const elapsed = this.state.animationElapsedMs + dtMs;
@@ -245,9 +250,15 @@ export class CharacterController {
     }
     if (this.state.activity === 'idle' && !this.directionalMovement) return;
     const scale = this.config.adjustSpeedToScale ? this.state.scale : 1;
-    const amount = this.config.movementLinkedToAnimation && this.config.frameCount > 1
+    const linked = this.config.movementLinkedToAnimation && this.config.frameCount > 1;
+    const cycleMs = this.animationDurations?.reduce((sum, duration) => sum + duration, 0)
+      ?? this.config.frameCount * this.config.frameDurationMs;
+    const speed = linked && options.smoothLinkedMovement
+      ? this.config.walkStep * this.config.frameCount * 1000 / cycleMs
+      : this.config.speed;
+    const amount = linked && !options.smoothLinkedMovement
       ? frames * this.config.walkStep * scale
-      : dtMs / 1000 * this.config.speed * scale;
+      : dtMs / 1000 * speed * scale;
     if (this.directionalMovement) this.advanceDirection(amount);
     else this.advance(amount);
   }

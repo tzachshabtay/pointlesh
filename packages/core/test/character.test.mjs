@@ -178,3 +178,41 @@ test('saving held-key movement keeps the pose but does not restore a stuck input
   assert.deepEqual(restored.state.position, actor.state.position);
   assert.equal(restored.state.activity, 'idle');
 });
+
+
+test('temporary smooth linked movement matches a full variable-timing cycle and perspective scale', () => {
+  const linked = create({ speed: 999 }), smooth = create({ speed: 999 });
+  for (const actor of [linked, smooth]) {
+    actor.walkTo({ x: 190, y: 10 }, floor);
+    actor.setAnimationTiming([50, 150, 100, 200]);
+    actor.setScale(0.5);
+  }
+  let previous = smooth.state.position.x;
+  for (let i = 0; i < 50; i++) {
+    linked.tick(10);
+    smooth.tick(10, { smoothLinkedMovement: true });
+    assert.ok(Math.abs(smooth.state.position.x - previous - 0.4) < 1e-9);
+    previous = smooth.state.position.x;
+  }
+  assert.ok(Math.abs(smooth.state.position.x - linked.state.position.x) < 1e-9);
+  assert.equal(smooth.config.speed, 999);
+  assert.equal(smooth.config.movementLinkedToAnimation, true);
+  assert.equal(smooth.state.animationFrame, linked.state.animationFrame);
+  assert.equal(smooth.state.animationElapsedMs, linked.state.animationElapsedMs);
+  // Returning to linked mode preserves phase and waits for the next frame.
+  smooth.tick(20, { smoothLinkedMovement: true });
+  const position = smooth.state.position.x;
+  smooth.tick(29);
+  assert.equal(smooth.state.position.x, position);
+  smooth.tick(1);
+  assert.equal(smooth.state.position.x, position + 5);
+});
+
+test('smooth linked override leaves authored smooth and single-frame speeds alone', () => {
+  for (const config of [{ movementLinkedToAnimation: false }, { frameCount: 1 }]) {
+    const actor = create({ speed: 60, ...config });
+    actor.walkTo({ x: 190, y: 10 }, floor);
+    actor.tick(100, { smoothLinkedMovement: true });
+    assert.equal(actor.state.position.x, 16);
+  }
+});
