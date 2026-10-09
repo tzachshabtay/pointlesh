@@ -835,10 +835,6 @@ class ForestAdventure extends Phaser.Scene {
   }
   installTools() {
     this.sceneDesigner = installPhaserPointleshDesigner({
-      viewport: {
-        target: document.querySelector<HTMLElement>('.game-shell')!,
-        chromeHeight: () => document.body.classList.contains('game-fullscreen') ? 0 : 134,
-      },
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200,
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),
@@ -877,6 +873,10 @@ class ForestAdventure extends Phaser.Scene {
     };
     let assetDesignerManifest: import('@ai-game-assets/core').AiAssetManifest = assets;
     installAiAssetDesigner({ scene: this, manifest: assets, autoFirstDrafts: false, generationRecoveryKey: 'pointlesh-forest', client: new ForestAssetDebugClient('http://127.0.0.1:4287'), ...callbacks,
+      viewport: {
+        target: document.querySelector<HTMLElement>('.game-shell')!,
+        chromeHeight: () => document.body.classList.contains('game-fullscreen') ? 0 : 134,
+      },
       onPreview: (id, key, asset) => { callbacks.onPreview(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
       onAssetReady: (id, key, asset) => { callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
       onManifestUpdated: manifest => {
