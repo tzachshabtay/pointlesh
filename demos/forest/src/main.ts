@@ -26,6 +26,7 @@ import { DoorForeground } from './door-foreground';
 import { addFireplaceAssets, addFireplace } from './fireplace-assets';
 import { addLampAssets, addLamps } from './lamp-assets';
 import { MINE_OVERSCAN_ASSET, MINE_EDGE_PADDING, addMineOverscanAsset, drawMineEdgeBlend, mineOverscanBounds } from './mine-overscan';
+import { FOREST_OVERSCAN_ASSET, addForestOverscanAsset, createForestOverscan, drawForestEdgeTextures } from './forest-overscan';
 import { InventoryPickup, type PickupOrigin } from './inventory-pickup';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting, withForestLighting } from './environment-lighting';
@@ -126,6 +127,7 @@ class ForestAdventure extends Phaser.Scene {
   background!: Phaser.GameObjects.Image;
   private mineOverscan!: Phaser.GameObjects.Image;
   private mineEdgeBlend!: Phaser.GameObjects.Image;
+  private forestOverscan!: ReturnType<typeof createForestOverscan>;
   private roomTextureSources = new Map<RoomId, string>();
   private roomTextureRevision = 0;
   npcActors = new Map<string, { controller: CharacterController; binding: PhaserAdventureCharacter; sprite: Phaser.GameObjects.Sprite; actorName: string }>();
@@ -185,9 +187,10 @@ class ForestAdventure extends Phaser.Scene {
     installPhaserTextureScaling(this, {
       default: 'nearest', canvas: 'auto',
       // Continuous room zoom needs smooth texel boundaries; actors retain crisp pixels.
-      resolve: texture => texture.key.startsWith('room.') || texture.key.includes(MINE_OVERSCAN_ASSET) ? 'smooth-pixel-art' : undefined,
+      resolve: texture => texture.key.startsWith('room.') || texture.key.includes(MINE_OVERSCAN_ASSET) || texture.key.includes(FOREST_OVERSCAN_ASSET) ? 'smooth-pixel-art' : undefined,
     });
     installPhaserDisplayResolution(this.game);
+    this.forestOverscan = createForestOverscan(this, this.aiRuntime);
     this.mineOverscan = this.add.image(0, 0, this.aiRuntime.key(MINE_OVERSCAN_ASSET)).setOrigin(0).setDepth(-1001).setVisible(false);
     const overscanBinding = this.aiRuntime.bindTexture(this.mineOverscan, MINE_OVERSCAN_ASSET);
     this.events.once('shutdown', () => overscanBinding.destroy());
@@ -378,6 +381,7 @@ class ForestAdventure extends Phaser.Scene {
     texture.context.clearRect(0, 0, pixels.width, pixels.height);
     texture.context.drawImage(source, 0, spec.row === null ? 0 : spec.row * (frameHeight + divider), source.width, frameHeight, 0, 0, pixels.width, pixels.height);
     texture.refresh();
+    if (room === 'forest') drawForestEdgeTextures(this, texture.canvas, size.width, size.height);
     if (room === 'mine') {
       const edgeKey = 'room.mine-edge';
       const edge = (this.textures.exists(edgeKey) ? this.textures.get(edgeKey) : this.textures.createCanvas(edgeKey, size.width + MINE_EDGE_PADDING * 2, size.height + MINE_EDGE_PADDING * 2)) as Phaser.Textures.CanvasTexture;
@@ -595,6 +599,7 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera.setRoom(size);
     this.drawRoomTexture(this.story.roomId);
     this.background.setDisplaySize(size.width, size.height);
+    this.forestOverscan.layout(this.story.roomId, size.width, size.height);
     this.mineEdgeBlend.setVisible(this.story.roomId === 'mine');
     const overscan = mineOverscanBounds(size.width, size.height);
     this.mineOverscan.setVisible(this.story.roomId === 'mine').setPosition(overscan.x, overscan.y).setDisplaySize(overscan.width, overscan.height);
@@ -1444,6 +1449,7 @@ addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
 addMineOverscanAsset(assets);
+addForestOverscanAsset(assets);
 addForestInterfaceAssets(assets);
 addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);

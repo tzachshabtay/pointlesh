@@ -15,6 +15,7 @@ import { CAGE_APPROACH_AREA } from './transition-content';
 import { campRescue, forestHomeward, villageHomecoming, forestMarch, villageAbduction, sampleWalk, sampleEntrance, walkLength } from './cinematic-paths';
 import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
+import { createForestOverscan } from './forest-overscan';
 import { liftCinematicWorld } from './cinematic-framing';
 
 export type CinematicKind = 'intro' | 'ending';
@@ -68,6 +69,7 @@ export class ForestCinematic {
   private readonly world: Phaser.GameObjects.Container;
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private readonly background: Phaser.GameObjects.Image;
+  private readonly forestOverscan: ReturnType<typeof createForestOverscan>;
   private readonly atmosphere: Phaser.GameObjects.Graphics;
   private readonly outdoorAtmosphere: OutdoorAtmosphere;
   private readonly props: Phaser.GameObjects.Graphics;
@@ -103,12 +105,13 @@ export class ForestCinematic {
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
     this.outdoorAtmosphere = new OutdoorAtmosphere(scene, this.world);
+    this.forestOverscan = createForestOverscan(scene, assets);
     this.background = scene.add.image(0, 0, 'room.village').setOrigin(0).setDepth(-1000);
     this.atmosphere = scene.add.graphics().setDepth(0);
     this.props = scene.add.graphics().setDepth(850).setName('cutscene-props');
     this.cageDoor = scene.add.sprite(0, 0, '__WHITE').setName('cage-door-cinematic').setVisible(false);
     this.foreground = scene.add.graphics().setDepth(900);
-    this.world.add([this.background, this.atmosphere, this.props, this.foreground, this.cageDoor]);
+    this.world.add([this.forestOverscan.image, this.forestOverscan.edge, this.forestOverscan.topEdge, this.background, this.atmosphere, this.props, this.foreground, this.cageDoor]);
     const actors: CastId[] = ['borin', 'king', 'guard-front', 'guard-rear', 'elder', 'innkeeper', 'miner'];
     for (const id of actors) {
       const shadow = scene.add.ellipse(0, 0, 40, 10, 0x07120e, 0.35);
@@ -224,6 +227,7 @@ export class ForestCinematic {
     this.background.setTexture(`room.${room}`).setTint(tint);
     const size = this.definitions.get(room)!;
     this.background.setDisplaySize(size.width, size.height);
+    this.forestOverscan.layout(room, size.width, size.height, tint);
     if (this.overlayRoom !== room) {
       for (const light of this.ambient) { light.binding.destroy(); light.sprite.destroy(); }
       this.ambient = [];
