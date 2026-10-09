@@ -13,3 +13,4 @@ export { installSceneDesigner, SceneDesignerDebugClient } from "@scene-designer/
 export type { SceneDesigner, SceneDesignerOptions } from "@scene-designer/designer";
 export { installInteractionDesigner, InteractionDesignerDebugClient } from './interactions.js';
 export type { InteractionDesignerOptions, InteractionDesigner } from './interactions.js';
+export { installDesignerViewport, type DesignerViewportOptions } from './viewport.js';

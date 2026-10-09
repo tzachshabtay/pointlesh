@@ -1,4 +1,4 @@
-import { installPointleshInspector, type PointleshInspector } from "@pointlesh/designer";
+import { installPointleshInspector, installDesignerViewport, type DesignerViewportOptions, type PointleshInspector } from "@pointlesh/designer";
 import { actOnPoint, resolvePointleshPoint, resolvePointleshScene, type CharacterController, type PointleshResolvedScene } from "@pointlesh/core";
 import { installPhaserSceneDesigner, type PhaserSceneDesignerOptions, type InstalledPhaserSceneDesigner } from "@scene-designer/phaser";
 import { installPhaserAreaBaseline } from "./area-baseline.js";
@@ -9,6 +9,8 @@ import { installPhaserDesignerLayer } from './designer-layer.js';
 
 export type PhaserPointleshDesignerOptions = PhaserSceneDesignerOptions & {
   inspectorMount?: HTMLElement;
+  /** Resizable presentation host. Defaults to the canvas parent; false disables it. */
+  viewport?: false | Omit<DesignerViewportOptions, 'onResize'>;
   onPreview?: (scene: PointleshResolvedScene) => void;
   /** Resolve a scene character instance to its live controller for point preview actions. */
   getCharacter?: (instanceId: string, sceneId: string) => CharacterController | undefined;
@@ -20,6 +22,7 @@ export type InstalledPhaserPointleshDesigner = InstalledPhaserSceneDesigner & {
   areaEdgeHandles: ReturnType<typeof installPhaserAreaEdgeHandles>;
   layer: ReturnType<typeof installPhaserDesignerLayer>;
   pointHandles: ReturnType<typeof installPhaserPointHandles>;
+  viewport?: ReturnType<typeof installDesignerViewport>;
 };
 
 /** Native draggable vertices, prefab editing and minimap, plus adventure properties. */
@@ -86,6 +89,11 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   const drawings = options.scene.children.list.filter(object => !previousObjects.has(object)
     && (object instanceof Phaser.GameObjects.Graphics || object.name === 'pointlesh-area-baseline-label'));
   const layer = installPhaserDesignerLayer(options.scene, drawings, () => native.designer.isOpen());
+  const viewport = options.viewport === false ? undefined : installDesignerViewport({
+    target: options.scene.game.canvas.parentElement!,
+    ...options.viewport,
+    onResize: () => options.scene.scale.refresh(),
+  });
   // The upstream Phaser adapter owns its selection callback. Observe only its tiny
   // selection value, and leave its canvas handles and input lifecycle intact.
   let selection = JSON.stringify(native.designer.getSelection());
@@ -100,6 +108,7 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
     options.scene.events.off("update", syncSelection);
     options.scene.events.off("shutdown", destroy);
     layer.destroy();
+    viewport?.destroy();
     areaBaseline.destroy();
     areaEdgeHandles.destroy();
     pointHandles.destroy();
@@ -112,5 +121,5 @@ export function installPhaserPointleshDesigner(options: PhaserPointleshDesignerO
   };
   options.scene.events.on("update", syncSelection);
   options.scene.events.once("shutdown", destroy);
-  return { ...native, inspector, areaBaseline, areaEdgeHandles, pointHandles, layer, destroy };
+  return { ...native, inspector, areaBaseline, areaEdgeHandles, pointHandles, layer, viewport, destroy };
 }

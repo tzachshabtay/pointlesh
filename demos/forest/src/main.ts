@@ -828,6 +828,10 @@ class ForestAdventure extends Phaser.Scene {
   }
   installTools() {
     this.sceneDesigner = installPhaserPointleshDesigner({
+      viewport: {
+        target: document.querySelector<HTMLElement>('.game-shell')!,
+        chromeHeight: () => document.body.classList.contains('game-fullscreen') ? 0 : 134,
+      },
       scene: this, manifest: authoredScenes, aiAssets: assets, aiRuntime: this.aiRuntime,
       defaultSceneId: this.story.roomId, renderSceneObjects: false, renderSceneTileMaps: false, areaDepth: 2200,
       client: new SceneDesignerDebugClient('http://127.0.0.1:4288'),

@@ -308,3 +308,9 @@ Speech remains active until the conversation advances by default. Set `waitForAd
 The crosshair uses `PhaserAdventureIcon`, so linked and directly assigned animations, scaled variants, live previews and promotions use the same rendering path as other interface assets. Explicit item click feedback retains the item's point and crosshair through consumption until the pointer moves. Designer controls retain their native cursor, and destruction removes both overlays and listeners.
 
 Set `animateOnClick: false` on a cursor appearance to keep its image or idle loop on clicks. Its crosshair continues looping independently. Omitting the setting preserves normal click feedback.
+
+## Designer game viewport
+
+`installPhaserPointleshDesigner` fits the canvas container to the left of an open shared designer panel. Drag the right edge, bottom edge, or bottom-right handle to resize the view; **Fit game view** restores automatic sizing. Closing all panels restores the original layout. This changes presentation only, without changing room coordinates or pausing the game.
+
+Use `viewport: { target: gameShell, aspectRatio: 16 / 9, chromeHeight: () => 134 }` when your game has an outer shell and controls. Style that shell's canvas region to fill its available size while `.pointlesh-designer-viewport` is applied. `chromeHeight` is the total height of controls outside the canvas (zero for overlay controls). Omit `viewport` to use the canvas parent, or set it to `false` to keep your own layout. The installed designer exposes `viewport.fit()` and cleans it up on destruction. The framework-independent helper is also exported as `installDesignerViewport` from `@pointlesh/designer`.
