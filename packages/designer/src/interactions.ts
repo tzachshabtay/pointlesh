@@ -187,11 +187,12 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     const help = document.createElement('p'); const actions = document.createElement('div'); actions.className = 'pointlesh-interaction-actions';
     const values = () => JSON.stringify([select.value, mode.value, inputs.map(input => input.value)]);
     const initialValues = values();
+    const emptySpeech = () => select.value === 'simple' && inputs.every(input => !input.value.trim());
     const commit = () => {
       // Browsing untouched cells must not replace empty cells or rewrite existing speech.
       if (marathon && values() === initialValues) return true;
       const next = structuredClone(manifest);
-      if (!select.value) {
+      if (!select.value || (marathon && emptySpeech())) {
         delete next.cells[row.id]?.[column.id];
         if (next.cells[row.id] && !Object.keys(next.cells[row.id]!).length) delete next.cells[row.id];
       } else {
@@ -218,7 +219,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     const refresh = () => {
       speech.hidden = select.value !== 'simple';
       const invalid = select.value === 'simple' && (!inputs.length || inputs.some(input => !input.value.trim()));
-      apply.disabled = marathon ? values() !== initialValues && invalid : !select.value || invalid;
+      apply.disabled = marathon ? invalid && !emptySpeech() : !select.value || invalid;
       if (previous) previous.disabled = marathon!.index === 0 || apply.disabled;
       inputs.forEach((input, index) => {
         input.setAttribute('aria-label', index === 0 ? 'Hero speech' : `Hero speech ${index + 1}`);
@@ -236,7 +237,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     dialog.append(h, label, speech, help);
     if (marathon) {
       const note = document.createElement('p'); note.className = 'pointlesh-marathon-note';
-      note.textContent = 'Moving saves this step. Untouched cells are skipped. Closing keeps saved steps and discards changes to the current step.';
+      note.textContent = 'Moving saves this step. Blank speech leaves the cell empty. Closing keeps saved steps and discards changes to the current step.';
       dialog.append(note);
     }
     dialog.append(actions); refresh(); if (!dialog.open) dialog.showModal();

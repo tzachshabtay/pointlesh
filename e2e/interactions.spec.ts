@@ -219,6 +219,14 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
   await expect(dialog.getByRole('status')).toHaveText('Marathon · 1 of 2');
   await expect(dialog.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
   await expect(dialog.getByRole('button', { name: 'Apply', exact: true })).toHaveCount(0);
+  // Even after changing playback or typing whitespace, blank speech stays empty.
+  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('   ');
+  await dialog.getByRole('combobox', { name: 'Sentence playback', exact: true }).selectOption('random');
+  await expect(dialog.getByRole('button', { name: 'Next', exact: true })).toBeEnabled();
+  await dialog.getByRole('button', { name: 'Next', exact: true }).click();
+  await expect(dialog.getByRole('status')).toHaveText('Marathon · 2 of 2');
+  await dialog.getByRole('button', { name: 'Previous', exact: true }).click();
+  await expect(dialog.getByRole('textbox', { name: 'Hero speech', exact: true })).toHaveValue('');
   await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('First marathon line.');
   await dialog.getByRole('button', { name: '+ Add sentence', exact: true }).click();
   await expect(dialog.getByRole('button', { name: 'Next', exact: true })).toBeDisabled();
@@ -231,6 +239,9 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
   await expect(dialog.getByRole('textbox', { name: 'Hero speech 2', exact: true })).toHaveValue('Second marathon line.');
   await expect(dialog.getByRole('combobox', { name: 'Sentence playback', exact: true })).toHaveValue('rotation');
   await dialog.getByRole('button', { name: 'Next', exact: true }).click();
+  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('   ');
+  await dialog.getByRole('button', { name: '+ Add sentence', exact: true }).click();
+  await expect(dialog.getByRole('button', { name: 'Done', exact: true })).toBeEnabled();
   await dialog.getByRole('button', { name: 'Done', exact: true }).click();
   await expect(dialog).toBeHidden();
   const saved = JSON.parse((await page.evaluate(() => localStorage.getItem('pointlesh.forest.interactions.draft.v1')))!).manifest;
