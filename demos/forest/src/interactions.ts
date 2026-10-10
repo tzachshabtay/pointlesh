@@ -32,12 +32,13 @@ export function createForestInteractions(scenes: SceneDesignerManifest): Interac
       cells[verbInteractionColumn('look')] = { kind: 'simple', text: typeof row.properties.description === 'string' ? row.properties.description : target.description };
       cells[verbInteractionColumn('interact')] = targetId === 'gold'
         ? { kind: 'simple', text: target.description } : { kind: 'code' };
+      // Inventory can be used on exits; empty cells inherit Defaults.
+      if (target.exit) continue;
       for (const item of inventory) {
         const id = String(item.properties.itemId), column = itemInteractionColumn(item.id.slice('prefab:'.length));
         const scripted = (id === 'coin' && targetId === 'innkeeper') || (id === 'sleepyStout' && targetId === 'cauldron') ||
           (id === 'rope' && targetId === 'guard') || (id === 'pickaxe' && targetId === 'cage');
-        // Mark unexpected uses for the designer; runtime still inherits Defaults.
-        cells[column] = target.exit ? { kind: 'impossible' } : scripted ? { kind: 'code' } : { kind: 'simple', text: 'I cannot see how that would help here.' };
+        cells[column] = scripted ? { kind: 'code' } : { kind: 'simple', text: 'I cannot see how that would help here.' };
       }
     }
     if (!Object.keys(cells).length) delete manifest.cells[row.id];

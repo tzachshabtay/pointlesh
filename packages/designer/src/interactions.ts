@@ -167,7 +167,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       const modeHelp = mode.value === 'random' ? 'Chooses one sentence at random each time.' : mode.value === 'rotation' ? 'Says the next sentence each time, wrapping back to the first.' : 'Says every sentence in order, one after another.';
       help.textContent = select.value === 'simple' ? `${modeHelp} Each sentence is linked to ${manifest.heroVoiceAssetId} in Assets → Voices.`
         : select.value === 'code' ? 'Runs the interaction handler registered by the game. This does not generate or edit code.'
-        : select.value === 'impossible' ? 'Designer note only: this combination is not expected. At runtime it uses Defaults, just like an empty cell.' : 'Choose how this action should behave.';
+        : select.value === 'impossible' ? 'Designer note only: this combination cannot occur in the game. At runtime it uses Defaults, just like an empty cell.' : 'Choose how this action should behave.';
     };
     select.onchange = refresh; mode.onchange = refresh;
     actions.append(clear, makeButton('Cancel', () => dialog.close()), apply); dialog.append(h, label, speech, help, actions); refresh(); dialog.showModal();
