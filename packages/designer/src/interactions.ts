@@ -127,7 +127,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     const label = document.createElement('label'); label.textContent = 'Interaction state';
     const select = document.createElement('select'); select.setAttribute('aria-label', 'Interaction state');
     for (const [value, text] of [['', 'Choose a state…'], ['code', 'Game code ★'], ['simple', 'Simple speech ✓'], ['impossible', 'Should not happen ✕']]) select.add(new Option(text, value));
-    select.value = cell?.kind ?? ''; label.append(select);
+    select.value = cell?.kind ?? 'simple'; label.append(select);
     const speech = document.createElement('div');
     const modeLabel = document.createElement('label'); modeLabel.textContent = 'Sentence playback';
     const mode = document.createElement('select'); mode.setAttribute('aria-label', 'Sentence playback');
@@ -171,7 +171,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     };
     select.onchange = refresh; mode.onchange = refresh;
     actions.append(clear, makeButton('Cancel', () => dialog.close()), apply); dialog.append(h, label, speech, help, actions); refresh(); dialog.showModal();
-    if (cell?.kind === 'simple') inputs[0]!.focus(); else select.focus();
+    if (select.value === 'simple') inputs[0]!.focus(); else select.focus();
   }
   render(); if (dirty) publish();
   return { root, open: () => dock.open(), close: () => dock.close(), isOpen: () => dock.isOpen(), refresh: render,

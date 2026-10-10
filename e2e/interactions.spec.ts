@@ -52,10 +52,10 @@ test('matrix discovers all target kinds, supports arbitrary verbs, and edits all
   await expect(cell(page, rope, 'verb:push')).toHaveAttribute('data-state', 'empty');
   await cell(page, rope, 'verb:push').click();
   const dialog = page.getByRole('dialog', { name: 'Edit interaction' });
-  await dialog.getByRole('combobox').selectOption('code'); await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
+  await dialog.getByRole('combobox', { name: 'Interaction state', exact: true }).selectOption('code'); await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
   await expect(cell(page, rope, 'verb:push')).toHaveAttribute('data-state', 'code');
   await cell(page, rope, 'verb:push').click();
-  await dialog.getByRole('combobox').selectOption('impossible'); await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
+  await dialog.getByRole('combobox', { name: 'Interaction state', exact: true }).selectOption('impossible'); await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
   await expect(cell(page, rope, 'verb:push')).toHaveAttribute('data-state', 'impossible');
   await cell(page, rope, 'verb:push').click(); await dialog.getByRole('button', { name: '× Clear interaction', exact: true }).click();
   await expect(cell(page, rope, 'verb:push')).toHaveAttribute('data-state', 'empty');
