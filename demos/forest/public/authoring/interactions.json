@@ -181,6 +181,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "scene:[\"forest\",\"forest-exit\"]": {
@@ -190,6 +208,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "scene:[\"forest\",\"mushroom\"]": {
@@ -232,6 +268,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "scene:[\"mine\",\"gold\"]": {
@@ -595,6 +649,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.door.village-pub": {
@@ -604,6 +676,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.door.house": {
@@ -613,6 +703,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.door.village-house": {
@@ -622,6 +730,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.door.forest-mine": {
@@ -631,6 +757,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.door.forest-camp": {
@@ -640,6 +784,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.door.camp": {
@@ -649,6 +811,24 @@
       },
       "verb:interact": {
         "kind": "code"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "impossible"
+      },
+      "item:forest.inventory.stout": {
+        "kind": "impossible"
       }
     },
     "prefab:forest.object.tool-chest": {

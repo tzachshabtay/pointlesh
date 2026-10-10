@@ -49,7 +49,7 @@ test('doors and exits inherit inventory defaults without triggering room travel'
     const column = 'item:forest.inventory.coin';
     manifest.cells.defaults = { [column]: { kind: 'simple', text: 'No. This is not what the coin is for.' } };
     for (const row of rows) {
-      assert.equal(manifest.cells[row.id]?.[column], undefined, row.name);
+      assert.deepEqual(manifest.cells[row.id]?.[column], { kind: 'impossible' }, 'door metadata is retained');
       assert.equal(resolveInteraction(manifest, row.id, 'verb:interact').cell.kind, 'code', 'ordinary door clicks still travel');
       const spoken = [];
       await runInteraction(manifest, row.id, column, { say: text => spoken.push(text), code: () => assert.fail('Coin must not trigger a room transition') });

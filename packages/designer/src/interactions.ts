@@ -48,7 +48,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   });
   tools.append(search, kinds, undo, redo, exportButton, promote); root.append(tools);
   const legend = document.createElement('p'); legend.className = 'pointlesh-interactions-legend';
-  legend.innerHTML = '<span>Empty · use Defaults</span><span>★ Game code</span><span class="simple">✓ Hero speech</span><span class="impossible">✕ Should not happen</span>';
+  legend.innerHTML = '<span>Empty · use Defaults</span><span>★ Game code</span><span class="simple">✓ Hero speech</span><span class="impossible">✕ Should not happen · use Defaults</span>';
   root.append(legend);
   const scroll = document.createElement('div'); scroll.className = 'pointlesh-interactions-scroll'; root.append(scroll);
   const count = document.createElement('p'); count.className = 'pointlesh-interactions-count'; root.append(count);
@@ -116,7 +116,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
         const state = cell?.kind ?? 'empty', label = state === 'code' ? 'Game code' : state === 'simple' ? 'Hero speech' : state === 'impossible' ? 'Should not happen' : 'Empty';
         const b = makeButton(state === 'code' ? '★' : state === 'simple' ? '✓' : state === 'impossible' ? '✕' : '', () => edit(row, column));
         b.className = state; b.dataset.target = row.id; b.dataset.column = column.id; b.dataset.state = state;
-        b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`); b.title = cell?.kind === 'simple' ? interactionSentences(cell).join('\n') : !cell && row.id !== DEFAULT_INTERACTION_TARGET ? 'Uses Defaults when assigned' : label; td.append(b);
+        b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`); b.title = cell?.kind === 'simple' ? interactionSentences(cell).join('\n') : (!cell || cell.kind === 'impossible') && row.id !== DEFAULT_INTERACTION_TARGET ? 'Uses Defaults when assigned' : label; td.append(b);
       }
     }
     scroll.replaceChildren(table); count.textContent = `${visible.length} of ${interactiveRows.length} interactive targets · ${columns.length} actions${dirty ? ' · Local draft' : ''}`;
@@ -167,7 +167,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       const modeHelp = mode.value === 'random' ? 'Chooses one sentence at random each time.' : mode.value === 'rotation' ? 'Says the next sentence each time, wrapping back to the first.' : 'Says every sentence in order, one after another.';
       help.textContent = select.value === 'simple' ? `${modeHelp} Each sentence is linked to ${manifest.heroVoiceAssetId} in Assets → Voices.`
         : select.value === 'code' ? 'Runs the interaction handler registered by the game. This does not generate or edit code.'
-        : select.value === 'impossible' ? 'This combination is intentionally unavailable and will not run an interaction.' : 'Choose how this action should behave.';
+        : select.value === 'impossible' ? 'Designer note only: this combination is not expected. At runtime it uses Defaults, just like an empty cell.' : 'Choose how this action should behave.';
     };
     select.onchange = refresh; mode.onchange = refresh;
     actions.append(clear, makeButton('Cancel', () => dialog.close()), apply); dialog.append(h, label, speech, help, actions); refresh(); dialog.showModal();

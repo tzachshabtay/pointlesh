@@ -7,12 +7,14 @@ export type InteractionSpeechMode = 'random' | 'rotation' | 'sequence';
 export type SimpleInteraction = { kind: 'simple'; mode?: InteractionSpeechMode } &
   ({ text: string; sentences?: never } | { sentences: string[]; text?: never });
 export type Interaction = { kind: 'code' } | SimpleInteraction | { kind: 'impossible' };
-/** Reserved row: an empty target cell inherits the same column from Defaults. */
+/** Reserved row: empty cells and designer-only red X markers inherit this column. */
 export const DEFAULT_INTERACTION_TARGET = 'defaults';
 export const interactionSentences = (cell: SimpleInteraction): string[] => cell.sentences ?? [cell.text!];
 export function resolveInteraction(manifest: InteractionManifest, row: string, column: string) {
   const own = manifest.cells[row]?.[column];
-  return own ? { cell: own, sourceRow: row } : { cell: manifest.cells[DEFAULT_INTERACTION_TARGET]?.[column], sourceRow: DEFAULT_INTERACTION_TARGET };
+  if (own && own.kind !== 'impossible') return { cell: own, sourceRow: row };
+  const fallback = manifest.cells[DEFAULT_INTERACTION_TARGET]?.[column];
+  return { cell: fallback?.kind === 'impossible' ? undefined : fallback, sourceRow: DEFAULT_INTERACTION_TARGET };
 }
 export type InteractionPlaybackState = { rotations: Record<string, number> };
 export const createInteractionPlaybackState = (): InteractionPlaybackState => ({ rotations: {} });
@@ -139,10 +141,11 @@ export function syncInteractionVoiceLines(manifest: InteractionManifest, source:
 }
 
 const defaultPlayback = new WeakMap<InteractionManifest, InteractionPlaybackState>();
-/** Empty inherits Defaults; sequence awaits each say callback before starting the next sentence. */
+/** Empty and red X cells inherit Defaults; sequence awaits each speech callback. */
 export async function runInteraction(manifest: InteractionManifest, row: string, column: string, handlers: {
   say(text: string, lineAssetId: string): unknown | Promise<unknown>;
   code?(row: string, column: string): unknown | Promise<unknown>;
+  /** @deprecated Red X is designer metadata and does not dispatch a runtime callback. */
   impossible?(row: string, column: string): unknown | Promise<unknown>;
 }, playback?: { state?: InteractionPlaybackState; random?: () => number }): Promise<boolean> {
   const { cell, sourceRow } = resolveInteraction(manifest, row, column);
@@ -152,7 +155,6 @@ export async function runInteraction(manifest: InteractionManifest, row: string,
     if (!state) { state = createInteractionPlaybackState(); defaultPlayback.set(manifest, state); }
     for (const line of selectInteractionSpeech(cell, sourceRow, column, state, playback?.random)) await handlers.say(line.text, line.lineAssetId);
   }
-  else if (cell.kind === 'impossible') await handlers.impossible?.(row, column);
   else {
     if (!handlers.code) throw new Error(`No game handler for ${row} / ${column}`);
     await handlers.code(row, column);

@@ -135,9 +135,9 @@ await runInteraction(interactions, targetId, columnId, {
 });
 ```
 
-Simple cells contain `{ kind: 'simple', text }`, code cells `{ kind: 'code' }`, and intentionally unavailable cells `{ kind: 'impossible' }`. Cells with no explicit or default interaction return `false` without effects. Assigned cells return `true`; code requires a game handler, and impossible does nothing unless an optional `impossible` callback is supplied. Movement, puzzle state and scripted actions stay in the game.
+Simple cells contain `{ kind: 'simple', text }`, code cells `{ kind: 'code' }`, and designer-only red X markers `{ kind: 'impossible' }`. Cells with no executable explicit or default interaction return `false` without effects. Speech and code return `true`; code requires a game handler. Red X markers never invoke a runtime callback. Movement, puzzle state and scripted actions stay in the game.
 
-Assign per-column fallbacks in `cells[DEFAULT_INTERACTION_TARGET]` (`"defaults"`). `resolveInteraction` uses a target's explicit cell first, then its column default. An explicit impossible cell blocks fallback; clearing the default leaves empty target cells unhandled. Default code still receives the actual target row in its callback.
+Assign per-column fallbacks in `cells[DEFAULT_INTERACTION_TARGET]` (`"defaults"`). `resolveInteraction` uses a target's explicit speech or code first, then its column default. Empty and red X cells both inherit Defaults. A red X in Defaults itself supplies no runtime action; clearing the default leaves empty and red X target cells unhandled. Default code still receives the actual target row in its callback.
 
 For multiple speech lines use `{ kind: 'simple', sentences: ['First.', 'Second.'], mode: 'rotation' }`. `random` chooses one sentence, `rotation` advances modulo the number of sentences, and `sequence` awaits each `say` callback in order (the default). A single legacy `text` remains supported. Pass `{ state: createInteractionPlaybackState(), random? }` as the fifth argument to `runInteraction` for game-owned, serializable rotation state and an optional random source. Otherwise it retains rotation state per manifest object. Each explicit cell rotates independently; targets inheriting a default share that default's rotation. `selectInteractionSpeech` exposes the same selection for hosts with their own speech queue.
 

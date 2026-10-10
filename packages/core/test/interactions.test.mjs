@@ -10,14 +10,14 @@ const make = () => ({ schemaVersion: 1, heroVoiceAssetId: 'hero', verbs: [{ id: 
   cells: { chest: { 'verb:look': { kind: 'simple', text: 'A stubborn chest.' }, 'verb:push': { kind: 'code' }, 'item:chest': { kind: 'impossible' } } } });
 const assets = () => ({ schemaVersion: 1, assets: { hero: { id: 'hero', kind: 'voice', prompt: 'The hero', activeVersion: '', versions: {} } } });
 
-test('all interaction states dispatch distinctly, with arbitrary verbs and inventory columns', async () => {
+test('speech and code dispatch, while red X metadata without a default has no runtime effect', async () => {
   const manifest = make(); assertInteractionManifest(manifest); const calls = [];
   const handlers = { say: (...args) => calls.push(['speech', ...args]), code: (...args) => calls.push(['code', ...args]), impossible: (...args) => calls.push(['impossible', ...args]) };
   assert.equal(await runInteraction(manifest, 'chest', 'verb:talk', handlers), false);
   assert.equal(await runInteraction(manifest, 'chest', 'verb:look', handlers), true);
   assert.equal(await runInteraction(manifest, 'chest', 'verb:push', handlers), true);
-  assert.equal(await runInteraction(manifest, 'chest', 'item:chest', handlers), true);
-  assert.deepEqual(calls, [['speech', 'A stubborn chest.', interactionVoiceLineId('chest', 'verb:look')], ['code', 'chest', 'verb:push'], ['impossible', 'chest', 'item:chest']]);
+  assert.equal(await runInteraction(manifest, 'chest', 'item:chest', handlers), false);
+  assert.deepEqual(calls, [['speech', 'A stubborn chest.', interactionVoiceLineId('chest', 'verb:look')], ['code', 'chest', 'verb:push']]);
   await assert.rejects(runInteraction(manifest, 'chest', 'verb:push', { say() {} }), /No game handler/);
   assert.throws(() => assertInteractionManifest({ ...manifest, verbs: [manifest.verbs[0], manifest.verbs[0]] }), /unique/);
   assert.throws(() => assertInteractionManifest({ ...manifest, cells: { chest: { 'verb:look': { kind: 'simple', text: ' ' } } } }), /speech text/);
@@ -53,7 +53,7 @@ test('game catalog includes scene hotspots and inventory, and deduplicates share
   assert.ok(!rows.some(row => row.id === 'prefab:pointlesh.inventory-item'));
 });
 
-test('empty cells inherit column defaults, while explicit speech, code and impossible override them', async () => {
+test('empty and red X cells inherit defaults, while explicit speech and code override them', async () => {
   const manifest = make(), calls = [];
   manifest.cells.defaults = { 'verb:talk': { kind: 'simple', text: 'Hello?' }, 'verb:push': { kind: 'code' }, 'item:rope': { kind: 'simple', text: 'No knot needed.' } };
   const handlers = { say: (...args) => calls.push(args), code: (...args) => calls.push(args) };
@@ -64,7 +64,13 @@ test('empty cells inherit column defaults, while explicit speech, code and impos
   await runInteraction(manifest, 'other', 'item:rope', handlers);
   assert.equal(calls.pop()[0], 'No knot needed.');
   manifest.cells.chest['verb:talk'] = { kind: 'impossible' };
-  await runInteraction(manifest, 'chest', 'verb:talk', handlers); assert.equal(calls.length, 0);
+  await runInteraction(manifest, 'chest', 'verb:talk', handlers);
+  assert.deepEqual(calls.pop(), ['Hello?', interactionVoiceLineId('defaults', 'verb:talk')]);
+  manifest.cells.chest['verb:push'] = { kind: 'impossible' };
+  await runInteraction(manifest, 'chest', 'verb:push', handlers);
+  assert.deepEqual(calls.pop(), ['chest', 'verb:push'], 'red X also inherits default code with the actual target');
+  manifest.cells.defaults['item:chest'] = { kind: 'impossible' };
+  assert.equal(await runInteraction(manifest, 'chest', 'item:chest', handlers), false, 'default metadata is not executable');
   manifest.cells.chest['verb:talk'] = { kind: 'simple', text: 'A chest reply.' };
   await runInteraction(manifest, 'chest', 'verb:talk', handlers); assert.equal(calls.pop()[0], 'A chest reply.');
   delete manifest.cells.chest['verb:talk']; delete manifest.cells.defaults['verb:talk'];
