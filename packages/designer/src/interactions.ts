@@ -46,7 +46,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     const url = URL.createObjectURL(new Blob([JSON.stringify(manifest, null, 2) + '\n'], { type: 'application/json' }));
     const link = document.createElement('a'); link.href = url; link.download = 'interactions.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 0);
   });
-  tools.append(search, kinds, undo, redo, exportButton, promote); root.append(tools);
+  tools.append(search, kinds, makeButton('Marathon', marathonSetup), undo, redo, exportButton, promote); root.append(tools);
   const legend = document.createElement('p'); legend.className = 'pointlesh-interactions-legend';
   legend.innerHTML = '<span>Empty · use Defaults</span><span>★ Game code</span><span class="simple">✓ Hero speech</span><span class="impossible">✕ Should not happen · use Defaults</span>';
   root.append(legend);
@@ -95,16 +95,19 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     undo.disabled = !past.length; redo.disabled = !future.length;
     renderTable();
   }
-  function renderTable() {
-    const columns = [...manifest.verbs.map(verb => ({ id: verbInteractionColumn(verb.id), name: verb.label, type: 'Verb' })),
+  function interactionColumns() {
+    return [...manifest.verbs.map(verb => ({ id: verbInteractionColumn(verb.id), name: verb.label, type: 'Verb' })),
       ...rows.filter(row => row.kind === 'inventory-item').map(row => ({ id: itemInteractionColumn(row.id.slice('prefab:'.length)), name: row.name, type: 'Inventory' }))];
+  }
+  const defaults: InteractionTarget = { id: DEFAULT_INTERACTION_TARGET, name: 'Defaults', kind: 'object', properties: {}, locations: [] };
+  function renderTable() {
+    const columns = interactionColumns();
     const table = document.createElement('table'); table.setAttribute('aria-label', 'Game interactions');
     const head = table.createTHead().insertRow(); const corner = document.createElement('th'); corner.scope = 'col'; corner.textContent = 'Target'; head.append(corner);
     for (const column of columns) { const th = document.createElement('th'); th.scope = 'col'; const label = document.createElement('span'); label.textContent = column.name;
       const small = document.createElement('small'); small.textContent = column.type; th.append(label, small); head.append(th); }
     const body = table.createTBody();
     const visible = interactiveRows.filter(row => (!kind || row.kind === kind) && `${row.name} ${row.locations.map(location => location.sceneName).join(' ')}`.toLowerCase().includes(filter));
-    const defaults: InteractionTarget = { id: DEFAULT_INTERACTION_TARGET, name: 'Defaults', kind: 'object', properties: {}, locations: [] };
     for (const row of [defaults, ...visible]) {
       const tr = body.insertRow(), th = document.createElement('th'); th.scope = 'row';
       if (row.id === DEFAULT_INTERACTION_TARGET) tr.className = 'pointlesh-interaction-defaults';
@@ -121,12 +124,49 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     }
     scroll.replaceChildren(table); count.textContent = `${visible.length} of ${interactiveRows.length} interactive targets · ${columns.length} actions${dirty ? ' · Local draft' : ''}`;
   }
-  function edit(row: InteractionTarget, column: { id: string; name: string }) {
-    const cell = manifest.cells[row.id]?.[column.id]; dialog.replaceChildren();
-    const h = document.createElement('h3'); h.textContent = `${row.name} · ${column.name}`;
+  type MarathonEntry = { row: InteractionTarget; column: { id: string; name: string } };
+  type Marathon = { entries: MarathonEntry[]; index: number };
+  function marathonSetup() {
+    render(); dialog.replaceChildren(); dialog.setAttribute('aria-label', 'Marathon');
+    const h = document.createElement('h3'); h.textContent = 'Interaction marathon';
+    const description = document.createElement('p');
+    description.textContent = 'Choose the cell categories to edit across all interactive targets, including Defaults. Table filters do not limit the marathon.';
+    const categories = document.createElement('fieldset'); categories.className = 'pointlesh-marathon-categories';
+    const legend = document.createElement('legend'); legend.textContent = 'Include cells'; categories.append(legend);
+    const entries = [defaults, ...interactiveRows].flatMap(row => interactionColumns().map(column => ({ row, column })));
+    const stateOf = ({ row, column }: MarathonEntry) => manifest.cells[row.id]?.[column.id]?.kind ?? 'empty';
+    const checks = new Map<string, HTMLInputElement>();
+    const total = document.createElement('p'); total.setAttribute('role', 'status');
+    const selected = () => entries.filter(entry => checks.get(stateOf(entry))?.checked);
+    const start = makeButton('Start marathon', () => {
+      const entries = selected(); if (entries.length) edit(entries[0]!.row, entries[0]!.column, { entries, index: 0 });
+    });
+    const refresh = () => { const length = selected().length; total.textContent = `${length} interactions selected`; start.disabled = !length; };
+    for (const [value, name] of [['empty', 'Empty'], ['impossible', '✕ Should not happen'], ['simple', '✓ Hero speech'], ['code', '★ Game code']] as const) {
+      const label = document.createElement('label'), check = document.createElement('input');
+      check.type = 'checkbox'; check.checked = value === 'empty'; check.setAttribute('aria-label', name); label.className = value;
+      check.onchange = refresh; checks.set(value, check);
+      label.append(check, document.createTextNode(`${name} (${entries.filter(entry => stateOf(entry) === value).length})`)); categories.append(label);
+    }
+    const actions = document.createElement('div'); actions.className = 'pointlesh-interaction-actions';
+    actions.append(makeButton('Cancel', () => dialog.close()), start);
+    dialog.append(h, description, categories, total, actions); refresh(); dialog.showModal();
+  }
+  function edit(row: InteractionTarget, column: { id: string; name: string }, marathon?: Marathon) {
+    const cell = manifest.cells[row.id]?.[column.id]; dialog.replaceChildren(); dialog.setAttribute('aria-label', 'Edit interaction');
+    const h = document.createElement('h3'); h.textContent = column.id.startsWith('item:')
+      ? row.id === DEFAULT_INTERACTION_TARGET ? `Default for using ${column.name}` : `Use ${column.name} on ${row.name}`
+      : `${row.name} · ${column.name}`;
+    if (marathon) {
+      const progress = document.createElement('p'); progress.className = 'pointlesh-marathon-progress'; progress.setAttribute('role', 'status');
+      progress.textContent = `Marathon · ${marathon.index + 1} of ${marathon.entries.length}`;
+      const close = makeButton('×', () => dialog.close()); close.className = 'pointlesh-marathon-close'; close.setAttribute('aria-label', 'Close marathon');
+      close.title = 'Keep saved steps and discard changes to this step';
+      dialog.append(progress, close);
+    }
     const label = document.createElement('label'); label.textContent = 'Interaction state';
     const select = document.createElement('select'); select.setAttribute('aria-label', 'Interaction state');
-    for (const [value, text] of [['', 'Choose a state…'], ['code', 'Game code ★'], ['simple', 'Simple speech ✓'], ['impossible', 'Should not happen ✕']]) select.add(new Option(text, value));
+    for (const [value, text] of [['', 'Empty · use Defaults'], ['code', 'Game code ★'], ['simple', 'Simple speech ✓'], ['impossible', 'Should not happen ✕']]) select.add(new Option(text, value));
     select.value = cell?.kind ?? 'simple'; label.append(select);
     const speech = document.createElement('div');
     const modeLabel = document.createElement('label'); modeLabel.textContent = 'Sentence playback';
@@ -145,19 +185,41 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     for (const value of cell?.kind === 'simple' ? interactionSentences(cell) : ['']) addSentence(value);
     speech.append(modeLabel, sentenceList, makeButton('+ Add sentence', () => { const input = addSentence(); refresh(); input.focus(); }));
     const help = document.createElement('p'); const actions = document.createElement('div'); actions.className = 'pointlesh-interaction-actions';
+    const values = () => JSON.stringify([select.value, mode.value, inputs.map(input => input.value)]);
+    const initialValues = values();
+    const commit = () => {
+      // Browsing untouched cells must not replace empty cells or rewrite existing speech.
+      if (marathon && values() === initialValues) return true;
+      const next = structuredClone(manifest);
+      if (!select.value) {
+        delete next.cells[row.id]?.[column.id];
+        if (next.cells[row.id] && !Object.keys(next.cells[row.id]!).length) delete next.cells[row.id];
+      } else {
+        const sentences = inputs.map(input => input.value.trim());
+        (next.cells[row.id] ??= {})[column.id] = select.value === 'simple'
+          ? { kind: 'simple', ...(sentences.length === 1 ? { text: sentences[0]! } : { sentences }), mode: mode.value as InteractionSpeechMode }
+          : { kind: select.value as 'code' | 'impossible' };
+      }
+      try { if (JSON.stringify(next) !== JSON.stringify(manifest)) change(next); return true; }
+      catch (error) { help.textContent = error instanceof Error ? error.message : String(error); return false; }
+    };
+    const move = (index: number) => {
+      if (!commit()) return;
+      if (!marathon || index >= marathon.entries.length) { dialog.close(); return; }
+      const entry = marathon.entries[index]!;
+      edit(entry.row, entry.column, { ...marathon, index });
+    };
     const clear = makeButton('× Clear interaction', () => {
-      const next = structuredClone(manifest); delete next.cells[row.id]?.[column.id];
-      if (next.cells[row.id] && !Object.keys(next.cells[row.id]!).length) delete next.cells[row.id];
-      change(next); dialog.close();
+      select.value = ''; refresh();
+      if (!marathon && commit()) dialog.close();
     });
-    const apply = makeButton('Apply', () => {
-      const sentences = inputs.map(input => input.value.trim());
-      const next = structuredClone(manifest); (next.cells[row.id] ??= {})[column.id] = select.value === 'simple'
-        ? { kind: 'simple', ...(sentences.length === 1 ? { text: sentences[0]! } : { sentences }), mode: mode.value as InteractionSpeechMode } : { kind: select.value as 'code' | 'impossible' };
-      try { change(next); dialog.close(); } catch (error) { help.textContent = error instanceof Error ? error.message : String(error); }
-    });
+    const previous = marathon ? makeButton('Previous', () => move(marathon.index - 1)) : undefined;
+    const apply = makeButton(marathon ? marathon.index === marathon.entries.length - 1 ? 'Done' : 'Next' : 'Apply', () => move(marathon ? marathon.index + 1 : 0));
     const refresh = () => {
-      speech.hidden = select.value !== 'simple'; apply.disabled = !select.value || (select.value === 'simple' && (!inputs.length || inputs.some(input => !input.value.trim())));
+      speech.hidden = select.value !== 'simple';
+      const invalid = select.value === 'simple' && (!inputs.length || inputs.some(input => !input.value.trim()));
+      apply.disabled = marathon ? values() !== initialValues && invalid : !select.value || invalid;
+      if (previous) previous.disabled = marathon!.index === 0 || apply.disabled;
       inputs.forEach((input, index) => {
         input.setAttribute('aria-label', index === 0 ? 'Hero speech' : `Hero speech ${index + 1}`);
         input.previousElementSibling!.textContent = `Sentence ${index + 1}`;
@@ -167,10 +229,17 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       const modeHelp = mode.value === 'random' ? 'Chooses one sentence at random each time.' : mode.value === 'rotation' ? 'Says the next sentence each time, wrapping back to the first.' : 'Says every sentence in order, one after another.';
       help.textContent = select.value === 'simple' ? `${modeHelp} Each sentence is linked to ${manifest.heroVoiceAssetId} in Assets → Voices.`
         : select.value === 'code' ? 'Runs the interaction handler registered by the game. This does not generate or edit code.'
-        : select.value === 'impossible' ? 'Designer note only: this combination cannot occur in the game. At runtime it uses Defaults, just like an empty cell.' : 'Choose how this action should behave.';
+        : select.value === 'impossible' ? 'Designer note only: this combination cannot occur in the game. At runtime it uses Defaults, just like an empty cell.' : 'Empty cells use Defaults when assigned.';
     };
     select.onchange = refresh; mode.onchange = refresh;
-    actions.append(clear, makeButton('Cancel', () => dialog.close()), apply); dialog.append(h, label, speech, help, actions); refresh(); dialog.showModal();
+    actions.append(clear, previous ?? makeButton('Cancel', () => dialog.close()), apply);
+    dialog.append(h, label, speech, help);
+    if (marathon) {
+      const note = document.createElement('p'); note.className = 'pointlesh-marathon-note';
+      note.textContent = 'Moving saves this step. Untouched cells are skipped. Closing keeps saved steps and discards changes to the current step.';
+      dialog.append(note);
+    }
+    dialog.append(actions); refresh(); if (!dialog.open) dialog.showModal();
     if (select.value === 'simple') inputs[0]!.focus(); else select.focus();
   }
   render(); if (dirty) publish();
@@ -192,5 +261,6 @@ const styles = `
 .pointlesh-interactions th{padding:10px;background:#202938;font-weight:600}.pointlesh-interactions thead th{position:sticky;top:0;z-index:2}.pointlesh-interactions tbody th{position:sticky;left:0;z-index:1;text-align:left;min-width:235px;max-width:300px}.pointlesh-interactions thead th:first-child{left:0;z-index:3;min-width:235px}.pointlesh-interactions small{display:block;font-size:10px;font-weight:400;color:#99a8bf;margin-top:5px}
 .pointlesh-interactions td button{display:block;border:0;border-radius:0;width:100%;height:51px;font-size:21px;background:#171e29}.pointlesh-interactions tr:nth-child(even) td button{background:#1b2330}.pointlesh-interactions tr td button:hover{background:#35435a}.pointlesh-interactions-count{font-size:11px;color:#aab6ca;margin:0;flex:none}
 .pointlesh-interaction-defaults th,.pointlesh-interactions .pointlesh-interaction-defaults td button{background:#283449;border-bottom:2px solid #6883a8}.pointlesh-interaction-sentences>div{display:flex;align-items:center;gap:10px}.pointlesh-interaction-sentences label{flex:1}.pointlesh-interaction-edit [hidden]{display:none!important}
+.pointlesh-marathon-categories{border:1px solid #49546b;border-radius:6px;padding:14px}.pointlesh-interaction-edit .pointlesh-marathon-categories label{display:flex;align-items:center;gap:10px;margin:8px 0}.pointlesh-marathon-categories input{accent-color:#8cbaff}.pointlesh-marathon-progress{margin:0 32px 12px 0;font-size:12px}.pointlesh-interaction-edit .pointlesh-marathon-close{position:absolute;right:12px;top:12px;font-size:20px;padding:2px 8px}.pointlesh-interaction-edit .pointlesh-marathon-note{font-size:11px}.pointlesh-interaction-actions{flex-wrap:wrap}
 .pointlesh-interaction-edit{max-height:85vh;overflow:auto;width:min(540px,90vw);padding:24px;color:#e6eaf2;background:#192230;border:1px solid #677a99;border-radius:10px;font:13px system-ui}.pointlesh-interaction-edit::backdrop{background:#060b1399}.pointlesh-interaction-edit h3{margin:0 0 20px;font-size:17px}.pointlesh-interaction-edit label{display:grid;gap:8px;margin-bottom:16px}.pointlesh-interaction-edit label[hidden]{display:none}.pointlesh-interaction-edit textarea{resize:vertical;min-height:100px}.pointlesh-interaction-edit p{color:#aab9cf;line-height:1.5}.pointlesh-interaction-actions{display:flex;gap:8px;justify-content:flex-end}.pointlesh-interaction-actions button:first-child{margin-right:auto}
 `;
