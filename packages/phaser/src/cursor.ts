@@ -18,6 +18,9 @@ export type AdventureCursorOptions = {
   /** Return an asset only over game surfaces; leave designer/browser controls native. */
   resolve(target: Element): string | AdventureCursorAppearance | undefined;
   enabled?: () => boolean;
+  /** Override game-surface cursors during an action the player cannot cancel.
+   * The asset's linked idle animation loops until active() returns false. */
+  busy?: { active(): boolean; appearance: string | AdventureCursorAppearance };
   /** Position of the click within the icon, normalized from 0 to 1. */
   hotspot?: { x: number; y: number };
 };
@@ -87,7 +90,9 @@ export class PhaserAdventureCursor {
   private update = () => {
     if (this.destroyed) return;
     const target = this.icon.canvas.ownerDocument.elementFromPoint(this.x, this.y);
-    const appearance = target ? this.options.resolve(target) : undefined;
+    let appearance = target ? this.options.resolve(target) : undefined;
+    const busy = !!appearance && this.options.busy?.active();
+    if (busy) { appearance = this.options.busy!.appearance; this.retainClickAsset = false; }
     const enabled = this.options.enabled?.() ?? true;
     // A new hover action takes priority over feedback for the previous action.
     // Explicit click assets stay visible through inventory consumption until the pointer moves.
@@ -104,6 +109,7 @@ export class PhaserAdventureCursor {
   click(appearance?: string | AdventureCursorAppearance): void {
     this.retainClickAsset = false;
     this.update();
+    if (this.options.busy?.active()) return;
     if (appearance) this.setAppearance(appearance);
     if (this.appearance.animateOnClick === false) this.icon.stop();
     else { this.retainClickAsset = !!appearance; this.icon.play('click'); }

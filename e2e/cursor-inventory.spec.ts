@@ -301,3 +301,27 @@ test.describe('cursor asset sizing', () => {
     expect(errors).toEqual([]);
   });
 });
+
+test('uncancellable actions override feedback with a looping hourglass and restore the selected cursor', async ({ page }) => {
+  await ready(page);
+  const cursor = page.locator('.pointlesh-adventure-cursor');
+  const ground = await worldPoint(page, 600, 470);
+  await page.mouse.move(ground.x, ground.y);
+  await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.selected = 'rope'; scene.cursor.click('inventory.rope');
+    scene.story.chestOpening = { elapsedMs: -60_000 }; // Extend the action so browser latency cannot finish it during assertions.
+  });
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.busy');
+  await expect(cursor).toHaveAttribute('data-state', 'idle');
+  const frame = await cursor.getAttribute('data-frame');
+  await expect.poll(() => cursor.getAttribute('data-frame')).not.toBe(frame);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.cursor.click('inventory.coin'));
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.busy');
+  await page.evaluate(() => { delete (window as any).pointleshDemo.scene.story.chestOpening; });
+  await expect(cursor).toHaveAttribute('data-asset-id', 'inventory.rope');
+  await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.selected = undefined; void scene.character.walkTo({ x: 650, y: 470 }); });
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.walk');
+  await page.evaluate(() => { const scene = (window as any).pointleshDemo.scene; scene.character.stop(); scene.say('Continue when ready.'); });
+  await expect(cursor).toHaveAttribute('data-asset-id', 'cursor.interact');
+});

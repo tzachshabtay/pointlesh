@@ -251,6 +251,7 @@ class ForestAdventure extends Phaser.Scene {
     this.roomCamera = new PhaserRoomCamera(this.cameras.main, { room: this.roomSize('village'), target: () => this.character.state.position });
     this.cursor = new PhaserAdventureCursor(this, this.aiRuntime, {
       assetId: 'cursor.walk',
+      busy: { active: () => this.uncancellableAction(), appearance: { assetId: 'cursor.busy', animateOnClick: false } },
       resolve: target => {
         if (!this.started || modalOpen || this.story.introStep < intro.length || this.story.endingStep >= 0) return undefined;
         const inventory = target.closest('#inventory button, #nearby button');
@@ -428,7 +429,8 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
-  blocked(includeDesigner = true) { return !this.started || !!this.cutsceneCrossfade || this.roomTransition?.active || !!this.introArrival || this.campStealth?.busy || (includeDesigner && (this.worldEditorOpen() || this.editing)) || modalOpen || this.talking || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0; }
+  uncancellableAction() { return !!(this.cutsceneCrossfade || this.roomTransition?.active || this.introArrival || this.campStealth?.busy || this.story.tyingGuard || this.story.chestOpening); }
+  blocked(includeDesigner = true) { return !this.started || this.uncancellableAction() || (includeDesigner && (this.worldEditorOpen() || this.editing)) || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
     this.movementKeys.clear();
     this.character?.setMovementDirection(null, []);

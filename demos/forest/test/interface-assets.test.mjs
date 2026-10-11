@@ -81,3 +81,22 @@ test('cursor and inventory click generation sends the active base image as the f
     assert.equal(reference.role, 'animation-base', `${id} preserves base scale inside each frame`);
   }
 });
+
+test('busy cursor is an editable image with a transparent, looping sand-and-flip animation', async () => {
+  const catalog = addForestInterfaceAssets(structuredClone(authored));
+  const base = catalog.assets['cursor.busy'], clip = catalog.assets[base.linkedAnimationAssets.idle.assetId];
+  assert.equal(base.kind, 'image');
+  assert.equal(clip.animations[0].repeat, -1);
+  assert.equal(clip.frameGrid.frameCount, 20);
+  const sheet = PNG.sync.read(await readFile(new URL(clip.versions.original.file, directory)));
+  assert.equal(sheet.width, clip.frameGrid.frameWidth * clip.frameGrid.columns);
+  assert.equal(sheet.height, clip.frameGrid.frameHeight);
+  const frames = [0, 6, 15].map(index => {
+    const frame = new PNG({ width: 32, height: 32 });
+    PNG.bitblt(sheet, frame, index * 32, 0, 32, 32, 0, 0); return frame.data;
+  });
+  assert.notDeepEqual(frames[0], frames[1], 'sand moves');
+  assert.notDeepEqual(frames[1], frames[2], 'hourglass flips');
+  assert.ok(frames[0].some((v, i) => i % 4 === 3 && v === 0));
+  assert.ok(frames[0].some((v, i) => i % 4 === 3 && v > 0));
+});

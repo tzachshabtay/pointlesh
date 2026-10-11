@@ -12481,6 +12481,96 @@
         "voiceAssetId": "voice.borin",
         "text": "I cannot see how that would help here."
       }
+    },
+    "cursor.busy": {
+      "id": "cursor.busy",
+      "kind": "image",
+      "prompt": "A small copper-framed hourglass with pale golden sand and clear blue glass. Readable 32 by 32 pixel-art adventure cursor, transparent background, warm Bramblehollow palette. No text.",
+      "dimensions": {
+        "width": 32,
+        "height": 32
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/cursor.busy.png",
+          "prompt": "A small copper-framed hourglass with pale golden sand and clear blue glass. Readable 32 by 32 pixel-art adventure cursor, transparent background, warm Bramblehollow palette. No text.",
+          "createdAt": "2026-10-11T00:00:00.000Z",
+          "model": "authored-pixel-art",
+          "notes": "Regenerate with demos/forest/scripts/generate-hourglass.mjs. Editable in AI Assets."
+        }
+      },
+      "linkedAnimationAssets": {
+        "idle": {
+          "label": "Waiting",
+          "assetId": "cursor.busy.idle"
+        }
+      },
+      "tags": [
+        "forest",
+        "cursor"
+      ]
+    },
+    "cursor.busy.idle": {
+      "id": "cursor.busy.idle",
+      "kind": "animation",
+      "prompt": "A small copper-framed hourglass with pale golden sand and clear blue glass. Readable 32 by 32 pixel-art adventure cursor, transparent background, warm Bramblehollow palette. No text. A seamless waiting loop: sand trickles from the top chamber to the bottom, then the hourglass turns over to start again. Preserve the centered size and shape.",
+      "dimensions": {
+        "width": 640,
+        "height": 32
+      },
+      "frameGrid": {
+        "frameWidth": 32,
+        "frameHeight": 32,
+        "columns": 20,
+        "rows": 1,
+        "frameCount": 20
+      },
+      "animations": [
+        {
+          "key": "cursor.busy.idle",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/interface/cursor.busy.idle.png",
+          "prompt": "A small copper-framed hourglass with pale golden sand and clear blue glass. Readable 32 by 32 pixel-art adventure cursor, transparent background, warm Bramblehollow palette. No text.",
+          "createdAt": "2026-10-11T00:00:00.000Z",
+          "model": "authored-pixel-art",
+          "notes": "Regenerate with demos/forest/scripts/generate-hourglass.mjs. Editable in AI Assets."
+        }
+      },
+      "tags": [
+        "forest",
+        "cursor"
+      ]
     }
   },
   "styleGuide": {
@@ -13594,6 +13684,14 @@
     ],
     "voice.line.interaction.bf9293e8939c1e08": [
       "Voices"
+    ],
+    "cursor.busy": [
+      "Graphics",
+      "Cursors"
+    ],
+    "cursor.busy.idle": [
+      "Graphics",
+      "Cursors"
     ]
   }
 }

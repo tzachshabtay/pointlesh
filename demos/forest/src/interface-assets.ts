@@ -43,6 +43,22 @@ interfaceAssetDefinitions['cursor.crosshair.idle'] = {
 };
 for (const id of ['cursor.crosshair', 'cursor.crosshair.idle']) interfaceAssetPaths[id] = ['Graphics', 'Cursors'];
 
+const hourglassPrompt = 'A small copper-framed hourglass with pale golden sand and clear blue glass. Readable 32 by 32 pixel-art adventure cursor, transparent background, warm Bramblehollow palette. No text.';
+const hourglassVersion = (file: string) => ({ name: 'original', file, prompt: hourglassPrompt,
+  createdAt: '2026-10-11T00:00:00.000Z', model: 'authored-pixel-art', notes: 'Regenerate with demos/forest/scripts/generate-hourglass.mjs. Editable in AI Assets.' });
+interfaceAssetDefinitions['cursor.busy'] = {
+  id: 'cursor.busy', kind: 'image', prompt: hourglassPrompt, dimensions: { width: 32, height: 32 },
+  activeVersion: 'original', versions: { original: hourglassVersion('art/interface/cursor.busy.png') },
+  linkedAnimationAssets: { idle: { label: 'Waiting', assetId: 'cursor.busy.idle' } }, tags: ['forest', 'cursor'],
+};
+interfaceAssetDefinitions['cursor.busy.idle'] = {
+  id: 'cursor.busy.idle', kind: 'animation', prompt: `${hourglassPrompt} A seamless waiting loop: sand trickles from the top chamber to the bottom, then the hourglass turns over to start again. Preserve the centered size and shape.`,
+  dimensions: { width: 640, height: 32 }, frameGrid: { frameWidth: 32, frameHeight: 32, columns: 20, rows: 1, frameCount: 20 },
+  animations: [{ key: 'cursor.busy.idle', frames: Array.from({ length: 20 }, (_, index) => index), frameRate: 10, repeat: -1 }],
+  activeVersion: 'original', versions: { original: hourglassVersion('art/interface/cursor.busy.idle.png') }, tags: ['forest', 'cursor'],
+};
+for (const id of ['cursor.busy', 'cursor.busy.idle']) interfaceAssetPaths[id] = ['Graphics', 'Cursors'];
+
 /** Add the UI catalog without replacing any authored images, animations, or folder edits. */
 export function addForestInterfaceAssets(manifest: AiAssetManifest): AiAssetManifest {
   for (const [id, asset] of Object.entries(interfaceAssetDefinitions)) manifest.assets[id] ??= structuredClone(asset);
