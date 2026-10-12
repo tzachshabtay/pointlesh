@@ -21,7 +21,8 @@
 .menu-open #game-header,.menu-open #game-content { visibility:hidden; }
 .menu-open { overflow:hidden; }
 #start-screen { position:fixed; inset:0; z-index:50; width:var(--preview-width,100%); left:var(--preview-left,0px); top:var(--preview-top,0px); height:var(--preview-height,100dvh); min-height:0; container-type:size; display:grid; place-items:center; overflow:auto; isolation:isolate; background:#101b17; text-align:center; padding:60px 24px; }
-.start-art { position:absolute; inset:0; z-index:-1; background:var(--start-art) center/cover; image-rendering:pixelated; filter:sepia(1); }
+.start-art { position:absolute; inset:0; z-index:-1; background:var(--start-art) center/100% 100% no-repeat; image-rendering:pixelated; filter:sepia(1); }
+.game-fit .start-art { background-size:contain; background-color:#080e0b; }
 .start-art::after { content:''; position:absolute; inset:0; background:linear-gradient(#09140db3,#0b171366 35%,#09140dec); }
 #start-screen.start-departing { background:transparent; overflow:hidden; pointer-events:auto; }
 .start-departing .start-art { right:auto; bottom:auto; width:100%; height:100%; }

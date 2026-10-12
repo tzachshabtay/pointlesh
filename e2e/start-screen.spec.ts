@@ -78,3 +78,30 @@ test('both start choices stay in the visible pane when the preview is zoomed or 
   await session.send('Emulation.setPageScaleFactor',{pageScaleFactor:1});
   await page.setViewportSize({width:844,height:390});await check();
 });
+
+for (const fit of ['stretch', 'fit']) for (const viewport of [{ width: 1200, height: 900 }, { width: 1200, height: 600 }]) {
+  test(`title backdrop matches intro framing in ${fit} at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.addInitScript(fit => localStorage.setItem('pointlesh.screen-fit', fit), fit);
+    await page.goto('/?designer=1');
+    await expect(page.locator('#new-game')).toBeEnabled();
+    const titleBounds = await page.locator('.start-art').evaluate(art => {
+      const rect = art.getBoundingClientRect(), sizing = getComputedStyle(art).backgroundSize;
+      // The opening snapshot and render canvas use the same 16:9 source frame.
+      const width = sizing === 'contain' ? Math.min(rect.width, rect.height * 16 / 9) : rect.width;
+      const height = sizing === 'contain' ? width * 9 / 16 : rect.height;
+      return { sizing, x: rect.left + (rect.width - width) / 2, y: rect.top + (rect.height - height) / 2, width, height };
+    });
+    expect(titleBounds.sizing).toBe(fit === 'fit' ? 'contain' : '100% 100%');
+    await page.locator('#new-game').click();
+    const introBounds = await page.locator('#game canvas').boundingBox();
+    for (const key of ['x', 'y', 'width', 'height'] as const) expect(Math.abs(titleBounds[key] - introBounds![key])).toBeLessThan(1);
+    // The dissolve may animate color/opacity, never the size or crop of the image.
+    const animatedProperties = await page.locator('.start-art').evaluate(art => art.getAnimations().flatMap(animation =>
+      (animation.effect as KeyframeEffect).getKeyframes().flatMap(frame => Object.keys(frame))));
+    for (const property of ['width', 'height', 'left', 'top', 'backgroundSize', 'transform']) expect(animatedProperties).not.toContain(property);
+    await expect(page.locator('#start-screen')).toBeHidden();
+    const finishedBounds = await page.locator('#game canvas').boundingBox();
+    for (const key of ['x', 'y', 'width', 'height'] as const) expect(Math.abs(titleBounds[key] - finishedBounds![key])).toBeLessThan(1);
+  });
+}
