@@ -1,0 +1,14 @@
+Generated with the built-in image_gen tool on 2026-10-26.
+Final artwork: public/art/interface/elderwood-map.png
+Reference: initial parchment concept, replaced to match the actual game exits.
+
+Use case: illustration-story. Redraw this dwarven parchment travel map with CORRECT GAME GEOGRAPHY. Keep the beautiful pen-and-ink crosshatching, warm aged parchment, moss watercolor, copper dwarven ornamental border. LANDSCAPE 3:2.
+Replace the entire geographical layout, not just labels:
+TOP LEFT: gold mine entrance in a rocky hill, centered x=23%, y=20%.
+TOP RIGHT: orc palisade camp with cage, tents and cauldron, centered x=79%, y=20%.
+MIDDLE CENTER: wide ancient woodland clearing, centered x=50%, y=47%. Paths fork from this forest to mine upper-left and camp upper-right.
+BOTTOM CENTER: small dwarf village square Bramblehollow, centered x=50%, y=75%, connected directly north to forest.
+BOTTOM LEFT: The Copper Tankard tavern with tankard sign, centered x=20%, y=78%, connected east to village.
+BOTTOM RIGHT: Borin's single round-doored stone cottage, centered x=80%, y=78%, connected west to village.
+The pub and cottage are part of the village, not separate remote settlements. EXACTLY these six landmarks, NO duplicate landmarks. All six spacious and distinct, no overlapping.
+Small blank parchment cartouches beneath landmarks at: mine (23%,32%), camp (79%,33%), forest (50%,59%), village (50%,87%), pub (20%,90%), cottage (80%,90%). No text anywhere. Leave room within border. Small compass in quiet upper center. Accurate schematic connections are more important than decorative rivers: ONLY mine-forest, camp-forest, forest-village, village-pub, village-cottage. No river cutting the routes. Handmade dwarf cartographer style, flat full-bleed map, no props or UI.

@@ -22,6 +22,7 @@ import { addPortraitAssets } from './portrait-assets';
 import { addForestOverscanAsset } from './forest-overscan';
 import { addMineOverscanAsset } from './mine-overscan';
 import { addJournalAssets } from './journal-assets';
+import { addWorldMapAsset } from './world-map';
 import { addForestInventoryPrefabs } from './inventory-prefabs';
 
 export const roomDimensions = Object.fromEntries(roomIds.map(id => [id, { width: id === 'forest' ? 1620 : 960, height: 540 }])) as Record<typeof roomIds[number], { width: number; height: number }>;
@@ -175,6 +176,7 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addWorldMapAsset(assets);
 addMineOverscanAsset(assets);
 addForestOverscanAsset(assets);
 addBrewAssets(assets);

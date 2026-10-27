@@ -55,7 +55,7 @@ for (const width of [1440, 390]) test(`one handwritten scroll contains every not
   await page.getByRole('button', { name: 'Close', exact: true }).click();
   await page.locator('#map').click();
   await expect(page.getByRole('dialog')).not.toHaveClass(/journal-modal/);
-  await expect(page.locator('.map-grid')).toBeVisible();
+  await expect(page.locator('.world-map')).toBeVisible();
 });
 
 test('a learned clue plays the generated quill, fades away and is not replayed on load', async ({ page }, testInfo) => {

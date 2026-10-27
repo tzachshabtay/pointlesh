@@ -49,6 +49,8 @@ import { assertInteractionManifest, syncInteractionVoiceLines, interactionTarget
 import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
 import { createForestInteractions, entityInteractionId } from './interactions';
 import { playTitleDeparture } from './title-departure';
+import { addWorldMapAsset, renderWorldMap, WORLD_MAP_ASSET } from './world-map';
+import './world-map.css';
 
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
 
@@ -99,7 +101,7 @@ function modal(title: string) {
   if (!modalOpen) modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   modalRevision++;
   gameScene?.clearMovementKeys(); el('start-screen').inert = !gameScene?.started;
-  el('modal-backdrop').querySelector('.modal')!.classList.remove('journal-modal');
+  el('modal-backdrop').querySelector('.modal')!.classList.remove('journal-modal', 'world-map-modal');
   el('modal-title').textContent = title; el('modal-body').replaceChildren(); el('modal-backdrop').hidden = false;
   modalOpen = true; el('modal-close').focus(); return el('modal-body');
 }
@@ -1345,8 +1347,14 @@ function setupControls() {
     renderJournal(body, gameScene.story.journal); gameScene.journal.markRead();
   };
   el('map').onclick = () => {
-    const body = modal('A corner of the Elderwood'); const grid = document.createElement('div'); grid.className = 'map-grid';
-    for (const id of roomIds) { const card = document.createElement('div'); card.className = 'map-room'; const image = document.createElement('img'); image.src = gameScene.textures.get(`room.${id}`).getSourceImage() instanceof HTMLCanvasElement ? (gameScene.textures.get(`room.${id}`).getSourceImage() as HTMLCanvasElement).toDataURL() : ''; image.alt = roomNames[id]; const label = document.createElement('span'); label.textContent = roomNames[id]; const sub = document.createElement('small'); sub.textContent = id === gameScene.story.roomId ? 'YOU ARE HERE' : ({ village:'Pub · Cottage · Forest',pub:'From Bramblehollow',house:'From Bramblehollow',forest:'Village · Mine · Camp',mine:'From the Whispering Wood',camp:'From the Whispering Wood' })[id]; label.append(sub); card.append(image, label); grid.append(card); } body.append(grid);
+    if (gameScene.blocked(false)) return;
+    const body = modal('A corner of the Elderwood');
+    el('modal-backdrop').querySelector('.modal')!.classList.add('world-map-modal');
+    const image = gameScene.textures.get(gameScene.aiRuntime.key(WORLD_MAP_ASSET)).getSourceImage();
+    renderWorldMap(body, image as CanvasImageSource, gameScene.story.roomId, room => {
+      closeModal();
+      if (room !== gameScene.story.roomId) { gameScene.putAwayItem(); gameScene.changeRoom(room); }
+    });
   };
   el('help').onclick = () => { const body = modal('A quieter kind of hero'); const list = document.createElement('ul'); for (const text of ['Click to walk to the nearest reachable ground, or hold the arrow keys to walk. Click or tap a person to talk, or an object to interact. Nearby buttons also interact and work with the keyboard.', 'Right-click or press and hold for half a second to look at a person, object, or hotspot. Holding works with touch, mouse, or trackpad.', 'Select an item in your satchel, then click an object to use it. Select a second inventory item to try combining them. Right-click or Put away clears your selection without looking at the target.', 'Tab reveals hotspots. M opens the map. J opens your journal. The nudge button gives a clue for your current puzzle.', 'The animated introduction and ending play automatically. Next scene advances a shot; Skip finishes the sequence. Save and load any of three slots, even during a conversation or animation. Saves stay in this browser.', 'Designer opens the live scene editor. Draw walkable shapes, tune perspective and zoom, or edit prefab properties. Your changes affect play immediately. Run the local authoring server to promote edits to project files.']) { const li = document.createElement('li'); li.textContent = text; list.append(li); } body.append(list); };
   function gameMenu() {
@@ -1468,6 +1476,7 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addWorldMapAsset(assets);
 addMineOverscanAsset(assets);
 addForestOverscanAsset(assets);
 addForestInterfaceAssets(assets);
