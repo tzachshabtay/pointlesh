@@ -3,11 +3,30 @@ import assert from 'node:assert/strict';
 import { stat } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { assertManifest } from '@ai-game-assets/core';
+import { aiTextureKey } from '@ai-game-assets/phaser';
 const { FootstepCadence, soundtrackFor, footstepFor } = await tsImport('../src/audio-state.ts', import.meta.url);
 const { addForestAudio, forestAudio } = await tsImport('../src/audio-assets.ts', import.meta.url);
 const { assets } = await tsImport('../src/content.ts', import.meta.url);
 const { ForestSoundscape } = await tsImport('../src/soundscape.ts', import.meta.url);
+const { loadForestAssets } = await tsImport('../src/asset-loading.ts', import.meta.url);
 const walker = (x, phase, rest = {}) => ({ id: 'hero', character: 'borin', x, y: 20, phase, walking: true, pan: 0, ...rest });
+
+test('game preload queues actual audio with playback keys and deployment-relative URLs', () => {
+  const manifest = structuredClone(assets);
+  manifest.assets['test.speech'] = { id: 'test.speech', kind: 'voice-line', prompt: 'Hello', activeVersion: 'recorded',
+    versions: { recorded: { name: 'recorded', file: 'art/test-speech.mp3', prompt: 'Hello', model: 'test', createdAt: '2026-10-28T00:00:00Z' } } };
+  manifest.assets['test.unrecorded'] = { id: 'test.unrecorded', kind: 'voice-line', prompt: 'Later', activeVersion: '', versions: {} };
+  for (const base of ['/', './', '/pointlesh/']) {
+    const audio = new Map();
+    const scene = { textures: { exists: () => false }, load: { image() {}, svg() {}, spritesheet() {}, audio: (key, url) => audio.set(key, url) } };
+    loadForestAssets(scene, manifest, base);
+    for (const id of Object.keys(forestAudio)) {
+      assert.equal(audio.get(aiTextureKey({ assetId: id })), `${base}art/audio/${id}.mp3`, `${id} must be queued, not just present in the manifest`);
+    }
+    assert.equal(audio.get(aiTextureKey({ assetId: 'test.speech' })), `${base}art/test-speech.mp3`);
+    assert.equal(audio.has(aiTextureKey({ assetId: 'test.unrecorded' })), false);
+  }
+});
 
 test('all room, cinematic and walker sound selections have recordings', async () => {
   assertManifest(assets);

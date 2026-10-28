@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { AiAssetRuntime, loadAiAssets, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
+import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
+import { loadForestAssets } from './asset-loading';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
@@ -182,7 +183,7 @@ class ForestAdventure extends Phaser.Scene {
   behaviors = new BehaviorRegistry<{ targetId: string; item?: ItemId }>();
   constructor() { super('forest-adventure'); }
   audio!: ForestSoundscape;
-  preload() { loadAiAssets(this, assets, { baseUrl: import.meta.env.BASE_URL }); }
+  preload() { loadForestAssets(this, assets, import.meta.env.BASE_URL); }
   create() {
     gameScene = this;
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
