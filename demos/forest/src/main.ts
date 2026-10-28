@@ -581,7 +581,7 @@ class ForestAdventure extends Phaser.Scene {
     this.say(line.text); this.interactionSpeechQueue = remaining;
     const asset = assets.assets[line.lineAssetId], key = this.aiRuntime.key(line.lineAssetId);
     if (asset?.versions[asset.activeVersion]?.file && this.cache.audio.exists(key)) {
-      this.interactionSound = this.sound.add(key); this.interactionSound.play();
+      this.interactionSound = this.audio.playVoice(line.lineAssetId);
     }
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
@@ -967,11 +967,13 @@ class ForestAdventure extends Phaser.Scene {
   }
   dismissSpeech() { this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
+    this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.clearMovementKeys();
     if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
     this.talking = true; this.conversationActive = true;
     el('dialog').hidden = false; el('choices').replaceChildren();
     if (turn.type === 'line') {
+      if (turn.resolved.audio) this.interactionSound = this.audio.playVoice(turn.line.lineAssetId);
       const voice = turn.resolved.voiceAsset.id.split('.').pop();
       this.speakingVoice = voice ?? 'borin';
       el('speaker').textContent = ({ ...portraitCharacters, chest:'Runed chest' } as Record<string,string>)[voice ?? ''] ?? 'Borin';
@@ -1408,7 +1410,7 @@ function setupControls() {
     toggle.type = 'checkbox'; toggle.checked = gameScene.audio.settings.enabled;
     toggle.onchange = () => { gameScene.audio.setEnabled(toggle.checked); syncSound(); };
     toggleLabel.append(toggle, ' Sound enabled'); audio.append(toggleLabel);
-    for (const [channel, title] of [['music', 'Music'], ['ambience', 'Ambience'], ['footsteps', 'Footsteps']] as const) {
+    for (const [channel, title] of [['music', 'Music'], ['sfx', 'SFX'], ['voices', 'Voices']] as const) {
       const row = document.createElement('label'), name = document.createElement('span'), slider = document.createElement('input'), value = document.createElement('output');
       name.textContent = title; slider.type = 'range'; slider.min = '0'; slider.max = '100'; slider.step = '1'; slider.setAttribute('aria-label', `${title} volume`);
       slider.value = String(Math.round(gameScene.audio.settings[channel] * 100)); value.textContent = `${slider.value}%`;

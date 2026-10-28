@@ -71,15 +71,17 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
   const doc = new EventTarget(); doc.hidden = false;
   const previousDocument = globalThis.document, previousStorage = globalThis.localStorage;
   globalThis.document = doc;
-  const stored = new Map(); globalThis.localStorage = { getItem: k => stored.get(k), setItem: (k, v) => stored.set(k, v) };
+  const stored = new Map([['pointlesh.audio', JSON.stringify({ music: .38, footsteps: .55, ambience: .38 })]]);
+  globalThis.localStorage = { getItem: k => stored.get(k), setItem: (k, v) => stored.set(k, v) };
   const made = [], callbacks = new Map();
   const scene = {
     events: { on: (key, fn, ctx) => callbacks.set(key, fn.bind(ctx)), once() {}, off: key => callbacks.delete(key) },
     cache: { audio: { exists: () => true } },
     sound: { locked: false, mute: false, add: (key, config) => {
+      const events = new Map();
       const sound = { key, ...config, totalDuration: 20, seek: 0, isPlaying: false,
         play() { this.isPlaying = true; return true; }, setVolume(n) { this.volume = n; },
-        once() {}, destroy() { this.destroyed = true; this.isPlaying = false; } };
+        once(name, fn) { events.set(name, fn); }, destroy() { this.destroyed = true; this.isPlaying = false; events.get('destroy')?.(); } };
       made.push(sound); return sound;
     } },
   };
@@ -87,11 +89,30 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
   let soundscape;
   try {
     soundscape = new ForestSoundscape(scene, { key: id => id, manifest: assets }, () => state);
+    assert.deepEqual(soundscape.settings, { enabled: true, music: .38, sfx: .55, voices: 1 }, 'legacy preferences migrate to three channels');
     const tick = (n = 20) => { for (let i = 0; i < n; i++) callbacks.get('postupdate')(i * 100, 100); };
     tick(); assert.equal(made.length, 0, 'title is silent until user starts');
     state.started = true; tick();
     assert.deepEqual(made.map(s => s.key), ['music.village', 'ambience.village']);
     assert.equal(made[0].volume, .38);
+    const voice = soundscape.playVoice('voice.test');
+    assert.equal(voice.volume, 1);
+    soundscape.setVolume('voices', .25); assert.equal(voice.volume, .25, 'currently playing speech changes immediately');
+    assert.equal(made[0].volume, .38, 'voice volume does not change music');
+    state.walkers = [walker(0, 0)]; tick(1);
+    state.walkers = [walker(10, .5)]; tick(1);
+    const step = made.find(s => s.key.startsWith('step.')); assert.ok(step);
+    soundscape.setVolume('sfx', 0); tick();
+    assert.equal(step.volume, 0, 'active footsteps follow SFX');
+    assert.equal(made[1].destroyed, true, 'ambience follows SFX');
+    assert.equal(voice.volume, .25, 'SFX does not change voices');
+    assert.equal(made[0].volume, .38, 'SFX does not change music');
+    voice.destroy(); step.destroy(); state.walkers = [];
+    soundscape.setVolume('sfx', .55); tick();
+    const ambience = made.findLast(s => s.key === 'ambience.village');
+    assert.ok(Math.abs(ambience.volume - .38) < 1e-8);
+    assert.equal(soundscape.playVoice('voice.test').volume, .25, 'new speech uses the current voice volume');
+    made.at(-1).destroy();
     state.speaking = true; tick(); assert.equal(made[0].volume, .19);
     state.speaking = false; state.room = 'forest'; tick();
     assert.equal(made[0].destroyed, true); assert.equal(made[1].destroyed, true);

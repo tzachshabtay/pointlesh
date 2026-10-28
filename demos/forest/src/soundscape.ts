@@ -2,8 +2,8 @@ import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import { FootstepCadence, footstepFor, soundtrackFor, type AudioWalker, type ForestAudioState } from './audio-state';
 
-type MixChannel = 'music' | 'ambience' | 'footsteps';
-type Settings = { enabled: boolean; music: number; ambience: number; footsteps: number };
+type MixChannel = 'music' | 'sfx' | 'voices';
+type Settings = { enabled: boolean; music: number; sfx: number; voices: number };
 type Sound = Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound;
 type Stem = { id: string; key: string; channel: 'music' | 'ambience'; sound: Sound; gain: number; retiring: boolean };
 const preferenceKey = 'pointlesh.audio';
@@ -18,9 +18,10 @@ export function spriteWalker(id: string, character: string, sprite: Phaser.GameO
 
 /** Room orchestration belongs to the game; every recording is an editable ai-assets asset. */
 export class ForestSoundscape {
-  readonly settings: Settings = { enabled: true, music: .38, ambience: .38, footsteps: .55 };
+  readonly settings: Settings = { enabled: true, music: .38, sfx: .55, voices: 1 };
   private stems: Stem[] = [];
-  private hits = new Set<Sound>();
+  private hits = new Map<Sound, number>();
+  private voices = new Map<Sound, number>();
   private cadence = new FootstepCadence();
   private shot = '';
   private variation = 0;
@@ -29,7 +30,9 @@ export class ForestSoundscape {
     try {
       const saved = JSON.parse(localStorage.getItem(preferenceKey) ?? '{}');
       if (typeof saved.enabled === 'boolean') this.settings.enabled = saved.enabled;
-      for (const channel of ['music', 'ambience', 'footsteps'] as const) if (typeof saved[channel] === 'number' && Number.isFinite(saved[channel])) this.settings[channel] = clamp(saved[channel]);
+      // Keep existing preferences when upgrading the former separate effects controls.
+      saved.sfx ??= saved.footsteps ?? saved.ambience;
+      for (const channel of ['music', 'sfx', 'voices'] as const) if (typeof saved[channel] === 'number' && Number.isFinite(saved[channel])) this.settings[channel] = clamp(saved[channel]);
     } catch { /* Audio still works when browser storage is unavailable. */ }
     scene.sound.mute = !this.settings.enabled;
     scene.events.on('postupdate', this.update, this);
@@ -47,12 +50,29 @@ export class ForestSoundscape {
     if (!enabled) this.stop(); else this.unlock();
     this.save();
   }
-  setVolume(channel: MixChannel, volume: number) { this.settings[channel] = clamp(volume); this.save(); }
+  setVolume(channel: MixChannel, volume: number) {
+    this.settings[channel] = clamp(volume);
+    const sounds = channel === 'voices' ? this.voices : channel === 'sfx' ? this.hits : undefined;
+    for (const [sound, gain] of sounds ?? []) sound.setVolume(clamp(gain * this.settings[channel]));
+    this.save();
+  }
+  /** Both dialog lines and simple interaction speech use the Voices channel. */
+  playVoice(id: string): Sound | undefined {
+    const key = this.runtime.key(id);
+    if (!this.scene.cache.audio.exists(key)) return;
+    const gain = this.assetVolume(id);
+    const sound = this.scene.sound.add(key, { volume: gain * this.settings.voices }) as Sound;
+    this.voices.set(sound, gain);
+    sound.once('destroy', () => this.voices.delete(sound));
+    sound.once('complete', () => sound.destroy());
+    if (!sound.play()) { sound.destroy(); return; }
+    return sound;
+  }
   private save() { try { localStorage.setItem(preferenceKey, JSON.stringify(this.settings)); } catch { /* Optional preference. */ } }
   private visibility = () => { this.hidden = document.hidden; this.stop(); };
   private stop() {
     for (const stem of this.stems) stem.sound.destroy(); this.stems = [];
-    for (const hit of this.hits) hit.destroy(); this.hits.clear(); this.cadence.reset();
+    for (const hit of this.hits.keys()) hit.destroy(); this.hits.clear(); this.cadence.reset();
   }
   private start(id: string, channel: Stem['channel']): Stem | undefined {
     const key = this.runtime.key(id);
@@ -78,9 +98,10 @@ export class ForestSoundscape {
     const id = `${footstepFor(walker.character, room)}.${++this.variation % 2 + 1}`;
     const key = this.runtime.key(id);
     if (!this.scene.cache.audio.exists(key) || this.hits.size >= 12) return;
-    const sound = this.scene.sound.add(key, { volume: this.settings.footsteps * (walker.character === 'borin' ? .65 : .45) * this.assetVolume(id),
+    const gain = (walker.character === 'borin' ? .65 : .45) * this.assetVolume(id);
+    const sound = this.scene.sound.add(key, { volume: this.settings.sfx * gain,
       rate: .96 + Math.random() * .08, pan: walker.pan }) as Sound;
-    this.hits.add(sound);
+    this.hits.set(sound, gain);
     sound.once('complete', () => { this.hits.delete(sound); sound.destroy(); });
     if (!sound.play()) { this.hits.delete(sound); sound.destroy(); }
   }
@@ -89,10 +110,12 @@ export class ForestSoundscape {
     if (this.hidden || !this.settings.enabled || this.scene.sound.locked) { this.cadence.reset(); return; }
     const state = this.state(), dt = Math.min(delta, 100);
     this.select(state.started && this.settings.music > 0 ? soundtrackFor(state.room, state.cinematic) : undefined, 'music');
-    this.select(state.started && this.settings.ambience > 0 ? `ambience.${state.room}` : undefined, 'ambience');
+    this.select(state.started && this.settings.sfx > 0 ? `ambience.${state.room}` : undefined, 'ambience');
     const duck = state.speaking ? .5 : state.menu ? .7 : 1;
     for (const stem of [...this.stems]) {
-      const target = stem.retiring ? 0 : this.settings[stem.channel] * duck * this.assetVolume(stem.id);
+      // Preserve the relative effects mix underneath the single SFX control.
+      const volume = stem.channel === 'music' ? this.settings.music : this.settings.sfx * (.38 / .55);
+      const target = stem.retiring ? 0 : volume * duck * this.assetVolume(stem.id);
       const amount = dt / 1500;
       stem.gain += Math.max(-amount, Math.min(amount, target - stem.gain));
       stem.sound.setVolume(clamp(stem.gain));
@@ -100,9 +123,9 @@ export class ForestSoundscape {
     }
     if (this.shot !== state.shot || state.footstepsPaused || !state.started) this.cadence.reset();
     this.shot = state.shot;
-    if (!state.footstepsPaused && state.started && this.settings.footsteps > 0) {
+    if (!state.footstepsPaused && state.started && this.settings.sfx > 0) {
       for (const walker of this.cadence.tick(state.walkers, dt)) this.hit(walker, state.room);
     }
   }
-  destroy() { this.stop(); document.removeEventListener('visibilitychange', this.visibility); this.scene.events.off('postupdate', this.update, this); this.scene.events.off('shutdown', this.destroy, this); }
+  destroy() { this.stop(); for (const voice of this.voices.keys()) voice.destroy(); this.voices.clear(); document.removeEventListener('visibilitychange', this.visibility); this.scene.events.off('postupdate', this.update, this); this.scene.events.off('shutdown', this.destroy, this); }
 }
