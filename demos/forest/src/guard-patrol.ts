@@ -22,7 +22,8 @@ export class GuardPatrol {
   elapsedMs = 0;
   constructor(readonly controller: CharacterController, readonly playback: GuardPlayback,
     readonly points: () => { home: Point; drink: Point }, readonly afterDrink: () => boolean,
-    readonly afterCollapse: () => void = () => {}, readonly isBound: () => boolean = () => false) {}
+    readonly afterCollapse: () => void = () => {}, readonly isBound: () => boolean = () => false,
+    readonly sound: (cue: 'guard-slurp' | 'guard-fall') => void = () => {}) {}
 
   get distracted(): boolean { return this.phase === 'idle-back' || this.phase === 'walk-right'; }
   get assignment(): CharacterAnimationAssignment | undefined {
@@ -76,7 +77,13 @@ export class GuardPatrol {
       } else {
         const duration = Math.max(1, this.playback.animationDurationMs);
         const step = Math.min(remaining, Math.max(0, duration - this.elapsedMs));
+        const before = this.elapsedMs;
         this.playback.update(step); this.elapsedMs += step; remaining -= step;
+        const cueAt = duration * (this.phase === 'drink' ? .35 : .72);
+        if (before < cueAt && this.elapsedMs >= cueAt) {
+          if (this.phase === 'drink') this.sound('guard-slurp');
+          if (this.phase === 'collapse') this.sound('guard-fall');
+        }
         if (this.elapsedMs + 1e-6 >= duration) {
           if (this.phase === 'drink' && this.afterDrink()) this.enter('collapse');
           else if (this.phase === 'collapse') { this.enter('asleep'); this.afterCollapse(); }

@@ -4,6 +4,7 @@ import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject, type Point, type Direction } from '@pointlesh/core';
 import { intro as introScript, ending as endingScript, type RoomId } from './story';
 import { spriteWalker } from './soundscape';
+import { cinematicAudioCue } from './action-audio';
 import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting } from './environment-lighting';
@@ -102,7 +103,7 @@ export class ForestCinematic {
 
   constructor(private readonly scene: Phaser.Scene, readonly kind: CinematicKind,
     private readonly assets: AiAssetRuntime, private readonly getManifest: () => SceneDesignerManifest, private readonly lighting?: PhaserAdventureLighting,
-    private readonly opening?: EndingOpening) {
+    private readonly opening?: EndingOpening, private readonly playSound?: (name: string) => void) {
     this.root = scene.add.container(0, 0).setName('pointlesh-cinematic').setDepth(5000);
     this.world = scene.add.container(0, 0);
     this.root.add(this.world);
@@ -135,6 +136,8 @@ export class ForestCinematic {
   render(stepIndex: number, elapsedMs: number): void {
     if (this.destroyed) return;
     if (!Number.isInteger(stepIndex) || stepIndex < 0 || stepIndex > CINEMATIC_DURATIONS[this.kind].length || !Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid cinematic checkpoint');
+    const cue = cinematicAudioCue(this.kind, stepIndex, this.stepIndex, this.elapsedMs, elapsedMs, CINEMATIC_DURATIONS[this.kind][stepIndex] ?? 0);
+    if (cue && this.visible) this.playSound?.(cue);
     this.stepIndex = stepIndex;
     this.elapsedMs = elapsedMs;
     if (stepIndex === CINEMATIC_DURATIONS[this.kind].length) { this.setVisible(false); return; }

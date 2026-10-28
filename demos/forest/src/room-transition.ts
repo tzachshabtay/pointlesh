@@ -63,6 +63,7 @@ export class RoomTransitionController {
     enterRoom: (portal: RoomPortal) => void;
     onComplete?: () => void;
     onBlocked?: () => void;
+    onDoor?: (action: 'open' | 'close', portal: RoomPortal) => void;
   }) {}
   get active(): boolean { return !!this.state; }
   get portal(): RoomPortal | undefined { return this.state && (this.state.phase.includes('entry') ? this.state.to : this.state.from); }
@@ -86,6 +87,7 @@ export class RoomTransitionController {
     if (this.active) throw new Error('A room transition is already active');
     this.character.stop();
     this.state = cloneJSON(state);
+    if (from.doorId) this.options.onDoor?.(state.phase === 'peek-exit' ? 'close' : 'open', from);
     if (state.phase !== 'peek-exit') this.walk();
   }
   /** Start in the destination, opening its door before walking out onto its floor. */
@@ -96,6 +98,7 @@ export class RoomTransitionController {
     this.state = cloneJSON(state);
     const path = this.route();
     this.character.place(path[0]!); this.character.face(path[1]!);
+    if (to.doorId) this.options.onDoor?.('open', to);
   }
   snapshot(): RoomTransitionCheckpoint | null { return this.state ? cloneJSON(this.state) : null; }
   /** Restore the character snapshot as well; its remaining path resumes normally. */
@@ -140,7 +143,9 @@ export class RoomTransitionController {
         // Crossing starts with the leaf fully open. Close only after the body
         // clears the sill, while its remaining incoming walk continues.
         const clearance = this.portal.doorClearance ?? 30;
-        if (state.closingElapsedMs === undefined && distance(this.character.state.position, threshold) >= clearance) state.closingElapsedMs = 0;
+        if (state.closingElapsedMs === undefined && distance(this.character.state.position, threshold) >= clearance) {
+          state.closingElapsedMs = 0; this.options.onDoor?.('close', this.portal);
+        }
         if (state.closingElapsedMs !== undefined) state.closingElapsedMs += deltaMs;
       }
       if (this.character.isWalking) return;
@@ -151,7 +156,11 @@ export class RoomTransitionController {
       }
       if (state.waypoint + 1 < path.length) { state.waypoint++; this.walk(); }
       else if (state.phase === 'exit') this.enterDestination();
-      else { const closing = state.closingElapsedMs ?? 0; this.next('close-entry'); this.state!.elapsedMs = closing; }
+      else {
+        if (state.closingElapsedMs === undefined && this.portal?.doorId) this.options.onDoor?.('close', this.portal);
+        const closing = state.closingElapsedMs ?? 0;
+        this.next('close-entry'); this.state!.elapsedMs = closing;
+      }
       return;
     }
     // Old checkpoints resume without repeating a close/open at the same door.

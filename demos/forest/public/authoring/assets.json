@@ -13261,6 +13261,426 @@
           "createdAt": "2026-10-27T00:00:00.000Z"
         }
       }
+    },
+    "sfx.cage-close": {
+      "id": "sfx.cage-close",
+      "kind": "sound",
+      "prompt": "A heavy iron cage door swings shut with a short rusty hinge squeak then a solid metallic slam and brief bars rattle. One closure, compact dry fantasy game foley. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1.2,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.cage-close.mp3",
+          "prompt": "A heavy iron cage door swings shut with a short rusty hinge squeak then a solid metallic slam and brief bars rattle. One closure, compact dry fantasy game foley. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.guard-slurp": {
+      "id": "sfx.guard-slurp",
+      "kind": "sound",
+      "prompt": "One deep coarse slurp of thick soup by a large gruff creature, followed by a short wet gulp. Comic but restrained. No words, no growling. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1.4,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.guard-slurp.mp3",
+          "prompt": "One deep coarse slurp of thick soup by a large gruff creature, followed by a short wet gulp. Comic but restrained. No words, no growling. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.pickup": {
+      "id": "sfx.pickup",
+      "kind": "sound",
+      "prompt": "A single pleasing delicate metallic treasure chime, two quick ascending warm bell notes with a tiny leather pouch rustle. Short subtle fantasy adventure item pickup feedback, not a fanfare. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.pickup.mp3",
+          "prompt": "A single pleasing delicate metallic treasure chime, two quick ascending warm bell notes with a tiny leather pouch rustle. Short subtle fantasy adventure item pickup feedback, not a fanfare. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.door-open": {
+      "id": "sfx.door-open",
+      "kind": "sound",
+      "prompt": "One old solid wooden cottage door opening: latch click then a gentle low wooden hinge creak. No slam, no footsteps. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1.2,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.door-open.mp3",
+          "prompt": "One old solid wooden cottage door opening: latch click then a gentle low wooden hinge creak. No slam, no footsteps. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.door-close": {
+      "id": "sfx.door-close",
+      "kind": "sound",
+      "prompt": "One solid wooden cottage door closing: a short soft hinge creak then a warm wooden thunk and latch click. Not a violent slam. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.door-close.mp3",
+          "prompt": "One solid wooden cottage door closing: a short soft hinge creak then a warm wooden thunk and latch click. Not a violent slam. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.miner-slurp": {
+      "id": "sfx.miner-slurp",
+      "kind": "sound",
+      "prompt": "One small friendly dwarf taking a sip of beer from a ceramic tankard: light liquid sip, satisfied quiet swallow, tiny mug clink. No words, no burp. Different from a big creature slurping soup. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1.1,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.miner-slurp.mp3",
+          "prompt": "One small friendly dwarf taking a sip of beer from a ceramic tankard: light liquid sip, satisfied quiet swallow, tiny mug clink. No words, no burp. Different from a big creature slurping soup. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.coin": {
+      "id": "sfx.coin",
+      "kind": "sound",
+      "prompt": "A single copper coin handed over and placed on a wooden tavern counter: delicate bright metal clink and a tiny settling tap. No shower of coins. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.coin.mp3",
+          "prompt": "A single copper coin handed over and placed on a wooden tavern counter: delicate bright metal clink and a tiny settling tap. No shower of coins. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.chest-open": {
+      "id": "sfx.chest-open",
+      "kind": "sound",
+      "prompt": "Runes on an ancient dwarven wooden chest awaken with a soft ascending crystalline magical shimmer, then its heavy hinged lid creaks open with a gentle wooden stop. One short coherent action. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 2.5,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.chest-open.mp3",
+          "prompt": "Runes on an ancient dwarven wooden chest awaken with a soft ascending crystalline magical shimmer, then its heavy hinged lid creaks open with a gentle wooden stop. One short coherent action. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.journal-write": {
+      "id": "sfx.journal-write",
+      "kind": "sound",
+      "prompt": "A quill pen writing a short note on dry parchment: delicate scratchy nib strokes with brief natural pauses, very faint paper rustle. Close soft detailed foley, no voice. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 2.2,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.journal-write.mp3",
+          "prompt": "A quill pen writing a short note on dry parchment: delicate scratchy nib strokes with brief natural pauses, very faint paper rustle. Close soft detailed foley, no voice. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.brew-mix": {
+      "id": "sfx.brew-mix",
+      "kind": "sound",
+      "prompt": "A small mushroom drops into a tankard of stout with a soft plop, followed by a few gentle magical purple potion bubbles. Short wet gurgle, not an explosion. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1.3,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.brew-mix.mp3",
+          "prompt": "A small mushroom drops into a tankard of stout with a soft plop, followed by a few gentle magical purple potion bubbles. Short wet gurgle, not an explosion. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.brew-pour": {
+      "id": "sfx.brew-pour",
+      "kind": "sound",
+      "prompt": "A small tankard of liquid pours into a thick soup cauldron: brief continuous liquid trickle and soft splashes, ending in two drips. One pour, close foley. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.brew-pour.mp3",
+          "prompt": "A small tankard of liquid pours into a thick soup cauldron: brief continuous liquid trickle and soft splashes, ending in two drips. One pour, close foley. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.guard-fall": {
+      "id": "sfx.guard-fall",
+      "kind": "sound",
+      "prompt": "A large armored orc slumps onto packed earth with a heavy low body thud, small leather armor creak and metal buckle rattle settling. One fall. No vocal, no footsteps. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 1,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.guard-fall.mp3",
+          "prompt": "A large armored orc slumps onto packed earth with a heavy low body thud, small leather armor creak and metal buckle rattle settling. One fall. No vocal, no footsteps. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.rope-tie": {
+      "id": "sfx.rope-tie",
+      "kind": "sound",
+      "prompt": "Coarse hemp rope slides and wraps around leather clothing, two quick pulls tighten a knot. Detailed dry fibrous rubbing and creak, short tying action. No voices. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 2,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.rope-tie.mp3",
+          "prompt": "Coarse hemp rope slides and wraps around leather clothing, two quick pulls tighten a knot. Detailed dry fibrous rubbing and creak, short tying action. No voices. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "sfx.lock-break": {
+      "id": "sfx.lock-break",
+      "kind": "sound",
+      "prompt": "One precise pickaxe strike breaks an iron padlock: sharp metal impact, brief brittle metal snap, small lock pieces clattering to stone. One hit, not repeated hammering. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "sfx"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.9,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/sfx.lock-break.mp3",
+          "prompt": "One precise pickaxe strike breaks an iron padlock: sharp metal impact, brief brittle metal snap, small lock pieces clattering to stone. One hit, not repeated hammering. Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
     }
   },
   "styleGuide": {
@@ -14474,6 +14894,62 @@
     "step.orc.2": [
       "Audio",
       "Footsteps"
+    ],
+    "sfx.cage-close": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.guard-slurp": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.pickup": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.door-open": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.door-close": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.miner-slurp": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.coin": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.chest-open": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.journal-write": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.brew-mix": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.brew-pour": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.guard-fall": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.rope-tie": [
+      "Audio",
+      "SFX"
+    ],
+    "sfx.lock-break": [
+      "Audio",
+      "SFX"
     ]
   }
 }

@@ -40,7 +40,10 @@ test('all room, cinematic and walker sound selections have recordings', async ()
   assert.equal(soundtrackFor('forest', 'intro'), soundtrackFor('camp'));
   assert.equal(soundtrackFor('village', 'ending'), 'music.ending');
   assert.equal(footstepFor('borin', 'pub'), 'step.dwarf-wood');
-  assert.equal(footstepFor('borin', 'forest'), 'step.dwarf-earth');
+  for (const room of ['village', 'forest', 'camp']) {
+    assert.equal(footstepFor('borin', room), 'step.dwarf-stone');
+    assert.equal(footstepFor('king', room), 'step.dwarf-stone');
+  }
   assert.equal(footstepFor('borin', 'mine'), 'step.dwarf-stone');
   for (const asset of Object.values(forestAudio)) {
     assert.ok((await stat(new URL(`../public/${asset.versions.original.file}`, import.meta.url))).size > 1000, asset.id);
@@ -121,8 +124,11 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
     state.walkers = [walker(0, 0)]; tick(1);
     state.walkers = [walker(10, .5)]; tick(1);
     const step = made.find(s => s.key.startsWith('step.')); assert.ok(step);
+    const effect = soundscape.playSfx('coin'); assert.equal(effect.key, 'sfx.coin');
+    assert.equal(effect.volume, .75 * .55);
     soundscape.setVolume('sfx', 0); tick();
     assert.equal(step.volume, 0, 'active footsteps follow SFX');
+    assert.equal(effect.volume, 0, 'active action effects follow SFX');
     assert.equal(made[1].destroyed, true, 'ambience follows SFX');
     assert.equal(voice.volume, .25, 'SFX does not change voices');
     assert.equal(made[0].volume, .38, 'SFX does not change music');
@@ -139,6 +145,7 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
     tick(1); assert.equal(made.filter(s => s.key === 'music.forest').length, 2, 'next loop overlaps tail');
     tick(); assert.equal(forest.destroyed, true);
     soundscape.setEnabled(false); assert.equal(scene.sound.mute, true); assert.ok(made.every(s => s.destroyed));
+    assert.equal(soundscape.playSfx('coin'), undefined, 'master mute suppresses new effects');
     tick(); assert.ok(made.every(s => s.destroyed));
     soundscape.setEnabled(true); tick(); assert.ok(made.some(s => !s.destroyed));
     doc.hidden = true; doc.dispatchEvent(new Event('visibilitychange')); tick(); assert.ok(made.every(s => s.destroyed));

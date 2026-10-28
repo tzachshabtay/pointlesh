@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
 import { loadForestAssets } from './asset-loading';
+import { minerSipCue } from './action-audio';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
@@ -189,7 +190,7 @@ class ForestAdventure extends Phaser.Scene {
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
     this.portrait = new ForestDialogPortrait(this, this.aiRuntime, el('dialog-portrait'), () => !this.started || modalOpen);
     this.cinematicPortrait = new ForestDialogPortrait(this, this.aiRuntime, el('cinematic-portrait'), () => !this.started || modalOpen);
-    this.journal = new ForestJournal(this, this.aiRuntime, el('journal-notification'), el('clue-dot'));
+    this.journal = new ForestJournal(this, this.aiRuntime, el('journal-notification'), el('clue-dot'), () => this.audio?.playSfx('journal-write', .5));
     this.journal.reset(this.story.journal);
     this.characterLighting = new PhaserAdventureLighting(this);
     for (const room of roomIds) this.drawRoomTexture(room);
@@ -211,6 +212,7 @@ class ForestAdventure extends Phaser.Scene {
     this.campStealth = new CampStealth(this.character, {
       pourDurationMs: () => this.binding.animationDurationMs || POUR_DURATION_MS,
       canPour: () => guardLookingAway(this.story),
+      onPour: () => this.audio.playSfx('brew-pour'),
       poison: () => {
         const result = finishPouringBrew(this.story);
         if (!this.story.inventory.includes('sleepyStout')) this.selected = undefined;
@@ -221,6 +223,9 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.roomTransition = new RoomTransitionController(this.character, {
       enterRoom: portal => this.changeRoom(portal.roomId as RoomId, false, true),
+      onDoor: (action, portal) => {
+        if (portal.doorId === 'village.door.village-house' || portal.doorId === 'house.door.house') this.audio?.playSfx(`door-${action}`);
+      },
       onComplete: () => {
         if (this.introArrival === 'walking') {
           this.character.face(this.authoredFacing(this.playerDefinition()!));
@@ -277,7 +282,7 @@ class ForestAdventure extends Phaser.Scene {
       name: id => items[id as ItemId].name,
       slot: id => Array.from(el('inventory').querySelectorAll<HTMLElement>('[data-item-id]')).find(node => node.dataset.itemId === id),
       origin: () => this.pickupScreenPoint(), stage: this.game.canvas, bar: document.querySelector<HTMLElement>('.inventory-bar')!,
-      paused: () => !this.started || modalOpen,
+      paused: () => !this.started || modalOpen, onPickup: () => this.audio?.playSfx('pickup', .6),
     });
     this.inventoryPickup.reset(this.story.inventory);
     this.behaviors.register('forest.interact', { handle: context => this.applyInteraction(context.targetId, context.item) });
@@ -553,11 +558,13 @@ class ForestAdventure extends Phaser.Scene {
       return;
     }
     this.pickupOrigin = this.pickupScreenPoint(targetId);
+    const paying = targetId === 'innkeeper' && selected === 'coin' && this.story.inventory.includes('coin');
     const result = interact(this.story, targetId, selected);
+    if (paying && !this.story.inventory.includes('coin')) this.audio.playSfx('coin');
     if (selected && !this.story.inventory.includes(selected)) this.selected = undefined;
     if (result.room) this.changeRoom(result.room);
     if (result.dialog) { this.conversationActive = true; this.conversation.start(result.dialog); }
-    if (result.action === 'tie-guard') { this.epoch++; this.character.stop(); this.character.face('up'); this.renderTyingGuard(); }
+    if (result.action === 'tie-guard') { this.audio.playSfx('rope-tie'); this.epoch++; this.character.stop(); this.character.face('up'); this.renderTyingGuard(); }
     if (result.text) this.say(result.text, result.speaker);
     if (result.ending) {
       const camera = this.cameras.main;
@@ -755,7 +762,7 @@ class ForestAdventure extends Phaser.Scene {
             drink: resolvePointleshPoint(this.resolved(), GUARD_DRINK_POINT).position,
           }), () => !!this.story.flags.stewSpiked && !this.story.flags.guardAsleep, () => {
             if (finishGuardDrink(this.story)) this.render();
-          }, () => !!this.story.flags.guardBound);
+          }, () => !!this.story.flags.guardBound, cue => this.audio?.playSfx(cue));
           if (this.guardCheckpoint) this.guardPatrol.restore(this.guardCheckpoint);
           else this.guardPatrol.start(this.story.flags.guardAsleep);
         }
@@ -987,7 +994,10 @@ class ForestAdventure extends Phaser.Scene {
       this.character.finishSpeech(); el('speaker').textContent = 'Borin'; el('speech').textContent = turn.decision.prompt; el('dialog-next').hidden = true;
       this.showDialogPortrait('borin', false);
       for (const option of turn.options) el('choices').append(button(option.text, () => {
-        applyDialogChoice(this.story, option.id); this.conversation.choose(option.id); this.render();
+        const opening = !!this.story.chestOpening;
+        applyDialogChoice(this.story, option.id);
+        if (!opening && this.story.chestOpening) this.audio.playSfx('chest-open');
+        this.conversation.choose(option.id); this.render();
       }));
     }
   }
@@ -1018,7 +1028,7 @@ class ForestAdventure extends Phaser.Scene {
         this.cinematicPortrait.hide();
         // Keep the homecoming shot behind a terminal screen. There is no won
         // sandbox to dismiss into; Play again creates a fresh story and intro.
-        if (!this.cinematic) this.cinematic = new ForestCinematic(this, 'ending', this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening);
+        if (!this.cinematic) this.cinematic = new ForestCinematic(this, 'ending', this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening, cue => { if (this.started) this.audio?.playSfx(cue); });
         document.body.classList.add('cinematic-playing');
         this.cinematic.render(3, CINEMATIC_DURATIONS.ending[3] - 300);
         if (!endingModal) {
@@ -1049,7 +1059,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cutsceneCrossfade?.destroy(); this.cutsceneCrossfade = undefined;
     const kind = isEnding ? 'ending' : 'intro';
     if (this.cinematic?.snapshot().kind !== kind) {
-      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening);
+      this.cinematic?.destroy(); this.cinematic = new ForestCinematic(this, kind, this.aiRuntime, () => authoredScenes, this.characterLighting, this.endingOpening, cue => { if (this.started) this.audio?.playSfx(cue); });
       this.clearMovementKeys(); this.character.stop(); this.hover();
     }
     document.body.classList.add('cinematic-playing');
@@ -1089,7 +1099,10 @@ class ForestAdventure extends Phaser.Scene {
         const row = prefabInteractionTarget(inventoryPrefabId(id));
         if (this.selected && this.selected !== id) {
           if (this.authoredInteraction(row, itemInteractionColumn(inventoryPrefabId(this.selected)))) return;
-          const text = combineItems(this.story, this.selected, id); this.selected = undefined; this.say(text);
+          const mixed = !!this.story.flags.mixedBrew;
+          const text = combineItems(this.story, this.selected, id);
+          if (!mixed && this.story.flags.mixedBrew) this.audio.playSfx('brew-mix');
+          this.selected = undefined; this.say(text);
         } else {
           if (this.authoredInteraction(row, verbInteractionColumn('interact'))) return;
           this.selected = this.selected === id ? undefined : id;
@@ -1313,7 +1326,14 @@ class ForestAdventure extends Phaser.Scene {
       const speech = el('speech').textContent ?? '';
       if (speaking && npc.controller.state.speech?.text !== speech) void npc.controller.say(speech, 3600000);
       else if (!speaking) npc.controller.finishSpeech();
-      if (!paused) npc.binding.update(Math.min(delta, 100));
+      if (!paused) {
+        const animation = npc.sprite.anims.currentAnim, frame = npc.sprite.anims.currentFrame?.index ?? 0;
+        npc.binding.update(Math.min(delta, 100));
+        if (npc.actorName === 'miner' && !speaking && npc.controller.state.activity === 'idle' && npc.controller.state.facing === 'down' &&
+          animation && animation === npc.sprite.anims.currentAnim && minerSipCue(frame, npc.sprite.anims.currentFrame?.index ?? 0, animation.frames.length)) {
+          this.audio.playSfx('miner-slurp', .55);
+        }
+      }
     }
     this.drawRoomTexture(this.story.roomId);
     this.syncChest();

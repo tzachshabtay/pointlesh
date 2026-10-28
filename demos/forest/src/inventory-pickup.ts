@@ -16,7 +16,7 @@ export class InventoryPickup {
   constructor(private scene: Phaser.Scene, private runtime: AiAssetRuntime, private options: {
     asset: (id: string) => string; name: (id: string) => string;
     slot: (id: string) => HTMLElement | undefined; origin: () => PickupOrigin;
-    stage: HTMLElement; bar: HTMLElement; paused: () => boolean;
+    stage: HTMLElement; bar: HTMLElement; paused: () => boolean; onPickup?: () => void;
   }) {
     scene.events.on('postupdate', this.update);
     scene.events.once('shutdown', this.destroy);
@@ -56,6 +56,7 @@ export class InventoryPickup {
     const label = document.createElement('span'); label.textContent = this.options.name(item.id);
     node.append(icon.canvas, label); document.body.append(node);
     this.active = { ...item, elapsed: 0, node, icon, label };
+    this.options.onPickup?.();
     this.draw();
   }
   private draw(): void {

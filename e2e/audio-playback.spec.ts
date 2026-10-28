@@ -5,9 +5,9 @@ test('starting the game loads recordings and produces a non-silent Web Audio out
   await openAdventure(page);
   await expect.poll(() => page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;
-    return Object.keys(scene.aiRuntime.manifest.assets).filter(id => id.startsWith('music.') || id.startsWith('ambience.') || id.startsWith('step.'))
+    return Object.keys(scene.aiRuntime.manifest.assets).filter(id => id.startsWith('music.') || id.startsWith('ambience.') || id.startsWith('step.') || id.startsWith('sfx.'))
       .filter(id => scene.cache.audio.exists(scene.aiRuntime.key(id))).length;
-  })).toBe(23);
+  })).toBe(37);
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.sound.context.state)).toBe('running');
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene;

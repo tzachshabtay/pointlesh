@@ -37,9 +37,27 @@ const steps = {
 };
 for (const [name, prompt] of Object.entries(steps)) for (const variation of [1, 2]) asset(`step.${name}.${variation}`, 'sound', prompt, .7, false, 'Footsteps');
 
+const effects: Record<string, [number, string]> = {
+  'cage-close': [1.2, 'A heavy iron cage door swings shut with a short rusty hinge squeak then a solid metallic slam and brief bars rattle. One closure, compact dry fantasy game foley.'],
+  'guard-slurp': [1.4, 'One deep coarse slurp of thick soup by a large gruff creature, followed by a short wet gulp. Comic but restrained. No words, no growling.'],
+  pickup: [.7, 'A single pleasing delicate metallic treasure chime, two quick ascending warm bell notes with a tiny leather pouch rustle. Short subtle fantasy adventure item pickup feedback, not a fanfare.'],
+  'door-open': [1.2, 'One old solid wooden cottage door opening: latch click then a gentle low wooden hinge creak. No slam, no footsteps.'],
+  'door-close': [1.0, 'One solid wooden cottage door closing: a short soft hinge creak then a warm wooden thunk and latch click. Not a violent slam.'],
+  'miner-slurp': [1.1, 'One small friendly dwarf taking a sip of beer from a ceramic tankard: light liquid sip, satisfied quiet swallow, tiny mug clink. No words, no burp. Different from a big creature slurping soup.'],
+  coin: [.7, 'A single copper coin handed over and placed on a wooden tavern counter: delicate bright metal clink and a tiny settling tap. No shower of coins.'],
+  'chest-open': [2.5, 'Runes on an ancient dwarven wooden chest awaken with a soft ascending crystalline magical shimmer, then its heavy hinged lid creaks open with a gentle wooden stop. One short coherent action.'],
+  'journal-write': [2.2, 'A quill pen writing a short note on dry parchment: delicate scratchy nib strokes with brief natural pauses, very faint paper rustle. Close soft detailed foley, no voice.'],
+  'brew-mix': [1.3, 'A small mushroom drops into a tankard of stout with a soft plop, followed by a few gentle magical purple potion bubbles. Short wet gurgle, not an explosion.'],
+  'brew-pour': [1.7, 'A small tankard of liquid pours into a thick soup cauldron: brief continuous liquid trickle and soft splashes, ending in two drips. One pour, close foley.'],
+  'guard-fall': [1.0, 'A large armored orc slumps onto packed earth with a heavy low body thud, small leather armor creak and metal buckle rattle settling. One fall. No vocal, no footsteps.'],
+  'rope-tie': [2.0, 'Coarse hemp rope slides and wraps around leather clothing, two quick pulls tighten a knot. Detailed dry fibrous rubbing and creak, short tying action. No voices.'],
+  'lock-break': [.9, 'One precise pickaxe strike breaks an iron padlock: sharp metal impact, brief brittle metal snap, small lock pieces clattering to stone. One hit, not repeated hammering.'],
+};
+for (const [name, [seconds, prompt]] of Object.entries(effects)) asset(`sfx.${name}`, 'sound', `${prompt} Isolated sound effect, no music, no background ambience. Action begins immediately, short natural tail.`, seconds, false, 'SFX');
+
 export function addForestAudio(manifest: AiAssetManifest): void {
   for (const [id, definition] of Object.entries(forestAudio)) {
     manifest.assets[id] ??= structuredClone(definition);
-    (manifest.assetPaths ??= {})[id] ??= ['Audio', id.startsWith('music.') ? 'Music' : id.startsWith('ambience.') ? 'Ambience' : 'Footsteps'];
+    (manifest.assetPaths ??= {})[id] ??= ['Audio', id.startsWith('music.') ? 'Music' : id.startsWith('ambience.') ? 'Ambience' : id.startsWith('step.') ? 'Footsteps' : 'SFX'];
   }
 }

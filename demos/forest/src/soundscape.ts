@@ -68,6 +68,18 @@ export class ForestSoundscape {
     if (!sound.play()) { sound.destroy(); return; }
     return sound;
   }
+  playSfx(name: string, volume = .75): Sound | undefined {
+    if (this.hidden || !this.settings.enabled || this.scene.sound.locked) return;
+    const id = `sfx.${name}`, key = this.runtime.key(id);
+    if (!this.scene.cache.audio.exists(key)) return;
+    const gain = clamp(volume) * this.assetVolume(id);
+    const sound = this.scene.sound.add(key, { volume: gain * this.settings.sfx, loop: false }) as Sound;
+    this.hits.set(sound, gain);
+    sound.once('destroy', () => this.hits.delete(sound));
+    sound.once('complete', () => sound.destroy());
+    if (!sound.play()) { sound.destroy(); return; }
+    return sound;
+  }
   private save() { try { localStorage.setItem(preferenceKey, JSON.stringify(this.settings)); } catch { /* Optional preference. */ } }
   private visibility = () => { this.hidden = document.hidden; this.stop(); };
   private stop() {

@@ -10,7 +10,7 @@ export function soundtrackFor(room: RoomId, cinematic?: 'intro' | 'ending'): str
 }
 export function footstepFor(character: string, room: RoomId): string {
   if (character.startsWith('guard')) return 'step.orc';
-  if (character === 'king') return 'step.king';
+  if (character === 'king' || character === 'borin' && (room === 'forest' || room === 'camp')) return 'step.dwarf-stone';
   return `step.dwarf-${room === 'pub' ? 'wood' : room === 'village' || room === 'mine' || room === 'house' ? 'stone' : 'earth'}`;
 }
 
