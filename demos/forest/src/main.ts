@@ -344,6 +344,7 @@ class ForestAdventure extends Phaser.Scene {
       await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
       el<HTMLButtonElement>('new-game').disabled = false;
       el<HTMLButtonElement>('start-load').disabled = false;
+      el<HTMLButtonElement>('start-options').disabled = false;
       el('start-progress').hidden = true;
       el('start-controls').setAttribute('aria-busy', 'false');
       el('start-screen').classList.remove('start-loading');
@@ -1362,6 +1363,7 @@ function setupControls() {
   el('new-game').onclick = () => gameScene.newGame();
   el('fullscreen').onclick = () => setFullScreen(!document.body.classList.contains('game-fullscreen'));
   el('start-load').onclick = () => saveMenu('load');
+  el('start-options').onclick = () => modal('Options').append(soundControls());
   el('menu').onclick = gameMenu;
   el('character-lighting').onclick = () => {
     const enabled = gameScene.characterLighting.enabled = !gameScene.characterLighting.enabled;
@@ -1425,6 +1427,9 @@ function setupControls() {
     select.value = screenFit;
     select.onchange = () => setScreenFit(select.value === 'fit' ? 'fit' : 'stretch');
     display.append(caption, select); body.append(display);
+    body.append(soundControls());
+  }
+  function soundControls(): HTMLFieldSetElement {
     const audio = document.createElement('fieldset'); audio.className = 'audio-settings';
     const legend = document.createElement('legend'); legend.textContent = 'Sound'; audio.append(legend);
     const toggleLabel = document.createElement('label'), toggle = document.createElement('input');
@@ -1438,7 +1443,7 @@ function setupControls() {
       slider.oninput = () => { gameScene.audio.setVolume(channel, Number(slider.value) / 100); value.textContent = `${slider.value}%`; };
       row.append(name, slider, value); audio.append(row);
     }
-    body.append(audio);
+    return audio;
   }
   function saveMenu(mode: 'save' | 'load') {
     if (mode === 'save' && !gameScene.started) return;
