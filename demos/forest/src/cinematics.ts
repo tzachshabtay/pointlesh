@@ -2,7 +2,8 @@ import type Phaser from 'phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject, type Point, type Direction } from '@pointlesh/core';
-import { intro as introScript, ending as endingScript } from './story';
+import { intro as introScript, ending as endingScript, type RoomId } from './story';
+import { spriteWalker } from './soundscape';
 import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting } from './environment-lighting';
@@ -41,6 +42,7 @@ type CastActor = {
   definition?: ResolvedPointleshObject;
   binding?: PhaserAdventureCharacter;
   sleeping: boolean;
+  walking?: boolean;
   transitionAreas?: string[];
   action?: 'bound' | 'tie-rope-back' | 'pickaxe-back' | IntroAction;
 };
@@ -145,7 +147,7 @@ export class ForestCinematic {
       this.overlayRoom = undefined;
     }
     this.excludeGameplayObjects();
-    for (const { sprite, shadow } of this.cast.values()) { sprite.setVisible(false); shadow.setVisible(false); }
+    for (const actor of this.cast.values()) { actor.sprite.setVisible(false); actor.shadow.setVisible(false); actor.walking = false; }
     this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
     this.cageDoor.setVisible(false);
     const duration = CINEMATIC_DURATIONS[this.kind][stepIndex]!;
@@ -169,6 +171,12 @@ export class ForestCinematic {
     this.visible = visible;
     this.root.setVisible(visible);
     this.camera.setVisible(visible);
+  }
+
+  audioState() {
+    return { room: this.room as RoomId, shot: `${this.kind}:${this.stepIndex}:${this.room}`,
+      walkers: [...this.cast].map(([id, actor]) => spriteWalker(`cinematic-${id}`, id, actor.sprite,
+        !!actor.walking && this.visible && !this.destroyed, this.camera)) };
   }
 
   snapshot(): CinematicSnapshot {
@@ -284,6 +292,7 @@ export class ForestCinematic {
   private pose(id: CastId, pose: Pose): Phaser.GameObjects.Sprite {
     const actor = this.cast.get(id)!;
     actor.sleeping = pose.sleeping ?? false;
+    actor.walking = !!pose.walking && !pose.action && !pose.sleeping;
     actor.transitionAreas = pose.transitionAreas ?? [];
     actor.action = actor.sleeping ? 'bound' : pose.action;
     const { sprite, shadow } = actor;

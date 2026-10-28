@@ -159,25 +159,3 @@ export function createPixelActors(scene: Phaser.Scene): void {
     texture.refresh();
   }
 }
-
-export class ForestMusic {
-  private context?: AudioContext;
-  private timer?: ReturnType<typeof setInterval>;
-  private active = false;
-  private step = 0;
-  toggle(): boolean {
-    if (this.active) { this.stop(); return false; }
-    this.context ??= new AudioContext(); void this.context.resume(); this.active = true;
-    const melody = [0, 7, 12, 14, 10, 7, 3, 7, 0, 5, 10, 12, 7, 5, 3, -2];
-    const play = () => {
-      if (!this.context || !this.active) return;
-      const now = this.context.currentTime;
-      const oscillator = this.context.createOscillator(), gain = this.context.createGain();
-      oscillator.type = 'sine'; oscillator.frequency.value = 196 * 2 ** (melody[this.step++ % melody.length] / 12);
-      gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.045, now + 0.06); gain.gain.exponentialRampToValueAtTime(0.001, now + 1.3);
-      oscillator.connect(gain).connect(this.context.destination); oscillator.start(now); oscillator.stop(now + 1.4);
-    };
-    play(); this.timer = setInterval(play, 730); return true;
-  }
-  stop(): void { this.active = false; if (this.timer) clearInterval(this.timer); }
-}

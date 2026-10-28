@@ -1,0 +1,7 @@
+.audio-settings{border:1px solid #526044;border-radius:4px;margin:20px 0 0;padding:12px 16px;color:#d9dbbd}
+.audio-settings legend{padding:0 7px;font:18px Georgia,serif;color:var(--gold)}
+.audio-settings label{display:flex;align-items:center;gap:12px;margin:10px 0;font-size:12px}
+.audio-settings label>span{width:75px;flex-shrink:0}
+.audio-settings input[type=range]{flex:1;min-width:40px;accent-color:#d7b476}
+.audio-settings input[type=checkbox]{accent-color:#d7b476}
+.audio-settings output{width:38px;text-align:right;color:#bdc8ae;font-variant-numeric:tabular-nums}

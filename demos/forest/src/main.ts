@@ -11,7 +11,11 @@ import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses } from './content';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
 import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, introArrivalLine, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
-import { createPixelActors, ForestMusic } from './sprites';
+import { createPixelActors } from './sprites';
+import { ForestSoundscape, spriteWalker } from './soundscape';
+import { addForestAudio } from './audio-assets';
+import type { ForestAudioState } from './audio-state';
+import './soundscape.css';
 import { addForestPoints, roomEntryPointId } from './points';
 import { GuardPatrol, assertGuardPatrolSnapshot, GUARD_HOME_POINT, GUARD_DRINK_POINT, type GuardPatrolSnapshot } from './guard-patrol';
 import { addGuardAnimations, guardAnimationSize } from './guard-assets';
@@ -74,7 +78,7 @@ function setFullScreen(enabled: boolean) {
   window.scrollTo(0, 0);
 }
 const button = (text: string, action: () => void) => { const node = document.createElement('button'); node.textContent = text; node.onclick = action; return node; };
-const music = new ForestMusic();
+
 // Authoring requests use the companion service; image previews use the same public files as the game.
 class ForestAssetDebugClient extends AiAssetDebugClient {
   override assetUrl(file: string): string {
@@ -177,6 +181,7 @@ class ForestAdventure extends Phaser.Scene {
   saves!: SaveStore;
   behaviors = new BehaviorRegistry<{ targetId: string; item?: ItemId }>();
   constructor() { super('forest-adventure'); }
+  audio!: ForestSoundscape;
   preload() { loadAiAssets(this, assets, { baseUrl: import.meta.env.BASE_URL }); }
   create() {
     gameScene = this;
@@ -309,6 +314,7 @@ class ForestAdventure extends Phaser.Scene {
     this.installTools();
     this.render();
     el('loading').hidden = true;
+    this.audio = new ForestSoundscape(this, this.aiRuntime, () => this.audioState());
     setupControls();
     // Capture the actual opening camera and character pose, rather than a bare
     // room texture whose framing and cast would jump when the intro starts.
@@ -431,6 +437,20 @@ class ForestAdventure extends Phaser.Scene {
   }
   // Editors own canvas gestures and camera navigation; the simulation keeps running.
   worldEditorOpen() { return !!document.querySelector('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"]:not([aria-label="Toggle AI asset designer"]), [aria-label="Toggle scene minimap"][aria-pressed="true"]'); }
+  audioState(): ForestAudioState {
+    const cinematic = this.cinematic && !this.cutsceneCrossfade ? this.cinematic.audioState() : undefined;
+    const room = cinematic?.room ?? this.story.roomId;
+    const walkers = cinematic?.walkers ?? [
+      spriteWalker('borin', 'borin', this.actor, this.character.isWalking, this.cameras.main, this.character.state.animationFrame / this.character.config.frameCount),
+      ...[...this.npcActors.values()].map(npc => spriteWalker(npc.controller.config.id, npc.actorName, npc.sprite, npc.controller.isWalking, this.cameras.main,
+        npc.controller.state.animationFrame / npc.controller.config.frameCount)),
+    ];
+    return { started: this.started, room,
+      cinematic: this.story.endingStep >= 0 ? 'ending' : this.story.introStep < intro.length ? 'intro' : undefined,
+      shot: cinematic?.shot ?? room, walkers,
+      footstepsPaused: modalOpen || !!this.cutsceneCrossfade || !!this.cancelTitleDeparture || this.editing || this.worldEditorOpen(),
+      speaking: this.talking || !!cinematic, menu: modalOpen };
+  }
   uncancellableAction() { return !!(this.cutsceneCrossfade || this.roomTransition?.active || this.introArrival || this.campStealth?.busy || this.story.tyingGuard || this.story.chestOpening); }
   blocked(includeDesigner = true) { return !this.started || this.uncancellableAction() || (includeDesigner && (this.worldEditorOpen() || this.editing)) || modalOpen || this.talking || this.story.introStep < intro.length || this.story.endingStep >= 0; }
   clearMovementKeys() {
@@ -1107,6 +1127,7 @@ class ForestAdventure extends Phaser.Scene {
     el('start-screen').hidden = false; el('new-game').focus({ preventScroll: true }); window.scrollTo(0, 0);
   }
   enterGame(animateTitle = false) {
+    this.audio.unlock();
     this.cancelTitleDeparture?.(); this.cancelTitleDeparture = undefined;
     if (!this.started) setFullScreen(true);
     this.started = true; el('start-screen').hidden = !animateTitle; document.body.classList.remove('menu-open');
@@ -1339,7 +1360,13 @@ function setupControls() {
     if (visible) gameScene.sceneDesigner?.designer.open();
     else { document.querySelectorAll<HTMLButtonElement>('.ai-game-assets-in-game-designer-dock__button[aria-expanded="true"], [aria-label="Toggle scene minimap"][aria-pressed="true"]').forEach(node => node.click()); gameScene.editing = false; }
   };
-  el('sound').onclick = () => { const active = music.toggle(); el('sound').setAttribute('aria-pressed', String(active)); el('sound').querySelector('span')!.textContent = active ? 'Sound on' : 'Sound off'; };
+  const syncSound = () => {
+    const active = gameScene.audio.settings.enabled;
+    el('sound').setAttribute('aria-pressed', String(active));
+    el('sound').querySelector('span')!.textContent = active ? 'Sound on' : 'Sound off';
+  };
+  el('sound').onclick = () => { gameScene.audio.setEnabled(!gameScene.audio.settings.enabled); syncSound(); };
+  syncSound();
   el('journal').onclick = () => {
     const body = modal('Borin’s field notes');
     el('modal-backdrop').querySelector('.modal')!.classList.add('journal-modal');
@@ -1375,6 +1402,20 @@ function setupControls() {
     select.value = screenFit;
     select.onchange = () => setScreenFit(select.value === 'fit' ? 'fit' : 'stretch');
     display.append(caption, select); body.append(display);
+    const audio = document.createElement('fieldset'); audio.className = 'audio-settings';
+    const legend = document.createElement('legend'); legend.textContent = 'Sound'; audio.append(legend);
+    const toggleLabel = document.createElement('label'), toggle = document.createElement('input');
+    toggle.type = 'checkbox'; toggle.checked = gameScene.audio.settings.enabled;
+    toggle.onchange = () => { gameScene.audio.setEnabled(toggle.checked); syncSound(); };
+    toggleLabel.append(toggle, ' Sound enabled'); audio.append(toggleLabel);
+    for (const [channel, title] of [['music', 'Music'], ['ambience', 'Ambience'], ['footsteps', 'Footsteps']] as const) {
+      const row = document.createElement('label'), name = document.createElement('span'), slider = document.createElement('input'), value = document.createElement('output');
+      name.textContent = title; slider.type = 'range'; slider.min = '0'; slider.max = '100'; slider.step = '1'; slider.setAttribute('aria-label', `${title} volume`);
+      slider.value = String(Math.round(gameScene.audio.settings[channel] * 100)); value.textContent = `${slider.value}%`;
+      slider.oninput = () => { gameScene.audio.setVolume(channel, Number(slider.value) / 100); value.textContent = `${slider.value}%`; };
+      row.append(name, slider, value); audio.append(row);
+    }
+    body.append(audio);
   }
   function saveMenu(mode: 'save' | 'load') {
     if (mode === 'save' && !gameScene.started) return;
@@ -1476,6 +1517,7 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addForestAudio(assets);
 addWorldMapAsset(assets);
 addMineOverscanAsset(assets);
 addForestOverscanAsset(assets);

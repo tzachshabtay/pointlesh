@@ -22,6 +22,7 @@ import { addPortraitAssets } from './portrait-assets';
 import { addForestOverscanAsset } from './forest-overscan';
 import { addMineOverscanAsset } from './mine-overscan';
 import { addJournalAssets } from './journal-assets';
+import { addForestAudio } from './audio-assets';
 import { addWorldMapAsset } from './world-map';
 import { addForestInventoryPrefabs } from './inventory-prefabs';
 
@@ -176,6 +177,7 @@ addFireplaceAssets(assets);
 addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
+addForestAudio(assets);
 addWorldMapAsset(assets);
 addMineOverscanAsset(assets);
 addForestOverscanAsset(assets);

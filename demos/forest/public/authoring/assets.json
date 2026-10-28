@@ -12571,6 +12571,696 @@
         "forest",
         "cursor"
       ]
+    },
+    "music.tense": {
+      "id": "music.tense",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. The king is abducted by orcs. Tense stealth and looming danger, low bowed strings, restrained frame drum heartbeat, dark bassoon, sparse dulcimer. D minor, 80 BPM. Suspense rather than action combat, quiet ominous pulse throughout.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 64,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.tense.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. The king is abducted by orcs. Tense stealth and looming danger, low bowed strings, restrained frame drum heartbeat, dark bassoon, sparse dulcimer. D minor, 80 BPM. Suspense rather than action combat, quiet ominous pulse throughout.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "music.ending": {
+      "id": "music.ending",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. A dwarf rescues his king and returns home. Triumphant joyful homecoming, noble French horn melody, bright strings, harp and celebratory frame drums. D major, 96 BPM. Earned warmth and relief, a memorable heroic theme, no abrupt orchestral stabs.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 48,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.ending.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. A dwarf rescues his king and returns home. Triumphant joyful homecoming, noble French horn melody, bright strings, harp and celebratory frame drums. D major, 96 BPM. Earned warmth and relief, a memorable heroic theme, no abrupt orchestral stabs.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "music.village": {
+      "id": "music.village",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. Bramblehollow, a peaceful dwarf village among ancient trees. Welcoming wistful melody on wooden flute and fiddle, plucked lute, mellow cello, gentle hand drum. D major, 84 BPM. Cozy, brave, a hint of the adventure ahead.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 64,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.village.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. Bramblehollow, a peaceful dwarf village among ancient trees. Welcoming wistful melody on wooden flute and fiddle, plucked lute, mellow cello, gentle hand drum. D major, 84 BPM. Cozy, brave, a hint of the adventure ahead.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "music.pub": {
+      "id": "music.pub",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. The Copper Tankard, a cozy dwarven tavern. Playful lilting fiddle and hammered dulcimer, lute and soft bodhran, a rustic 6/8 folk dance at 100 BPM. Friendly humorous warmth, never frantic, no crowd sounds in the music.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 64,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.pub.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. The Copper Tankard, a cozy dwarven tavern. Playful lilting fiddle and hammered dulcimer, lute and soft bodhran, a rustic 6/8 folk dance at 100 BPM. Friendly humorous warmth, never frantic, no crowd sounds in the music.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "music.house": {
+      "id": "music.house",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. Borin’s quiet cottage, preparing for an adventure by the hearth. Intimate fingerpicked lute, warm cello and delicate harp, a simple tender melody. G major, 68 BPM. Restful and homely, no percussion, no fire sounds in the music.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 64,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.house.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. Borin’s quiet cottage, preparing for an adventure by the hearth. Intimate fingerpicked lute, warm cello and delicate harp, a simple tender melody. G major, 68 BPM. Restful and homely, no percussion, no fire sounds in the music.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "music.forest": {
+      "id": "music.forest",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. The Whispering Wood, a mysterious ancient forest. Airy wooden flute, soft harp arpeggios, sustained viola and low cello, subtle magical celesta. E dorian, 72 BPM. Wonder and gentle curiosity, tranquil exploration, not horror. No birds or wind in the music.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 64,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.forest.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. The Whispering Wood, a mysterious ancient forest. Airy wooden flute, soft harp arpeggios, sustained viola and low cello, subtle magical celesta. E dorian, 72 BPM. Wonder and gentle curiosity, tranquil exploration, not horror. No birds or wind in the music.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "music.mine": {
+      "id": "music.mine",
+      "kind": "music",
+      "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. Goldroot Mine, an old dwarven gold mine with runic secrets. Sparse resonant hammered dulcimer, deep cello, muted frame drum and mysterious bass clarinet. A dorian, 64 BPM. Measured, subterranean, intriguing, not horror. No mining sound effects in the music.",
+      "tags": [
+        "forest",
+        "audio",
+        "music"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 64,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/music.mine.mp3",
+          "prompt": "Instrumental fantasy adventure game score, intimate acoustic ensemble, warm natural recording, no vocals, no choir, no speech, no modern drum kit. A complete gently developing repeating musical phrase, steady dynamics, no long silent intro or final fade. Leave space for dialogue. Goldroot Mine, an old dwarven gold mine with runic secrets. Sparse resonant hammered dulcimer, deep cello, muted frame drum and mysterious bass clarinet. A dorian, 64 BPM. Measured, subterranean, intriguing, not horror. No mining sound effects in the music.",
+          "model": "music_v1",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "ambience.village": {
+      "id": "ambience.village",
+      "kind": "sound",
+      "prompt": "Quiet medieval woodland village atmosphere. Soft wind through leaves, occasional distant birds, faint wooden house creaks. Peaceful subtle stereo background, no voices, no music, no prominent footsteps. Seamless continuous ambience.",
+      "tags": [
+        "forest",
+        "audio",
+        "ambience"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 20,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/ambience.village.mp3",
+          "prompt": "Quiet medieval woodland village atmosphere. Soft wind through leaves, occasional distant birds, faint wooden house creaks. Peaceful subtle stereo background, no voices, no music, no prominent footsteps. Seamless continuous ambience.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "ambience.pub": {
+      "id": "ambience.pub",
+      "kind": "sound",
+      "prompt": "Cozy small medieval tavern interior ambience. Gentle hearth crackle, occasional soft wooden creak and distant ceramic mug clink. Subdued indistinct room murmur without intelligible words. No music or footsteps. Seamless quiet background loop.",
+      "tags": [
+        "forest",
+        "audio",
+        "ambience"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 20,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/ambience.pub.mp3",
+          "prompt": "Cozy small medieval tavern interior ambience. Gentle hearth crackle, occasional soft wooden creak and distant ceramic mug clink. Subdued indistinct room murmur without intelligible words. No music or footsteps. Seamless quiet background loop.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "ambience.house": {
+      "id": "ambience.house",
+      "kind": "sound",
+      "prompt": "Small cozy stone cottage fireplace, gentle close crackling embers with soft room air and occasional wooden beam creak. Quiet and soothing, no roaring flames, no speech, no music. Seamless background ambience.",
+      "tags": [
+        "forest",
+        "audio",
+        "ambience"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 20,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/ambience.house.mp3",
+          "prompt": "Small cozy stone cottage fireplace, gentle close crackling embers with soft room air and occasional wooden beam creak. Quiet and soothing, no roaring flames, no speech, no music. Seamless background ambience.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "ambience.forest": {
+      "id": "ambience.forest",
+      "kind": "sound",
+      "prompt": "Ancient leafy forest in daylight, soft canopy breeze, rustling leaves, scattered small songbird calls at varied distances, occasional delicate insects. Natural spacious stereo ambience, restrained and peaceful. No music, no speech, no footsteps. Seamless loop.",
+      "tags": [
+        "forest",
+        "audio",
+        "ambience"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 20,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/ambience.forest.mp3",
+          "prompt": "Ancient leafy forest in daylight, soft canopy breeze, rustling leaves, scattered small songbird calls at varied distances, occasional delicate insects. Natural spacious stereo ambience, restrained and peaceful. No music, no speech, no footsteps. Seamless loop.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "ambience.mine": {
+      "id": "ambience.mine",
+      "kind": "sound",
+      "prompt": "Deep quiet stone mine ambience, sparse water droplets with natural cave echoes, very low hollow air movement, occasional distant stone settling. No machinery, no music, no speech, no footsteps. Quiet spacious seamless loop.",
+      "tags": [
+        "forest",
+        "audio",
+        "ambience"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 20,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/ambience.mine.mp3",
+          "prompt": "Deep quiet stone mine ambience, sparse water droplets with natural cave echoes, very low hollow air movement, occasional distant stone settling. No machinery, no music, no speech, no footsteps. Quiet spacious seamless loop.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "ambience.camp": {
+      "id": "ambience.camp",
+      "kind": "sound",
+      "prompt": "Forest orc camp at dusk, low fire crackle beneath a gently bubbling iron cauldron, faint woodland wind, occasional wooden palisade creak and distant crow. No voices, no music, no footsteps. Subtle seamless atmospheric loop.",
+      "tags": [
+        "forest",
+        "audio",
+        "ambience"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 20,
+        "loop": true
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": true
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/ambience.camp.mp3",
+          "prompt": "Forest orc camp at dusk, low fire crackle beneath a gently bubbling iron cauldron, faint woodland wind, occasional wooden palisade creak and distant crow. No voices, no music, no footsteps. Subtle seamless atmospheric loop.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.dwarf-earth.1": {
+      "id": "step.dwarf-earth.1",
+      "kind": "sound",
+      "prompt": "One single firm leather boot footstep on packed earth with a tiny dry leaf crunch, stocky dwarf walker. Close dry foley, quick heel then sole impact, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.dwarf-earth.1.mp3",
+          "prompt": "One single firm leather boot footstep on packed earth with a tiny dry leaf crunch, stocky dwarf walker. Close dry foley, quick heel then sole impact, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.dwarf-earth.2": {
+      "id": "step.dwarf-earth.2",
+      "kind": "sound",
+      "prompt": "One single firm leather boot footstep on packed earth with a tiny dry leaf crunch, stocky dwarf walker. Close dry foley, quick heel then sole impact, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.dwarf-earth.2.mp3",
+          "prompt": "One single firm leather boot footstep on packed earth with a tiny dry leaf crunch, stocky dwarf walker. Close dry foley, quick heel then sole impact, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.dwarf-stone.1": {
+      "id": "step.dwarf-stone.1",
+      "kind": "sound",
+      "prompt": "One single sturdy leather boot footstep on stone paving, stocky dwarf walker. Close dry foley, solid low heel and slight sole scuff. No reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.dwarf-stone.1.mp3",
+          "prompt": "One single sturdy leather boot footstep on stone paving, stocky dwarf walker. Close dry foley, solid low heel and slight sole scuff. No reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.dwarf-stone.2": {
+      "id": "step.dwarf-stone.2",
+      "kind": "sound",
+      "prompt": "One single sturdy leather boot footstep on stone paving, stocky dwarf walker. Close dry foley, solid low heel and slight sole scuff. No reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.dwarf-stone.2.mp3",
+          "prompt": "One single sturdy leather boot footstep on stone paving, stocky dwarf walker. Close dry foley, solid low heel and slight sole scuff. No reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.dwarf-wood.1": {
+      "id": "step.dwarf-wood.1",
+      "kind": "sound",
+      "prompt": "One single sturdy leather boot footstep on a wooden tavern floor with a very slight board creak. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.dwarf-wood.1.mp3",
+          "prompt": "One single sturdy leather boot footstep on a wooden tavern floor with a very slight board creak. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.dwarf-wood.2": {
+      "id": "step.dwarf-wood.2",
+      "kind": "sound",
+      "prompt": "One single sturdy leather boot footstep on a wooden tavern floor with a very slight board creak. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.dwarf-wood.2.mp3",
+          "prompt": "One single sturdy leather boot footstep on a wooden tavern floor with a very slight board creak. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.king.1": {
+      "id": "step.king.1",
+      "kind": "sound",
+      "prompt": "One single measured leather shoe footstep with a very soft cloth robe rustle. Dignified older dwarf king on an earth path. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.king.1.mp3",
+          "prompt": "One single measured leather shoe footstep with a very soft cloth robe rustle. Dignified older dwarf king on an earth path. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.king.2": {
+      "id": "step.king.2",
+      "kind": "sound",
+      "prompt": "One single measured leather shoe footstep with a very soft cloth robe rustle. Dignified older dwarf king on an earth path. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.king.2.mp3",
+          "prompt": "One single measured leather shoe footstep with a very soft cloth robe rustle. Dignified older dwarf king on an earth path. Close dry foley, no reverb, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.orc.1": {
+      "id": "step.orc.1",
+      "kind": "sound",
+      "prompt": "One single heavy orc boot thud on hard earth, slight leather armor creak and tiny metal buckle rattle. Weighty but not a monster stomp. Close dry foley, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.orc.1.mp3",
+          "prompt": "One single heavy orc boot thud on hard earth, slight leather armor creak and tiny metal buckle rattle. Weighty but not a monster stomp. Close dry foley, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
+    },
+    "step.orc.2": {
+      "id": "step.orc.2",
+      "kind": "sound",
+      "prompt": "One single heavy orc boot thud on hard earth, slight leather armor creak and tiny metal buckle rattle. Weighty but not a monster stomp. Close dry foley, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+      "tags": [
+        "forest",
+        "audio",
+        "footsteps"
+      ],
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3",
+        "durationSeconds": 0.7,
+        "loop": false
+      },
+      "audioPlayback": {
+        "volume": 1,
+        "loop": false
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/audio/step.orc.2.mp3",
+          "prompt": "One single heavy orc boot thud on hard earth, slight leather armor creak and tiny metal buckle rattle. Weighty but not a monster stomp. Close dry foley, no voice, no music, no extra steps. Impact at the beginning, short natural tail.",
+          "model": "eleven_text_to_sound_v2",
+          "createdAt": "2026-10-27T00:00:00.000Z"
+        }
+      }
     }
   },
   "styleGuide": {
@@ -13692,6 +14382,98 @@
     "cursor.busy.idle": [
       "Graphics",
       "Cursors"
+    ],
+    "music.tense": [
+      "Audio",
+      "Music"
+    ],
+    "music.ending": [
+      "Audio",
+      "Music"
+    ],
+    "music.village": [
+      "Audio",
+      "Music"
+    ],
+    "music.pub": [
+      "Audio",
+      "Music"
+    ],
+    "music.house": [
+      "Audio",
+      "Music"
+    ],
+    "music.forest": [
+      "Audio",
+      "Music"
+    ],
+    "music.mine": [
+      "Audio",
+      "Music"
+    ],
+    "ambience.village": [
+      "Audio",
+      "Ambience"
+    ],
+    "ambience.pub": [
+      "Audio",
+      "Ambience"
+    ],
+    "ambience.house": [
+      "Audio",
+      "Ambience"
+    ],
+    "ambience.forest": [
+      "Audio",
+      "Ambience"
+    ],
+    "ambience.mine": [
+      "Audio",
+      "Ambience"
+    ],
+    "ambience.camp": [
+      "Audio",
+      "Ambience"
+    ],
+    "step.dwarf-earth.1": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.dwarf-earth.2": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.dwarf-stone.1": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.dwarf-stone.2": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.dwarf-wood.1": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.dwarf-wood.2": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.king.1": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.king.2": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.orc.1": [
+      "Audio",
+      "Footsteps"
+    ],
+    "step.orc.2": [
+      "Audio",
+      "Footsteps"
     ]
   }
 }
