@@ -6,11 +6,11 @@ import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, isPointleshPrefab, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
-import { PhaserAdventureLighting, PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
+import { PhaserAdventureAudioAssets, PhaserAdventureLighting, PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
-import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses } from './content';
+import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses, completeForestAssetManifest } from './content';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
 import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, introArrivalLine, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors } from './sprites';
@@ -184,10 +184,12 @@ class ForestAdventure extends Phaser.Scene {
   behaviors = new BehaviorRegistry<{ targetId: string; item?: ItemId }>();
   constructor() { super('forest-adventure'); }
   audio!: ForestSoundscape;
+  audioAssets!: PhaserAdventureAudioAssets;
   preload() { loadForestAssets(this, assets, import.meta.env.BASE_URL); }
   create() {
     gameScene = this;
     this.aiRuntime = new AiAssetRuntime(this, assets, { baseUrl: import.meta.env.BASE_URL });
+    this.audioAssets = new PhaserAdventureAudioAssets(this, this.aiRuntime, new URL(import.meta.env.BASE_URL, location.href).href);
     this.portrait = new ForestDialogPortrait(this, this.aiRuntime, el('dialog-portrait'), () => !this.started || modalOpen);
     this.cinematicPortrait = new ForestDialogPortrait(this, this.aiRuntime, el('cinematic-portrait'), () => !this.started || modalOpen);
     this.journal = new ForestJournal(this, this.aiRuntime, el('journal-notification'), el('clue-dot'), () => this.audio?.playSfx('journal-write', .5));
@@ -320,7 +322,7 @@ class ForestAdventure extends Phaser.Scene {
     this.installTools();
     this.render();
     el('loading').hidden = true;
-    this.audio = new ForestSoundscape(this, this.aiRuntime, () => this.audioState());
+    this.audio = new ForestSoundscape(this, this.aiRuntime, () => this.audioState(), this.audioAssets);
     setupControls();
     // Capture the actual opening camera and character pose, rather than a bare
     // room texture whose framing and cast would jump when the intro starts.
@@ -588,8 +590,8 @@ class ForestAdventure extends Phaser.Scene {
   private playInteractionSpeech(lines: InteractionSpeechLine[]) {
     const [line, ...remaining] = lines; if (!line) return;
     this.say(line.text); this.interactionSpeechQueue = remaining;
-    const asset = assets.assets[line.lineAssetId], key = this.aiRuntime.key(line.lineAssetId);
-    if (asset?.versions[asset.activeVersion]?.file && this.cache.audio.exists(key)) {
+    const key = this.audioAssets.key(line.lineAssetId);
+    if (this.cache.audio.exists(key)) {
       this.interactionSound = this.audio.playVoice(line.lineAssetId);
     }
   }
@@ -898,7 +900,7 @@ class ForestAdventure extends Phaser.Scene {
     });
     installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
       Object.assign(dialogs, manifest); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech();
-    }, onAiAssetsChange: next => { Object.assign(assets, next); this.aiRuntime.syncManifest(assets); this.sceneDesigner?.inspector.setAiAssets(assets); this.refreshCharacterAnimations(); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech(); } });
+    }, onAiAssetsChange: next => { Object.assign(assets, completeForestAssetManifest(next)); void this.audioAssets.syncManifest(assets).catch(error => toast(String(error))); this.aiRuntime.syncManifest(assets); this.sceneDesigner?.inspector.setAiAssets(assets); this.refreshCharacterAnimations(); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech(); } });
     const callbacks = this.aiRuntime.designerCallbacks();
     const refreshAtlas = (assetId: string, textureKey: string) => {
       if (!assetId.startsWith('background.')) return;
@@ -910,10 +912,12 @@ class ForestAdventure extends Phaser.Scene {
         target: document.querySelector<HTMLElement>('.game-shell')!,
         chromeHeight: () => document.body.classList.contains('game-fullscreen') ? 0 : 134,
       },
-      onPreview: (id, key, asset) => { callbacks.onPreview(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
-      onAssetReady: (id, key, asset) => { callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
+      onPreview: (id, key, asset) => { if (this.audioAssets.isAudio(asset)) { void this.audioAssets.select(id, key, asset).catch(error => toast(String(error))); return; } callbacks.onPreview(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
+      onAssetReady: (id, key, asset) => { if (this.audioAssets.isAudio(asset)) { void this.audioAssets.select(id, key, asset).catch(error => toast(String(error))); return; } callbacks.onAssetReady(id, key, asset); refreshAtlas(id, key); this.sceneDesigner?.inspector.setAiAssets({ ...assets, assets: { ...assets.assets, [id]: asset } }); this.refreshCharacterAnimations(); },
       onManifestUpdated: manifest => {
+        Object.assign(manifest, completeForestAssetManifest(manifest));
         assetDesignerManifest = manifest;
+        void this.audioAssets.syncManifest(manifest).catch(error => toast(String(error)));
         Object.assign(manifest, syncInteractionVoiceLines(interactions, manifest, interactionTargets(authoredScenes)));
         Object.assign(assets, manifest); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations();
       },

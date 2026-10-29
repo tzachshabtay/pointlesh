@@ -157,3 +157,17 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
     soundscape?.destroy(); globalThis.document = previousDocument; globalThis.localStorage = previousStorage;
   }
 });
+
+test('promotion manifests retain game defaults without replacing promoted choices or reviving deleted custom assets', async () => {
+  const { completeForestAssetManifest } = await tsImport('../src/content.ts', import.meta.url);
+  const door = structuredClone(assets.assets['sfx.door-close']);
+  door.activeVersion = 'chosen'; door.versions.chosen = { ...door.versions.original, file: 'art/chosen.mp3' };
+  const fresh = completeForestAssetManifest({ schemaVersion: 1, assets: { [door.id]: door }, assetPaths: { [door.id]: ['My sounds'] } });
+  assert.ok(fresh.assets['journal.quill']); assert.ok(fresh.assets['journal.quill.write']);
+  assert.ok(fresh.assets['cursor.crosshair']);
+  assert.equal(fresh.assets[door.id], door);
+  assert.deepEqual(fresh.assetPaths[door.id], ['My sounds']);
+  fresh.assets['custom.deleted'] = door;
+  const next = completeForestAssetManifest({ schemaVersion: 1, assets: { [door.id]: door } });
+  assert.equal(next.assets['custom.deleted'], undefined);
+});

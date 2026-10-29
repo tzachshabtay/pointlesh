@@ -271,3 +271,11 @@ export const scenes = addForestTransitions(withForestLighting(addLamps(addFirepl
   return [roomId, scene];
 })) }))))))));
 addForestInventoryPrefabs(scenes);
+
+// The authoring server can predate game-supplied assets. Reapply only game defaults,
+// never old user-created assets, when accepting a fresh server manifest.
+const gameAssetDefaults = structuredClone(assets);
+export function completeForestAssetManifest(manifest: AiAssetManifest): AiAssetManifest {
+  return { ...manifest, assets: { ...structuredClone(gameAssetDefaults.assets), ...manifest.assets },
+    assetPaths: { ...structuredClone(gameAssetDefaults.assetPaths), ...manifest.assetPaths } };
+}

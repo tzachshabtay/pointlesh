@@ -316,3 +316,18 @@ The resizable game view belongs to ai-assets' shared designer. `installAiAssetDe
 Configure `viewport` on `installAiAssetDesigner`, for example `{ target: gameShell, aspectRatio: 16 / 9, chromeHeight: () => 134 }` for an outer shell with controls. Pointlesh does not install or own another viewport controller. See the ai-assets designer documentation for the shared API.
 
 Configure `PhaserAdventureCursor` with `busy: { active: () => isUninterruptible(), appearance: { assetId: "cursor.busy", animateOnClick: false } }` to override normal cursors during uncancellable actions. Its linked `idle` clip loops automatically. Busy takes priority over retained click feedback, ignores clicks, and restores the resolved cursor immediately when the action finishes, even without moving the pointer. It only applies on game surfaces returned by `resolve`; designer controls remain native. Keep redirectable walking and dialog choices out of the busy predicate.
+
+### Live audio selections
+
+`PhaserAdventureAudioAssets` bridges the audio URLs emitted by the ai-assets
+Designer to Phaser's decoded audio cache. Create it after preload with the scene,
+`AiAssetRuntime`, and asset base URL. Route audio `onPreview` and `onAssetReady`
+callbacks to `select(id, url, asset)`, and use `audioAssets.key(id)` for playback.
+Call `syncManifest(manifest)` after accepting a manifest update to pick up
+recordings changed by other designers. These methods return promises; handle
+load failures in your UI. Non-audio callbacks still go to `runtime.designerCallbacks()`.
+
+Selection switches only after decoding succeeds, without pausing gameplay.
+Rapid selections cannot install older results over newer choices. A different
+key lets looping music crossfade while one-shot effects use the new recording
+on their next play. Metadata-only updates preserve an unpromoted audition.

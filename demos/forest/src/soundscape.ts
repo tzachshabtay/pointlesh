@@ -1,4 +1,5 @@
 import type Phaser from 'phaser';
+import type { PhaserAdventureAudioAssets } from '@pointlesh/phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import { FootstepCadence, footstepFor, soundtrackFor, type AudioWalker, type ForestAudioState } from './audio-state';
 
@@ -26,7 +27,7 @@ export class ForestSoundscape {
   private shot = '';
   private variation = 0;
   private hidden = document.hidden;
-  constructor(private scene: Phaser.Scene, private runtime: AiAssetRuntime, private state: () => ForestAudioState) {
+  constructor(private scene: Phaser.Scene, private runtime: AiAssetRuntime, private state: () => ForestAudioState, private audioAssets?: PhaserAdventureAudioAssets) {
     try {
       const saved = JSON.parse(localStorage.getItem(preferenceKey) ?? '{}');
       if (typeof saved.enabled === 'boolean') this.settings.enabled = saved.enabled;
@@ -58,7 +59,7 @@ export class ForestSoundscape {
   }
   /** Both dialog lines and simple interaction speech use the Voices channel. */
   playVoice(id: string): Sound | undefined {
-    const key = this.runtime.key(id);
+    const key = this.audioKey(id);
     if (!this.scene.cache.audio.exists(key)) return;
     const gain = this.assetVolume(id);
     const sound = this.scene.sound.add(key, { volume: gain * this.settings.voices }) as Sound;
@@ -70,7 +71,7 @@ export class ForestSoundscape {
   }
   playSfx(name: string, volume = .75): Sound | undefined {
     if (this.hidden || !this.settings.enabled || this.scene.sound.locked) return;
-    const id = `sfx.${name}`, key = this.runtime.key(id);
+    const id = `sfx.${name}`, key = this.audioKey(id);
     if (!this.scene.cache.audio.exists(key)) return;
     const gain = clamp(volume) * this.assetVolume(id);
     const sound = this.scene.sound.add(key, { volume: gain * this.settings.sfx, loop: false }) as Sound;
@@ -87,7 +88,7 @@ export class ForestSoundscape {
     for (const hit of this.hits.keys()) hit.destroy(); this.hits.clear(); this.cadence.reset();
   }
   private start(id: string, channel: Stem['channel']): Stem | undefined {
-    const key = this.runtime.key(id);
+    const key = this.audioKey(id);
     if (!this.scene.cache.audio.exists(key)) return;
     const sound = this.scene.sound.add(key, { volume: 0, loop: false }) as Sound;
     if (!sound.play()) { sound.destroy(); return; }
@@ -95,7 +96,7 @@ export class ForestSoundscape {
   }
   private select(id: string | undefined, channel: Stem['channel']) {
     const current = this.stems.find(stem => stem.channel === channel && !stem.retiring);
-    const key = id ? this.runtime.key(id) : undefined;
+    const key = id ? this.audioKey(id) : undefined;
     if (current?.id === id && current?.key === key && current) {
       // Overlap the end with the next pass, also smoothing generated loop seams.
       if (!current.sound.isPlaying || current.sound.totalDuration > 2 && current.sound.seek >= current.sound.totalDuration - 1.5) {
@@ -108,7 +109,7 @@ export class ForestSoundscape {
   }
   private hit(walker: AudioWalker, room: ForestAudioState['room']) {
     const id = `${footstepFor(walker.character, room)}.${++this.variation % 2 + 1}`;
-    const key = this.runtime.key(id);
+    const key = this.audioKey(id);
     if (!this.scene.cache.audio.exists(key) || this.hits.size >= 12) return;
     const gain = (walker.character === 'borin' ? .65 : .45) * this.assetVolume(id);
     const sound = this.scene.sound.add(key, { volume: this.settings.sfx * gain,
@@ -117,7 +118,8 @@ export class ForestSoundscape {
     sound.once('complete', () => { this.hits.delete(sound); sound.destroy(); });
     if (!sound.play()) { this.hits.delete(sound); sound.destroy(); }
   }
-  private assetVolume(id: string) { return clamp(this.runtime.manifest.assets[id]?.audioPlayback?.volume ?? 1); }
+  private audioKey(id: string) { return this.audioAssets?.key(id) ?? this.runtime.key(id); }
+  private assetVolume(id: string) { return clamp((this.audioAssets?.asset(id) ?? this.runtime.manifest.assets[id])?.audioPlayback?.volume ?? 1); }
   private update(_time: number, delta: number) {
     if (this.hidden || !this.settings.enabled || this.scene.sound.locked) { this.cadence.reset(); return; }
     const state = this.state(), dt = Math.min(delta, 100);
