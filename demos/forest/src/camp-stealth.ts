@@ -11,7 +11,7 @@ export function assertCampStealthCheckpoint(value: unknown): asserts value is Ca
 /** The game's one permitted trip out of cover while Grub is awake. */
 export class CampStealth {
   private state?: CampStealthCheckpoint;
-  constructor(private readonly character: CharacterController, private readonly options: { poison: () => string; returned: (message?: string) => void; pourDurationMs?: () => number; canPour?: () => boolean; onPour?: () => void }) {}
+  constructor(private readonly character: CharacterController, private readonly options: { poison: () => string; returned: (message?: string) => void; pourDurationMs?: () => number; canPour?: () => boolean; onPour?: () => void; pourCueMs?: () => number | undefined }) {}
   get busy() { return !!this.state && this.state.phase !== 'peek'; }
   get peeking() { return this.state?.phase === 'peek'; }
   get pouring() { return this.state?.phase === 'pour'; }
@@ -50,7 +50,8 @@ export class CampStealth {
     s.elapsedMs += deltaMs;
     if (s.phase === 'pour') {
       const duration = this.options.pourDurationMs?.() ?? 1800;
-      if (before < duration * .3 && s.elapsedMs >= duration * .3) this.options.onPour?.();
+      const cue = this.options.pourCueMs?.();
+      if (cue !== undefined && (before < cue || cue === 0 && before === 0) && s.elapsedMs >= cue) this.options.onPour?.();
       if (s.elapsedMs < duration) return;
       s.message = this.options.poison(); this.returnToCover(); return;
     }

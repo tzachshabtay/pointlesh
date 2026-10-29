@@ -1,3 +1,5 @@
+import type { AiAssetAnimation } from '@ai-game-assets/core';
+import { crossedAnimationTag } from '@pointlesh/phaser/animation-tags';
 import { assertCharacterSnapshot, type CharacterController, type CharacterSnapshot, type CharacterAnimations, type CharacterAnimationAssignment, type Direction, type Point } from '@pointlesh/core';
 
 const PATROL_PHASES = ['idle-front', 'idle-back', 'walk-left', 'drink', 'walk-right'] as const;
@@ -5,7 +7,7 @@ export const GUARD_PHASES = [...PATROL_PHASES, 'collapse', 'asleep'] as const;
 export type GuardPhase = typeof GUARD_PHASES[number];
 const LEGACY_TURN_SUCCESSORS = { 'face-back': 'idle-back', 'face-left': 'walk-left', 'face-right': 'walk-right', 'face-front': 'idle-front' } as const;
 export type GuardPatrolSnapshot = { phase: GuardPhase | keyof typeof LEGACY_TURN_SUCCESSORS; elapsedMs: number; character: CharacterSnapshot };
-type GuardPlayback = { sync(): void; update(deltaMs: number): void; readonly animationDurationMs: number };
+type GuardPlayback = { sync(): void; update(deltaMs: number): void; readonly animationDurationMs: number; readonly animation?: AiAssetAnimation };
 export const GUARD_HOME_POINT = 'camp.guard.cage';
 export const GUARD_DRINK_POINT = 'camp.guard.cauldron';
 
@@ -79,8 +81,7 @@ export class GuardPatrol {
         const step = Math.min(remaining, Math.max(0, duration - this.elapsedMs));
         const before = this.elapsedMs;
         this.playback.update(step); this.elapsedMs += step; remaining -= step;
-        const cueAt = duration * (this.phase === 'drink' ? .35 : .72);
-        if (before < cueAt && this.elapsedMs >= cueAt) {
+        if (crossedAnimationTag(this.playback.animation, this.phase === 'drink' ? 'slurp' : 'fall', before, this.elapsedMs)) {
           if (this.phase === 'drink') this.sound('guard-slurp');
           if (this.phase === 'collapse') this.sound('guard-fall');
         }

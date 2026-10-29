@@ -1,5 +1,6 @@
 import type Phaser from 'phaser';
 import { applyAiAnimationFrameTransform, type AiAssetRuntime, type AiAssetAnimationPlayback, type AiAssetTextureBinding } from '@ai-game-assets/phaser';
+import { crossedAnimationTag } from './animation-tags.js';
 
 export type AdventureIconOptions = {
   assetId: string;
@@ -12,6 +13,8 @@ export type AdventureIconOptions = {
   paused?: () => boolean;
   /** Optional linked or direct animation to loop while no click/action animation is playing. */
   idleAnimation?: string;
+  /** Emitted as a tagged frame is reached during playback, never during refresh. */
+  onFrameTag?: (tag: string) => void;
 };
 
 /** An AI Assets image/animation rendered into HTML: inventory, cursors or portraits. */
@@ -86,8 +89,12 @@ export class PhaserAdventureIcon {
   private update = (_time: number, delta: number) => {
     if (this.destroyed) return;
     if (this.state) {
+      const before = this.elapsed;
       if (!this.options.paused?.()) this.elapsed += Math.max(0, delta);
       const animation = this.playback?.animation;
+      for (const tag of new Set(animation?.frameTimings?.flatMap(frame => frame.tag ? [frame.tag] : []) ?? [])) {
+        if (crossedAnimationTag(animation, tag, before, this.elapsed)) this.options.onFrameTag?.(tag);
+      }
       const duration = animation?.frames.reduce((sum, _frame, index) => sum + (animation.frameTimings?.[index]?.delayMs ?? 1000 / animation.frameRate), 0) ?? 0;
       if (duration > 0 && this.loop) this.elapsed %= duration;
       else if (this.elapsed >= duration) { this.state = undefined; this.elapsed = 0; this.refresh(); }

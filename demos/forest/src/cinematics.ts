@@ -4,6 +4,7 @@ import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject, type Point, type Direction } from '@pointlesh/core';
 import { intro as introScript, ending as endingScript, type RoomId } from './story';
 import { spriteWalker } from './soundscape';
+import { animationDuration, animationTagTime } from '@pointlesh/phaser/animation-tags';
 import { cinematicAudioCue } from './action-audio';
 import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
@@ -78,6 +79,7 @@ export class ForestCinematic {
   private readonly props: Phaser.GameObjects.Graphics;
   private readonly cageDoor: Phaser.GameObjects.Sprite;
   private doorBinding?: PhaserAdventureCharacter;
+  private cageAnimation: 'open' | 'close' = 'open';
   private doorDefinition?: ResolvedPointleshObject;
   private overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
   private ambient: { sprite: Phaser.GameObjects.Sprite; binding: PhaserAdventureObject; playing: boolean }[] = [];
@@ -136,8 +138,7 @@ export class ForestCinematic {
   render(stepIndex: number, elapsedMs: number): void {
     if (this.destroyed) return;
     if (!Number.isInteger(stepIndex) || stepIndex < 0 || stepIndex > CINEMATIC_DURATIONS[this.kind].length || !Number.isFinite(elapsedMs) || elapsedMs < 0) throw new Error('Invalid cinematic checkpoint');
-    const cue = cinematicAudioCue(this.kind, stepIndex, this.stepIndex, this.elapsedMs, elapsedMs, CINEMATIC_DURATIONS[this.kind][stepIndex] ?? 0);
-    if (cue && this.visible) this.playSound?.(cue);
+    const previousStep = this.stepIndex, previousElapsed = this.elapsedMs;
     this.stepIndex = stepIndex;
     this.elapsedMs = elapsedMs;
     if (stepIndex === CINEMATIC_DURATIONS[this.kind].length) { this.setVisible(false); return; }
@@ -157,6 +158,9 @@ export class ForestCinematic {
     const t = clamp(elapsedMs / duration);
     if (this.kind === 'intro') this.intro(stepIndex, t);
     else this.ending(stepIndex, t);
+    const cue = cinematicAudioCue(this.kind, stepIndex, previousStep, previousElapsed, elapsedMs, duration,
+      { cageClose: this.cageAnimation === 'close' ? this.doorBinding?.animation : undefined, pickaxe: this.cast.get('borin')?.binding?.animation });
+    if (cue && this.visible) this.playSound?.(cue);
     this.frameAboveCaption();
     const roomSize = this.definitions.get(this.room)!;
     this.outdoorAtmosphere.render(this.room, elapsedMs, roomSize.width, roomSize.height);
@@ -284,9 +288,8 @@ export class ForestCinematic {
   private roomDoor(id: string, progress: number): void {
     const door = this.roomDoors.find(door => door.object.id === id);
     if (!door) return;
-    const linked = this.assets.manifest.assets[door.object.assetId]?.linkedAnimationAssets?.open?.assetId;
-    const clip = linked && this.assets.manifest.assets[linked]?.animations?.[0];
-    const duration = clip ? clip.frames.reduce((sum, _, i) => sum + (clip.frameTimings?.[i]?.delayMs ?? 1000 / clip.frameRate), 0) : 1000;
+    door.binding.sync();
+    const duration = animationDuration(door.binding.animation);
     door.binding.seek(clamp(progress) * duration); door.sprite.setDepth(-900);
     const area = this.definitions.get(this.room)?.areas.find(area => area.id === `${id}.frame`);
     door.foreground.sync(Number(door.sprite.frame.name), Number(area?.properties.baseline ?? Math.max(...doorWorldAperture(door.foreground.door).map(p => p.y)) + 5));
@@ -347,7 +350,8 @@ export class ForestCinematic {
     }
   }
 
-  private cage(openness: number, elapsedMs?: number): void {
+  private cage(openness: number, elapsedMs?: number, animation: 'open' | 'close' = 'open'): void {
+    this.cageAnimation = animation;
     this.doorDefinition = this.definitions.get('camp')?.objects.find(object => object.id === CAGE_DOOR_ID);
     const door = this.doorDefinition;
     if (!door) return;
@@ -359,11 +363,11 @@ export class ForestCinematic {
           baseScale: () => ({ x: this.doorDefinition!.scaleX, y: this.doorDefinition!.scaleY }),
           origin: () => ({ x: this.doorDefinition!.anchorX, y: 1 - this.doorDefinition!.anchorY }),
           angle: () => this.doorDefinition!.rotation,
-          animations: () => rescueAnimation(this.doorDefinition!.assetId, 'open'),
+          animations: () => rescueAnimation(this.doorDefinition!.assetId, this.cageAnimation),
         });
     }
     this.doorBinding.renderPose({ position: door.position, activity: 'idle', facing: 'down' },
-      elapsedMs ?? clamp(openness) * this.doorBinding.animationDurationMs, { loop: false });
+      elapsedMs ?? clamp(animation === 'close' ? 1 - openness : openness) * this.doorBinding.animationDurationMs, { loop: false });
     this.cageDoor.setVisible(door.enabled);
   }
 
@@ -416,7 +420,7 @@ export class ForestCinematic {
       this.pose('king', { x: kingX, y: kingY, walking: t < 0.70, facingLeft: t > 0.74 });
       this.pose('guard-front', { x: lerp(651, 872, entry), y: 420, walking: t < 0.70, facingLeft: t > 0.7 });
       this.pose('guard-rear', { x: lerp(433, 616, entry), y: 437, walking: t < 0.70 });
-      this.cage(1 - segment(t, 0.69, 0.87));
+      this.cage(1 - segment(t, 0.69, 0.87), undefined, 'close');
       this.mist(0x75928b, 0.045);
     }
   }
@@ -436,7 +440,7 @@ export class ForestCinematic {
       this.pose('borin', { ...sampleWalk(paths.approach, walkLength(paths.approach) * arrive),
         walking: approaching, ...(approaching ? {} : { action: 'pickaxe-back', actionElapsedMs: this.elapsedMs - PICKAXE_START_MS }) });
       this.sleepingGuard();
-      this.cage(0, Math.max(0, this.elapsedMs - PICKAXE_START_MS - PICKAXE_IMPACT_MS));
+      this.cage(0, Math.max(0, this.elapsedMs - PICKAXE_START_MS - (animationTagTime(this.cast.get('borin')?.binding?.animation, 'strike') ?? PICKAXE_IMPACT_MS)));
       this.mist(0xe5b05b, 0.025);
     } else if (step === 1) {
       this.shot('camp', 'GOOD KNOTS · AN OPEN DOOR', lerp(1.26, 1.16, t), 570, 298);

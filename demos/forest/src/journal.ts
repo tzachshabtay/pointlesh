@@ -27,7 +27,7 @@ export class ForestJournal {
   readonly icon: PhaserAdventureIcon;
   constructor(private scene: Phaser.Scene, private runtime: AiAssetRuntime,
     private notification: HTMLElement, private unreadDot: HTMLElement, private onWrite?: () => void) {
-    this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: JOURNAL_QUILL_ASSET, width: 104, height: 104 });
+    this.icon = new PhaserAdventureIcon(scene, runtime, { assetId: JOURNAL_QUILL_ASSET, width: 104, height: 104, onFrameTag: tag => { if (tag === 'write') this.onWrite?.(); } });
     notification.querySelector('.journal-quill')!.replaceChildren(this.icon.canvas);
     this.syncPaper();
     scene.events.once('shutdown', this.destroy);
@@ -66,7 +66,6 @@ export class ForestJournal {
     if (!note) { this.notification.hidden = true; return; }
     this.notification.querySelector('.journal-notification-note')!.textContent = note;
     this.notification.hidden = false;
-    this.onWrite?.();
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduced) this.icon.play('write');
     const move = (y: number) => reduced ? 'none' : `translateY(${y}px)`;

@@ -7,6 +7,7 @@ export * from "./effects.js";
 export * from "./designer.js";
 export * from "./assets.js";
 export * from './audio-assets.js';
+export * from './animation-tags.js';
 export * from "./texture-scaling.js";
 export * from "./dialog.js";
 export * from "./interaction.js";

@@ -15,6 +15,10 @@
     "./lighting": {
       "types": "./dist/lighting.d.ts",
       "import": "./dist/lighting.js"
+    },
+    "./animation-tags": {
+      "types": "./dist/animation-tags.d.ts",
+      "import": "./dist/animation-tags.js"
     }
   },
   "files": [

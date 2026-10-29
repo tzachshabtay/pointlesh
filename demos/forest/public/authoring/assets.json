@@ -3999,6 +3999,26 @@
             13,
             14,
             15
+          ],
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "slurp"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
           ]
         }
       ],
@@ -6802,7 +6822,8 @@
               "offsetY": 0,
               "scaleX": 1,
               "scaleY": 1,
-              "rotation": 0
+              "rotation": 0,
+              "tag": "slurp"
             },
             {
               "delayMs": 125,
@@ -6993,7 +7014,8 @@
               "delayMs": 150
             },
             {
-              "delayMs": 150
+              "delayMs": 150,
+              "tag": "fall"
             },
             {
               "delayMs": 500
@@ -7149,7 +7171,8 @@
           "repeat": 0,
           "frameTimings": [
             {
-              "delayMs": 200
+              "delayMs": 200,
+              "tag": "tie"
             },
             {
               "delayMs": 220
@@ -7237,7 +7260,8 @@
               "delayMs": 240
             },
             {
-              "delayMs": 240
+              "delayMs": 240,
+              "tag": "strike"
             },
             {
               "delayMs": 120
@@ -7377,6 +7401,10 @@
         "open": {
           "label": "Break lock · open door",
           "assetId": "cage-door.open"
+        },
+        "close": {
+          "label": "Close",
+          "assetId": "cage-door.close"
         }
       },
       "tags": [
@@ -9156,7 +9184,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -9208,7 +9248,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -9293,7 +9345,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -9345,7 +9409,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -9430,7 +9506,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -9482,7 +9570,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -9567,7 +9667,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -9619,7 +9731,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -9704,7 +9828,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -9756,7 +9892,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -9841,7 +9989,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -9893,7 +10053,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -9978,7 +10150,19 @@
             7
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "tag": "open"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
         }
       ],
       "settings": {
@@ -10030,7 +10214,19 @@
             0
           ],
           "frameRate": 8,
-          "repeat": 0
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "tag": "shut"
+            }
+          ]
         }
       ],
       "settings": {
@@ -10196,7 +10392,8 @@
               "delayMs": 160
             },
             {
-              "delayMs": 220
+              "delayMs": 220,
+              "tag": "glow"
             },
             {
               "delayMs": 220
@@ -10922,7 +11119,8 @@
               "delayMs": 225
             },
             {
-              "delayMs": 225
+              "delayMs": 225,
+              "tag": "pour"
             },
             {
               "delayMs": 225
@@ -13681,6 +13879,232 @@
           "createdAt": "2026-10-27T00:00:00.000Z"
         }
       }
+    },
+    "cage-door.close": {
+      "id": "cage-door.close",
+      "kind": "animation",
+      "prompt": "The original narrow wooden barred cage door swings shut around its fixed left hinge, from fully open to fully closed. Eight frames. Preserve the original timber colors, bars, rails, knots and perspective. Transparent through the bars; no stationary cage, scenery or lock-breaking action.",
+      "dimensions": {
+        "width": 960,
+        "height": 460
+      },
+      "frameGrid": {
+        "frameWidth": 240,
+        "frameHeight": 230,
+        "columns": 4,
+        "rows": 2,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "cage-door.close",
+          "frames": [
+            7,
+            6,
+            5,
+            4,
+            3,
+            2,
+            1,
+            0
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {
+              "delayMs": 500
+            },
+            {
+              "delayMs": 200
+            },
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 160
+            },
+            {
+              "delayMs": 140
+            },
+            {
+              "delayMs": 100
+            },
+            {
+              "delayMs": 100,
+              "tag": "shut"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "rescue",
+      "versions": {
+        "rescue": {
+          "name": "rescue",
+          "file": "art/objects/cage-door-open.png",
+          "prompt": "The original narrow wooden barred cage door: padlock shackle breaks and falls, then the door swings outward left around its fixed left hinge. Eight frames. Preserve timber, bars, rails, knots and perspective. Transparent through the bars, no stationary cage or scenery.",
+          "model": "imagegen",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+        }
+      },
+      "tags": [
+        "forest",
+        "rescue"
+      ]
+    },
+    "journal.scroll": {
+      "id": "journal.scroll",
+      "kind": "image",
+      "prompt": "An unrolled blank parchment scroll matching the journal quill, warm golden paper, worn irregular pixel-art edges, compact curled top and bottom. Transparent background. No text or props.",
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "tags": [
+        "forest",
+        "journal",
+        "ui"
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/journal/scroll.png",
+          "model": "imagegen",
+          "createdAt": "2026-10-03T00:00:00.000Z",
+          "prompt": "Blank parchment scroll, using the journal quill as a style reference.",
+          "notes": "Generated with the built-in image_gen tool. Full prompt in art-source/journal/scroll.txt."
+        }
+      }
+    },
+    "journal.quill": {
+      "id": "journal.quill",
+      "kind": "image",
+      "prompt": "An ivory feather quill writing three short ink lines on warm parchment. Crisp fantasy pixel art, transparent background, stationary page, no hand or readable text.",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent"
+      },
+      "tags": [
+        "forest",
+        "journal",
+        "ui"
+      ],
+      "linkedAnimationAssets": {
+        "write": {
+          "assetId": "journal.quill.write",
+          "label": "Write a note"
+        }
+      },
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/journal/quill.png",
+          "prompt": "An ivory feather quill writing three short ink lines on warm parchment. Crisp fantasy pixel art, transparent background, stationary page, no hand or readable text.",
+          "model": "imagegen",
+          "createdAt": "2026-10-02T00:00:00.000Z",
+          "notes": "Generated with the built-in image_gen tool. Full prompt in art-source/journal/quill-writing.txt; pack with scripts/pack-journal-art.mjs."
+        }
+      }
+    },
+    "journal.quill.write": {
+      "id": "journal.quill.write",
+      "kind": "animation",
+      "prompt": "An ivory feather quill writing three short ink lines on warm parchment. Crisp fantasy pixel art, transparent background, stationary page, no hand or readable text. Sixteen sequential writing frames, four columns by four rows. Finish by lifting the quill.",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 4,
+        "rows": 4,
+        "frameCount": 16
+      },
+      "animations": [
+        {
+          "key": "journal.quill.write",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "frameTimings": [
+            {},
+            {},
+            {
+              "tag": "write"
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
+        }
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "tags": [
+        "forest",
+        "journal",
+        "ui"
+      ],
+      "activeVersion": "original",
+      "versions": {
+        "original": {
+          "name": "original",
+          "file": "art/journal/quill.write.png",
+          "prompt": "An ivory feather quill writing three short ink lines on warm parchment. Crisp fantasy pixel art, transparent background, stationary page, no hand or readable text.",
+          "model": "imagegen",
+          "createdAt": "2026-10-02T00:00:00.000Z",
+          "notes": "Generated with the built-in image_gen tool. Full prompt in art-source/journal/quill-writing.txt; pack with scripts/pack-journal-art.mjs."
+        }
+      }
     }
   },
   "styleGuide": {
@@ -14044,11 +14468,13 @@
     ],
     "cage-door.open": [
       "Graphics",
-      "Objects"
+      "Objects",
+      "Doors"
     ],
     "cage-door": [
       "Graphics",
-      "Objects"
+      "Objects",
+      "Doors"
     ],
     "background.camp": [
       "Graphics",
@@ -14950,6 +15376,26 @@
     "sfx.lock-break": [
       "Audio",
       "SFX"
+    ],
+    "cage-door.close": [
+      "Graphics",
+      "Objects",
+      "Doors"
+    ],
+    "journal.scroll": [
+      "Graphics",
+      "Interface",
+      "Journal"
+    ],
+    "journal.quill": [
+      "Graphics",
+      "Interface",
+      "Journal"
+    ],
+    "journal.quill.write": [
+      "Graphics",
+      "Interface",
+      "Journal"
     ]
   }
 }

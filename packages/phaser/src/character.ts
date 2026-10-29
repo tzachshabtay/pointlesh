@@ -126,6 +126,8 @@ export class PhaserAdventureCharacter {
   /** Refresh after external asset changes; normal manifest/preview replacements are also detected automatically. */
   refreshAnimation(): void { this.playbackSignature = undefined; this.sync(); }
 
+  /** Currently rendered clip, including live designer preview metadata. */
+  get animation() { return this.playback?.animation; }
   /** One full cycle of the currently selected clip, including authored per-frame holds. */
   get animationDurationMs(): number {
     const animation = this.playback?.animation;

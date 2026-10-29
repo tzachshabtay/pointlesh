@@ -331,3 +331,12 @@ Selection switches only after decoding succeeds, without pausing gameplay.
 Rapid selections cannot install older results over newer choices. A different
 key lets looping music crossfade while one-shot effects use the new recording
 on their next play. Metadata-only updates preserve an unpromoted audition.
+
+
+Animation frame tags can drive game events with `animationTagTime`, `crossedAnimationTag`,
+and `crossedAnimationFrameTag` (also available from `@pointlesh/phaser/animation-tags`).
+They use playback slots and authored frame delays, including reversed sheets. Character
+and object bindings expose their currently rendered `animation`, including designer
+preview edits. Compare the time before/after advancing an action to emit its cue once;
+restoring or seeking a checkpoint should not emit past cues. `PhaserAdventureIcon`
+also accepts `onFrameTag` for events during normal playback.

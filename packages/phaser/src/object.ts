@@ -42,6 +42,8 @@ export class PhaserAdventureObject {
     this.render(object);
   }
 
+  /** Currently rendered clip, including live designer preview metadata. */
+  get animation() { return this.renderer?.animation; }
   /** Refresh authored properties without restarting the current animation. */
   sync(): void {
     if (this.destroyed) return;

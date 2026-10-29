@@ -1,3 +1,4 @@
+import { seedAudioFrameTags } from './audio-frame-tags';
 import { defineAiAssets, type AiAssetDefinition, type AiAssetManifest } from '@ai-game-assets/core';
 import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
 import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
@@ -274,6 +275,7 @@ addForestInventoryPrefabs(scenes);
 
 // The authoring server can predate game-supplied assets. Reapply only game defaults,
 // never old user-created assets, when accepting a fresh server manifest.
+seedAudioFrameTags(assets);
 const gameAssetDefaults = structuredClone(assets);
 export function completeForestAssetManifest(manifest: AiAssetManifest): AiAssetManifest {
   return { ...manifest, assets: { ...structuredClone(gameAssetDefaults.assets), ...manifest.assets },

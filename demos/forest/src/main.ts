@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
 import { loadForestAssets } from './asset-loading';
-import { minerSipCue } from './action-audio';
+import { animationDuration, animationTagTime, crossedAnimationTag, crossedAnimationFrameTag } from '@pointlesh/phaser/animation-tags';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
@@ -215,6 +215,7 @@ class ForestAdventure extends Phaser.Scene {
       pourDurationMs: () => this.binding.animationDurationMs || POUR_DURATION_MS,
       canPour: () => guardLookingAway(this.story),
       onPour: () => this.audio.playSfx('brew-pour'),
+      pourCueMs: () => animationTagTime(this.binding.animation, 'pour'),
       poison: () => {
         const result = finishPouringBrew(this.story);
         if (!this.story.inventory.includes('sleepyStout')) this.selected = undefined;
@@ -225,8 +226,12 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.roomTransition = new RoomTransitionController(this.character, {
       enterRoom: portal => this.changeRoom(portal.roomId as RoomId, false, true),
-      onDoor: (action, portal) => {
-        if (portal.doorId === 'village.door.village-house' || portal.doorId === 'house.door.house') this.audio?.playSfx(`door-${action}`);
+      onDoorProgress: (action, portal, before, after) => {
+        const binding = this.objectAnimations.get(portal.doorId!);
+        binding?.sync(); // Resolve the current linked clip, including unpromoted frame-tag edits.
+        const clip = binding?.animation, duration = animationDuration(clip);
+        if (crossedAnimationTag(clip, action === 'close' ? 'shut' : 'open',
+          (action === 'close' ? 1 - before : before) * duration, (action === 'close' ? 1 - after : after) * duration)) this.audio?.playSfx(`door-${action}`);
       },
       onComplete: () => {
         if (this.introArrival === 'walking') {
@@ -567,7 +572,7 @@ class ForestAdventure extends Phaser.Scene {
     if (selected && !this.story.inventory.includes(selected)) this.selected = undefined;
     if (result.room) this.changeRoom(result.room);
     if (result.dialog) { this.conversationActive = true; this.conversation.start(result.dialog); }
-    if (result.action === 'tie-guard') { this.audio.playSfx('rope-tie'); this.epoch++; this.character.stop(); this.character.face('up'); this.renderTyingGuard(); }
+    if (result.action === 'tie-guard') { this.epoch++; this.character.stop(); this.character.face('up'); this.renderTyingGuard(); }
     if (result.text) this.say(result.text, result.speaker);
     if (result.ending) {
       const camera = this.cameras.main;
@@ -806,9 +811,8 @@ class ForestAdventure extends Phaser.Scene {
         : (this.campRestricted() || this.campStealth?.busy) && object.id === 'camp.door.camp' ? PEEK_DOOR_OPEN : 0;
       // Seeking shares the normal object renderer and supports live previews.
       const key = this.transitionDoorKey(object.id);
-      const linked = assets.assets[object.assetId]?.linkedAnimationAssets?.[key]?.assetId;
-      const clip = linked && assets.assets[linked]?.animations?.[0];
-      const duration = clip ? clip.frames.reduce((sum, _frame, i) => sum + (clip.frameTimings?.[i]?.delayMs ?? 1000 / clip.frameRate), 0) : 1000;
+      animation?.sync();
+      const duration = animationDuration(animation?.animation);
       animation?.seek((key === 'close' ? 1 - progress : progress) * duration);
       sprite?.setDepth(-900);
       const door = forestDoors.find(door => doorObjectId(door) === object.id);
@@ -847,7 +851,9 @@ class ForestAdventure extends Phaser.Scene {
   }
   updateTyingGuard(deltaMs: number): void {
     if (!this.story.tyingGuard) return;
+    const before = this.story.tyingGuard.elapsedMs;
     this.story.tyingGuard.elapsedMs += deltaMs;
+    if (crossedAnimationTag(this.binding.animation, 'tie', before, this.story.tyingGuard.elapsedMs)) this.audio.playSfx('rope-tie');
     this.renderTyingGuard();
     if (this.story.tyingGuard.elapsedMs < this.binding.animationDurationMs) return;
     const result = finishTyingGuard(this.story);
@@ -999,9 +1005,7 @@ class ForestAdventure extends Phaser.Scene {
       this.character.finishSpeech(); el('speaker').textContent = 'Borin'; el('speech').textContent = turn.decision.prompt; el('dialog-next').hidden = true;
       this.showDialogPortrait('borin', false);
       for (const option of turn.options) el('choices').append(button(option.text, () => {
-        const opening = !!this.story.chestOpening;
         applyDialogChoice(this.story, option.id);
-        if (!opening && this.story.chestOpening) this.audio.playSfx('chest-open');
         this.conversation.choose(option.id); this.render();
       }));
     }
@@ -1233,7 +1237,7 @@ class ForestAdventure extends Phaser.Scene {
     if (endingOpening && (!Number.isFinite(endingOpening.position?.x) || !Number.isFinite(endingOpening.position?.y) ||
       !['up', 'down', 'left', 'right', 'up-left', 'up-right', 'down-left', 'down-right'].includes(endingOpening.facing) ||
       !Number.isFinite(endingOpening.zoom) || endingOpening.zoom <= 0 || !Number.isFinite(endingOpening.x) || !Number.isFinite(endingOpening.y))) throw new Error('Invalid ending opening pose');
-    if (opening !== undefined && (!opening || !Number.isFinite(opening.elapsedMs) || opening.elapsedMs < 0 || opening.elapsedMs >= CHEST_OPEN_DURATION_MS || save.roomId !== 'mine' || !save.flags.knowsPassword || save.flags.chestOpen || save.flags.tookPickaxe)) throw new Error('Invalid chest-opening checkpoint');
+    if (opening !== undefined && (!opening || !Number.isFinite(opening.elapsedMs) || opening.elapsedMs < 0 || save.roomId !== 'mine' || !save.flags.knowsPassword || save.flags.chestOpen || save.flags.tookPickaxe)) throw new Error('Invalid chest-opening checkpoint');
     const tying = save.extensions.tyingGuard as { elapsedMs: number } | undefined;
     if (tying !== undefined && (!tying || !Number.isFinite(tying.elapsedMs) || tying.elapsedMs < 0 || save.roomId !== 'camp' || !save.flags.guardAsleep || save.flags.guardBound || !save.inventory.includes('rope'))) throw new Error('Invalid rope-tying checkpoint');
     const checkDialog = new AdventureDialog(dialogs, assets); checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
@@ -1296,8 +1300,10 @@ class ForestAdventure extends Phaser.Scene {
       }
     }
     if (!modalOpen && this.story.chestOpening) {
+      const before = this.story.chestOpening.elapsedMs;
       this.story.chestOpening.elapsedMs += Math.min(delta, 100);
-      if (this.story.chestOpening.elapsedMs >= CHEST_OPEN_DURATION_MS) { finishOpeningChest(this.story); this.render(); }
+      if (crossedAnimationTag(this.objectAnimations.get('tool-chest')?.animation, 'glow', before, this.story.chestOpening.elapsedMs)) this.audio.playSfx('chest-open');
+      if (this.story.chestOpening.elapsedMs >= (animationDuration(this.objectAnimations.get('tool-chest')?.animation) || CHEST_OPEN_DURATION_MS)) { finishOpeningChest(this.story); this.render(); }
     }
     if (!modalOpen) this.updateTyingGuard(Math.min(delta, 100));
     const paused = modalOpen || !!this.cutsceneCrossfade || !!this.story.tyingGuard || !!this.story.chestOpening || this.story.introStep < intro.length || this.story.endingStep >= 0;
@@ -1335,7 +1341,7 @@ class ForestAdventure extends Phaser.Scene {
         const animation = npc.sprite.anims.currentAnim, frame = npc.sprite.anims.currentFrame?.index ?? 0;
         npc.binding.update(Math.min(delta, 100));
         if (npc.actorName === 'miner' && !speaking && npc.controller.state.activity === 'idle' && npc.controller.state.facing === 'down' &&
-          animation && animation === npc.sprite.anims.currentAnim && minerSipCue(frame, npc.sprite.anims.currentFrame?.index ?? 0, animation.frames.length)) {
+          animation && animation === npc.sprite.anims.currentAnim && crossedAnimationFrameTag(npc.binding.animation, 'slurp', frame, npc.sprite.anims.currentFrame?.index ?? 0)) {
           this.audio.playSfx('miner-slurp', .55);
         }
       }

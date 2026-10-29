@@ -64,6 +64,7 @@ export class RoomTransitionController {
     onComplete?: () => void;
     onBlocked?: () => void;
     onDoor?: (action: 'open' | 'close', portal: RoomPortal) => void;
+    onDoorProgress?: (action: 'open' | 'close', portal: RoomPortal, before: number, after: number) => void;
   }) {}
   get active(): boolean { return !!this.state; }
   get portal(): RoomPortal | undefined { return this.state && (this.state.phase.includes('entry') ? this.state.to : this.state.from); }
@@ -112,7 +113,7 @@ export class RoomTransitionController {
     const state = this.state;
     if (!state) return;
     if (state.phase === 'peek-exit') {
-      state.elapsedMs += deltaMs;
+      this.advanceDoor(deltaMs);
       if (state.elapsedMs < PEEK_DURATION_MS) return;
       // The gate is already closed. Resume outside without another entrance
       // animation or a walk back out of a room he never stepped into.
@@ -124,12 +125,12 @@ export class RoomTransitionController {
       return;
     }
     if (state.phase === 'opening-entry') {
-      state.elapsedMs += deltaMs;
+      this.advanceDoor(deltaMs);
       if (state.elapsedMs < (this.portal?.doorId ? this.portal.doorDurationMs ?? 900 : 0)) return;
       this.next('entry'); this.state!.waypoint = 1; this.walk(); return;
     }
     if (state.phase === 'open-exit') {
-      state.elapsedMs += deltaMs;
+      this.advanceDoor(deltaMs);
       if (this.character.isWalking) return;
       if (distance(this.character.state.position, this.route()[state.waypoint]!) > 1) { this.cancel(); this.options.onBlocked?.(); return; }
       if (state.waypoint < (this.portal?.openingWaypoint ?? 0)) { state.waypoint++; this.walk(); return; }
@@ -146,7 +147,7 @@ export class RoomTransitionController {
         if (state.closingElapsedMs === undefined && distance(this.character.state.position, threshold) >= clearance) {
           state.closingElapsedMs = 0; this.options.onDoor?.('close', this.portal);
         }
-        if (state.closingElapsedMs !== undefined) state.closingElapsedMs += deltaMs;
+        if (state.closingElapsedMs !== undefined) this.advanceDoor(deltaMs, true);
       }
       if (this.character.isWalking) return;
       const path = this.route();
@@ -166,10 +167,17 @@ export class RoomTransitionController {
     // Old checkpoints resume without repeating a close/open at the same door.
     if (state.phase === 'close-exit') { this.enterDestination(); return; }
     if (state.phase === 'open-entry') { this.next('entry'); this.walk(); return; }
-    state.elapsedMs += deltaMs;
+    this.advanceDoor(deltaMs);
     const duration = state.phase === 'peek-entry' ? PEEK_DURATION_MS : this.portal?.doorId ? this.portal.doorCloseDurationMs ?? this.portal.doorDurationMs ?? 900 : 0;
     if (state.elapsedMs < duration) return;
     this.state = undefined; this.options.onComplete?.();
+  }
+  private advanceDoor(deltaMs: number, overlapping = false): void {
+    const portal = this.portal, before = this.doorProgress;
+    if (overlapping) this.state!.closingElapsedMs! += deltaMs;
+    else this.state!.elapsedMs += deltaMs;
+    const after = this.doorProgress;
+    if (portal?.doorId && before !== after) this.options.onDoorProgress?.(this.closing ? 'close' : 'open', portal, before, after);
   }
   private enterDestination(): void {
     const peek = this.state!.campStealth && this.state!.to.roomId === 'camp';

@@ -40,7 +40,23 @@ export function addRescueAssets(manifest: AiAssetManifest): void {
   for (const [id, asset] of Object.entries(rescueAssetDefinitions)) {
     manifest.assets[id] ??= structuredClone(asset);
     (manifest.assetPaths ??= {})[id] ??= id.startsWith('background.') ? ['Graphics', 'Backgrounds']
-      : id.startsWith('cage-door') ? ['Graphics', 'Objects'] : ['Graphics', 'Characters'];
+      : id.startsWith('cage-door') ? ['Graphics', 'Objects', 'Doors'] : ['Graphics', 'Characters'];
+  }
+  // Closing was previously an implicit backwards seek of Open. Expose the
+  // same poses as a real linked clip, with independent timings and frame tags.
+  const open = manifest.assets['cage-door.open'];
+  if (open && !manifest.assets['cage-door.close']) {
+    const close = structuredClone(open); close.id = 'cage-door.close';
+    close.prompt = "The original narrow wooden barred cage door swings shut around its fixed left hinge, from fully open to fully closed. Eight frames. Preserve the original timber colors, bars, rails, knots and perspective. Transparent through the bars; no stationary cage, scenery or lock-breaking action.";
+    close.animations = open.animations?.map(clip => ({ ...structuredClone(clip), key: 'cage-door.close',
+      frames: [...clip.frames].reverse(), frameTimings: clip.frames.map((_, i) => ({ ...clip.frameTimings?.[clip.frames.length - 1 - i], tag: undefined })) }));
+    manifest.assets[close.id] = close;
+  }
+  const cage = manifest.assets['cage-door'];
+  if (cage) (cage.linkedAnimationAssets ??= {}).close ??= { label: 'Close', assetId: 'cage-door.close' };
+  for (const id of ['cage-door', 'cage-door.open', 'cage-door.close']) {
+    const path = (manifest.assetPaths ??= {})[id];
+    if (!path || path.join('/') === 'Graphics/Objects') manifest.assetPaths[id] = ['Graphics', 'Objects', 'Doors'];
   }
   for (const [parent, state, label] of [['borin', 'tie-rope-back', 'Tie rope · back'], ['borin', 'pickaxe-back', 'Pickaxe · back'], ['guard', 'bound', 'Bound · asleep']]) {
     const asset = manifest.assets[parent!];
