@@ -39,7 +39,6 @@ type CastId = 'borin' | 'king' | 'guard-front' | 'guard-rear' | 'elder' | 'innke
 type Pose = { x: number; y: number; transitionAreas?: string[]; walking?: boolean; speaking?: boolean; facingLeft?: boolean; facing?: Direction; alpha?: number; sleeping?: boolean; action?: 'tie-rope-back' | 'pickaxe-back' | IntroAction; actionElapsedMs?: number };
 type CastActor = {
   sprite: Phaser.GameObjects.Sprite;
-  shadow: Phaser.GameObjects.Ellipse;
   assetId?: string;
   definition?: ResolvedPointleshObject;
   binding?: PhaserAdventureCharacter;
@@ -119,10 +118,9 @@ export class ForestCinematic {
     this.world.add([this.forestOverscan.image, this.forestOverscan.edge, this.forestOverscan.topEdge, this.background, this.atmosphere, this.props, this.foreground, this.cageDoor]);
     const actors: CastId[] = ['borin', 'king', 'guard-front', 'guard-rear', 'elder', 'innkeeper', 'miner'];
     for (const id of actors) {
-      const shadow = scene.add.ellipse(0, 0, 40, 10, 0x07120e, 0.35);
       const sprite = scene.add.sprite(0, 0, '__WHITE').setVisible(false).setName(`cinematic-${id}`);
-      this.world.add([shadow, sprite]);
-      this.cast.set(id, { sprite, shadow, sleeping: false });
+      this.world.add(sprite);
+      this.cast.set(id, { sprite, sleeping: false });
     }
     this.fade = scene.add.rectangle(0, 0, W, H, 0x06100c, 1).setOrigin(0).setAlpha(0);
     this.root.add(this.fade);
@@ -151,7 +149,7 @@ export class ForestCinematic {
       this.overlayRoom = undefined;
     }
     this.excludeGameplayObjects();
-    for (const actor of this.cast.values()) { actor.sprite.setVisible(false); actor.shadow.setVisible(false); actor.walking = false; }
+    for (const actor of this.cast.values()) { actor.sprite.setVisible(false); actor.walking = false; }
     this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
     this.cageDoor.setVisible(false);
     const duration = CINEMATIC_DURATIONS[this.kind][stepIndex]!;
@@ -301,7 +299,7 @@ export class ForestCinematic {
     actor.walking = !!pose.walking && !pose.action && !pose.sleeping;
     actor.transitionAreas = pose.transitionAreas ?? [];
     actor.action = actor.sleeping ? 'bound' : pose.action;
-    const { sprite, shadow } = actor;
+    const { sprite } = actor;
     const characterId = id.startsWith('guard') ? 'guard' : id;
     const matches = (object: ResolvedPointleshObject) => object.prefabId === `forest.character.${characterId}`;
     // Prefer the shot's scene overrides, then the character's home scene. Editor
@@ -337,8 +335,6 @@ export class ForestCinematic {
       facing: pose.facing ?? (pose.facingLeft ? 'left' : pose.walking ? 'right' : 'down'),
     }, actor.sleeping ? Number.MAX_SAFE_INTEGER : pose.actionElapsedMs ?? this.elapsedMs, { loop: !actor.action });
     sprite.setVisible(true).setAlpha(pose.alpha ?? 1);
-    const shadowWidth = sprite.displayWidth * (actor.action === 'point-spear' ? 120 / 320 : 1);
-    shadow.setVisible(true).setPosition(pose.x, pose.y - 1).setDisplaySize(shadowWidth * .7, 10).setDepth(pose.y - 0.5).setAlpha(0.33 * (pose.alpha ?? 1));
     return sprite;
   }
 

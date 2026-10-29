@@ -62,8 +62,8 @@ document.body.classList.toggle('debug-build', import.meta.env.DEV);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 type ScreenFit = 'stretch' | 'fit';
-let screenFit: ScreenFit = 'stretch';
-try { if (localStorage.getItem('pointlesh.screen-fit') === 'fit') screenFit = 'fit'; } catch { /* Storage may be unavailable. */ }
+let screenFit: ScreenFit = 'fit';
+try { if (localStorage.getItem('pointlesh.screen-fit') === 'stretch') screenFit = 'stretch'; } catch { /* Storage may be unavailable. */ }
 function setScreenFit(value: ScreenFit) {
   screenFit = value;
   document.body.classList.toggle('game-fit', value === 'fit');
