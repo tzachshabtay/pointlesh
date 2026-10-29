@@ -1373,7 +1373,7 @@ function setupControls() {
   el('new-game').onclick = () => gameScene.newGame();
   el('fullscreen').onclick = () => setFullScreen(!document.body.classList.contains('game-fullscreen'));
   el('start-load').onclick = () => saveMenu('load');
-  el('start-options').onclick = () => modal('Options').append(soundControls());
+  el('start-options').onclick = () => optionsMenu(closeModal);
   el('menu').onclick = gameMenu;
   el('character-lighting').onclick = () => {
     const enabled = gameScene.characterLighting.enabled = !gameScene.characterLighting.enabled;
@@ -1426,8 +1426,12 @@ function setupControls() {
     const save = button('Save', () => saveMenu('save')); save.id = 'save';
     const load = button('Load', () => saveMenu('load')); load.id = 'load';
     actions.append(button('Resume adventure', closeModal), save, load,
+      button('Options', () => optionsMenu(gameMenu)),
       button('Return to title', () => gameScene.showStartScreen()));
     body.append(actions);
+  }
+  function optionsMenu(back: () => void) {
+    const body = modal('Options');
     const display = document.createElement('label'); display.className = 'screen-fit-setting';
     const caption = document.createElement('span'); caption.textContent = 'Full-screen display';
     const select = document.createElement('select'); select.id = 'screen-fit';
@@ -1438,6 +1442,8 @@ function setupControls() {
     select.onchange = () => setScreenFit(select.value === 'fit' ? 'fit' : 'stretch');
     display.append(caption, select); body.append(display);
     body.append(soundControls());
+    const actions = document.createElement('div'); actions.className = 'pause-menu';
+    actions.append(button('Back', back)); body.append(actions);
   }
   function soundControls(): HTMLFieldSetElement {
     const audio = document.createElement('fieldset'); audio.className = 'audio-settings';
