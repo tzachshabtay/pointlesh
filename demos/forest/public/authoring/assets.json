@@ -14105,6 +14105,66 @@
           "notes": "Generated with the built-in image_gen tool. Full prompt in art-source/journal/quill-writing.txt; pack with scripts/pack-journal-art.mjs."
         }
       }
+    },
+    "voice.narrator": {
+      "id": "voice.narrator",
+      "kind": "voice",
+      "activeVersion": "",
+      "versions": {},
+      "prompt": "A warm, resonant fantasy storyteller with a gentle dwarven lilt. Mature, clear and intimate, with dry humour. Ominous restraint in danger and quiet joy at homecoming. Natural spoken narration, no music or sound effects.",
+      "voiceSettings": {
+        "text": "In the oldest woods, even the smallest dwarf can leave a story worth remembering."
+      },
+      "linkedAnimationAssets": {
+        "line.narrator.intro.dawn": {
+          "assetId": "line.narrator.intro.dawn",
+          "label": "Introduction · Bramblehollow · before dawn"
+        },
+        "line.narrator.intro.camp": {
+          "assetId": "line.narrator.intro.camp",
+          "label": "Introduction · The eastern camp"
+        },
+        "line.narrator.ending.homecoming": {
+          "assetId": "line.narrator.ending.homecoming",
+          "label": "Ending · Bramblehollow · home again"
+        }
+      }
+    },
+    "line.narrator.intro.dawn": {
+      "id": "line.narrator.intro.dawn",
+      "kind": "voice-line",
+      "prompt": "The orcs found the king’s road.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.narrator",
+        "text": "The orcs found the king’s road.",
+        "direction": ""
+      }
+    },
+    "line.narrator.intro.camp": {
+      "id": "line.narrator.intro.camp",
+      "kind": "voice-line",
+      "prompt": "By nightfall, their captain would return. The king was running out of time.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.narrator",
+        "text": "By nightfall, their captain would return. The king was running out of time.",
+        "direction": ""
+      }
+    },
+    "line.narrator.ending.homecoming": {
+      "id": "line.narrator.ending.homecoming",
+      "kind": "voice-line",
+      "prompt": "Tankards rose for the smallest rescue party in dwarven history.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.narrator",
+        "text": "Tankards rose for the smallest rescue party in dwarven history.",
+        "direction": ""
+      }
     }
   },
   "styleGuide": {
@@ -15396,6 +15456,9 @@
       "Graphics",
       "Interface",
       "Journal"
+    ],
+    "voice.narrator": [
+      "Voices"
     ]
   }
 }

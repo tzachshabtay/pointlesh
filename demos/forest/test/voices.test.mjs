@@ -4,12 +4,47 @@ import { readFile } from 'node:fs/promises';
 import { tsImport } from 'tsx/esm/api';
 import { assertManifest, linkedAnimationAssetIds, topLevelAiAssetIds } from '@ai-game-assets/core';
 import { assertDialogAiAssets, resolveDialogLine } from '@dialog-designer/core';
+import { AdventureDialog } from '@pointlesh/core';
+import { aiTextureKey } from '@ai-game-assets/phaser';
+const { loadForestAssets } = await tsImport('../src/asset-loading.ts', import.meta.url);
 
 const seed = await tsImport('../src/content.ts', import.meta.url);
 const authored = {
   assets: JSON.parse(await readFile(new URL('../public/authoring/assets.json', import.meta.url), 'utf8')),
   dialogs: JSON.parse(await readFile(new URL('../public/authoring/dialogs.json', import.meta.url), 'utf8')),
 };
+
+test('all speakers can acquire recordings after startup, with resolvable dialogue and playable audio keys', () => {
+  const unrecorded = structuredClone(authored.assets);
+  const lines = Object.values(unrecorded.assets).filter(asset => asset.kind === 'voice-line');
+  for (const line of lines) { line.versions = {}; line.activeVersion = ''; }
+  const sessions = Object.keys(authored.dialogs.dialogs).map(id => ({ id, conversation: new AdventureDialog(authored.dialogs, unrecorded) }));
+  for (const { id, conversation } of sessions) assert.equal(conversation.start(id).resolved.audio, undefined);
+  const recorded = structuredClone(unrecorded);
+  const speakers = new Set();
+  for (const line of lines) {
+    speakers.add(line.voiceSettings.voiceAssetId);
+    recorded.assets[line.id].activeVersion = 'test-recording';
+    recorded.assets[line.id].versions['test-recording'] = { name: 'test-recording', file: `art/${line.id}.mp3`, prompt: line.prompt,
+      model: 'test', createdAt: '2026-10-29T00:00:00Z' };
+  }
+  for (const id of ['borin', 'elder', 'innkeeper', 'miner', 'chest']) assert.ok(speakers.has(`voice.${id}`), id);
+  const queued = new Map();
+  loadForestAssets({ textures: { exists: () => false }, load: { image() {}, svg() {}, spritesheet() {}, audio: (key, file) => queued.set(key, file) } }, recorded, '/');
+  for (const line of lines) assert.equal(queued.get(aiTextureKey({ assetId: line.id })), `/art/${line.id}.mp3`);
+  for (const { id, conversation } of sessions) {
+    conversation.setAiAssets(recorded);
+    assert.ok(conversation.start(id).resolved.audio);
+    conversation.advance();
+    const checkpoint = conversation.snapshot();
+    for (const option of conversation.current().options) {
+      conversation.restore(checkpoint);
+      const reply = conversation.choose(option.id);
+      assert.equal(reply.resolved.audio.file, `art/${reply.resolved.lineAsset.id}.mp3`);
+      assert.equal(queued.has(aiTextureKey({ assetId: reply.resolved.lineAsset.id })), true);
+    }
+  }
+});
 
 for (const [name, { assets, dialogs }] of [['seed', seed], ['authored', authored]]) {
   test(`${name} voice lines appear under their speaker and retain native dialog resolution`, () => {

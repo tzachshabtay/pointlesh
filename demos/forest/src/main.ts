@@ -43,6 +43,8 @@ import { addForestInventoryPrefabs, inventoryPrefabId } from './inventory-prefab
 import { resolveInventoryItemPrefab } from '@pointlesh/core';
 import type { AdventureCursorAppearance } from '@pointlesh/phaser';
 import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
+import { addNarratorAssets, narrationLineId } from './narrator-assets';
+import { CutsceneVoice } from './cutscene-voice';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
 import { ForestDialogPortrait } from './dialog-portrait';
@@ -184,6 +186,7 @@ class ForestAdventure extends Phaser.Scene {
   behaviors = new BehaviorRegistry<{ targetId: string; item?: ItemId }>();
   constructor() { super('forest-adventure'); }
   audio!: ForestSoundscape;
+  private cutsceneVoice!: CutsceneVoice;
   audioAssets!: PhaserAdventureAudioAssets;
   preload() { loadForestAssets(this, assets, import.meta.env.BASE_URL); }
   create() {
@@ -328,6 +331,8 @@ class ForestAdventure extends Phaser.Scene {
     this.render();
     el('loading').hidden = true;
     this.audio = new ForestSoundscape(this, this.aiRuntime, () => this.audioState(), this.audioAssets);
+    this.cutsceneVoice = new CutsceneVoice(id => this.audio.playVoice(id));
+    this.events.once('shutdown', () => this.cutsceneVoice.reset());
     setupControls();
     // Capture the actual opening camera and character pose, rather than a bare
     // room texture whose framing and cast would jump when the intro starts.
@@ -1034,6 +1039,7 @@ class ForestAdventure extends Phaser.Scene {
     if (runner.snapshot().stepIndex !== index) runner.restore({ cutsceneId: runner.definition.id, version: 1, stepIndex: Math.min(index, sequence.length), elapsedMs: 0 });
     el('cutscene').hidden = index >= sequence.length;
     if (index >= sequence.length) {
+      this.cutsceneVoice.reset();
       if (isEnding) {
         this.cinematicPortrait.hide();
         // Keep the homecoming shot behind a terminal screen. There is no won
@@ -1078,7 +1084,7 @@ class ForestAdventure extends Phaser.Scene {
     el('cutscene-kicker').textContent = isEnding ? 'THE JOURNEY HOME' : 'THE STORY BEGINS';
     const step = runner.current()!;
     const voice = Object.entries(portraitCharacters).find(([, name]) => name === step.speaker)?.[0];
-    if (voice) this.showDialogPortrait(voice, true, this.cinematicPortrait);
+    if (voice && !narrationLineId(kind, index)) this.showDialogPortrait(voice, true, this.cinematicPortrait);
     else this.cinematicPortrait.hide();
     el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = step.text ?? '';
     el('cutscene-progress').textContent = sequence.map((_, i) => i === index ? '◆' : '◇').join(' ');
@@ -1089,6 +1095,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   advanceCutscene(skip = false) {
     if (!this.cinematic) return;
+    this.cutsceneVoice.reset();
     const isEnding = this.story.endingStep >= 0;
     const runner = isEnding ? this.endingRunner : this.introRunner;
     if (!isEnding) this.skipIntroArrival = skip;
@@ -1140,6 +1147,7 @@ class ForestAdventure extends Phaser.Scene {
     this.inventoryPickup.observe(this.story.inventory, this.pickupOrigin); this.pickupOrigin = undefined;
   }
   showStartScreen() {
+    this.cutsceneVoice.reset();
     this.cancelTitleDeparture?.(); this.cancelTitleDeparture = undefined;
     setFullScreen(false);
     this.journal.clearNotification();
@@ -1248,6 +1256,7 @@ class ForestAdventure extends Phaser.Scene {
     this.validateSave(save);
     const conversation = new AdventureDialog(dialogs, assets); const turn = conversation.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const checkpoint = save.cutscene as ForestCheckpoint;
+    this.cutsceneVoice.reset();
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
     this.skipIntroArrival = false;
     this.introArrival = save.extensions.introArrival as typeof this.introArrival;
@@ -1283,6 +1292,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   update(_time: number, delta: number) {
     if (!this.binding || !this.started) return;
+    this.cutsceneVoice.pause(modalOpen || document.hidden || !!this.cancelTitleDeparture);
     const cameraEditing = this.worldEditorOpen() || this.editing;
     this.roomCamera.setEnabled(!cameraEditing);
     if (this.cameraWasEditing && !cameraEditing) { this.binding.sync(); this.roomCamera.snap(); }
@@ -1292,8 +1302,10 @@ class ForestAdventure extends Phaser.Scene {
       if (!modalOpen && !this.cancelTitleDeparture) {
         const isEnding = this.story.endingStep >= 0;
         const runner = isEnding ? this.endingRunner : this.introRunner;
-        const previousStep = runner.snapshot().stepIndex;
-        runner.tick(Math.min(delta, 100));
+        const { stepIndex: previousStep, elapsedMs } = runner.snapshot();
+        const kind = isEnding ? 'ending' : 'intro';
+        this.cutsceneVoice.sync(`${kind}:${previousStep}`, narrationLineId(kind, previousStep), elapsedMs);
+        runner.tick(this.cutsceneVoice.tickDelta(Math.min(delta, 100), elapsedMs, runner.current()?.durationMs ?? 0));
         const checkpoint = runner.snapshot();
         if (isEnding) this.story.endingStep = checkpoint.stepIndex; else this.story.introStep = checkpoint.stepIndex;
         if (checkpoint.stepIndex !== previousStep) this.renderCutscene();
@@ -1563,6 +1575,7 @@ addLampAssets(assets);
 addPortraitAssets(assets);
 addJournalAssets(assets);
 addForestAudio(assets);
+addNarratorAssets(assets);
 addWorldMapAsset(assets);
 addMineOverscanAsset(assets);
 addForestOverscanAsset(assets);

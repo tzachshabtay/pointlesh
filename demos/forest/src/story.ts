@@ -190,14 +190,14 @@ export function hint(state: StoryState): string {
   return 'The king is home. There are worse reasons to have another round.';
 }
 export const intro = [
-  { speaker: 'Bramblehollow · before dawn', text: 'The orcs found the king’s road.' },
+  { speaker: 'Bramblehollow · before dawn', narration: 'dawn', text: 'The orcs found the king’s road.' },
   { speaker: 'King Aldric', text: 'Run home! Tell Rowan… tell him I may be late for breakfast.' },
-  { speaker: 'The eastern camp', text: 'By nightfall, their captain would return. The king was running out of time.' }
+  { speaker: 'The eastern camp', narration: 'camp', text: 'By nightfall, their captain would return. The king was running out of time.' }
 ];
 export const introArrivalLine = 'An army would wake the whole camp. One dwarf? I will bring him home.';
 export const ending = [
   { speaker: 'Borin', text: 'One good strike. Keep snoring, Grub.' },
   { speaker: 'King Aldric', text: 'A locked cage for me, a stout rope for him. A fair exchange, Borin.' },
   { speaker: 'Borin', text: 'This way, Your Majesty. Mara is keeping breakfast warm.' },
-  { speaker: 'Bramblehollow · home again', text: 'Tankards rose for the smallest rescue party in dwarven history.' }
+  { speaker: 'Bramblehollow · home again', narration: 'homecoming', text: 'Tankards rose for the smallest rescue party in dwarven history.' }
 ];
