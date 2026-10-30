@@ -25,6 +25,7 @@ import { addMineOverscanAsset } from './mine-overscan';
 import { addJournalAssets } from './journal-assets';
 import { addForestAudio } from './audio-assets';
 import { addNarratorAssets } from './narrator-assets';
+import { addGameSpeechAssets } from './speech-assets';
 import { addWorldMapAsset } from './world-map';
 import { addForestInventoryPrefabs } from './inventory-prefabs';
 
@@ -278,8 +279,11 @@ addForestInventoryPrefabs(scenes);
 // The authoring server can predate game-supplied assets. Reapply only game defaults,
 // never old user-created assets, when accepting a fresh server manifest.
 seedAudioFrameTags(assets);
+addGameSpeechAssets(assets, scenes);
 const gameAssetDefaults = structuredClone(assets);
 export function completeForestAssetManifest(manifest: AiAssetManifest): AiAssetManifest {
-  return { ...manifest, assets: { ...structuredClone(gameAssetDefaults.assets), ...manifest.assets },
+  const complete = { ...manifest, assets: { ...structuredClone(gameAssetDefaults.assets), ...manifest.assets },
     assetPaths: { ...structuredClone(gameAssetDefaults.assetPaths), ...manifest.assetPaths } };
+  addGameSpeechAssets(complete);
+  return complete;
 }

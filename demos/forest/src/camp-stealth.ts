@@ -1,3 +1,4 @@
+import { spokenLines } from './spoken-lines';
 import { CharacterController, distance, isPoint, type Point } from '@pointlesh/core';
 
 export type CampStealthCheckpoint = { phase: 'peek' | 'outbound' | 'pour' | 'return' | 'release'; elapsedMs: number; cover: Point; clearance: Point; path: Point[]; waypoint: number; message?: string };
@@ -64,9 +65,9 @@ export class CampStealth {
     if (arrived && s.waypoint < s.path.length - 1) { s.waypoint++; this.walk(); return; }
     if (s.phase === 'outbound') {
       if (arrived && this.options.canPour?.() === false) {
-        s.message = 'He is watching! Wait until he turns his back, then try the brew again.'; this.returnToCover();
+        s.message = spokenLines["he-is-watching-wait-until-he-turns"].text; this.returnToCover();
       } else if (arrived) { s.phase = 'pour'; s.elapsedMs = 0; this.character.stop(); this.character.face('up'); }
-      else { s.message = 'That route is blocked. Back to cover.'; this.returnToCover(); }
+      else { s.message = spokenLines["that-route-is-blocked-back-to-cover"].text; this.returnToCover(); }
     } else {
       if (!arrived) {
         // A moved obstacle can interrupt the trip; retry from the current feet.

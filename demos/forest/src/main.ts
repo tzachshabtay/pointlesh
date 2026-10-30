@@ -1,3 +1,5 @@
+import { spokenLines } from './spoken-lines';
+import { addGameSpeechAssets, resolveGameSpeech, cutsceneSpeechLine } from './speech-assets';
 import Phaser from 'phaser';
 import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
 import { loadForestAssets } from './asset-loading';
@@ -536,11 +538,11 @@ class ForestAdventure extends Phaser.Scene {
     if (this.campRestricted()) {
       if (targetId === 'camp-exit') { this.applyInteraction(targetId); return; }
       if (targetId === 'cauldron' && selected === 'sleepyStout' && this.story.inventory.includes(selected) && !this.story.flags.stewSpiked) {
-        if (!guardLookingAway(this.story)) { this.say('He is watching! Wait until he turns his back, then try the brew again.'); return; }
+        if (!guardLookingAway(this.story)) { this.say(spokenLines["he-is-watching-wait-until-he-turns"].text); return; }
         const point = resolvePointleshPoint(this.resolved(), String(entity.properties.walkPointId || 'camp.walk.cauldron')).position;
         this.campStealth.poison(point, this.campClearance()); this.binding.sync(); this.renderNearby(); return;
       }
-      this.say(this.story.flags.stewSpiked ? 'The stew is ready. I should keep hidden until he falls asleep.' : 'I need to keep hidden. A little sleeping draught in that cauldron could give me a chance.');
+      this.say(this.story.flags.stewSpiked ? spokenLines["the-stew-is-ready-i-should-keep"].text : spokenLines["i-need-to-keep-hidden-a-little"].text);
       return;
     }
     const operation = ++this.epoch;
@@ -551,7 +553,7 @@ class ForestAdventure extends Phaser.Scene {
     catch (error) { toast(error instanceof Error ? error.message : String(error)); return; }
     const current = this.interactionEntity(targetId, instanceId);
     if (operation !== this.epoch || !current) return;
-    if (!arrived) return this.say('I cannot reach that from here. There needs to be a walkable path.');
+    if (!arrived) return this.say(spokenLines["i-cannot-reach-that-from-here-there"].text);
     try { await this.behaviors.dispatch(current.behaviors, { type: 'interact', payload: targetId }, { targetId, item: selected }); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); }
   }
@@ -599,11 +601,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   private playInteractionSpeech(lines: InteractionSpeechLine[]) {
     const [line, ...remaining] = lines; if (!line) return;
-    this.say(line.text); this.interactionSpeechQueue = remaining;
-    const key = this.audioAssets.key(line.lineAssetId);
-    if (this.cache.audio.exists(key)) {
-      this.interactionSound = this.audio.playVoice(line.lineAssetId);
-    }
+    this.say(line.text, 'Borin', line.lineAssetId); this.interactionSpeechQueue = remaining;
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
     if (!transitioning) this.roomTransition?.cancel();
@@ -899,6 +897,7 @@ class ForestAdventure extends Phaser.Scene {
       onManifestChange: manifest => {
         const previous = this.resolved();
         authoredScenes = manifest; this.resolvedCache = undefined;
+        addGameSpeechAssets(assets, authoredScenes);
         for (const [id, icon] of this.inventoryIcons) icon.setAsset(this.inventoryDefinition(id).assetId || inventoryAssetId(id));
         this.cursor.refresh();
         this.interactionDesigner?.refresh();
@@ -930,6 +929,7 @@ class ForestAdventure extends Phaser.Scene {
         assetDesignerManifest = manifest;
         void this.audioAssets.syncManifest(manifest).catch(error => toast(String(error)));
         Object.assign(manifest, syncInteractionVoiceLines(interactions, manifest, interactionTargets(authoredScenes)));
+        addGameSpeechAssets(manifest, authoredScenes);
         Object.assign(assets, manifest); this.conversation.setAiAssets(assets); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations();
       },
     });
@@ -977,17 +977,19 @@ class ForestAdventure extends Phaser.Scene {
     if (properties) portrait.show(properties, speaking);
     else portrait.hide();
   }
-  say(text: string, speaker = 'Borin') {
+  say(text: string, speaker = 'Borin', lineAssetId?: string) {
     this.interactionSpeechQueue = [];
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.epoch++; this.clearMovementKeys(); this.talking = true;
-    this.speakingVoice = Object.entries(portraitCharacters).find(([id, name]) => id === speaker || name === speaker)?.[0] ?? 'borin';
+    const speech = resolveGameSpeech(assets, text, speaker, lineAssetId);
+    text = speech.text; this.speakingVoice = speech.voice;
     this.conversationActive = false; this.character.stop();
     if (this.speakingVoice === 'borin') void this.character.say(text, 3600000);
     else this.character.finishSpeech();
     el('dialog').hidden = false; el('speaker').textContent = speaker; el('speech').textContent = text;
     el('choices').replaceChildren(); el('dialog-next').hidden = false;
     this.showDialogPortrait(this.speakingVoice, true);
+    if (speech.lineAssetId) this.interactionSound = this.audio.playVoice(speech.lineAssetId);
   }
   dismissSpeech() { this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
@@ -1086,7 +1088,9 @@ class ForestAdventure extends Phaser.Scene {
     const voice = Object.entries(portraitCharacters).find(([, name]) => name === step.speaker)?.[0];
     if (voice && !narrationLineId(kind, index)) this.showDialogPortrait(voice, true, this.cinematicPortrait);
     else this.cinematicPortrait.hide();
-    el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = step.text ?? '';
+    const lineId = cutsceneSpeechLine(assets, kind, index);
+    const line = lineId ? assets.assets[lineId] : undefined;
+    el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = line?.versions[line.activeVersion]?.voiceSettings?.text ?? line?.voiceSettings?.text ?? step.text ?? '';
     el('cutscene-progress').textContent = sequence.map((_, i) => i === index ? '◆' : '◇').join(' ');
     el('skip-intro').hidden = false;
     el('skip-intro').textContent = isEnding ? 'Skip to homecoming' : 'Skip introduction';
@@ -1304,7 +1308,7 @@ class ForestAdventure extends Phaser.Scene {
         const runner = isEnding ? this.endingRunner : this.introRunner;
         const { stepIndex: previousStep, elapsedMs } = runner.snapshot();
         const kind = isEnding ? 'ending' : 'intro';
-        this.cutsceneVoice.sync(`${kind}:${previousStep}`, narrationLineId(kind, previousStep), elapsedMs);
+        this.cutsceneVoice.sync(`${kind}:${previousStep}`, cutsceneSpeechLine(assets, kind, previousStep), elapsedMs);
         runner.tick(this.cutsceneVoice.tickDelta(Math.min(delta, 100), elapsedMs, runner.current()?.durationMs ?? 0));
         const checkpoint = runner.snapshot();
         if (isEnding) this.story.endingStep = checkpoint.stepIndex; else this.story.introStep = checkpoint.stepIndex;
@@ -1592,6 +1596,7 @@ else if (interactionResponse.status !== 404) throw new Error(`Could not load aut
 // Introduce the newly supported player row once; preserve authored cells and cleared rows.
 interactions.cells['prefab:forest.character.borin'] ??= seededInteractions.cells['prefab:forest.character.borin'];
 Object.assign(assets, syncInteractionVoiceLines(interactions, assets, interactionTargets(authoredScenes)));
+addGameSpeechAssets(assets, authoredScenes);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
 // edges differently in the main framebuffer and the walk-behind filter framebuffer.
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 960, height: 540, antialias: true, antialiasGL: false, roundPixels: false, backgroundColor: '#1a2922', scene: ForestAdventure, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, audio: { noAudio: false } });

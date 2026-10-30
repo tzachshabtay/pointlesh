@@ -1,3 +1,4 @@
+import { spokenLines } from './spoken-lines';
 export const roomIds = ['village', 'pub', 'house', 'forest', 'mine', 'camp'] as const;
 export type RoomId = typeof roomIds[number];
 export const roomNames: Record<RoomId, string> = { village: 'Bramblehollow', pub: 'The Copper Tankard', house: 'Borin’s Cottage', forest: 'The Whispering Wood', mine: 'The Goldroot Mine', camp: 'The Orc Encampment' };
@@ -50,14 +51,14 @@ export function addClue(state: StoryState, flag: string, clue: string): void {
   if (!state.flags[flag]) { state.flags[flag] = true; state.journal.push(clue); }
 }
 export function combineItems(state: StoryState, first: ItemId, second: ItemId): string {
-  if (!state.inventory.includes(first) || !state.inventory.includes(second)) return 'I need both things in my satchel first.';
+  if (!state.inventory.includes(first) || !state.inventory.includes(second)) return spokenLines["i-need-both-things-in-my-satchel"].text;
   if ([first, second].includes('stout') && [first, second].includes('mushroom')) {
     state.inventory = state.inventory.filter(item => item !== 'stout' && item !== 'mushroom');
     state.inventory.push('sleepyStout');
     addClue(state, 'mixedBrew', 'The dreamcap stout is ready. Add it to the camp’s cauldron while the guard looks away.');
-    return 'A pinch of dreamcap, a splash of stout. Sweet dreams, large unpleasant fellow.';
+    return spokenLines["a-pinch-of-dreamcap-a-splash-of"].text;
   }
-  return 'An inspired idea. Unfortunately, inspiration is not enough here.';
+  return spokenLines["an-inspired-idea-unfortunately-inspiration-is-not"].text;
 }
 export type Target = { id: string; name: string; x: number; y: number; walkX?: number; walkY?: number; exit?: RoomId; description: string };
 export const targets: Record<RoomId, Target[]> = {
@@ -104,66 +105,66 @@ export function finishPouringBrew(state: StoryState): InteractionResult {
   if (!state.inventory.includes('sleepyStout') || state.flags.stewSpiked) return {};
   state.inventory = state.inventory.filter(value => value !== 'sleepyStout');
   addClue(state, 'stewSpiked', 'The dreamcap stout is in the stew. Now wait for Grub’s next drink.');
-  return { text: 'A discreet splash. Now to wait for his next drink.' };
+  return { text: spokenLines["a-discreet-splash-now-to-wait-for"].text };
 }
 export function finishTyingGuard(state: StoryState): InteractionResult {
   if (!state.tyingGuard || !state.flags.guardAsleep || !state.inventory.includes('rope')) return {};
   delete state.tyingGuard;
   state.inventory = state.inventory.filter(item => item !== 'rope');
   addClue(state, 'guardBound', 'Grub is securely tied up. Even if the lock wakes him, he cannot stop us.');
-  return { text: 'The knots are secure. If the noise wakes you, Grub, you will have to complain from there.' };
+  return { text: spokenLines["the-knots-are-secure-if-the-noise"].text };
 }
 export function interact(state: StoryState, targetId: string, item?: ItemId): InteractionResult {
   if (state.tyingGuard || state.chestOpening) return {};
   const target = targets[state.roomId].find(target => target.id === targetId);
-  if (!target || !targetVisible(state, targetId)) return { text: 'Nothing to do here.' };
-  if (item && !state.inventory.includes(item)) return { text: 'That is no longer in my satchel.' };
+  if (!target || !targetVisible(state, targetId)) return { text: spokenLines["nothing-to-do-here"].text };
+  if (item && !state.inventory.includes(item)) return { text: spokenLines["that-is-no-longer-in-my-satchel"].text };
   if (item) {
     if (item === 'coin' && targetId === 'innkeeper') {
       state.inventory = state.inventory.filter(value => value !== 'coin'); state.inventory.push('stout');
       addClue(state, 'boughtStout', 'Mara sold me honey stout. Orcs love its smell.');
-      return { speaker: 'Mara', text: 'One honey stout. If you are taking that to the orcs, please do not tell them who brewed it.' };
+      return { speaker: 'Mara', text: spokenLines["stout-sale"].text };
     }
     if (item === 'sleepyStout' && targetId === 'cauldron') {
-      if (!guardLookingAway(state)) return { text: 'He is watching! Wait until he turns his back, then try the brew again.' };
+      if (!guardLookingAway(state)) return { text: spokenLines["he-is-watching-wait-until-he-turns"].text };
       return finishPouringBrew(state);
     }
     if (item === 'rope' && targetId === 'guard') {
-      if (!state.flags.guardAsleep) return { text: 'He would never let me tie him up while he is awake. Sleep first, knots second.' };
+      if (!state.flags.guardAsleep) return { text: spokenLines["he-would-never-let-me-tie-him"].text };
       state.tyingGuard = { elapsedMs: 0 };
       return { action: 'tie-guard' };
     }
     if (item === 'pickaxe' && targetId === 'cage') {
-      if (!state.flags.guardAsleep) return { text: 'One clang and that guard will catch us. Quiet first, heroics second.' };
-      if (!state.flags.guardBound) return { text: 'Breaking the lock might wake him. I should tie up Grub first.' };
+      if (!state.flags.guardAsleep) return { text: spokenLines["one-clang-and-that-guard-will-catch"].text };
+      if (!state.flags.guardBound) return { text: spokenLines["breaking-the-lock-might-wake-him-i"].text };
       addClue(state, 'won', 'King Aldric is free. Bramblehollow will have its king—and a new story.');
       state.endingStep = 0;
       return { ending: true };
     }
-    return { text: 'I cannot see how that would help here.' };
+    return { text: spokenLines["i-cannot-see-how-that-would-help"].text };
   }
   if (target.exit) { state.roomId = target.exit; return { room: target.exit }; }
   if (targetId === 'coin' || targetId === 'rope') {
     state.inventory.push(targetId); state.flags[targetId === 'coin' ? 'tookCoin' : 'tookRope'] = true;
-    return { text: targetId === 'coin' ? 'One copper coin. Enough to buy an idea a drink.' : 'Never go on a rescue without a rope. Father was quite firm about that.' };
+    return { text: targetId === 'coin' ? spokenLines["one-copper-coin-enough-to-buy-an"].text : spokenLines["never-go-on-a-rescue-without-a"].text };
   }
   if (targetId === 'mushroom') {
-    if (!state.flags.knowsDreamcap) return { text: 'I should ask someone about these before I put them in my bag. Or my mouth.' };
+    if (!state.flags.knowsDreamcap) return { text: spokenLines["i-should-ask-someone-about-these-before"].text };
     state.inventory.push('mushroom'); state.flags.tookMushroom = true;
-    return { text: 'A dreamcap. Mara said it makes a very effective sleeping draught when mixed with stout.' };
+    return { text: spokenLines["a-dreamcap-mara-said-it-makes-a"].text };
   }
   if (targetId === 'elder' || targetId === 'innkeeper' || targetId === 'miner') return { dialog: targetId };
   if (targetId === 'tool-chest') {
-    if (state.flags.tookPickaxe) return { text: 'The tool chest is empty. Its pickaxe is in capable, if rather small, hands.' };
+    if (state.flags.tookPickaxe) return { text: spokenLines["the-tool-chest-is-empty-its-pickaxe"].text };
     if (state.flags.chestOpen) {
       state.inventory.push('pickaxe');
       addClue(state, 'tookPickaxe', 'The runed chest yielded a pickaxe. It should break the king’s lock.');
-      return { text: 'Orrin’s finest pickaxe. For the king.' };
+      return { text: spokenLines["orrins-finest-pickaxe-for-the-king"].text };
     }
     return { dialog: state.flags.knowsPassword ? 'chest-open' : 'chest-locked' };
   }
-  if (targetId === 'guard') return { speaker: state.flags.guardAsleep ? 'Borin' : 'Orc guard', text: state.flags.guardBound ? 'Sound asleep and securely tied. Those knots should hold him while we escape.' : state.flags.guardAsleep ? 'Sound asleep, but breaking that lock could wake him. Better tie him up first.' : 'No visitors! Especially short ones with suspiciously heroic expressions.' };
-  if (targetId === 'cage') return { speaker: 'King Aldric', text: state.flags.guardBound ? 'Good knots, Borin. Now break this lock and let us get out of here!' : state.flags.guardAsleep ? 'Tie up the guard before you break the lock. The noise might wake him!' : 'Borin, deal with the guard. Quietly!' };
+  if (targetId === 'guard') return { speaker: state.flags.guardAsleep || state.flags.guardBound ? 'Borin' : 'Orc guard', text: state.flags.guardBound ? spokenLines["sound-asleep-and-securely-tied-those-knots"].text : state.flags.guardAsleep ? spokenLines["sound-asleep-but-breaking-that-lock-could"].text : spokenLines["no-visitors"].text };
+  if (targetId === 'cage') return { speaker: 'King Aldric', text: state.flags.guardBound ? spokenLines["bound-guard"].text : state.flags.guardAsleep ? spokenLines["tie-guard"].text : spokenLines["quietly"].text };
   return { text: target.description };
 }
 export function applyDialogChoice(state: StoryState, optionId: string): void {
@@ -177,27 +178,27 @@ export function finishOpeningChest(state: StoryState): void {
   state.flags.chestOpen = true;
 }
 export function hint(state: StoryState): string {
-  if (!state.flags.tookCoin || !state.flags.tookRope) return 'Start at home. A copper coin and a strong rope may come in handy.';
-  if (!state.flags.knowsDreamcap || !state.flags.knowsPassword) return 'Visit the pub. Ask Mara about the orcs and Orrin about the mine.';
-  if (!state.flags.boughtStout) return 'Select the copper coin in your satchel, then give it to Mara.';
-  if (!state.flags.tookMushroom) return 'Mara described the silver-spotted mushrooms beside the forest path.';
-  if (!state.flags.mixedBrew) return 'Select the dreamcap, then select the stout to combine them.';
-  if (state.flags.chestOpen && !state.flags.tookPickaxe) return 'Search the open chest for Orrin’s pickaxe.';
-  if (!state.flags.tookPickaxe) return 'The runed chest in Goldroot Mine opens with Orrin’s words.';
-  if (!state.flags.guardAsleep) return state.flags.stewSpiked ? 'The stew is ready. Let Grub finish his next drink.' : 'At the camp, use the dreamcap stout on the cauldron when the guard turns away.';
-  if (!state.flags.guardBound) return 'Use the climbing rope on the sleeping Grub before the noise of breaking the lock wakes him.';
-  if (!state.flags.won) return 'Use the pickaxe on the cage’s lock. The way home is almost open.';
-  return 'The king is home. There are worse reasons to have another round.';
+  if (!state.flags.tookCoin || !state.flags.tookRope) return spokenLines["start-at-home-a-copper-coin-and"].text;
+  if (!state.flags.knowsDreamcap || !state.flags.knowsPassword) return spokenLines["visit-the-pub-ask-mara-about-the"].text;
+  if (!state.flags.boughtStout) return spokenLines["select-the-copper-coin-in-your-satchel"].text;
+  if (!state.flags.tookMushroom) return spokenLines["mara-described-the-silverspotted-mushrooms-beside-the"].text;
+  if (!state.flags.mixedBrew) return spokenLines["select-the-dreamcap-then-select-the-stout"].text;
+  if (state.flags.chestOpen && !state.flags.tookPickaxe) return spokenLines["search-the-open-chest-for-orrins-pickaxe"].text;
+  if (!state.flags.tookPickaxe) return spokenLines["the-runed-chest-in-goldroot-mine-opens"].text;
+  if (!state.flags.guardAsleep) return state.flags.stewSpiked ? spokenLines["the-stew-is-ready-let-grub-finish"].text : spokenLines["at-the-camp-use-the-dreamcap-stout"].text;
+  if (!state.flags.guardBound) return spokenLines["use-the-climbing-rope-on-the-sleeping"].text;
+  if (!state.flags.won) return spokenLines["use-the-pickaxe-on-the-cages-lock"].text;
+  return spokenLines["the-king-is-home-there-are-worse"].text;
 }
 export const intro = [
   { speaker: 'Bramblehollow · before dawn', narration: 'dawn', text: 'The orcs found the king’s road.' },
-  { speaker: 'King Aldric', text: 'Run home! Tell Rowan… tell him I may be late for breakfast.' },
+  { speaker: 'King Aldric', text: spokenLines["abduction"].text },
   { speaker: 'The eastern camp', narration: 'camp', text: 'By nightfall, their captain would return. The king was running out of time.' }
 ];
-export const introArrivalLine = 'An army would wake the whole camp. One dwarf? I will bring him home.';
+export const introArrivalLine = spokenLines["intro-arrival"].text;
 export const ending = [
-  { speaker: 'Borin', text: 'One good strike. Keep snoring, Grub.' },
-  { speaker: 'King Aldric', text: 'A locked cage for me, a stout rope for him. A fair exchange, Borin.' },
-  { speaker: 'Borin', text: 'This way, Your Majesty. Mara is keeping breakfast warm.' },
+  { speaker: 'Borin', text: spokenLines["lock-strike"].text },
+  { speaker: 'King Aldric', text: spokenLines["free"].text },
+  { speaker: 'Borin', text: spokenLines["homeward"].text },
   { speaker: 'Bramblehollow · home again', narration: 'homecoming', text: 'Tankards rose for the smallest rescue party in dwarven history.' }
 ];

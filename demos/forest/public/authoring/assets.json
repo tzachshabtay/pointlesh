@@ -1354,6 +1354,234 @@
         "voice.line.interaction.bf9293e8939c1e08": {
           "assetId": "voice.line.interaction.bf9293e8939c1e08",
           "label": "Runed tool chest · Honey stout"
+        },
+        "line.game.borin.i-need-both-things-in-my-satchel": {
+          "assetId": "line.game.borin.i-need-both-things-in-my-satchel",
+          "label": "I need both things in my satchel first."
+        },
+        "line.game.borin.a-pinch-of-dreamcap-a-splash-of": {
+          "assetId": "line.game.borin.a-pinch-of-dreamcap-a-splash-of",
+          "label": "A pinch of dreamcap, a splash of stout. Sweet dreams, large unpleasant fellow."
+        },
+        "line.game.borin.an-inspired-idea-unfortunately-inspiration-is-not": {
+          "assetId": "line.game.borin.an-inspired-idea-unfortunately-inspiration-is-not",
+          "label": "An inspired idea. Unfortunately, inspiration is not enough here."
+        },
+        "line.game.borin.a-discreet-splash-now-to-wait-for": {
+          "assetId": "line.game.borin.a-discreet-splash-now-to-wait-for",
+          "label": "A discreet splash. Now to wait for his next drink."
+        },
+        "line.game.borin.the-knots-are-secure-if-the-noise": {
+          "assetId": "line.game.borin.the-knots-are-secure-if-the-noise",
+          "label": "The knots are secure. If the noise wakes you, Grub, you will have to complain from there."
+        },
+        "line.game.borin.nothing-to-do-here": {
+          "assetId": "line.game.borin.nothing-to-do-here",
+          "label": "Nothing to do here."
+        },
+        "line.game.borin.that-is-no-longer-in-my-satchel": {
+          "assetId": "line.game.borin.that-is-no-longer-in-my-satchel",
+          "label": "That is no longer in my satchel."
+        },
+        "line.game.borin.he-is-watching-wait-until-he-turns": {
+          "assetId": "line.game.borin.he-is-watching-wait-until-he-turns",
+          "label": "He is watching! Wait until he turns his back, then try the brew again."
+        },
+        "line.game.borin.he-would-never-let-me-tie-him": {
+          "assetId": "line.game.borin.he-would-never-let-me-tie-him",
+          "label": "He would never let me tie him up while he is awake. Sleep first, knots second."
+        },
+        "line.game.borin.one-clang-and-that-guard-will-catch": {
+          "assetId": "line.game.borin.one-clang-and-that-guard-will-catch",
+          "label": "One clang and that guard will catch us. Quiet first, heroics second."
+        },
+        "line.game.borin.breaking-the-lock-might-wake-him-i": {
+          "assetId": "line.game.borin.breaking-the-lock-might-wake-him-i",
+          "label": "Breaking the lock might wake him. I should tie up Grub first."
+        },
+        "line.game.borin.i-cannot-see-how-that-would-help": {
+          "assetId": "line.game.borin.i-cannot-see-how-that-would-help",
+          "label": "I cannot see how that would help here."
+        },
+        "line.game.borin.one-copper-coin-enough-to-buy-an": {
+          "assetId": "line.game.borin.one-copper-coin-enough-to-buy-an",
+          "label": "One copper coin. Enough to buy an idea a drink."
+        },
+        "line.game.borin.never-go-on-a-rescue-without-a": {
+          "assetId": "line.game.borin.never-go-on-a-rescue-without-a",
+          "label": "Never go on a rescue without a rope. Father was quite firm about that."
+        },
+        "line.game.borin.i-should-ask-someone-about-these-before": {
+          "assetId": "line.game.borin.i-should-ask-someone-about-these-before",
+          "label": "I should ask someone about these before I put them in my bag. Or my mouth."
+        },
+        "line.game.borin.a-dreamcap-mara-said-it-makes-a": {
+          "assetId": "line.game.borin.a-dreamcap-mara-said-it-makes-a",
+          "label": "A dreamcap. Mara said it makes a very effective sleeping draught when mixed with stout."
+        },
+        "line.game.borin.the-tool-chest-is-empty-its-pickaxe": {
+          "assetId": "line.game.borin.the-tool-chest-is-empty-its-pickaxe",
+          "label": "The tool chest is empty. Its pickaxe is in capable, if rather small, hands."
+        },
+        "line.game.borin.orrins-finest-pickaxe-for-the-king": {
+          "assetId": "line.game.borin.orrins-finest-pickaxe-for-the-king",
+          "label": "Orrin’s finest pickaxe. For the king."
+        },
+        "line.game.borin.sound-asleep-and-securely-tied-those-knots": {
+          "assetId": "line.game.borin.sound-asleep-and-securely-tied-those-knots",
+          "label": "Sound asleep and securely tied. Those knots should hold him while we escape."
+        },
+        "line.game.borin.sound-asleep-but-breaking-that-lock-could": {
+          "assetId": "line.game.borin.sound-asleep-but-breaking-that-lock-could",
+          "label": "Sound asleep, but breaking that lock could wake him. Better tie him up first."
+        },
+        "line.game.borin.start-at-home-a-copper-coin-and": {
+          "assetId": "line.game.borin.start-at-home-a-copper-coin-and",
+          "label": "Start at home. A copper coin and a strong rope may come in handy."
+        },
+        "line.game.borin.visit-the-pub-ask-mara-about-the": {
+          "assetId": "line.game.borin.visit-the-pub-ask-mara-about-the",
+          "label": "Visit the pub. Ask Mara about the orcs and Orrin about the mine."
+        },
+        "line.game.borin.select-the-copper-coin-in-your-satchel": {
+          "assetId": "line.game.borin.select-the-copper-coin-in-your-satchel",
+          "label": "Select the copper coin in your satchel, then give it to Mara."
+        },
+        "line.game.borin.mara-described-the-silverspotted-mushrooms-beside-the": {
+          "assetId": "line.game.borin.mara-described-the-silverspotted-mushrooms-beside-the",
+          "label": "Mara described the silver-spotted mushrooms beside the forest path."
+        },
+        "line.game.borin.select-the-dreamcap-then-select-the-stout": {
+          "assetId": "line.game.borin.select-the-dreamcap-then-select-the-stout",
+          "label": "Select the dreamcap, then select the stout to combine them."
+        },
+        "line.game.borin.search-the-open-chest-for-orrins-pickaxe": {
+          "assetId": "line.game.borin.search-the-open-chest-for-orrins-pickaxe",
+          "label": "Search the open chest for Orrin’s pickaxe."
+        },
+        "line.game.borin.the-runed-chest-in-goldroot-mine-opens": {
+          "assetId": "line.game.borin.the-runed-chest-in-goldroot-mine-opens",
+          "label": "The runed chest in Goldroot Mine opens with Orrin’s words."
+        },
+        "line.game.borin.the-stew-is-ready-let-grub-finish": {
+          "assetId": "line.game.borin.the-stew-is-ready-let-grub-finish",
+          "label": "The stew is ready. Let Grub finish his next drink."
+        },
+        "line.game.borin.at-the-camp-use-the-dreamcap-stout": {
+          "assetId": "line.game.borin.at-the-camp-use-the-dreamcap-stout",
+          "label": "At the camp, use the dreamcap stout on the cauldron when the guard turns away."
+        },
+        "line.game.borin.use-the-climbing-rope-on-the-sleeping": {
+          "assetId": "line.game.borin.use-the-climbing-rope-on-the-sleeping",
+          "label": "Use the climbing rope on the sleeping Grub before the noise of breaking the lock wakes him."
+        },
+        "line.game.borin.use-the-pickaxe-on-the-cages-lock": {
+          "assetId": "line.game.borin.use-the-pickaxe-on-the-cages-lock",
+          "label": "Use the pickaxe on the cage’s lock. The way home is almost open."
+        },
+        "line.game.borin.the-king-is-home-there-are-worse": {
+          "assetId": "line.game.borin.the-king-is-home-there-are-worse",
+          "label": "The king is home. There are worse reasons to have another round."
+        },
+        "line.game.borin.intro-arrival": {
+          "assetId": "line.game.borin.intro-arrival",
+          "label": "After introduction · Leaving home"
+        },
+        "line.game.borin.lock-strike": {
+          "assetId": "line.game.borin.lock-strike",
+          "label": "Ending · Breaking the lock"
+        },
+        "line.game.borin.homeward": {
+          "assetId": "line.game.borin.homeward",
+          "label": "Ending · Homeward"
+        },
+        "line.game.borin.the-stew-is-ready-i-should-keep": {
+          "assetId": "line.game.borin.the-stew-is-ready-i-should-keep",
+          "label": "The stew is ready. I should keep hidden until he falls asleep."
+        },
+        "line.game.borin.i-need-to-keep-hidden-a-little": {
+          "assetId": "line.game.borin.i-need-to-keep-hidden-a-little",
+          "label": "I need to keep hidden. A little sleeping draught in that cauldron could give me a chance."
+        },
+        "line.game.borin.i-cannot-reach-that-from-here-there": {
+          "assetId": "line.game.borin.i-cannot-reach-that-from-here-there",
+          "label": "I cannot reach that from here. There needs to be a walkable path."
+        },
+        "line.game.borin.that-route-is-blocked-back-to-cover": {
+          "assetId": "line.game.borin.that-route-is-blocked-back-to-cover",
+          "label": "That route is blocked. Back to cover."
+        },
+        "line.game.borin.look.village-village.floor-e5bf199b": {
+          "assetId": "line.game.borin.look.village-village.floor-e5bf199b",
+          "label": "Look · Walkable ground & perspective"
+        },
+        "line.game.borin.look.village-village.foreground-fb09e829": {
+          "assetId": "line.game.borin.look.village-village.foreground-fb09e829",
+          "label": "Look · Foreground occlusion"
+        },
+        "line.game.borin.look.village-village.door.village-pub.frame-b9d035bf": {
+          "assetId": "line.game.borin.look.village-village.door.village-pub.frame-b9d035bf",
+          "label": "Look · Door frame · Copper Tankard door · outside"
+        },
+        "line.game.borin.look.village-village.door.village-house.frame-129c52ba": {
+          "assetId": "line.game.borin.look.village-village.door.village-house.frame-129c52ba",
+          "label": "Look · Door frame · Cottage door · outside"
+        },
+        "line.game.borin.look.village-village.forest-canopy-fd7a23e9": {
+          "assetId": "line.game.borin.look.village-village.forest-canopy-fd7a23e9",
+          "label": "Look · Forest path canopy"
+        },
+        "line.game.borin.look.pub-pub.foreground-d70ceb7f": {
+          "assetId": "line.game.borin.look.pub-pub.foreground-d70ceb7f",
+          "label": "Look · Table"
+        },
+        "line.game.borin.look.pub-prefab-instance-mtyj1z1j-nxfwc1-dbbc7dba": {
+          "assetId": "line.game.borin.look.pub-prefab-instance-mtyj1z1j-nxfwc1-dbbc7dba",
+          "label": "Look · Bar"
+        },
+        "line.game.borin.look.pub-pub.door.pub.frame-fe8242f4": {
+          "assetId": "line.game.borin.look.pub-pub.door.pub.frame-fe8242f4",
+          "label": "Look · Door frame · Copper Tankard door · inside"
+        },
+        "line.game.borin.look.house-house.hearth-kettle-c143242b": {
+          "assetId": "line.game.borin.look.house-house.hearth-kettle-c143242b",
+          "label": "Look · Cooking pot in front of fire"
+        },
+        "line.game.borin.look.house-house.door.house.frame-9ab3e2af": {
+          "assetId": "line.game.borin.look.house-house.door.house.frame-9ab3e2af",
+          "label": "Look · Door frame · Cottage door · inside"
+        },
+        "line.game.borin.look.forest-forest.door.forest-mine.frame-8a1d0863": {
+          "assetId": "line.game.borin.look.forest-forest.door.forest-mine.frame-8a1d0863",
+          "label": "Look · Door frame · Goldroot Mine gate"
+        },
+        "line.game.borin.look.forest-forest.door.forest-camp.frame-b6636aa3": {
+          "assetId": "line.game.borin.look.forest-forest.door.forest-camp.frame-b6636aa3",
+          "label": "Look · Door frame · Orc camp gate"
+        },
+        "line.game.borin.look.camp-camp.cauldron-ground-5312038d": {
+          "assetId": "line.game.borin.look.camp-camp.cauldron-ground-5312038d",
+          "label": "Look · Cauldron approach"
+        },
+        "line.game.borin.look.camp-camp.cage.left-d2434f38": {
+          "assetId": "line.game.borin.look.camp-camp.cage.left-d2434f38",
+          "label": "Look · Cage frame · Left post"
+        },
+        "line.game.borin.look.camp-camp.cage.header-633ad56a": {
+          "assetId": "line.game.borin.look.camp-camp.cage.header-633ad56a",
+          "label": "Look · Cage frame · Header"
+        },
+        "line.game.borin.look.camp-camp.cage.wall-6c516563": {
+          "assetId": "line.game.borin.look.camp-camp.cage.wall-6c516563",
+          "label": "Look · Cage frame · Stationary wall"
+        },
+        "line.game.borin.look.camp-camp.hearth-cauldron-355b2df6": {
+          "assetId": "line.game.borin.look.camp-camp.hearth-cauldron-355b2df6",
+          "label": "Look · Cauldron in front of fire"
+        },
+        "line.game.borin.look.camp-camp.door.camp.frame-7e1ba8a": {
+          "assetId": "line.game.borin.look.camp-camp.door.camp.frame-7e1ba8a",
+          "label": "Look · Door frame · Orc camp gate · inside"
         }
       }
     },
@@ -1404,6 +1632,10 @@
         "line.innkeeper.goodbye": {
           "label": "Keep a seat by the fire for us.",
           "assetId": "line.innkeeper.goodbye"
+        },
+        "line.game.innkeeper.stout-sale": {
+          "assetId": "line.game.innkeeper.stout-sale",
+          "label": "Selling honey stout"
         }
       }
     },
@@ -14165,6 +14397,847 @@
         "text": "Tankards rose for the smallest rescue party in dwarven history.",
         "direction": ""
       }
+    },
+    "line.game.borin.i-need-both-things-in-my-satchel": {
+      "id": "line.game.borin.i-need-both-things-in-my-satchel",
+      "kind": "voice-line",
+      "prompt": "I need both things in my satchel first.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I need both things in my satchel first.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.a-pinch-of-dreamcap-a-splash-of": {
+      "id": "line.game.borin.a-pinch-of-dreamcap-a-splash-of",
+      "kind": "voice-line",
+      "prompt": "A pinch of dreamcap, a splash of stout. Sweet dreams, large unpleasant fellow.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A pinch of dreamcap, a splash of stout. Sweet dreams, large unpleasant fellow.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.an-inspired-idea-unfortunately-inspiration-is-not": {
+      "id": "line.game.borin.an-inspired-idea-unfortunately-inspiration-is-not",
+      "kind": "voice-line",
+      "prompt": "An inspired idea. Unfortunately, inspiration is not enough here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An inspired idea. Unfortunately, inspiration is not enough here.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.a-discreet-splash-now-to-wait-for": {
+      "id": "line.game.borin.a-discreet-splash-now-to-wait-for",
+      "kind": "voice-line",
+      "prompt": "A discreet splash. Now to wait for his next drink.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A discreet splash. Now to wait for his next drink.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.the-knots-are-secure-if-the-noise": {
+      "id": "line.game.borin.the-knots-are-secure-if-the-noise",
+      "kind": "voice-line",
+      "prompt": "The knots are secure. If the noise wakes you, Grub, you will have to complain from there.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The knots are secure. If the noise wakes you, Grub, you will have to complain from there.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.nothing-to-do-here": {
+      "id": "line.game.borin.nothing-to-do-here",
+      "kind": "voice-line",
+      "prompt": "Nothing to do here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Nothing to do here.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.that-is-no-longer-in-my-satchel": {
+      "id": "line.game.borin.that-is-no-longer-in-my-satchel",
+      "kind": "voice-line",
+      "prompt": "That is no longer in my satchel.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "That is no longer in my satchel.",
+        "direction": ""
+      }
+    },
+    "line.game.innkeeper.stout-sale": {
+      "id": "line.game.innkeeper.stout-sale",
+      "kind": "voice-line",
+      "prompt": "One honey stout. If you are taking that to the orcs, please do not tell them who brewed it.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.innkeeper",
+        "text": "One honey stout. If you are taking that to the orcs, please do not tell them who brewed it.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.he-is-watching-wait-until-he-turns": {
+      "id": "line.game.borin.he-is-watching-wait-until-he-turns",
+      "kind": "voice-line",
+      "prompt": "He is watching! Wait until he turns his back, then try the brew again.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "He is watching! Wait until he turns his back, then try the brew again.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.he-would-never-let-me-tie-him": {
+      "id": "line.game.borin.he-would-never-let-me-tie-him",
+      "kind": "voice-line",
+      "prompt": "He would never let me tie him up while he is awake. Sleep first, knots second.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "He would never let me tie him up while he is awake. Sleep first, knots second.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.one-clang-and-that-guard-will-catch": {
+      "id": "line.game.borin.one-clang-and-that-guard-will-catch",
+      "kind": "voice-line",
+      "prompt": "One clang and that guard will catch us. Quiet first, heroics second.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "One clang and that guard will catch us. Quiet first, heroics second.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.breaking-the-lock-might-wake-him-i": {
+      "id": "line.game.borin.breaking-the-lock-might-wake-him-i",
+      "kind": "voice-line",
+      "prompt": "Breaking the lock might wake him. I should tie up Grub first.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Breaking the lock might wake him. I should tie up Grub first.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.i-cannot-see-how-that-would-help": {
+      "id": "line.game.borin.i-cannot-see-how-that-would-help",
+      "kind": "voice-line",
+      "prompt": "I cannot see how that would help here.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot see how that would help here.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.one-copper-coin-enough-to-buy-an": {
+      "id": "line.game.borin.one-copper-coin-enough-to-buy-an",
+      "kind": "voice-line",
+      "prompt": "One copper coin. Enough to buy an idea a drink.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "One copper coin. Enough to buy an idea a drink.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.never-go-on-a-rescue-without-a": {
+      "id": "line.game.borin.never-go-on-a-rescue-without-a",
+      "kind": "voice-line",
+      "prompt": "Never go on a rescue without a rope. Father was quite firm about that.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Never go on a rescue without a rope. Father was quite firm about that.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.i-should-ask-someone-about-these-before": {
+      "id": "line.game.borin.i-should-ask-someone-about-these-before",
+      "kind": "voice-line",
+      "prompt": "I should ask someone about these before I put them in my bag. Or my mouth.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I should ask someone about these before I put them in my bag. Or my mouth.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.a-dreamcap-mara-said-it-makes-a": {
+      "id": "line.game.borin.a-dreamcap-mara-said-it-makes-a",
+      "kind": "voice-line",
+      "prompt": "A dreamcap. Mara said it makes a very effective sleeping draught when mixed with stout.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "A dreamcap. Mara said it makes a very effective sleeping draught when mixed with stout.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.the-tool-chest-is-empty-its-pickaxe": {
+      "id": "line.game.borin.the-tool-chest-is-empty-its-pickaxe",
+      "kind": "voice-line",
+      "prompt": "The tool chest is empty. Its pickaxe is in capable, if rather small, hands.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The tool chest is empty. Its pickaxe is in capable, if rather small, hands.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.orrins-finest-pickaxe-for-the-king": {
+      "id": "line.game.borin.orrins-finest-pickaxe-for-the-king",
+      "kind": "voice-line",
+      "prompt": "Orrin’s finest pickaxe. For the king.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Orrin’s finest pickaxe. For the king.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.sound-asleep-and-securely-tied-those-knots": {
+      "id": "line.game.borin.sound-asleep-and-securely-tied-those-knots",
+      "kind": "voice-line",
+      "prompt": "Sound asleep and securely tied. Those knots should hold him while we escape.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Sound asleep and securely tied. Those knots should hold him while we escape.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.sound-asleep-but-breaking-that-lock-could": {
+      "id": "line.game.borin.sound-asleep-but-breaking-that-lock-could",
+      "kind": "voice-line",
+      "prompt": "Sound asleep, but breaking that lock could wake him. Better tie him up first.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Sound asleep, but breaking that lock could wake him. Better tie him up first.",
+        "direction": ""
+      }
+    },
+    "voice.guard": {
+      "id": "voice.guard",
+      "kind": "voice",
+      "activeVersion": "",
+      "versions": {},
+      "prompt": "A gruff, gravelly orc guard. Deep and grumbling, with comic bluster; clearly intelligible speech.",
+      "linkedAnimationAssets": {
+        "line.game.guard.no-visitors": {
+          "assetId": "line.game.guard.no-visitors",
+          "label": "Guard warning"
+        }
+      }
+    },
+    "line.game.guard.no-visitors": {
+      "id": "line.game.guard.no-visitors",
+      "kind": "voice-line",
+      "prompt": "No visitors! Especially short ones with suspiciously heroic expressions.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.guard",
+        "text": "No visitors! Especially short ones with suspiciously heroic expressions.",
+        "direction": ""
+      }
+    },
+    "voice.king": {
+      "id": "voice.king",
+      "kind": "voice",
+      "activeVersion": "",
+      "versions": {},
+      "prompt": "Warm fantasy storytelling voice for King Aldric.",
+      "linkedAnimationAssets": {
+        "line.game.king.bound-guard": {
+          "assetId": "line.game.king.bound-guard",
+          "label": "Guard tied up"
+        },
+        "line.game.king.tie-guard": {
+          "assetId": "line.game.king.tie-guard",
+          "label": "Guard asleep"
+        },
+        "line.game.king.quietly": {
+          "assetId": "line.game.king.quietly",
+          "label": "Guard awake"
+        },
+        "line.game.king.abduction": {
+          "assetId": "line.game.king.abduction",
+          "label": "Introduction · Forest march"
+        },
+        "line.game.king.free": {
+          "assetId": "line.game.king.free",
+          "label": "Ending · Freedom"
+        }
+      }
+    },
+    "line.game.king.bound-guard": {
+      "id": "line.game.king.bound-guard",
+      "kind": "voice-line",
+      "prompt": "Good knots, Borin. Now break this lock and let us get out of here!",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.king",
+        "text": "Good knots, Borin. Now break this lock and let us get out of here!",
+        "direction": ""
+      }
+    },
+    "line.game.king.tie-guard": {
+      "id": "line.game.king.tie-guard",
+      "kind": "voice-line",
+      "prompt": "Tie up the guard before you break the lock. The noise might wake him!",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.king",
+        "text": "Tie up the guard before you break the lock. The noise might wake him!",
+        "direction": ""
+      }
+    },
+    "line.game.king.quietly": {
+      "id": "line.game.king.quietly",
+      "kind": "voice-line",
+      "prompt": "Borin, deal with the guard. Quietly!",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.king",
+        "text": "Borin, deal with the guard. Quietly!",
+        "direction": ""
+      }
+    },
+    "line.game.borin.start-at-home-a-copper-coin-and": {
+      "id": "line.game.borin.start-at-home-a-copper-coin-and",
+      "kind": "voice-line",
+      "prompt": "Start at home. A copper coin and a strong rope may come in handy.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Start at home. A copper coin and a strong rope may come in handy.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.visit-the-pub-ask-mara-about-the": {
+      "id": "line.game.borin.visit-the-pub-ask-mara-about-the",
+      "kind": "voice-line",
+      "prompt": "Visit the pub. Ask Mara about the orcs and Orrin about the mine.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Visit the pub. Ask Mara about the orcs and Orrin about the mine.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.select-the-copper-coin-in-your-satchel": {
+      "id": "line.game.borin.select-the-copper-coin-in-your-satchel",
+      "kind": "voice-line",
+      "prompt": "Select the copper coin in your satchel, then give it to Mara.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Select the copper coin in your satchel, then give it to Mara.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.mara-described-the-silverspotted-mushrooms-beside-the": {
+      "id": "line.game.borin.mara-described-the-silverspotted-mushrooms-beside-the",
+      "kind": "voice-line",
+      "prompt": "Mara described the silver-spotted mushrooms beside the forest path.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Mara described the silver-spotted mushrooms beside the forest path.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.select-the-dreamcap-then-select-the-stout": {
+      "id": "line.game.borin.select-the-dreamcap-then-select-the-stout",
+      "kind": "voice-line",
+      "prompt": "Select the dreamcap, then select the stout to combine them.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Select the dreamcap, then select the stout to combine them.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.search-the-open-chest-for-orrins-pickaxe": {
+      "id": "line.game.borin.search-the-open-chest-for-orrins-pickaxe",
+      "kind": "voice-line",
+      "prompt": "Search the open chest for Orrin’s pickaxe.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Search the open chest for Orrin’s pickaxe.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.the-runed-chest-in-goldroot-mine-opens": {
+      "id": "line.game.borin.the-runed-chest-in-goldroot-mine-opens",
+      "kind": "voice-line",
+      "prompt": "The runed chest in Goldroot Mine opens with Orrin’s words.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The runed chest in Goldroot Mine opens with Orrin’s words.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.the-stew-is-ready-let-grub-finish": {
+      "id": "line.game.borin.the-stew-is-ready-let-grub-finish",
+      "kind": "voice-line",
+      "prompt": "The stew is ready. Let Grub finish his next drink.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The stew is ready. Let Grub finish his next drink.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.at-the-camp-use-the-dreamcap-stout": {
+      "id": "line.game.borin.at-the-camp-use-the-dreamcap-stout",
+      "kind": "voice-line",
+      "prompt": "At the camp, use the dreamcap stout on the cauldron when the guard turns away.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "At the camp, use the dreamcap stout on the cauldron when the guard turns away.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.use-the-climbing-rope-on-the-sleeping": {
+      "id": "line.game.borin.use-the-climbing-rope-on-the-sleeping",
+      "kind": "voice-line",
+      "prompt": "Use the climbing rope on the sleeping Grub before the noise of breaking the lock wakes him.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Use the climbing rope on the sleeping Grub before the noise of breaking the lock wakes him.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.use-the-pickaxe-on-the-cages-lock": {
+      "id": "line.game.borin.use-the-pickaxe-on-the-cages-lock",
+      "kind": "voice-line",
+      "prompt": "Use the pickaxe on the cage’s lock. The way home is almost open.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Use the pickaxe on the cage’s lock. The way home is almost open.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.the-king-is-home-there-are-worse": {
+      "id": "line.game.borin.the-king-is-home-there-are-worse",
+      "kind": "voice-line",
+      "prompt": "The king is home. There are worse reasons to have another round.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The king is home. There are worse reasons to have another round.",
+        "direction": ""
+      }
+    },
+    "line.game.king.abduction": {
+      "id": "line.game.king.abduction",
+      "kind": "voice-line",
+      "prompt": "Run home! Tell Rowan… tell him I may be late for breakfast.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.king",
+        "text": "Run home! Tell Rowan… tell him I may be late for breakfast.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.intro-arrival": {
+      "id": "line.game.borin.intro-arrival",
+      "kind": "voice-line",
+      "prompt": "An army would wake the whole camp. One dwarf? I will bring him home.",
+      "activeVersion": "arrival-1793328972802",
+      "versions": {
+        "arrival-1793328972802": {
+          "name": "arrival-1793328972802",
+          "file": "art/line.game.borin.intro-arrival.arrival-1793328972802.mp3",
+          "prompt": "An army would wake the whole camp. One dwarf? I will bring him home.",
+          "createdAt": "2026-10-30T02:56:13.562Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "An army would wake the whole camp. One dwarf? I will bring him home.",
+            "direction": "",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4"
+          }
+        }
+      },
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "An army would wake the whole camp. One dwarf? I will bring him home.",
+        "direction": "",
+        "provider": "elevenlabs",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "model": "eleven_v4"
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.game.borin.lock-strike": {
+      "id": "line.game.borin.lock-strike",
+      "kind": "voice-line",
+      "prompt": "One good strike. Keep snoring, Grub.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "One good strike. Keep snoring, Grub.",
+        "direction": ""
+      }
+    },
+    "line.game.king.free": {
+      "id": "line.game.king.free",
+      "kind": "voice-line",
+      "prompt": "A locked cage for me, a stout rope for him. A fair exchange, Borin.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.king",
+        "text": "A locked cage for me, a stout rope for him. A fair exchange, Borin.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.homeward": {
+      "id": "line.game.borin.homeward",
+      "kind": "voice-line",
+      "prompt": "This way, Your Majesty. Mara is keeping breakfast warm.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "This way, Your Majesty. Mara is keeping breakfast warm.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.the-stew-is-ready-i-should-keep": {
+      "id": "line.game.borin.the-stew-is-ready-i-should-keep",
+      "kind": "voice-line",
+      "prompt": "The stew is ready. I should keep hidden until he falls asleep.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "The stew is ready. I should keep hidden until he falls asleep.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.i-need-to-keep-hidden-a-little": {
+      "id": "line.game.borin.i-need-to-keep-hidden-a-little",
+      "kind": "voice-line",
+      "prompt": "I need to keep hidden. A little sleeping draught in that cauldron could give me a chance.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I need to keep hidden. A little sleeping draught in that cauldron could give me a chance.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.i-cannot-reach-that-from-here-there": {
+      "id": "line.game.borin.i-cannot-reach-that-from-here-there",
+      "kind": "voice-line",
+      "prompt": "I cannot reach that from here. There needs to be a walkable path.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I cannot reach that from here. There needs to be a walkable path.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.that-route-is-blocked-back-to-cover": {
+      "id": "line.game.borin.that-route-is-blocked-back-to-cover",
+      "kind": "voice-line",
+      "prompt": "That route is blocked. Back to cover.",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "That route is blocked. Back to cover.",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.village-village.floor-e5bf199b": {
+      "id": "line.game.borin.look.village-village.floor-e5bf199b",
+      "kind": "voice-line",
+      "prompt": "Walkable ground & perspective",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Walkable ground & perspective",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.village-village.foreground-fb09e829": {
+      "id": "line.game.borin.look.village-village.foreground-fb09e829",
+      "kind": "voice-line",
+      "prompt": "Foreground occlusion",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Foreground occlusion",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.village-village.door.village-pub.frame-b9d035bf": {
+      "id": "line.game.borin.look.village-village.door.village-pub.frame-b9d035bf",
+      "kind": "voice-line",
+      "prompt": "Door frame · Copper Tankard door · outside",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Copper Tankard door · outside",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.village-village.door.village-house.frame-129c52ba": {
+      "id": "line.game.borin.look.village-village.door.village-house.frame-129c52ba",
+      "kind": "voice-line",
+      "prompt": "Door frame · Cottage door · outside",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Cottage door · outside",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.village-village.forest-canopy-fd7a23e9": {
+      "id": "line.game.borin.look.village-village.forest-canopy-fd7a23e9",
+      "kind": "voice-line",
+      "prompt": "Forest path canopy",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Forest path canopy",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.pub-pub.foreground-d70ceb7f": {
+      "id": "line.game.borin.look.pub-pub.foreground-d70ceb7f",
+      "kind": "voice-line",
+      "prompt": "Table",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Table",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.pub-prefab-instance-mtyj1z1j-nxfwc1-dbbc7dba": {
+      "id": "line.game.borin.look.pub-prefab-instance-mtyj1z1j-nxfwc1-dbbc7dba",
+      "kind": "voice-line",
+      "prompt": "Bar",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Bar",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.pub-pub.door.pub.frame-fe8242f4": {
+      "id": "line.game.borin.look.pub-pub.door.pub.frame-fe8242f4",
+      "kind": "voice-line",
+      "prompt": "Door frame · Copper Tankard door · inside",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Copper Tankard door · inside",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.house-house.hearth-kettle-c143242b": {
+      "id": "line.game.borin.look.house-house.hearth-kettle-c143242b",
+      "kind": "voice-line",
+      "prompt": "Cooking pot in front of fire",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cooking pot in front of fire",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.house-house.door.house.frame-9ab3e2af": {
+      "id": "line.game.borin.look.house-house.door.house.frame-9ab3e2af",
+      "kind": "voice-line",
+      "prompt": "Door frame · Cottage door · inside",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Cottage door · inside",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.forest-forest.door.forest-mine.frame-8a1d0863": {
+      "id": "line.game.borin.look.forest-forest.door.forest-mine.frame-8a1d0863",
+      "kind": "voice-line",
+      "prompt": "Door frame · Goldroot Mine gate",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Goldroot Mine gate",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.forest-forest.door.forest-camp.frame-b6636aa3": {
+      "id": "line.game.borin.look.forest-forest.door.forest-camp.frame-b6636aa3",
+      "kind": "voice-line",
+      "prompt": "Door frame · Orc camp gate",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Orc camp gate",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.camp-camp.cauldron-ground-5312038d": {
+      "id": "line.game.borin.look.camp-camp.cauldron-ground-5312038d",
+      "kind": "voice-line",
+      "prompt": "Cauldron approach",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cauldron approach",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.camp-camp.cage.left-d2434f38": {
+      "id": "line.game.borin.look.camp-camp.cage.left-d2434f38",
+      "kind": "voice-line",
+      "prompt": "Cage frame · Left post",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cage frame · Left post",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.camp-camp.cage.header-633ad56a": {
+      "id": "line.game.borin.look.camp-camp.cage.header-633ad56a",
+      "kind": "voice-line",
+      "prompt": "Cage frame · Header",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cage frame · Header",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.camp-camp.cage.wall-6c516563": {
+      "id": "line.game.borin.look.camp-camp.cage.wall-6c516563",
+      "kind": "voice-line",
+      "prompt": "Cage frame · Stationary wall",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cage frame · Stationary wall",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.camp-camp.hearth-cauldron-355b2df6": {
+      "id": "line.game.borin.look.camp-camp.hearth-cauldron-355b2df6",
+      "kind": "voice-line",
+      "prompt": "Cauldron in front of fire",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Cauldron in front of fire",
+        "direction": ""
+      }
+    },
+    "line.game.borin.look.camp-camp.door.camp.frame-7e1ba8a": {
+      "id": "line.game.borin.look.camp-camp.door.camp.frame-7e1ba8a",
+      "kind": "voice-line",
+      "prompt": "Door frame · Orc camp gate · inside",
+      "activeVersion": "",
+      "versions": {},
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Door frame · Orc camp gate · inside",
+        "direction": ""
+      }
     }
   },
   "styleGuide": {
@@ -15458,6 +16531,18 @@
       "Journal"
     ],
     "voice.narrator": [
+      "Voices"
+    ],
+    "voice.borin": [
+      "Voices"
+    ],
+    "voice.innkeeper": [
+      "Voices"
+    ],
+    "voice.guard": [
+      "Voices"
+    ],
+    "voice.king": [
       "Voices"
     ]
   }
