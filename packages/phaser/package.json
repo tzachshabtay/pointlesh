@@ -19,6 +19,10 @@
     "./animation-tags": {
       "types": "./dist/animation-tags.d.ts",
       "import": "./dist/animation-tags.js"
+    },
+    "./audio-assets": {
+      "types": "./dist/audio-assets.d.ts",
+      "import": "./dist/audio-assets.js"
     }
   },
   "files": [

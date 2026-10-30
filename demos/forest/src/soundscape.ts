@@ -1,5 +1,5 @@
 import type Phaser from 'phaser';
-import { playAdventureAudio, type PhaserAdventureAudioAssets } from '@pointlesh/phaser';
+import { playAdventureAudio, type PhaserAdventureAudioAssets } from '@pointlesh/phaser/audio-assets';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import { FootstepCadence, footstepFor, soundtrackFor, type AudioWalker, type ForestAudioState } from './audio-state';
 
