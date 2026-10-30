@@ -24,6 +24,8 @@ async function ready(page: Page) {
     s.introArrival = undefined; s.dismissSpeech(); s.changeRoom('house'); s.character.stop();
     s.story.inventory = ['rope', 'stout', 'mushroom']; s.render();
   });
+  // Fullscreen auto-hides the toolbar; use the normal layout for editor checks.
+  await page.keyboard.press('Escape');
   await page.locator('#designer').click();
   await page.getByRole('button', { name: 'Toggle interaction designer', exact: true }).click();
 }
@@ -271,4 +273,25 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
   await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('Discard this.');
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await expect(cell(page, guard, coin)).toHaveAttribute('data-state', 'empty');
+});
+
+
+test('promoted recording-session wording appears in the matrix and in-game after reload', async ({ page }) => {
+  const assets = JSON.parse(readFileSync('demos/forest/public/authoring/assets.json', 'utf8'));
+  const text = 'A rope with a freshly recorded purpose.';
+  const line = assets.assets[lineId] ?? { id: lineId, kind: 'voice-line', prompt: 'A rope', activeVersion: '', versions: {} };
+  line.voiceSettings = { ...line.voiceSettings, voiceAssetId: 'voice.borin', text, direction: 'With pride' };
+  if (line.versions[line.activeVersion]) line.versions[line.activeVersion].voiceSettings = { ...line.voiceSettings };
+  assets.assets[lineId] = line;
+  await page.route('**/authoring/assets.json', route => route.fulfill({ json: assets }));
+  await ready(page);
+  await expect(cell(page, rope, 'verb:look')).toHaveAttribute('title', text);
+  await cell(page, rope, 'verb:look').click();
+  const dialog = page.getByRole('dialog', { name: 'Edit interaction', exact: true });
+  await expect(dialog.getByRole('textbox', { name: 'Hero speech', exact: true })).toHaveValue(text);
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.getByRole('button', { name: 'Toggle interaction designer', exact: true }).click();
+  await page.locator('#designer').click();
+  await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click({ button: 'right' });
+  await expect(page.locator('#speech')).toContainText(text);
 });

@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createLayer, defineSceneManifest } from '@scene-designer/core';
 import { createCharacterPrefab, createObjectPrefab, createHotspotPrefab, createInventoryItemPrefab, createPointleshInstance } from '../dist/index.js';
 import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
-import { assertInteractionManifest, createInteractionPlaybackState, interactionTargets, interactionVoiceLineId, runInteraction, syncInteractionVoiceLines } from '../dist/index.js';
+import { assertInteractionManifest, createInteractionPlaybackState, interactionTargets, interactionVoiceLineId, runInteraction, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines } from '../dist/index.js';
 
 const make = () => ({ schemaVersion: 1, heroVoiceAssetId: 'hero', verbs: [{ id: 'look', label: 'Look' }, { id: 'push', label: 'Push' }, { id: 'talk', label: 'Talk' }],
   cells: { chest: { 'verb:look': { kind: 'simple', text: 'A stubborn chest.' }, 'verb:push': { kind: 'code' }, 'item:chest': { kind: 'impossible' } } } });
@@ -147,4 +147,30 @@ test('interactive matrix targets respect prefab and instance settings without di
   assert.deepEqual(manifest, before);
   const synced = syncInteractionVoiceLines(manifest, assets(), interactionTargets(scenes));
   assert.equal(synced.assets[interactionVoiceLineId('prefab:borin', 'verb:look')].voiceSettings.text, 'Ready for adventure.');
+});
+
+
+test('promoted voice text hydrates interactions on reload and still allows subsequent interaction edits', async () => {
+  const manifest = make();
+  manifest.cells.defaults = { 'verb:talk': { kind: 'simple', sentences: ['One', 'Two'], mode: 'rotation' } };
+  const source = syncInteractionVoiceLines(manifest, assets());
+  const id = interactionVoiceLineId('chest', 'verb:look');
+  const line = source.assets[id];
+  line.voiceSettings = { ...line.voiceSettings, text: 'A recently polished chest.', direction: 'Impressed' };
+  line.activeVersion = 'take';
+  line.versions.take = { name: 'take', file: 'take.wav', prompt: 'Speak', model: 'microphone', createdAt: '2026-10-30T00:00:00Z', voiceSettings: { ...line.voiceSettings } };
+  source.assets[interactionVoiceLineId('defaults', 'verb:talk', 1)].voiceSettings.text = 'A better second line';
+  const restored = syncInteractionTextFromVoiceLines(manifest, source);
+  assert.equal(restored.cells.chest['verb:look'].text, 'A recently polished chest.');
+  assert.deepEqual(restored.cells.defaults['verb:talk'], { kind: 'simple', sentences: ['One', 'A better second line'], mode: 'rotation' });
+  assert.equal(manifest.cells.chest['verb:look'].text, 'A stubborn chest.');
+  assert.equal(syncInteractionVoiceLines(restored, source).assets[id].activeVersion, 'take');
+  const spoken = [];
+  await runInteraction(restored, 'chest', 'verb:look', { say: text => spoken.push(text) });
+  assert.deepEqual(spoken, ['A recently polished chest.']);
+  restored.cells.chest['verb:look'].text = 'Edited from the matrix';
+  const changed = syncInteractionVoiceLines(restored, source);
+  assert.equal(changed.assets[id].voiceSettings.text, 'Edited from the matrix');
+  assert.equal(changed.assets[id].voiceSettings.direction, 'Impressed');
+  assert.equal(changed.assets[id].activeVersion, '');
 });

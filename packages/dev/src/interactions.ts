@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { assertManifest, type AiAssetManifest } from '@ai-game-assets/core';
-import { assertInteractionManifest, interactionTargets, syncInteractionVoiceLines, type InteractionManifest } from '@pointlesh/core';
+import { assertInteractionManifest, interactionTargets, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, type InteractionManifest } from '@pointlesh/core';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
 import { readProjectJson, writeProjectJson } from './index.js';
 
@@ -24,7 +24,11 @@ export function createInteractionDevServer(options: InteractionDevServerOptions)
     if (request.url !== '/manifest' || !['GET', 'PUT'].includes(request.method ?? '')) { response.writeHead(404); response.end('Not found'); return; }
     try {
       let result: InteractionManifest;
-      if (request.method === 'GET') result = await readProjectJson<InteractionManifest>(options.manifestPath, assertInteractionManifest);
+      if (request.method === 'GET') {
+        const manifest = await readProjectJson<InteractionManifest>(options.manifestPath, assertInteractionManifest);
+        const assets = await readProjectJson<AiAssetManifest>(options.aiAssetsManifestPath, value => assertManifest(value as AiAssetManifest));
+        result = syncInteractionTextFromVoiceLines(manifest, assets);
+      }
       else {
         if (!request.headers['content-type']?.startsWith('application/json')) throw new Error('Expected application/json');
         let size = 0; const chunks: Buffer[] = [];

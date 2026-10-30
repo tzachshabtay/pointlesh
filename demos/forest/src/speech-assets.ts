@@ -16,9 +16,11 @@ const lineText = (asset: AiAssetManifest['assets'][string]) =>
 
 /** Reuse existing interaction/dialog recordings when the same character says the same text. */
 export function findSpeechLine(manifest: AiAssetManifest, text: string, voice: string): string | undefined {
-  const matches = Object.values(manifest.assets).filter(asset => asset.kind === 'voice-line'
-    && (asset.versions[asset.activeVersion]?.voiceSettings?.voiceAssetId ?? asset.voiceSettings?.voiceAssetId) === `voice.${voice}`
-    && lineText(asset) === text);
+  const candidates = Object.values(manifest.assets).filter(asset => asset.kind === 'voice-line'
+    && (asset.versions[asset.activeVersion]?.voiceSettings?.voiceAssetId ?? asset.voiceSettings?.voiceAssetId) === `voice.${voice}`);
+  const exact = candidates.filter(asset => lineText(asset) === text);
+  const matches = exact.length ? exact : candidates.filter(asset => asset.prompt === text
+    || Object.values(asset.versions).some(version => version.voiceSettings?.text === text || version.prompt === text));
   return (matches.find(asset => asset.versions[asset.activeVersion]?.file) ?? matches[0])?.id;
 }
 
@@ -26,11 +28,13 @@ export function resolveGameSpeech(manifest: AiAssetManifest, text: string, speak
   const voice = speechVoice(speaker);
   const scripted = Object.entries(spokenLines).find(([, line]) => line.voice === voice && line.text === text);
   const id = explicitLineId ?? (scripted ? `line.game.${voice}.${scripted[0]}` : undefined);
-  const asset = id ? manifest.assets[id] : undefined;
-  const resolvedText = asset ? lineText(asset) ?? text : text;
-  // Explicit interaction IDs always win, including an unpromoted selection.
-  const lineAssetId = explicitLineId ?? findSpeechLine(manifest, resolvedText, voice) ?? asset?.id;
-  return { text: resolvedText, voice, lineAssetId };
+  // Resolve the stable source wording too: promoted edits need to replace scripted
+  // descriptions even though the game still calls say() with their original text.
+  const scriptedAsset = id ? manifest.assets[id] : undefined;
+  const authoredText = scriptedAsset ? lineText(scriptedAsset) ?? text : text;
+  const lineAssetId = explicitLineId ?? findSpeechLine(manifest, authoredText, voice) ?? id;
+  const asset = lineAssetId ? manifest.assets[lineAssetId] : undefined;
+  return { text: asset ? lineText(asset) ?? text : text, voice, lineAssetId };
 }
 
 export function cutsceneSpeechLine(manifest: AiAssetManifest, kind: 'intro' | 'ending', index: number): string | undefined {

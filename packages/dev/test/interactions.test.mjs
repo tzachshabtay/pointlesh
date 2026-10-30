@@ -25,6 +25,11 @@ test('promoting interactions persists speech alongside the latest generated asse
     assert.equal(saved.assets.hero.linkedAnimationAssets[id].assetId, id);
     assert.equal(saved.assets[interactionVoiceLineId('defaults', 'verb:look', 1)].voiceSettings.text, 'Still nothing unusual.');
     assert.deepEqual(await (await fetch(url)).json(), updated);
+    saved.assets[id].voiceSettings.text = 'A revised line from the recording session.';
+    await writeFile(aiAssetsManifestPath, JSON.stringify(saved));
+    const reloaded = await (await fetch(url)).json();
+    assert.equal(reloaded.cells.chest['verb:look'].text, 'A revised line from the recording session.');
+    assert.equal(reloaded.cells.defaults['verb:look'].mode, 'rotation');
     const invalid = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...updated, verbs: [] }) });
     assert.equal(invalid.status, 400); assert.deepEqual(JSON.parse(await readFile(manifestPath, 'utf8')), updated);
     assert.equal((await fetch(url, { method: 'PUT', headers: { Origin: 'https://untrusted.example', 'Content-Type': 'application/json' }, body: JSON.stringify(initial) })).status, 403);

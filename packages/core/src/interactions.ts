@@ -110,6 +110,22 @@ export function interactionVoiceLineId(row: string, column: string, sentenceInde
   return sentenceIndex === 0 ? base : `${base}.sentence-${sentenceIndex + 1}`;
 }
 
+/** Pull promoted asset wording back into interaction cells. Asset edits are shared
+ * with dialogs and recording sessions; editing a cell still uses the forward sync below. */
+export function syncInteractionTextFromVoiceLines(manifest: InteractionManifest, assets: AiAssetManifest): InteractionManifest {
+  const result = structuredClone(manifest);
+  for (const [row, cells] of Object.entries(result.cells)) for (const [column, cell] of Object.entries(cells)) {
+    if (cell.kind !== 'simple') continue;
+    const sentences = interactionSentences(cell).map((text, index) => {
+      const asset = assets.assets[interactionVoiceLineId(row, column, index)];
+      const authored = asset?.voiceSettings?.text ?? asset?.versions[asset.activeVersion]?.voiceSettings?.text;
+      return typeof authored === 'string' && authored.trim() ? authored : text;
+    });
+    cells[column] = { kind: 'simple', ...(cell.mode ? { mode: cell.mode } : {}), ...(cell.sentences ? { sentences } : { text: sentences[0]! }) };
+  }
+  return result;
+}
+
 /** Retains generated versions; changed speech clears the active recording so stale audio cannot play. */
 export function syncInteractionVoiceLines(manifest: InteractionManifest, source: AiAssetManifest, targets: InteractionTarget[] = []): AiAssetManifest {
   assertInteractionManifest(manifest);

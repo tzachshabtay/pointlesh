@@ -102,3 +102,18 @@ test('existing generated look lines retain recordings and regain their voice lin
   assert.equal(topLevelAiAssetIds(completed).includes(id), false);
   assert.ok(Object.values(completed.assets['voice.borin'].linkedAnimationAssets).some(link => link.assetId === id));
 });
+
+
+test('promoted wording replaces source descriptions and survives catalog completion without duplicates', () => {
+  const text = story.targets.camp.find(target => target.id === 'cage').description;
+  const id = 'line.authored.cage';
+  const saved = { schemaVersion: 1, assets: {
+    'voice.borin': structuredClone(assets.assets['voice.borin']),
+    [id]: { id, kind: 'voice-line', prompt: text, voiceSettings: { voiceAssetId: 'voice.borin', text: 'A cage fit for nobody.', direction: 'Disgusted' },
+      activeVersion: 'recorded', versions: { recorded: { name: 'recorded', file: 'cage.mp3', voiceSettings: { voiceAssetId: 'voice.borin', text: 'A cage fit for nobody.', direction: 'Disgusted' } } } },
+  } };
+  const completed = completeForestAssetManifest(saved);
+  assert.deepEqual(resolveGameSpeech(completed, text), { text: 'A cage fit for nobody.', voice: 'borin', lineAssetId: id });
+  assert.equal(completed.assets['line.game.borin.look.camp-cage'], undefined);
+  assert.equal(completed.assets[id].versions.recorded.file, 'cage.mp3');
+});

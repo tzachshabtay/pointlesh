@@ -1,5 +1,5 @@
 import { registerInGameDesignerPanel, type AiAssetManifest } from '@ai-game-assets/core';
-import { assertInteractionManifest, DEFAULT_INTERACTION_TARGET, interactionSentences, interactionTargets, itemInteractionColumn, syncInteractionVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget, type InteractionSpeechMode } from '@pointlesh/core';
+import { assertInteractionManifest, DEFAULT_INTERACTION_TARGET, interactionSentences, interactionTargets, itemInteractionColumn, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget, type InteractionSpeechMode } from '@pointlesh/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 
 export class InteractionDesignerDebugClient {
@@ -246,6 +246,16 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   render(); if (dirty) publish();
   return { root, open: () => dock.open(), close: () => dock.close(), isOpen: () => dock.isOpen(), refresh: render,
     getManifest: () => structuredClone(manifest), promote: promoteChanges,
+    setAiAssets(assets: AiAssetManifest) {
+      manifest = syncInteractionTextFromVoiceLines(manifest, assets);
+      base = JSON.stringify(syncInteractionTextFromVoiceLines(JSON.parse(base), assets));
+      for (const history of [past, future]) for (let i = 0; i < history.length; i++) history[i] = syncInteractionTextFromVoiceLines(history[i]!, assets);
+      if (options.storageKey) {
+        try { if (dirty) document.defaultView!.localStorage.setItem(options.storageKey, JSON.stringify({ base, manifest })); }
+        catch { status.textContent = 'Draft storage is unavailable.'; }
+      }
+      render();
+    },
     destroy() { destroyed = true; dialog.close(); dock.destroy(); root.remove(); } };
 }
 

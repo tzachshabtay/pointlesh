@@ -55,7 +55,7 @@ import { CutsceneCrossfade } from './cutscene-crossfade';
 import { addJournalAssets } from './journal-assets';
 import { ForestJournal, renderJournal } from './journal';
 import { captureSavePreview } from './save-preview';
-import { assertInteractionManifest, syncInteractionVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, resolveInteraction, selectInteractionSpeech, createInteractionPlaybackState, type InteractionManifest, type InteractionSpeechLine } from '@pointlesh/core';
+import { assertInteractionManifest, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, resolveInteraction, selectInteractionSpeech, createInteractionPlaybackState, type InteractionManifest, type InteractionSpeechLine } from '@pointlesh/core';
 import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
 import { createForestInteractions, entityInteractionId } from './interactions';
 import { playTitleDeparture } from './title-departure';
@@ -928,6 +928,8 @@ class ForestAdventure extends Phaser.Scene {
         Object.assign(manifest, completeForestAssetManifest(manifest));
         assetDesignerManifest = manifest;
         void this.audioAssets.syncManifest(manifest).catch(error => toast(String(error)));
+        interactions = syncInteractionTextFromVoiceLines(interactions, manifest);
+        this.interactionDesigner?.setAiAssets(manifest);
         Object.assign(manifest, syncInteractionVoiceLines(interactions, manifest, interactionTargets(authoredScenes)));
         addGameSpeechAssets(manifest, authoredScenes);
         Object.assign(assets, manifest); this.conversation.setAiAssets(assets); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations();
@@ -1595,6 +1597,7 @@ if (interactionResponse.ok) { const value = await interactionResponse.json(); as
 else if (interactionResponse.status !== 404) throw new Error(`Could not load authored interactions: ${interactionResponse.status}`);
 // Introduce the newly supported player row once; preserve authored cells and cleared rows.
 interactions.cells['prefab:forest.character.borin'] ??= seededInteractions.cells['prefab:forest.character.borin'];
+interactions = syncInteractionTextFromVoiceLines(interactions, assets);
 Object.assign(assets, syncInteractionVoiceLines(interactions, assets, interactionTargets(authoredScenes)));
 addGameSpeechAssets(assets, authoredScenes);
 // Use smooth texture sampling during continuous zoom, without multisampling quad
