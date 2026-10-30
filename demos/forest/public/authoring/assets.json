@@ -1811,10 +1811,42 @@
       "prompt": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel.",
       "voiceSettings": {
         "voiceAssetId": "voice.miner",
-        "text": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel."
+        "text": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel.",
+        "direction": "",
+        "provider": "elevenlabs",
+        "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+        "model": "eleven_v4"
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "generated-1793403342431",
+      "versions": {
+        "generated-1793403342431": {
+          "name": "generated-1793403342431",
+          "file": "art/line.miner.greeting.generated-1793403342431.wav",
+          "prompt": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel.",
+          "createdAt": "2026-10-30T23:35:43.729Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "format": "wav",
+            "provider": "elevenlabs"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.miner",
+            "text": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel.",
+            "direction": "",
+            "provider": "elevenlabs",
+            "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+            "model": "eleven_v4"
+          }
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "format": "wav",
+        "provider": "elevenlabs"
+      },
+      "audioPlayback": {}
     },
     "line.miner.password": {
       "id": "line.miner.password",
