@@ -71,9 +71,26 @@ export class PhaserAdventureAudioAssets {
   async syncManifest(manifest: AiAssetManifest): Promise<void> {
     await Promise.all(Object.values(manifest.assets).map(async asset => {
       const source = this.source(asset);
-      if (!source || this.sources.get(asset.id) === source) return;
-      await this.select(asset.id, source, asset);
+      if (!source) {
+        if (this.sources.has(asset.id)) {
+          this.pending.get(asset.id)?.cancel();
+          const selected = this.selected.get(asset.id);
+          if (selected) { this.scene.cache.audio.remove(selected.key); this.owned.delete(selected.key); }
+          this.selected.delete(asset.id); this.sources.delete(asset.id);
+          this.scene.cache.audio.remove(this.runtime.key(asset.id));
+        }
+        return;
+      }
+      if (this.sources.get(asset.id) === source) return;
+      const previousSource = this.sources.get(asset.id);
       this.sources.set(asset.id, source);
+      try { await this.select(asset.id, source, asset); }
+      catch (error) {
+        if (this.sources.get(asset.id) === source) {
+          if (previousSource) this.sources.set(asset.id, previousSource); else this.sources.delete(asset.id);
+        }
+        throw error;
+      }
     }));
   }
   destroy(): void {

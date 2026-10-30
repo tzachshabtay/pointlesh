@@ -65,3 +65,29 @@ test('a previously unrecorded voice line becomes playable after batch promotion'
   assert.equal(f.cache.get(f.audio.key(line.id)), '/art/elder-greeting.mp3');
   f.audio.destroy();
 });
+
+
+test('deleting the final promoted recording clears cached playback without clearing unpromoted auditions', async () => {
+  const f = fixture();
+  const sync = f.audio.syncManifest({ assets: { door: asset('recorded.wav') } });
+  f.complete(f.queued[0]); await sync;
+  await f.audio.syncManifest({ assets: { door: { ...asset(), activeVersion: '', versions: {} } } });
+  assert.equal(f.cache.has(f.audio.key('door')), false);
+  const audition = f.audio.select('door', 'draft.wav', asset());
+  f.complete(f.queued[1]); await audition;
+  await f.audio.syncManifest({ assets: { door: { ...asset(), activeVersion: '', versions: {} } } });
+  assert.equal(f.cache.has(f.audio.key('door')), true, 'An unpromoted draft on an empty line remains selected');
+  f.audio.destroy();
+});
+
+
+test('deleting a first recording while its audio is still loading cancels the pending playback', async () => {
+  const f = fixture();
+  const line = { id: 'new-line', kind: 'voice-line', activeVersion: 'take', versions: { take: { file: 'take.wav' } } };
+  const loading = f.audio.syncManifest({ assets: { [line.id]: line } });
+  await f.audio.syncManifest({ assets: { [line.id]: { ...line, activeVersion: '', versions: {} } } });
+  f.complete(f.queued[0]); await loading;
+  assert.equal(f.cache.has(f.queued[0].key), false);
+  assert.equal(f.cache.has(f.audio.key(line.id)), false);
+  f.audio.destroy();
+});
