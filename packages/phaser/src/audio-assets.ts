@@ -81,7 +81,12 @@ export class PhaserAdventureAudioAssets {
         }
         return;
       }
-      if (this.sources.get(asset.id) === source) return;
+      if (this.sources.get(asset.id) === source) {
+        // Refresh trim/voice metadata without reloading audio or replacing a different audition.
+        const selected = this.selected.get(asset.id);
+        if (selected?.source === source) selected.asset = asset;
+        return;
+      }
       const previousSource = this.sources.get(asset.id);
       this.sources.set(asset.id, source);
       try { await this.select(asset.id, source, asset); }
@@ -100,4 +105,19 @@ export class PhaserAdventureAudioAssets {
     this.owned.clear(); this.selected.clear();
     this.scene.events.off('shutdown', this.destroy, this);
   }
+}
+
+/** Play the selected version's non-destructive trim using Phaser's audio markers. */
+export function playAdventureAudio(sound: Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound, asset?: AiAssetDefinition): boolean {
+  const playback = { ...asset?.audioPlayback, ...asset?.versions[asset.activeVersion]?.audioPlayback };
+  const start = Math.max(0, playback.trimStartSeconds ?? 0);
+  const end = Math.min(sound.totalDuration, playback.trimEndSeconds ?? sound.totalDuration);
+  const rate = playback.playbackRate ?? 1;
+  if (start > 0 || end < sound.totalDuration) {
+    if (end <= start) return false;
+    const name = 'pointlesh-playable-region';
+    sound.addMarker({ name, start, duration: end - start, config: { volume: sound.volume, mute: sound.mute, detune: sound.detune, loop: sound.loop, rate } });
+    return sound.play(name);
+  }
+  return sound.play({ rate });
 }

@@ -1,5 +1,5 @@
 import type Phaser from 'phaser';
-import type { PhaserAdventureAudioAssets } from '@pointlesh/phaser';
+import { playAdventureAudio, type PhaserAdventureAudioAssets } from '@pointlesh/phaser';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
 import { FootstepCadence, footstepFor, soundtrackFor, type AudioWalker, type ForestAudioState } from './audio-state';
 
@@ -66,7 +66,7 @@ export class ForestSoundscape {
     this.voices.set(sound, gain);
     sound.once('destroy', () => this.voices.delete(sound));
     sound.once('complete', () => sound.destroy());
-    if (!sound.play()) { sound.destroy(); return; }
+    if (!playAdventureAudio(sound, this.audioAssets?.asset(id) ?? this.runtime.manifest.assets[id])) { sound.destroy(); return; }
     return sound;
   }
   playSfx(name: string, volume = .75): Sound | undefined {

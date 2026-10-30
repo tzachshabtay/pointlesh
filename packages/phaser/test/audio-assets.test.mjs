@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
-import { PhaserAdventureAudioAssets } from '../dist/audio-assets.js';
+import { PhaserAdventureAudioAssets, playAdventureAudio } from '../dist/audio-assets.js';
 const asset = (file = 'door.mp3') => ({ id: 'door', kind: 'sound', activeVersion: 'active', versions: { active: { file } } });
 function fixture() {
   const load = new EventEmitter(), cache = new Map([['original', 'original buffer']]), queued = [];
@@ -90,4 +90,28 @@ test('deleting a first recording while its audio is still loading cancels the pe
   assert.equal(f.cache.has(f.queued[0].key), false);
   assert.equal(f.cache.has(f.audio.key(line.id)), false);
   f.audio.destroy();
+});
+
+
+test('trim metadata updates the selected take without decoding again or disturbing an audition', async () => {
+  const f = fixture();
+  const next = { assets: { door: asset('recorded.wav') } };
+  const sync = f.audio.syncManifest(next); f.complete(f.queued[0]); await sync;
+  const edited = structuredClone(next);
+  edited.assets.door.versions.active.audioPlayback = { trimStartSeconds: .2, trimEndSeconds: 1.2 };
+  await f.audio.syncManifest(edited);
+  assert.deepEqual(f.audio.asset('door').versions.active.audioPlayback, { trimStartSeconds: .2, trimEndSeconds: 1.2 });
+  assert.equal(f.queued.length, 1);
+  f.audio.destroy();
+});
+
+test('voice playback uses the favorite take trim and rate, with completion at its end marker', () => {
+  const calls = [];
+  const sound = { totalDuration: 4, volume: .4, mute: false, detune: 0, loop: false, addMarker: marker => calls.push(marker), play: config => { calls.push(config); return true; } };
+  const voice = { ...asset(), audioPlayback: { trimStartSeconds: 0, trimEndSeconds: 4, playbackRate: 1 }, versions: { active: { file: 'voice.wav', audioPlayback: { trimStartSeconds: .4, trimEndSeconds: 2.8, playbackRate: .9 } } } };
+  assert.equal(playAdventureAudio(sound, voice), true);
+  assert.deepEqual(calls, [{ name: 'pointlesh-playable-region', start: .4, duration: 2.4, config: { volume: .4, mute: false, detune: 0, loop: false, rate: .9 } }, 'pointlesh-playable-region']);
+  calls.length = 0;
+  assert.equal(playAdventureAudio(sound, asset()), true);
+  assert.deepEqual(calls, [{ rate: 1 }]);
 });
