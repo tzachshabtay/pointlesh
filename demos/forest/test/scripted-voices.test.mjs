@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { tsImport } from 'tsx/esm/api';
 import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
-const { assets, scenes } = await tsImport('../src/content.ts', import.meta.url);
+const { assets, scenes, completeForestAssetManifest } = await tsImport('../src/content.ts', import.meta.url);
 const { spokenLines } = await tsImport('../src/spoken-lines.ts', import.meta.url);
 const { addGameSpeechAssets, resolveGameSpeech, cutsceneSpeechLine } = await tsImport('../src/speech-assets.ts', import.meta.url);
 const story = await tsImport('../src/story.ts', import.meta.url);
@@ -68,4 +68,37 @@ test('every cinematic line resolves to its character or narrator, and explicit i
   const before = structuredClone(manifest); addGameSpeechAssets(manifest, scenes);
   assert.deepEqual(manifest, before, 'Registration preserves promoted audio and edited text');
   assert.equal(resolveGameSpeech(manifest, story.introArrivalLine, 'Borin', 'interaction.selection').lineAssetId, 'interaction.selection');
+});
+
+
+test('loading saved voices reuses existing look recordings without adding standalone default duplicates', () => {
+  const text = story.targets.camp.find(target => target.id === 'cage').description;
+  const recording = { id: 'line.authored.cage', kind: 'voice-line', prompt: text,
+    voiceSettings: { voiceAssetId: 'voice.borin', text }, activeVersion: 'recorded',
+    versions: { recorded: { name: 'recorded', file: 'cage.mp3' } } };
+  const saved = { schemaVersion: 1, assets: {
+    'voice.borin': { ...structuredClone(assets.assets['voice.borin']), linkedAnimationAssets: {} },
+    [recording.id]: recording,
+  } };
+  const completed = completeForestAssetManifest(saved);
+  assert.equal(completed.assets['line.game.borin.look.camp-cage'], undefined);
+  assert.deepEqual(completed.assets[recording.id], recording);
+  assert.equal(resolveGameSpeech(completed, text).lineAssetId, recording.id);
+  assert.equal(topLevelAiAssetIds(completed).some(id => completed.assets[id].kind === 'voice-line' && id.startsWith('line.game.')), false);
+  assert.ok(Object.values(completed.assets['voice.borin'].linkedAnimationAssets).some(link => link.assetId === recording.id));
+  assert.deepEqual(completeForestAssetManifest(completed), completed, 'Completion is idempotent');
+});
+
+test('existing generated look lines retain recordings and regain their voice link after saved voice replacement', () => {
+  const manifest = structuredClone(assets);
+  const id = 'line.game.borin.look.custom-scene-object';
+  const asset = { id, kind: 'voice-line', prompt: 'A custom scene description.',
+    voiceSettings: { voiceAssetId: 'voice.borin', text: 'A custom scene description.' },
+    activeVersion: 'recorded', versions: { recorded: { name: 'recorded', file: 'custom.mp3' } } };
+  manifest.assets[id] = asset;
+  manifest.assets['voice.borin'].linkedAnimationAssets = {};
+  const completed = completeForestAssetManifest(manifest);
+  assert.deepEqual(completed.assets[id], asset);
+  assert.equal(topLevelAiAssetIds(completed).includes(id), false);
+  assert.ok(Object.values(completed.assets['voice.borin'].linkedAnimationAssets).some(link => link.assetId === id));
 });

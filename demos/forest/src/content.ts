@@ -282,7 +282,15 @@ seedAudioFrameTags(assets);
 addGameSpeechAssets(assets, scenes);
 const gameAssetDefaults = structuredClone(assets);
 export function completeForestAssetManifest(manifest: AiAssetManifest): AiAssetManifest {
-  const complete = { ...manifest, assets: { ...structuredClone(gameAssetDefaults.assets), ...manifest.assets },
+  // Look lines are derived from the current catalog. Copying the startup set can
+  // duplicate an authored interaction/dialog recording with the same speech.
+  const defaults = structuredClone(gameAssetDefaults.assets);
+  const derivedLookIds = new Set(Object.keys(defaults).filter(id => id.startsWith('line.game.borin.look.')));
+  for (const id of derivedLookIds) delete defaults[id];
+  for (const asset of Object.values(defaults)) for (const [key, link] of Object.entries(asset.linkedAnimationAssets ?? {})) {
+    if (derivedLookIds.has(link.assetId)) delete asset.linkedAnimationAssets![key];
+  }
+  const complete = { ...manifest, assets: { ...defaults, ...manifest.assets },
     assetPaths: { ...structuredClone(gameAssetDefaults.assetPaths), ...manifest.assetPaths } };
   addGameSpeechAssets(complete);
   return complete;

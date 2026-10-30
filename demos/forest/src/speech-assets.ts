@@ -54,10 +54,20 @@ export function addGameSpeechAssets(manifest: AiAssetManifest, scenes?: SceneDes
   };
   for (const [key, line] of Object.entries(spokenLines)) add(`line.game.${line.voice}.${key}`, line.voice, line.text, line.label);
   const description = (key: string, text: string, label: string) => {
-    if (text.trim() && !findSpeechLine(manifest, text, 'borin')) add(`line.game.borin.look.${key}`, 'borin', text, `Look · ${label}`);
+    if (!text.trim()) return;
+    const id = findSpeechLine(manifest, text, 'borin') ?? `line.game.borin.look.${key}`;
+    add(id, 'borin', text, `Look · ${label}`);
   };
   for (const [id, item] of Object.entries(items)) description(`inventory-${id}`, item.description, item.name);
   for (const [room, entries] of Object.entries(targets)) for (const target of entries) description(`${room}-${target.id}`, target.description, target.name);
+  for (const asset of Object.values(manifest.assets)) {
+    if (asset.kind !== 'voice-line' || !asset.id.startsWith('line.game.')) continue;
+    const voiceAssetId = asset.voiceSettings?.voiceAssetId
+      ?? asset.versions[asset.activeVersion]?.voiceSettings?.voiceAssetId;
+    if (!voiceAssetId?.startsWith('voice.')) continue;
+    const text = lineText(asset) ?? asset.prompt;
+    add(asset.id, voiceAssetId.slice('voice.'.length), text, text);
+  }
   if (scenes) for (const id of Object.keys(scenes.scenes)) {
     const room = resolvePointleshScene(scenes, id);
     for (const entity of [...room.objects, ...room.areas]) {
