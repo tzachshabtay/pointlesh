@@ -34,6 +34,36 @@ test('dialog checkpoint resumes a selected reply without replaying gameplay list
   assert.equal(restored.snapshot().commands.length, 3);
 });
 
+test('regenerated voice assets reach ongoing, restarted and restored conversations without replaying turns', () => {
+  const dialog = new AdventureDialog(manifest, assets);
+  const turns = [];
+  dialog.onTurn(turn => turns.push(turn));
+  assert.equal(dialog.start('miner').resolved.audio, undefined);
+  dialog.advance();
+  const checkpoint = dialog.snapshot(), current = dialog.current();
+  const recorded = structuredClone(assets);
+  for (const id of ['greeting', 'answer']) {
+    recorded.assets[id].activeVersion = 'generated';
+    recorded.assets[id].versions.generated = { name: 'generated', file: `art/${id}.mp3`, prompt: recorded.assets[id].prompt,
+      model: 'test', createdAt: '2026-10-29T00:00:00Z' };
+  }
+  dialog.setAiAssets(recorded);
+  assert.deepEqual(dialog.current(), current);
+  assert.deepEqual(dialog.snapshot(), checkpoint);
+  assert.equal(turns.length, 2, 'Asset updates must not restart speech or repeat game effects');
+  recorded.assets.answer.versions.generated.file = 'caller-mutated.mp3';
+  assert.equal(dialog.choose('password').resolved.audio.file, 'art/answer.mp3');
+  const saved = dialog.snapshot();
+  assert.equal(dialog.restore(saved).resolved.audio.file, 'art/answer.mp3');
+  assert.equal(turns.length, 3, 'Restoring still emits no effects');
+  assert.equal(dialog.start('miner').resolved.audio.file, 'art/greeting.mp3');
+
+  const invalid = structuredClone(assets);
+  delete invalid.assets.answer;
+  assert.throws(() => dialog.setAiAssets(invalid));
+  assert.equal(dialog.start('miner').resolved.audio.file, 'art/greeting.mp3', 'Invalid updates preserve the last working assets');
+});
+
 test('malformed or incompatible dialog checkpoint fails before replacing active conversation', () => {
   const dialog = new AdventureDialog(manifest, assets);
   dialog.start('miner'); dialog.advance();

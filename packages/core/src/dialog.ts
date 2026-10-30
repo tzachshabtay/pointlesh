@@ -83,6 +83,12 @@ export class AdventureDialog {
     this.runtime = candidate;
     this.checkpoint = undefined;
   }
+  /** Adopt regenerated voice lines for subsequent turns without restarting speech or replaying effects. */
+  setAiAssets(assets: AiAssetManifest): void {
+    const next = structuredClone(assets);
+    this.runtime.setAiAssets(next);
+    this.assets = next;
+  }
   private createRuntime(manifest = this.manifest, assets = this.assets): DialogRuntime {
     return new DialogRuntime(manifest, assets, { ...this.options, isEnabled: target => this.evaluateEnabled(target) });
   }

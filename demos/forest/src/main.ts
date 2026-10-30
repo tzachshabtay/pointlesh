@@ -925,7 +925,7 @@ class ForestAdventure extends Phaser.Scene {
         assetDesignerManifest = manifest;
         void this.audioAssets.syncManifest(manifest).catch(error => toast(String(error)));
         Object.assign(manifest, syncInteractionVoiceLines(interactions, manifest, interactionTargets(authoredScenes)));
-        Object.assign(assets, manifest); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations();
+        Object.assign(assets, manifest); this.conversation.setAiAssets(assets); callbacks.onManifestUpdated(manifest); this.sceneDesigner?.inspector.setAiAssets(manifest); this.refreshCharacterAnimations();
       },
     });
     this.interactionDesigner = installInteractionDesigner({
@@ -992,7 +992,8 @@ class ForestAdventure extends Phaser.Scene {
     this.talking = true; this.conversationActive = true;
     el('dialog').hidden = false; el('choices').replaceChildren();
     if (turn.type === 'line') {
-      if (turn.resolved.audio) this.interactionSound = this.audio.playVoice(turn.line.lineAssetId);
+      // The live audio selection can have a recording even before it is promoted.
+      this.interactionSound = this.audio.playVoice(turn.resolved.lineAsset.id);
       const voice = turn.resolved.voiceAsset.id.split('.').pop();
       this.speakingVoice = voice ?? 'borin';
       el('speaker').textContent = ({ ...portraitCharacters, chest:'Runed chest' } as Record<string,string>)[voice ?? ''] ?? 'Borin';

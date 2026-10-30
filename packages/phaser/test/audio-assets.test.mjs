@@ -50,3 +50,18 @@ test('duplicate callbacks share a load and shutdown ignores pending results', as
   f.audio.destroy(); f.complete(f.queued[0]); await a;
   assert.equal(f.audio.key('door'), 'original');
 });
+
+test('a previously unrecorded voice line becomes playable after batch promotion', async () => {
+  const f = fixture();
+  const line = { id: 'line.elder.greeting', kind: 'voice-line', activeVersion: '', versions: {} };
+  f.runtime.manifest.assets[line.id] = line;
+  await f.audio.syncManifest(f.runtime.manifest);
+  assert.equal(f.queued.length, 0);
+  const recorded = { ...line, activeVersion: 'generated', versions: { generated: { file: 'art/elder-greeting.mp3' } } };
+  const sync = f.audio.syncManifest({ assets: { ...f.runtime.manifest.assets, [line.id]: recorded } });
+  assert.equal(f.queued[0].source, '/art/elder-greeting.mp3');
+  f.complete(f.queued[0]); await sync;
+  assert.equal(f.audio.key(line.id), f.queued[0].key);
+  assert.equal(f.cache.get(f.audio.key(line.id)), '/art/elder-greeting.mp3');
+  f.audio.destroy();
+});
