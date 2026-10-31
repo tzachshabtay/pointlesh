@@ -992,6 +992,7 @@ class ForestAdventure extends Phaser.Scene {
     el('choices').replaceChildren(); el('dialog-next').hidden = false;
     this.showDialogPortrait(this.speakingVoice, true);
     if (speech.lineAssetId) this.interactionSound = this.audio.playVoice(speech.lineAssetId);
+    this.portrait.speak(text, speech.lineAssetId ? this.audioAssets.asset(speech.lineAssetId) : undefined, this.interactionSound);
   }
   dismissSpeech() { this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
@@ -1010,6 +1011,7 @@ class ForestAdventure extends Phaser.Scene {
       if (voice === 'borin') void this.character.say(turn.resolved.text, 3600000);
       else this.character.finishSpeech();
       this.showDialogPortrait(this.speakingVoice, true);
+      this.portrait.speak(turn.resolved.text, this.audioAssets.asset(turn.resolved.lineAsset.id), this.interactionSound);
     } else {
       this.speakingVoice = '';
       this.character.finishSpeech(); el('speaker').textContent = 'Borin'; el('speech').textContent = turn.decision.prompt; el('dialog-next').hidden = true;
@@ -1093,6 +1095,7 @@ class ForestAdventure extends Phaser.Scene {
     const lineId = cutsceneSpeechLine(assets, kind, index);
     const line = lineId ? assets.assets[lineId] : undefined;
     el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = line?.versions[line.activeVersion]?.voiceSettings?.text ?? line?.voiceSettings?.text ?? step.text ?? '';
+    this.cinematicPortrait.speak(el('cutscene-text').textContent ?? '', lineId ? this.audioAssets.asset(lineId) : undefined, this.cutsceneVoice.currentSound as Phaser.Sound.BaseSound | undefined, `${kind}:${index}`);
     el('cutscene-progress').textContent = sequence.map((_, i) => i === index ? '◆' : '◇').join(' ');
     el('skip-intro').hidden = false;
     el('skip-intro').textContent = isEnding ? 'Skip to homecoming' : 'Skip introduction';

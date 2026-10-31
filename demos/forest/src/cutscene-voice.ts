@@ -9,6 +9,7 @@ type VoiceSound = {
 export class CutsceneVoice {
   private shot?: string;
   private sound?: VoiceSound;
+  get currentSound(): VoiceSound | undefined { return this.sound; }
   constructor(private play: (id: string) => VoiceSound | undefined) {}
   sync(shot: string, lineId: string | undefined, elapsedMs: number): void {
     if (shot === this.shot) return;

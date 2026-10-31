@@ -1727,10 +1727,180 @@
       "prompt": "Borin. You have your father’s stubborn look. Good. We will need it.",
       "voiceSettings": {
         "voiceAssetId": "voice.elder",
-        "text": "Borin. You have your father’s stubborn look. Good. We will need it."
+        "text": "Borin. You have your father’s stubborn look. Good. We will need it.",
+        "provider": "elevenlabs",
+        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "direction": "",
+        "model": "eleven_v4"
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "promoted-1793324837849-1",
+      "versions": {
+        "promoted-1793324837849-1": {
+          "name": "promoted-1793324837849-1",
+          "file": "art/line.elder.greeting.promoted-1793324837849-1.mp3",
+          "prompt": "Borin. You have your father’s stubborn look. Good. We will need it.",
+          "createdAt": "2026-10-30T01:47:20.185Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.elder",
+            "text": "Borin. You have your father’s stubborn look. Good. We will need it.",
+            "provider": "elevenlabs",
+            "voiceId": "607NIeNPjD2aeZAq4oGc",
+            "direction": "",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Borin. You have your father’s stubborn look. Good. We will need it.",
+            "language": "en",
+            "duration": 4.96,
+            "audioHash": "0ea56be54e0a258a3994d6cf53b490161345e387985f0e9097bee11faf7c8e36",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "A"
+              },
+              {
+                "start": 0.03,
+                "end": 0.26,
+                "shape": "E"
+              },
+              {
+                "start": 0.26,
+                "end": 0.61,
+                "shape": "B"
+              },
+              {
+                "start": 0.61,
+                "end": 1.18,
+                "shape": "X"
+              },
+              {
+                "start": 1.18,
+                "end": 1.28,
+                "shape": "F"
+              },
+              {
+                "start": 1.28,
+                "end": 1.42,
+                "shape": "C"
+              },
+              {
+                "start": 1.42,
+                "end": 1.49,
+                "shape": "G"
+              },
+              {
+                "start": 1.49,
+                "end": 1.63,
+                "shape": "F"
+              },
+              {
+                "start": 1.63,
+                "end": 1.77,
+                "shape": "G"
+              },
+              {
+                "start": 1.77,
+                "end": 1.91,
+                "shape": "D"
+              },
+              {
+                "start": 1.91,
+                "end": 2.26,
+                "shape": "B"
+              },
+              {
+                "start": 2.26,
+                "end": 2.33,
+                "shape": "C"
+              },
+              {
+                "start": 2.33,
+                "end": 2.41,
+                "shape": "A"
+              },
+              {
+                "start": 2.41,
+                "end": 2.55,
+                "shape": "E"
+              },
+              {
+                "start": 2.55,
+                "end": 2.83,
+                "shape": "F"
+              },
+              {
+                "start": 2.83,
+                "end": 3.04,
+                "shape": "B"
+              },
+              {
+                "start": 3.04,
+                "end": 3.26,
+                "shape": "X"
+              },
+              {
+                "start": 3.26,
+                "end": 3.4,
+                "shape": "B"
+              },
+              {
+                "start": 3.4,
+                "end": 3.61,
+                "shape": "F"
+              },
+              {
+                "start": 3.61,
+                "end": 4.09,
+                "shape": "B"
+              },
+              {
+                "start": 4.09,
+                "end": 4.15,
+                "shape": "F"
+              },
+              {
+                "start": 4.15,
+                "end": 4.2,
+                "shape": "B"
+              },
+              {
+                "start": 4.2,
+                "end": 4.27,
+                "shape": "F"
+              },
+              {
+                "start": 4.27,
+                "end": 4.83,
+                "shape": "B"
+              },
+              {
+                "start": 4.83,
+                "end": 4.96,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.elder.greeting.promoted-1793324837849-1.mp3"
+          }
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
     },
     "line.elder.king": {
       "id": "line.elder.king",
@@ -1738,10 +1908,285 @@
       "prompt": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.",
       "voiceSettings": {
         "voiceAssetId": "voice.elder",
-        "text": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock."
+        "text": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.",
+        "provider": "elevenlabs",
+        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "direction": "",
+        "model": "eleven_v4"
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "promoted-1793324837849-2",
+      "versions": {
+        "promoted-1793324837849-2": {
+          "name": "promoted-1793324837849-2",
+          "file": "art/line.elder.king.promoted-1793324837849-2.mp3",
+          "prompt": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.",
+          "createdAt": "2026-10-30T01:47:22.564Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.elder",
+            "text": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.",
+            "provider": "elevenlabs",
+            "voiceId": "607NIeNPjD2aeZAq4oGc",
+            "direction": "",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "East, through the wood. Aldric is locked in a cage in the orc camp. Take a rope to secure his guard, and find a way to break the lock.",
+            "language": "en",
+            "duration": 8.56,
+            "audioHash": "00598f93689f90d791b11be7de089cf086fba72d23710587349678b04b87ff7b",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.49,
+                "shape": "B"
+              },
+              {
+                "start": 0.49,
+                "end": 0.61,
+                "shape": "X"
+              },
+              {
+                "start": 0.61,
+                "end": 0.87,
+                "shape": "F"
+              },
+              {
+                "start": 0.87,
+                "end": 0.94,
+                "shape": "C"
+              },
+              {
+                "start": 0.94,
+                "end": 1.15,
+                "shape": "F"
+              },
+              {
+                "start": 1.15,
+                "end": 1.29,
+                "shape": "B"
+              },
+              {
+                "start": 1.29,
+                "end": 1.96,
+                "shape": "X"
+              },
+              {
+                "start": 1.96,
+                "end": 2.03,
+                "shape": "E"
+              },
+              {
+                "start": 2.03,
+                "end": 2.51,
+                "shape": "B"
+              },
+              {
+                "start": 2.51,
+                "end": 2.58,
+                "shape": "H"
+              },
+              {
+                "start": 2.58,
+                "end": 2.86,
+                "shape": "B"
+              },
+              {
+                "start": 2.86,
+                "end": 3.28,
+                "shape": "C"
+              },
+              {
+                "start": 3.28,
+                "end": 3.63,
+                "shape": "B"
+              },
+              {
+                "start": 3.63,
+                "end": 3.7,
+                "shape": "E"
+              },
+              {
+                "start": 3.7,
+                "end": 3.84,
+                "shape": "F"
+              },
+              {
+                "start": 3.84,
+                "end": 4.12,
+                "shape": "C"
+              },
+              {
+                "start": 4.12,
+                "end": 4.29,
+                "shape": "A"
+              },
+              {
+                "start": 4.29,
+                "end": 4.68,
+                "shape": "X"
+              },
+              {
+                "start": 4.68,
+                "end": 4.84,
+                "shape": "F"
+              },
+              {
+                "start": 4.84,
+                "end": 5.05,
+                "shape": "E"
+              },
+              {
+                "start": 5.05,
+                "end": 5.12,
+                "shape": "F"
+              },
+              {
+                "start": 5.12,
+                "end": 5.19,
+                "shape": "E"
+              },
+              {
+                "start": 5.19,
+                "end": 5.27,
+                "shape": "A"
+              },
+              {
+                "start": 5.27,
+                "end": 5.44,
+                "shape": "F"
+              },
+              {
+                "start": 5.44,
+                "end": 5.58,
+                "shape": "B"
+              },
+              {
+                "start": 5.58,
+                "end": 5.79,
+                "shape": "F"
+              },
+              {
+                "start": 5.79,
+                "end": 6,
+                "shape": "B"
+              },
+              {
+                "start": 6,
+                "end": 6.32,
+                "shape": "D"
+              },
+              {
+                "start": 6.32,
+                "end": 6.39,
+                "shape": "C"
+              },
+              {
+                "start": 6.39,
+                "end": 6.63,
+                "shape": "B"
+              },
+              {
+                "start": 6.63,
+                "end": 6.77,
+                "shape": "C"
+              },
+              {
+                "start": 6.77,
+                "end": 6.84,
+                "shape": "B"
+              },
+              {
+                "start": 6.84,
+                "end": 6.98,
+                "shape": "G"
+              },
+              {
+                "start": 6.98,
+                "end": 7.05,
+                "shape": "C"
+              },
+              {
+                "start": 7.05,
+                "end": 7.26,
+                "shape": "B"
+              },
+              {
+                "start": 7.26,
+                "end": 7.33,
+                "shape": "F"
+              },
+              {
+                "start": 7.33,
+                "end": 7.4,
+                "shape": "C"
+              },
+              {
+                "start": 7.4,
+                "end": 7.54,
+                "shape": "F"
+              },
+              {
+                "start": 7.54,
+                "end": 7.72,
+                "shape": "A"
+              },
+              {
+                "start": 7.72,
+                "end": 7.94,
+                "shape": "B"
+              },
+              {
+                "start": 7.94,
+                "end": 8.01,
+                "shape": "C"
+              },
+              {
+                "start": 8.01,
+                "end": 8.15,
+                "shape": "H"
+              },
+              {
+                "start": 8.15,
+                "end": 8.22,
+                "shape": "D"
+              },
+              {
+                "start": 8.22,
+                "end": 8.43,
+                "shape": "B"
+              },
+              {
+                "start": 8.43,
+                "end": 8.56,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.elder.king.promoted-1793324837849-2.mp3"
+          }
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
     },
     "line.elder.advice": {
       "id": "line.elder.advice",
@@ -1749,10 +2194,335 @@
       "prompt": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.",
       "voiceSettings": {
         "voiceAssetId": "voice.elder",
-        "text": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe."
+        "text": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.",
+        "provider": "elevenlabs",
+        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "direction": "",
+        "model": "eleven_v4"
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "promoted-1793324837849-3",
+      "versions": {
+        "promoted-1793324837849-3": {
+          "name": "promoted-1793324837849-3",
+          "file": "art/line.elder.advice.promoted-1793324837849-3.mp3",
+          "prompt": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.",
+          "createdAt": "2026-10-30T01:47:24.646Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.elder",
+            "text": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.",
+            "provider": "elevenlabs",
+            "voiceId": "607NIeNPjD2aeZAq4oGc",
+            "direction": "",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Visit your cottage for supplies. Then speak to Mara and Orrin at the Copper Tankard. A conversation opens more doors than an axe.",
+            "language": "en",
+            "duration": 8.48,
+            "audioHash": "fc40693554c3d2e7c132eef86e0a0a5a5d9c6c172095b1f2bf9f5320bc65227e",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.06,
+                "shape": "X"
+              },
+              {
+                "start": 0.06,
+                "end": 0.16,
+                "shape": "G"
+              },
+              {
+                "start": 0.16,
+                "end": 0.23,
+                "shape": "B"
+              },
+              {
+                "start": 0.23,
+                "end": 0.51,
+                "shape": "F"
+              },
+              {
+                "start": 0.51,
+                "end": 0.7,
+                "shape": "D"
+              },
+              {
+                "start": 0.7,
+                "end": 0.75,
+                "shape": "C"
+              },
+              {
+                "start": 0.75,
+                "end": 1,
+                "shape": "B"
+              },
+              {
+                "start": 1,
+                "end": 1.07,
+                "shape": "G"
+              },
+              {
+                "start": 1.07,
+                "end": 1.21,
+                "shape": "B"
+              },
+              {
+                "start": 1.21,
+                "end": 1.29,
+                "shape": "A"
+              },
+              {
+                "start": 1.29,
+                "end": 1.51,
+                "shape": "H"
+              },
+              {
+                "start": 1.51,
+                "end": 1.58,
+                "shape": "C"
+              },
+              {
+                "start": 1.58,
+                "end": 1.86,
+                "shape": "B"
+              },
+              {
+                "start": 1.86,
+                "end": 2.24,
+                "shape": "X"
+              },
+              {
+                "start": 2.24,
+                "end": 2.29,
+                "shape": "B"
+              },
+              {
+                "start": 2.29,
+                "end": 2.47,
+                "shape": "C"
+              },
+              {
+                "start": 2.47,
+                "end": 2.54,
+                "shape": "B"
+              },
+              {
+                "start": 2.54,
+                "end": 2.62,
+                "shape": "A"
+              },
+              {
+                "start": 2.62,
+                "end": 2.74,
+                "shape": "B"
+              },
+              {
+                "start": 2.74,
+                "end": 2.95,
+                "shape": "F"
+              },
+              {
+                "start": 2.95,
+                "end": 3.06,
+                "shape": "A"
+              },
+              {
+                "start": 3.06,
+                "end": 3.19,
+                "shape": "D"
+              },
+              {
+                "start": 3.19,
+                "end": 3.26,
+                "shape": "B"
+              },
+              {
+                "start": 3.26,
+                "end": 3.4,
+                "shape": "C"
+              },
+              {
+                "start": 3.4,
+                "end": 3.47,
+                "shape": "B"
+              },
+              {
+                "start": 3.47,
+                "end": 3.75,
+                "shape": "E"
+              },
+              {
+                "start": 3.75,
+                "end": 3.89,
+                "shape": "B"
+              },
+              {
+                "start": 3.89,
+                "end": 4.03,
+                "shape": "C"
+              },
+              {
+                "start": 4.03,
+                "end": 4.17,
+                "shape": "B"
+              },
+              {
+                "start": 4.17,
+                "end": 4.27,
+                "shape": "D"
+              },
+              {
+                "start": 4.27,
+                "end": 4.31,
+                "shape": "C"
+              },
+              {
+                "start": 4.31,
+                "end": 4.39,
+                "shape": "A"
+              },
+              {
+                "start": 4.39,
+                "end": 4.48,
+                "shape": "E"
+              },
+              {
+                "start": 4.48,
+                "end": 4.55,
+                "shape": "B"
+              },
+              {
+                "start": 4.55,
+                "end": 4.69,
+                "shape": "C"
+              },
+              {
+                "start": 4.69,
+                "end": 4.9,
+                "shape": "E"
+              },
+              {
+                "start": 4.9,
+                "end": 5.04,
+                "shape": "B"
+              },
+              {
+                "start": 5.04,
+                "end": 5.47,
+                "shape": "X"
+              },
+              {
+                "start": 5.47,
+                "end": 5.67,
+                "shape": "D"
+              },
+              {
+                "start": 5.67,
+                "end": 5.75,
+                "shape": "C"
+              },
+              {
+                "start": 5.75,
+                "end": 5.82,
+                "shape": "G"
+              },
+              {
+                "start": 5.82,
+                "end": 5.89,
+                "shape": "E"
+              },
+              {
+                "start": 5.89,
+                "end": 5.96,
+                "shape": "B"
+              },
+              {
+                "start": 5.96,
+                "end": 6.03,
+                "shape": "C"
+              },
+              {
+                "start": 6.03,
+                "end": 6.17,
+                "shape": "B"
+              },
+              {
+                "start": 6.17,
+                "end": 6.31,
+                "shape": "C"
+              },
+              {
+                "start": 6.31,
+                "end": 6.38,
+                "shape": "E"
+              },
+              {
+                "start": 6.38,
+                "end": 6.46,
+                "shape": "A"
+              },
+              {
+                "start": 6.46,
+                "end": 6.65,
+                "shape": "C"
+              },
+              {
+                "start": 6.65,
+                "end": 6.72,
+                "shape": "B"
+              },
+              {
+                "start": 6.72,
+                "end": 6.82,
+                "shape": "A"
+              },
+              {
+                "start": 6.82,
+                "end": 7.37,
+                "shape": "E"
+              },
+              {
+                "start": 7.37,
+                "end": 7.51,
+                "shape": "B"
+              },
+              {
+                "start": 7.51,
+                "end": 7.93,
+                "shape": "C"
+              },
+              {
+                "start": 7.93,
+                "end": 8.28,
+                "shape": "B"
+              },
+              {
+                "start": 8.28,
+                "end": 8.48,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.elder.advice.promoted-1793324837849-3.mp3"
+          }
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
     },
     "line.elder.goodbye": {
       "id": "line.elder.goodbye",
@@ -1760,10 +2530,125 @@
       "prompt": "I know, lad. I know.",
       "voiceSettings": {
         "voiceAssetId": "voice.elder",
-        "text": "I know, lad. I know."
+        "text": "I know, lad. I know.",
+        "provider": "elevenlabs",
+        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "direction": "",
+        "model": "eleven_v4"
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "promoted-1793324837849-4",
+      "versions": {
+        "promoted-1793324837849-4": {
+          "name": "promoted-1793324837849-4",
+          "file": "art/line.elder.goodbye.promoted-1793324837849-4.mp3",
+          "prompt": "I know, lad. I know.",
+          "createdAt": "2026-10-30T01:47:25.348Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.elder",
+            "text": "I know, lad. I know.",
+            "provider": "elevenlabs",
+            "voiceId": "607NIeNPjD2aeZAq4oGc",
+            "direction": "",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I know, lad. I know.",
+            "language": "en",
+            "duration": 2.08,
+            "audioHash": "67340ec901ab2ebf710e6038377ce9c50947f95548dbc1b2722d946d3e9a2828",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.13,
+                "shape": "X"
+              },
+              {
+                "start": 0.13,
+                "end": 0.2,
+                "shape": "C"
+              },
+              {
+                "start": 0.2,
+                "end": 0.26,
+                "shape": "B"
+              },
+              {
+                "start": 0.26,
+                "end": 0.33,
+                "shape": "C"
+              },
+              {
+                "start": 0.33,
+                "end": 0.4,
+                "shape": "E"
+              },
+              {
+                "start": 0.4,
+                "end": 0.47,
+                "shape": "F"
+              },
+              {
+                "start": 0.47,
+                "end": 0.61,
+                "shape": "H"
+              },
+              {
+                "start": 0.61,
+                "end": 0.68,
+                "shape": "C"
+              },
+              {
+                "start": 0.68,
+                "end": 1.31,
+                "shape": "B"
+              },
+              {
+                "start": 1.31,
+                "end": 1.45,
+                "shape": "F"
+              },
+              {
+                "start": 1.45,
+                "end": 1.59,
+                "shape": "C"
+              },
+              {
+                "start": 1.59,
+                "end": 1.8,
+                "shape": "E"
+              },
+              {
+                "start": 1.8,
+                "end": 1.94,
+                "shape": "F"
+              },
+              {
+                "start": 1.94,
+                "end": 2.08,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.elder.goodbye.promoted-1793324837849-4.mp3"
+          }
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
     },
     "line.innkeeper.greeting": {
       "id": "line.innkeeper.greeting",
@@ -11072,6 +11957,10 @@
         "speak": {
           "assetId": "portrait.elder.speak",
           "label": "Close-up speak"
+        },
+        "lip-sync": {
+          "label": "Lip sync",
+          "assetId": "portrait.elder.mouths"
         }
       },
       "activeVersion": "portrait",
@@ -11089,7 +11978,14 @@
         "forest",
         "portrait",
         "elder"
-      ]
+      ],
+      "lipSync": {
+        "enabled": true,
+        "voiceAssetId": "voice.elder",
+        "language": "en",
+        "wordsPerMinute": 150,
+        "mouthAssetId": "portrait.elder.mouths"
+      }
     },
     "portrait.elder.speak": {
       "id": "portrait.elder.speak",
@@ -15388,6 +16284,170 @@
         "provider": "elevenlabs",
         "format": "mp3"
       }
+    },
+    "portrait.elder.mouths": {
+      "id": "portrait.elder.mouths",
+      "kind": "spritesheet",
+      "prompt": "Lip-sync mouth shapes for portrait.elder",
+      "dimensions": {
+        "width": 768,
+        "height": 768
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "mouthSet": {
+        "frames": {
+          "X": 0,
+          "A": 1,
+          "B": 2,
+          "C": 3,
+          "D": 4,
+          "E": 5,
+          "F": 6,
+          "G": 7,
+          "H": 8
+        },
+        "sourceAssetId": "portrait.elder",
+        "sourceVersion": "portrait",
+        "editRegion": {
+          "x": 77,
+          "y": 123,
+          "width": 102,
+          "height": 77
+        },
+        "frameGrid": {
+          "frameWidth": 256,
+          "frameHeight": 256,
+          "columns": 3,
+          "rows": 3,
+          "frameCount": 9
+        }
+      },
+      "activeVersion": "mouths-1793417007990-8cbd8572",
+      "versions": {
+        "mouths-1793415129749-eb13dfa6": {
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.elder",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 77,
+              "y": 123,
+              "width": 102,
+              "height": 77
+            }
+          },
+          "name": "mouths-1793415129749-eb13dfa6",
+          "file": "art/portrait.elder.mouths.mouths-1793415129749-eb13dfa6.png",
+          "prompt": "Lip-sync mouth shapes for portrait.elder",
+          "createdAt": "2026-10-31T02:52:09.796Z",
+          "settings": {},
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {}
+        },
+        "mouths-1793416747324-9af3f421": {
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.elder",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 77,
+              "y": 123,
+              "width": 102,
+              "height": 77
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "name": "mouths-1793416747324-9af3f421",
+          "file": "art/portrait.elder.mouths.mouths-1793416747324-9af3f421.png",
+          "prompt": "Lip-sync mouth shapes for portrait.elder",
+          "createdAt": "2026-10-31T03:19:07.589Z",
+          "settings": {},
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "mouths-1793415129749-eb13dfa6"
+        },
+        "mouths-1793417007990-8cbd8572": {
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.elder",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 77,
+              "y": 123,
+              "width": 102,
+              "height": 77
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "name": "mouths-1793417007990-8cbd8572",
+          "file": "art/portrait.elder.mouths.mouths-1793417007990-8cbd8572.png",
+          "prompt": "Lip-sync mouth shapes for portrait.elder",
+          "createdAt": "2026-10-31T03:23:28.108Z",
+          "settings": {},
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "mouths-1793416747324-9af3f421"
+        }
+      },
+      "tags": [
+        "lip-sync",
+        "portrait"
+      ],
+      "settings": {},
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
     }
   },
   "styleGuide": {
@@ -16694,6 +17754,10 @@
     ],
     "voice.king": [
       "Voices"
+    ],
+    "portrait.elder.mouths": [
+      "Graphics",
+      "Portraits"
     ]
   }
 }

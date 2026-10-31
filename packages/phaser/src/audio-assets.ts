@@ -1,6 +1,13 @@
 import type Phaser from 'phaser';
 import type { AiAssetDefinition, AiAssetManifest } from '@ai-game-assets/core';
 import type { AiAssetRuntime } from '@ai-game-assets/phaser';
+import type { AiLipSyncClock } from '@ai-game-assets/phaser';
+
+/** Phaser seek is relative to its trim marker and already includes playback rate.
+ * Lip-sync cues refer to the untrimmed recording, so add the marker exactly once. */
+export function adventureLipSyncClock(sound: { isPlaying: boolean; isPaused: boolean; seek?: number; currentMarker?: { start?: number } | null }): AiLipSyncClock {
+  return () => ({ seconds: (sound.seek ?? 0) + (sound.currentMarker?.start ?? 0), playing: sound.isPlaying, paused: sound.isPaused });
+}
 
 /** ai-assets audio callbacks supply URLs, not texture/cache keys. Decode before switching. */
 export class PhaserAdventureAudioAssets {
