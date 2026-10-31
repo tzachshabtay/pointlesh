@@ -2727,6 +2727,178 @@
             "provider": "elevenlabs",
             "voiceId": "J6KOvhFRxt7YCo4Igg4n",
             "model": "eleven_v4"
+          },
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "My pickaxe is locked in the runed chest at Goldroot. Can’t be too careful with good steel.",
+            "language": "en",
+            "duration": 5.44,
+            "audioHash": "3978517392b63ba02b3a17ff7d430eb366bd0ba5d44539911fb350e1c5712084",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.01,
+                "shape": "X"
+              },
+              {
+                "start": 0.01,
+                "end": 0.06,
+                "shape": "A"
+              },
+              {
+                "start": 0.06,
+                "end": 0.11,
+                "shape": "C"
+              },
+              {
+                "start": 0.11,
+                "end": 0.16,
+                "shape": "A"
+              },
+              {
+                "start": 0.16,
+                "end": 0.28,
+                "shape": "B"
+              },
+              {
+                "start": 0.28,
+                "end": 0.56,
+                "shape": "C"
+              },
+              {
+                "start": 0.56,
+                "end": 0.91,
+                "shape": "B"
+              },
+              {
+                "start": 0.91,
+                "end": 0.98,
+                "shape": "H"
+              },
+              {
+                "start": 0.98,
+                "end": 1.05,
+                "shape": "D"
+              },
+              {
+                "start": 1.05,
+                "end": 1.33,
+                "shape": "B"
+              },
+              {
+                "start": 1.33,
+                "end": 1.4,
+                "shape": "C"
+              },
+              {
+                "start": 1.4,
+                "end": 1.75,
+                "shape": "F"
+              },
+              {
+                "start": 1.75,
+                "end": 1.96,
+                "shape": "B"
+              },
+              {
+                "start": 1.96,
+                "end": 2.1,
+                "shape": "C"
+              },
+              {
+                "start": 2.1,
+                "end": 2.24,
+                "shape": "B"
+              },
+              {
+                "start": 2.24,
+                "end": 2.45,
+                "shape": "E"
+              },
+              {
+                "start": 2.45,
+                "end": 2.87,
+                "shape": "F"
+              },
+              {
+                "start": 2.87,
+                "end": 2.94,
+                "shape": "B"
+              },
+              {
+                "start": 2.94,
+                "end": 3.3,
+                "shape": "X"
+              },
+              {
+                "start": 3.3,
+                "end": 3.38,
+                "shape": "B"
+              },
+              {
+                "start": 3.38,
+                "end": 3.46,
+                "shape": "A"
+              },
+              {
+                "start": 3.46,
+                "end": 3.5,
+                "shape": "B"
+              },
+              {
+                "start": 3.5,
+                "end": 3.58,
+                "shape": "A"
+              },
+              {
+                "start": 3.58,
+                "end": 3.67,
+                "shape": "B"
+              },
+              {
+                "start": 3.67,
+                "end": 3.86,
+                "shape": "F"
+              },
+              {
+                "start": 3.86,
+                "end": 3.91,
+                "shape": "E"
+              },
+              {
+                "start": 3.91,
+                "end": 4.16,
+                "shape": "C"
+              },
+              {
+                "start": 4.16,
+                "end": 4.37,
+                "shape": "B"
+              },
+              {
+                "start": 4.37,
+                "end": 4.65,
+                "shape": "F"
+              },
+              {
+                "start": 4.65,
+                "end": 5.07,
+                "shape": "B"
+              },
+              {
+                "start": 5.07,
+                "end": 5.28,
+                "shape": "H"
+              },
+              {
+                "start": 5.28,
+                "end": 5.44,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.miner.greeting.generated-1793403342431.wav"
           }
         }
       },
@@ -11687,6 +11859,14 @@
         "speak": {
           "assetId": "portrait.borin.speak",
           "label": "Close-up speak"
+        },
+        "lip-sync": {
+          "assetId": "portrait.borin.mouths",
+          "label": "Lip sync"
+        },
+        "eyes": {
+          "assetId": "portrait.borin.eyes",
+          "label": "Eyes · blink"
         }
       },
       "activeVersion": "portrait",
@@ -11704,7 +11884,38 @@
         "forest",
         "portrait",
         "borin"
-      ]
+      ],
+      "lipSync": {
+        "enabled": true,
+        "voiceAssetId": "voice.borin",
+        "language": "en",
+        "wordsPerMinute": 150,
+        "mouthAssetId": "portrait.borin.mouths",
+        "layered": true,
+        "eyes": {
+          "assetId": "portrait.borin.eyes",
+          "region": {
+            "x": 86,
+            "y": 96,
+            "width": 82,
+            "height": 23
+          },
+          "frames": {
+            "open": 0,
+            "half": 1,
+            "closed": 2,
+            "left": 0,
+            "right": 0
+          },
+          "blink": true,
+          "gaze": false,
+          "blinkInterval": [
+            3,
+            6
+          ],
+          "blinkDuration": 0.24
+        }
+      }
     },
     "portrait.borin.speak": {
       "id": "portrait.borin.speak",
@@ -11777,6 +11988,14 @@
         "speak": {
           "assetId": "portrait.king.speak",
           "label": "Close-up speak"
+        },
+        "lip-sync": {
+          "assetId": "portrait.king.mouths",
+          "label": "Lip sync"
+        },
+        "eyes": {
+          "assetId": "portrait.king.eyes",
+          "label": "Eyes · blink"
         }
       },
       "activeVersion": "portrait",
@@ -11794,7 +12013,38 @@
         "forest",
         "portrait",
         "king"
-      ]
+      ],
+      "lipSync": {
+        "enabled": true,
+        "voiceAssetId": "voice.king",
+        "language": "en",
+        "wordsPerMinute": 150,
+        "mouthAssetId": "portrait.king.mouths",
+        "layered": true,
+        "eyes": {
+          "assetId": "portrait.king.eyes",
+          "region": {
+            "x": 88,
+            "y": 99,
+            "width": 80,
+            "height": 22
+          },
+          "frames": {
+            "open": 0,
+            "half": 1,
+            "closed": 2,
+            "left": 0,
+            "right": 0
+          },
+          "blink": true,
+          "gaze": false,
+          "blinkInterval": [
+            3,
+            6
+          ],
+          "blinkDuration": 0.24
+        }
+      }
     },
     "portrait.king.speak": {
       "id": "portrait.king.speak",
@@ -11867,6 +12117,14 @@
         "speak": {
           "assetId": "portrait.guard.speak",
           "label": "Close-up speak"
+        },
+        "lip-sync": {
+          "assetId": "portrait.guard.mouths",
+          "label": "Lip sync"
+        },
+        "eyes": {
+          "assetId": "portrait.guard.eyes",
+          "label": "Eyes · blink"
         }
       },
       "activeVersion": "portrait",
@@ -11884,7 +12142,38 @@
         "forest",
         "portrait",
         "guard"
-      ]
+      ],
+      "lipSync": {
+        "enabled": true,
+        "voiceAssetId": "voice.guard",
+        "language": "en",
+        "wordsPerMinute": 150,
+        "mouthAssetId": "portrait.guard.mouths",
+        "layered": true,
+        "eyes": {
+          "assetId": "portrait.guard.eyes",
+          "region": {
+            "x": 87,
+            "y": 102,
+            "width": 80,
+            "height": 23
+          },
+          "frames": {
+            "open": 0,
+            "half": 1,
+            "closed": 2,
+            "left": 0,
+            "right": 0
+          },
+          "blink": true,
+          "gaze": false,
+          "blinkInterval": [
+            3,
+            6
+          ],
+          "blinkDuration": 0.24
+        }
+      }
     },
     "portrait.guard.speak": {
       "id": "portrait.guard.speak",
@@ -12090,6 +12379,14 @@
         "speak": {
           "assetId": "portrait.innkeeper.speak",
           "label": "Close-up speak"
+        },
+        "lip-sync": {
+          "assetId": "portrait.innkeeper.mouths",
+          "label": "Lip sync"
+        },
+        "eyes": {
+          "assetId": "portrait.innkeeper.eyes",
+          "label": "Eyes · blink"
         }
       },
       "activeVersion": "portrait",
@@ -12107,7 +12404,38 @@
         "forest",
         "portrait",
         "innkeeper"
-      ]
+      ],
+      "lipSync": {
+        "enabled": true,
+        "voiceAssetId": "voice.innkeeper",
+        "language": "en",
+        "wordsPerMinute": 150,
+        "mouthAssetId": "portrait.innkeeper.mouths",
+        "layered": true,
+        "eyes": {
+          "assetId": "portrait.innkeeper.eyes",
+          "region": {
+            "x": 82,
+            "y": 113,
+            "width": 88,
+            "height": 34
+          },
+          "frames": {
+            "open": 0,
+            "half": 1,
+            "closed": 2,
+            "left": 0,
+            "right": 0
+          },
+          "blink": true,
+          "gaze": false,
+          "blinkInterval": [
+            3,
+            6
+          ],
+          "blinkDuration": 0.24
+        }
+      }
     },
     "portrait.innkeeper.speak": {
       "id": "portrait.innkeeper.speak",
@@ -12180,6 +12508,14 @@
         "speak": {
           "assetId": "portrait.miner.speak",
           "label": "Close-up speak"
+        },
+        "lip-sync": {
+          "assetId": "portrait.miner.mouths",
+          "label": "Lip sync"
+        },
+        "eyes": {
+          "assetId": "portrait.miner.eyes",
+          "label": "Eyes · blink"
         }
       },
       "activeVersion": "portrait",
@@ -12197,7 +12533,38 @@
         "forest",
         "portrait",
         "miner"
-      ]
+      ],
+      "lipSync": {
+        "enabled": true,
+        "voiceAssetId": "voice.miner",
+        "language": "en",
+        "wordsPerMinute": 150,
+        "mouthAssetId": "portrait.miner.mouths",
+        "layered": true,
+        "eyes": {
+          "assetId": "portrait.miner.eyes",
+          "region": {
+            "x": 91,
+            "y": 86,
+            "width": 82,
+            "height": 23
+          },
+          "frames": {
+            "open": 0,
+            "half": 1,
+            "closed": 2,
+            "left": 0,
+            "right": 0
+          },
+          "blink": true,
+          "gaze": false,
+          "blinkInterval": [
+            3,
+            6
+          ],
+          "blinkDuration": 0.24
+        }
+      }
     },
     "portrait.miner.speak": {
       "id": "portrait.miner.speak",
@@ -15919,6 +16286,198 @@
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4"
+          },
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "An army would wake the whole camp. One dwarf? I will bring him home.",
+            "language": "en",
+            "duration": 5.44,
+            "audioHash": "04782b265cbca3b610c68c43d58844f75ec1cd3787a5ddd053d7c3520323de20",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.12,
+                "shape": "B"
+              },
+              {
+                "start": 0.12,
+                "end": 0.25,
+                "shape": "C"
+              },
+              {
+                "start": 0.25,
+                "end": 0.39,
+                "shape": "D"
+              },
+              {
+                "start": 0.39,
+                "end": 0.46,
+                "shape": "B"
+              },
+              {
+                "start": 0.46,
+                "end": 0.55,
+                "shape": "A"
+              },
+              {
+                "start": 0.55,
+                "end": 0.66,
+                "shape": "B"
+              },
+              {
+                "start": 0.66,
+                "end": 0.73,
+                "shape": "F"
+              },
+              {
+                "start": 0.73,
+                "end": 0.87,
+                "shape": "B"
+              },
+              {
+                "start": 0.87,
+                "end": 0.94,
+                "shape": "F"
+              },
+              {
+                "start": 0.94,
+                "end": 1.01,
+                "shape": "C"
+              },
+              {
+                "start": 1.01,
+                "end": 1.15,
+                "shape": "B"
+              },
+              {
+                "start": 1.15,
+                "end": 1.43,
+                "shape": "E"
+              },
+              {
+                "start": 1.43,
+                "end": 1.5,
+                "shape": "F"
+              },
+              {
+                "start": 1.5,
+                "end": 1.92,
+                "shape": "C"
+              },
+              {
+                "start": 1.92,
+                "end": 2.11,
+                "shape": "A"
+              },
+              {
+                "start": 2.11,
+                "end": 2.57,
+                "shape": "X"
+              },
+              {
+                "start": 2.57,
+                "end": 2.69,
+                "shape": "F"
+              },
+              {
+                "start": 2.69,
+                "end": 2.83,
+                "shape": "C"
+              },
+              {
+                "start": 2.83,
+                "end": 2.97,
+                "shape": "B"
+              },
+              {
+                "start": 2.97,
+                "end": 3.04,
+                "shape": "F"
+              },
+              {
+                "start": 3.04,
+                "end": 3.25,
+                "shape": "E"
+              },
+              {
+                "start": 3.25,
+                "end": 3.39,
+                "shape": "G"
+              },
+              {
+                "start": 3.39,
+                "end": 3.94,
+                "shape": "X"
+              },
+              {
+                "start": 3.94,
+                "end": 4,
+                "shape": "C"
+              },
+              {
+                "start": 4,
+                "end": 4.06,
+                "shape": "B"
+              },
+              {
+                "start": 4.06,
+                "end": 4.13,
+                "shape": "F"
+              },
+              {
+                "start": 4.13,
+                "end": 4.2,
+                "shape": "B"
+              },
+              {
+                "start": 4.2,
+                "end": 4.28,
+                "shape": "A"
+              },
+              {
+                "start": 4.28,
+                "end": 4.69,
+                "shape": "B"
+              },
+              {
+                "start": 4.69,
+                "end": 4.77,
+                "shape": "A"
+              },
+              {
+                "start": 4.77,
+                "end": 4.96,
+                "shape": "E"
+              },
+              {
+                "start": 4.96,
+                "end": 5.03,
+                "shape": "F"
+              },
+              {
+                "start": 5.03,
+                "end": 5.13,
+                "shape": "A"
+              },
+              {
+                "start": 5.13,
+                "end": 5.27,
+                "shape": "B"
+              },
+              {
+                "start": 5.27,
+                "end": 5.44,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.intro-arrival.arrival-1793328972802.mp3"
           }
         }
       },
@@ -16261,7 +16820,174 @@
             "model": "eleven_v4",
             "voiceId": "XSzftlYznGd6V2b0eoYJ"
           },
-          "notes": "Chest narration and state-dependent look descriptions."
+          "notes": "Chest narration and state-dependent look descriptions.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "There’s Orrin’s pickaxe. All that magic to keep one good tool out of the wrong hands.",
+            "language": "en",
+            "duration": 5.84,
+            "audioHash": "ca12b6ffa587a7965cd2eb6b5ee0341cce36ea0de5324e028c4d5cf2de907937",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.13,
+                "shape": "B"
+              },
+              {
+                "start": 0.13,
+                "end": 0.2,
+                "shape": "C"
+              },
+              {
+                "start": 0.2,
+                "end": 0.34,
+                "shape": "B"
+              },
+              {
+                "start": 0.34,
+                "end": 0.48,
+                "shape": "E"
+              },
+              {
+                "start": 0.48,
+                "end": 0.9,
+                "shape": "B"
+              },
+              {
+                "start": 0.9,
+                "end": 1.18,
+                "shape": "C"
+              },
+              {
+                "start": 1.18,
+                "end": 1.39,
+                "shape": "B"
+              },
+              {
+                "start": 1.39,
+                "end": 2,
+                "shape": "X"
+              },
+              {
+                "start": 2,
+                "end": 2.22,
+                "shape": "E"
+              },
+              {
+                "start": 2.22,
+                "end": 2.29,
+                "shape": "B"
+              },
+              {
+                "start": 2.29,
+                "end": 2.36,
+                "shape": "C"
+              },
+              {
+                "start": 2.36,
+                "end": 2.5,
+                "shape": "B"
+              },
+              {
+                "start": 2.5,
+                "end": 2.66,
+                "shape": "A"
+              },
+              {
+                "start": 2.66,
+                "end": 2.8,
+                "shape": "C"
+              },
+              {
+                "start": 2.8,
+                "end": 2.94,
+                "shape": "B"
+              },
+              {
+                "start": 2.94,
+                "end": 3.15,
+                "shape": "F"
+              },
+              {
+                "start": 3.15,
+                "end": 3.29,
+                "shape": "B"
+              },
+              {
+                "start": 3.29,
+                "end": 3.46,
+                "shape": "A"
+              },
+              {
+                "start": 3.46,
+                "end": 3.61,
+                "shape": "F"
+              },
+              {
+                "start": 3.61,
+                "end": 3.68,
+                "shape": "C"
+              },
+              {
+                "start": 3.68,
+                "end": 4.23,
+                "shape": "F"
+              },
+              {
+                "start": 4.23,
+                "end": 4.31,
+                "shape": "E"
+              },
+              {
+                "start": 4.31,
+                "end": 4.45,
+                "shape": "H"
+              },
+              {
+                "start": 4.45,
+                "end": 4.59,
+                "shape": "B"
+              },
+              {
+                "start": 4.59,
+                "end": 4.66,
+                "shape": "G"
+              },
+              {
+                "start": 4.66,
+                "end": 4.73,
+                "shape": "C"
+              },
+              {
+                "start": 4.73,
+                "end": 5.01,
+                "shape": "E"
+              },
+              {
+                "start": 5.01,
+                "end": 5.36,
+                "shape": "C"
+              },
+              {
+                "start": 5.36,
+                "end": 5.64,
+                "shape": "B"
+              },
+              {
+                "start": 5.64,
+                "end": 5.84,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.look-chest-open.chest-speech-1793406388875.mp3"
+          }
         }
       },
       "voiceSettings": {
@@ -16301,7 +17027,144 @@
             "model": "eleven_v4",
             "voiceId": "XSzftlYznGd6V2b0eoYJ"
           },
-          "notes": "Chest narration and state-dependent look descriptions."
+          "notes": "Chest narration and state-dependent look descriptions.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Empty now. I’ll return the pickaxe once it’s finished its royal duties.",
+            "language": "en",
+            "duration": 4.56,
+            "audioHash": "626f7364a3917f29023dd0a7ed37e33d06c6a5bf40611aafd6e8c97e6d645ecb",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.08,
+                "shape": "X"
+              },
+              {
+                "start": 0.08,
+                "end": 0.13,
+                "shape": "C"
+              },
+              {
+                "start": 0.13,
+                "end": 0.21,
+                "shape": "A"
+              },
+              {
+                "start": 0.21,
+                "end": 0.42,
+                "shape": "B"
+              },
+              {
+                "start": 0.42,
+                "end": 0.49,
+                "shape": "C"
+              },
+              {
+                "start": 0.49,
+                "end": 0.77,
+                "shape": "D"
+              },
+              {
+                "start": 0.77,
+                "end": 0.91,
+                "shape": "E"
+              },
+              {
+                "start": 0.91,
+                "end": 1.39,
+                "shape": "X"
+              },
+              {
+                "start": 1.39,
+                "end": 1.43,
+                "shape": "C"
+              },
+              {
+                "start": 1.43,
+                "end": 1.68,
+                "shape": "B"
+              },
+              {
+                "start": 1.68,
+                "end": 1.82,
+                "shape": "E"
+              },
+              {
+                "start": 1.82,
+                "end": 1.89,
+                "shape": "C"
+              },
+              {
+                "start": 1.89,
+                "end": 1.97,
+                "shape": "A"
+              },
+              {
+                "start": 1.97,
+                "end": 2.08,
+                "shape": "B"
+              },
+              {
+                "start": 2.08,
+                "end": 2.36,
+                "shape": "C"
+              },
+              {
+                "start": 2.36,
+                "end": 2.5,
+                "shape": "B"
+              },
+              {
+                "start": 2.5,
+                "end": 2.57,
+                "shape": "F"
+              },
+              {
+                "start": 2.57,
+                "end": 2.92,
+                "shape": "B"
+              },
+              {
+                "start": 2.92,
+                "end": 2.99,
+                "shape": "G"
+              },
+              {
+                "start": 2.99,
+                "end": 3.48,
+                "shape": "B"
+              },
+              {
+                "start": 3.48,
+                "end": 3.69,
+                "shape": "E"
+              },
+              {
+                "start": 3.69,
+                "end": 3.76,
+                "shape": "B"
+              },
+              {
+                "start": 3.76,
+                "end": 3.97,
+                "shape": "F"
+              },
+              {
+                "start": 3.97,
+                "end": 4.39,
+                "shape": "B"
+              },
+              {
+                "start": 4.39,
+                "end": 4.56,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.look-chest-empty.chest-speech-1793406390126.mp3"
+          }
         }
       },
       "voiceSettings": {
@@ -16518,6 +17381,666 @@
         "background": "transparent",
         "frameAlignment": "none"
       }
+    },
+    "portrait.borin.mouths": {
+      "id": "portrait.borin.mouths",
+      "kind": "spritesheet",
+      "prompt": "Nine registered lip-sync mouth/jaw poses for borin: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+      "dimensions": {
+        "width": 768,
+        "height": 768
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "mouthSet": {
+        "frames": {
+          "X": 0,
+          "A": 1,
+          "B": 2,
+          "C": 3,
+          "D": 4,
+          "E": 5,
+          "F": 6,
+          "G": 7,
+          "H": 8
+        },
+        "sourceAssetId": "portrait.borin",
+        "sourceVersion": "portrait",
+        "editRegion": {
+          "x": 83,
+          "y": 130,
+          "width": 90,
+          "height": 73
+        },
+        "frameGrid": {
+          "frameWidth": 256,
+          "frameHeight": 256,
+          "columns": 3,
+          "rows": 3,
+          "frameCount": 9
+        }
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/borin.mouths.png",
+          "prompt": "Nine registered lip-sync mouth/jaw poses for borin: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.borin",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 83,
+              "y": 130,
+              "width": 90,
+              "height": 73
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "lip-sync",
+        "borin"
+      ]
+    },
+    "portrait.borin.eyes": {
+      "id": "portrait.borin.eyes",
+      "kind": "spritesheet",
+      "prompt": "Independent blink for borin: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+      "dimensions": {
+        "width": 768,
+        "height": 256
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 1,
+        "frameCount": 3
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/borin.eyes.png",
+          "prompt": "Independent blink for borin: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "portrait-eyes",
+        "borin"
+      ]
+    },
+    "portrait.king.mouths": {
+      "id": "portrait.king.mouths",
+      "kind": "spritesheet",
+      "prompt": "Nine registered lip-sync mouth/jaw poses for king: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+      "dimensions": {
+        "width": 768,
+        "height": 768
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "mouthSet": {
+        "frames": {
+          "X": 0,
+          "A": 1,
+          "B": 2,
+          "C": 3,
+          "D": 4,
+          "E": 5,
+          "F": 6,
+          "G": 7,
+          "H": 8
+        },
+        "sourceAssetId": "portrait.king",
+        "sourceVersion": "portrait",
+        "editRegion": {
+          "x": 83,
+          "y": 131,
+          "width": 90,
+          "height": 70
+        },
+        "frameGrid": {
+          "frameWidth": 256,
+          "frameHeight": 256,
+          "columns": 3,
+          "rows": 3,
+          "frameCount": 9
+        }
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/king.mouths.png",
+          "prompt": "Nine registered lip-sync mouth/jaw poses for king: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.king",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 83,
+              "y": 131,
+              "width": 90,
+              "height": 70
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "lip-sync",
+        "king"
+      ]
+    },
+    "portrait.king.eyes": {
+      "id": "portrait.king.eyes",
+      "kind": "spritesheet",
+      "prompt": "Independent blink for king: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+      "dimensions": {
+        "width": 768,
+        "height": 256
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 1,
+        "frameCount": 3
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/king.eyes.png",
+          "prompt": "Independent blink for king: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "portrait-eyes",
+        "king"
+      ]
+    },
+    "portrait.guard.mouths": {
+      "id": "portrait.guard.mouths",
+      "kind": "spritesheet",
+      "prompt": "Nine registered lip-sync mouth/jaw poses for guard: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+      "dimensions": {
+        "width": 768,
+        "height": 768
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "mouthSet": {
+        "frames": {
+          "X": 0,
+          "A": 1,
+          "B": 2,
+          "C": 3,
+          "D": 4,
+          "E": 5,
+          "F": 6,
+          "G": 7,
+          "H": 8
+        },
+        "sourceAssetId": "portrait.guard",
+        "sourceVersion": "portrait",
+        "editRegion": {
+          "x": 80,
+          "y": 132,
+          "width": 98,
+          "height": 68
+        },
+        "frameGrid": {
+          "frameWidth": 256,
+          "frameHeight": 256,
+          "columns": 3,
+          "rows": 3,
+          "frameCount": 9
+        }
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/guard.mouths.png",
+          "prompt": "Nine registered lip-sync mouth/jaw poses for guard: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.guard",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 80,
+              "y": 132,
+              "width": 98,
+              "height": 68
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "lip-sync",
+        "guard"
+      ]
+    },
+    "portrait.guard.eyes": {
+      "id": "portrait.guard.eyes",
+      "kind": "spritesheet",
+      "prompt": "Independent blink for guard: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+      "dimensions": {
+        "width": 768,
+        "height": 256
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 1,
+        "frameCount": 3
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/guard.eyes.png",
+          "prompt": "Independent blink for guard: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "portrait-eyes",
+        "guard"
+      ]
+    },
+    "portrait.innkeeper.mouths": {
+      "id": "portrait.innkeeper.mouths",
+      "kind": "spritesheet",
+      "prompt": "Nine registered lip-sync mouth/jaw poses for innkeeper: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+      "dimensions": {
+        "width": 768,
+        "height": 768
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "mouthSet": {
+        "frames": {
+          "X": 0,
+          "A": 1,
+          "B": 2,
+          "C": 3,
+          "D": 4,
+          "E": 5,
+          "F": 6,
+          "G": 7,
+          "H": 8
+        },
+        "sourceAssetId": "portrait.innkeeper",
+        "sourceVersion": "portrait",
+        "editRegion": {
+          "x": 98,
+          "y": 154,
+          "width": 64,
+          "height": 39
+        },
+        "frameGrid": {
+          "frameWidth": 256,
+          "frameHeight": 256,
+          "columns": 3,
+          "rows": 3,
+          "frameCount": 9
+        }
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/innkeeper.mouths.png",
+          "prompt": "Nine registered lip-sync mouth/jaw poses for innkeeper: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.innkeeper",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 98,
+              "y": 154,
+              "width": 64,
+              "height": 39
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "lip-sync",
+        "innkeeper"
+      ]
+    },
+    "portrait.innkeeper.eyes": {
+      "id": "portrait.innkeeper.eyes",
+      "kind": "spritesheet",
+      "prompt": "Independent blink for innkeeper: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+      "dimensions": {
+        "width": 768,
+        "height": 256
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 1,
+        "frameCount": 3
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/innkeeper.eyes.png",
+          "prompt": "Independent blink for innkeeper: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "portrait-eyes",
+        "innkeeper"
+      ]
+    },
+    "portrait.miner.mouths": {
+      "id": "portrait.miner.mouths",
+      "kind": "spritesheet",
+      "prompt": "Nine registered lip-sync mouth/jaw poses for miner: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+      "dimensions": {
+        "width": 768,
+        "height": 768
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 9
+      },
+      "mouthSet": {
+        "frames": {
+          "X": 0,
+          "A": 1,
+          "B": 2,
+          "C": 3,
+          "D": 4,
+          "E": 5,
+          "F": 6,
+          "G": 7,
+          "H": 8
+        },
+        "sourceAssetId": "portrait.miner",
+        "sourceVersion": "portrait",
+        "editRegion": {
+          "x": 83,
+          "y": 118,
+          "width": 96,
+          "height": 77
+        },
+        "frameGrid": {
+          "frameWidth": 256,
+          "frameHeight": 256,
+          "columns": 3,
+          "rows": 3,
+          "frameCount": 9
+        }
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/miner.mouths.png",
+          "prompt": "Nine registered lip-sync mouth/jaw poses for miner: rest, closed, teeth, open, wide, round, pucker, lip bite, tongue. Fixed face and original palette.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "mouthSet": {
+            "frames": {
+              "X": 0,
+              "A": 1,
+              "B": 2,
+              "C": 3,
+              "D": 4,
+              "E": 5,
+              "F": 6,
+              "G": 7,
+              "H": 8
+            },
+            "sourceAssetId": "portrait.miner",
+            "sourceVersion": "portrait",
+            "editRegion": {
+              "x": 83,
+              "y": 118,
+              "width": 96,
+              "height": 77
+            },
+            "frameGrid": {
+              "frameWidth": 256,
+              "frameHeight": 256,
+              "columns": 3,
+              "rows": 3,
+              "frameCount": 9
+            }
+          },
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "lip-sync",
+        "miner"
+      ]
+    },
+    "portrait.miner.eyes": {
+      "id": "portrait.miner.eyes",
+      "kind": "spritesheet",
+      "prompt": "Independent blink for miner: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+      "dimensions": {
+        "width": 768,
+        "height": 256
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 1,
+        "frameCount": 3
+      },
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      },
+      "activeVersion": "face-layers",
+      "versions": {
+        "face-layers": {
+          "name": "face-layers",
+          "file": "art/portraits/miner.eyes.png",
+          "prompt": "Independent blink for miner: original open eyes, halfway closed, fully closed. Fixed centered gaze; unchanged mouth and face.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from the existing portrait. Registration preserves original pixels outside the edited region. See art-source/portraits/face-layers.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "portrait-eyes",
+        "miner"
+      ]
     }
   },
   "styleGuide": {
@@ -17830,6 +19353,46 @@
       "Portraits"
     ],
     "portrait.elder.eyes": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.borin.mouths": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.borin.eyes": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.king.mouths": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.king.eyes": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.guard.mouths": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.guard.eyes": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.innkeeper.mouths": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.innkeeper.eyes": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.miner.mouths": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.miner.eyes": [
       "Graphics",
       "Portraits"
     ]

@@ -1,0 +1,28 @@
+Portrait face layers for Borin, King Aldric, Grub, Mara and Orrin.
+
+Generated with the built-in image tool. Each corresponding public/art/portraits/<id>.png was used as the edit target in a separate generation. Raw outputs are <id>-face-layers.png beside this file.
+
+Prompt:
+Use case: precise-object-edit. Asset: a tightly registered lip-sync and blinking sprite sheet for a pixel-art game portrait. The input image is the EDIT TARGET and exact identity/style reference.
+Create a 3-column by 4-row sheet, twelve equal square cells, each showing the same FULL portrait at the same fixed scale, centered at exactly the same coordinates. Transparent background. No labels, no borders, no dividers.
+Only edit the lips, mouth cavity, nearby moustache/jaw, and (in the last two cells only) eyelids. Keep every other feature identical: head outline, hat/hair/crown, eyes, eyebrows, nose, cheeks, costume, lighting, saturation, palette and pixel texture. Keep the head completely still. Mouth opening may lower the chin slightly but must not move the nose or upper face. Do not add hands or props.
+Row-major cells:
+0 X: the exact original resting portrait, mouth relaxed.
+1 A: lips gently pressed together for M/B/P.
+2 B: slightly parted mouth, teeth nearly together for S/EE.
+3 C: moderately open mouth for EH/AE.
+4 D: widely open mouth for AH, visibly distinct from C.
+5 E: medium rounded mouth for OH.
+6 F: small puckered round mouth for OO.
+7 G: upper teeth touch lower lip for F/V.
+8 H: open mouth with tongue against upper teeth for L.
+9 eyes open: exact original resting portrait.
+10 blink halfway: original resting portrait with both eyelids halfway down, pupils stay centered.
+11 blink closed: original resting portrait with both eyes naturally fully shut.
+Preserve the subject's anatomy and distinctive features, including beard and tusks when present. Do not let facial hair conceal every mouth shape: articulate the small lips/jaw under the moustache naturally. For the blink cells keep the mouth and entire rest of portrait identical to the original. No side glances. Pixel-art shading exactly matches the original, no thick added outlines, no color shifts. Each cell must fill the identical relative portion of its square as the source image. Output 1536 by 2048 pixels.
+
+Packing:
+Run node demos/forest/scripts/pack-portrait-face-layers.mjs from the repository root. The script aligns each generated cell using unchanged upper-face features, copies only the mouth/jaw or eye patches onto the original portrait, feathers the inner patch edge, and preserves the original alpha. Frames outside the edit regions are byte-for-byte copies of the source. The rest/open frame is always the original artwork. Transform measurements are saved as <id>-face-registration.json.
+
+Runtime:
+The nine-mouth sheet uses X/A/B/C/D/E/F/G/H. The three-eye sheet uses open/half/closed. Blink runs on an independent clock during speech and idle. Side glances are disabled. Existing voice recordings are analyzed locally with AI Assets' Rhubarb integration. Lines without recordings use text timing. No original voice takes, portraits or old speaking clips are replaced.

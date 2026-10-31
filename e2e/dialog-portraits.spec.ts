@@ -88,8 +88,9 @@ test('prefab portrait dropdowns support inheritance and None, without moving the
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(position);
 });
 
-test('portrait speech uses live AI Assets previews while cursor click clips still finish', async ({ page }) => {
+test('fallback portrait speech uses live AI Assets previews while cursor click clips still finish', async ({ page }) => {
   await ready(page);
+  await page.evaluate(() => { (window as any).pointleshDemo.scene.aiRuntime.manifest.assets['portrait.borin'].lipSync.enabled = false; });
   await page.evaluate(() => (window as any).pointleshDemo.scene.say('A closer look.'));
   await page.evaluate(() => {
     const scene = (window as any).pointleshDemo.scene, runtime = scene.aiRuntime;

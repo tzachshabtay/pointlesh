@@ -20,5 +20,6 @@ test('Rowan eye artwork preserves all pixels outside its independent region',asy
     assert.equal(base[a+3],sheet[b+3]);
   }
   assert.ok(changed>100);
-  for(const id of ['borin','king','guard','innkeeper','miner'])assert.notEqual(manifest.assets[`portrait.${id}`].lipSync?.layered,true);
+  assert.equal(settings.eyes.blink,true);
+  assert.equal(settings.eyes.gaze,false);
 });
