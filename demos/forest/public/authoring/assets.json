@@ -7631,7 +7631,8 @@
               "delayMs": 100
             },
             {
-              "delayMs": 100
+              "delayMs": 100,
+              "tag": "break"
             },
             {
               "delayMs": 140

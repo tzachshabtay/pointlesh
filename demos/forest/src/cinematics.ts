@@ -4,14 +4,14 @@ import type { SceneDesignerManifest } from '@scene-designer/core';
 import { CharacterController, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, type ResolvedPointleshObject, type Point, type Direction } from '@pointlesh/core';
 import { intro as introScript, ending as endingScript, type RoomId } from './story';
 import { spriteWalker } from './soundscape';
-import { animationDuration, animationTagTime } from '@pointlesh/phaser/animation-tags';
-import { cinematicAudioCue } from './action-audio';
+import { animationDuration } from '@pointlesh/phaser/animation-tags';
+import { cinematicAudioCue, cageOpeningStartMs } from './action-audio';
 import { createWalkBehindOverlay, PhaserAdventureCharacter, PhaserAdventureObject, type PhaserAdventureLighting } from '@pointlesh/phaser';
 import { OutdoorAtmosphere } from './outdoor-atmosphere';
 import { forestLighting } from './environment-lighting';
 import { guardAnimationSize } from './guard-assets';
 import { GUARD_DRINK_POINT } from './guard-patrol';
-import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, PICKAXE_IMPACT_MS, rescueAnimation } from './rescue-assets';
+import { borinActionSize, CAGE_DOOR_ID, PICKAXE_START_MS, rescueAnimation } from './rescue-assets';
 import { INTRO_APPROACH_START_MS, INTRO_HANDS_START_MS, INTRO_SPEAR_START_MS, introActionSize, introAnimation, type IntroAction } from './intro-assets';
 import { activatePointleshAreas } from './room-transition';
 import { CAGE_APPROACH_AREA } from './transition-content';
@@ -157,7 +157,8 @@ export class ForestCinematic {
     if (this.kind === 'intro') this.intro(stepIndex, t);
     else this.ending(stepIndex, t);
     const cue = cinematicAudioCue(this.kind, stepIndex, previousStep, previousElapsed, elapsedMs, duration,
-      { cageClose: this.cageAnimation === 'close' ? this.doorBinding?.animation : undefined, pickaxe: this.cast.get('borin')?.binding?.animation });
+      { cageClose: this.cageAnimation === 'close' ? this.doorBinding?.animation : undefined, pickaxe: this.cast.get('borin')?.binding?.animation,
+        cageOpen: this.cageAnimation === 'open' ? this.doorBinding?.animation : undefined });
     if (cue && this.visible) this.playSound?.(cue);
     this.frameAboveCaption();
     const roomSize = this.definitions.get(this.room)!;
@@ -436,7 +437,7 @@ export class ForestCinematic {
       this.pose('borin', { ...sampleWalk(paths.approach, walkLength(paths.approach) * arrive),
         walking: approaching, ...(approaching ? {} : { action: 'pickaxe-back', actionElapsedMs: this.elapsedMs - PICKAXE_START_MS }) });
       this.sleepingGuard();
-      this.cage(0, Math.max(0, this.elapsedMs - PICKAXE_START_MS - (animationTagTime(this.cast.get('borin')?.binding?.animation, 'strike') ?? PICKAXE_IMPACT_MS)));
+      this.cage(0, Math.max(0, this.elapsedMs - cageOpeningStartMs(this.cast.get('borin')?.binding?.animation)));
       this.mist(0xe5b05b, 0.025);
     } else if (step === 1) {
       this.shot('camp', 'GOOD KNOTS · AN OPEN DOOR', lerp(1.26, 1.16, t), 570, 298);

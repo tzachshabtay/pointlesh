@@ -3,7 +3,7 @@ import type { AiAssetManifest } from '@ai-game-assets/core';
 /** Initial authoring data only. Live edits (including removing a tag) stay authoritative. */
 export function seedAudioFrameTags(manifest: AiAssetManifest): void {
   const entries: [string, string, number][] = [
-    ['cage-door.close', 'shut', -1], ['guard.drink', 'slurp', 2], ['guard.collapse', 'fall', 5],
+    ['cage-door.close', 'shut', -1], ['cage-door.open', 'break', 1], ['guard.drink', 'slurp', 2], ['guard.collapse', 'fall', 5],
     ['miner.idle-front', 'slurp', 6], ['borin.pour-back', 'pour', 2],
     ['borin.tie-rope-back', 'tie', 0], ['borin.pickaxe-back', 'strike', 3],
     ['tool-chest.open', 'glow', 1], ['journal.quill.write', 'write', 2],

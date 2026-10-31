@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { tsImport } from 'tsx/esm/api';
 import { CharacterController } from '@pointlesh/core';
-const { cinematicAudioCue } = await tsImport('../src/action-audio.ts', import.meta.url);
+const { cinematicAudioCue, cageOpeningStartMs } = await tsImport('../src/action-audio.ts', import.meta.url);
 const { PICKAXE_START_MS } = await tsImport('../src/rescue-assets.ts', import.meta.url);
 const { RoomTransitionController } = await tsImport('../src/room-transition.ts', import.meta.url);
 const { GuardPatrol } = await tsImport('../src/guard-patrol.ts', import.meta.url);
@@ -12,13 +12,31 @@ const { CampStealth } = await tsImport('../src/camp-stealth.ts', import.meta.url
 const clip = (tag, index, count = 8) => ({ key: tag, frames: Array.from({ length: count }, (_, i) => i), frameRate: 10, frameTimings: Array.from({ length: count }, (_, i) => ({ tag: i === index ? tag : undefined })) });
 
 test('cage and lock effects cross the actual animation beats once; seeks stay silent', () => {
-  const clips = { cageClose: clip('shut', 7), pickaxe: clip('strike', 3) };
-  for (const [kind, step, at, expected] of [['intro', 2, 8475, 'cage-close'], ['ending', 0, PICKAXE_START_MS + 300, 'lock-break']]) {
+  const clips = { cageClose: clip('shut', 7), pickaxe: clip('strike', 3), cageOpen: clip('break', 1) };
+  for (const [kind, step, at, expected] of [['intro', 2, 8475, 'cage-close'], ['ending', 0, PICKAXE_START_MS + 400, 'lock-break']]) {
     assert.equal(cinematicAudioCue(kind, step, step, at - 20, at + 20, 10000, clips), expected);
     assert.equal(cinematicAudioCue(kind, step, step, at + 20, at + 40, 10000, clips), undefined);
     assert.equal(cinematicAudioCue(kind, step, step, 0, at + 20, 10000, clips), undefined, 'restore/seek skips old events');
     assert.equal(cinematicAudioCue(kind, step, step + 1, at - 20, at + 20, 10000, clips), undefined);
   }
+});
+
+test('lock break follows the cage break tag, including edited holds, moved tags and the pickaxe fallback', () => {
+  const clips = { pickaxe: clip('strike', 3), cageOpen: clip('break', 1) };
+  const cue = at => cinematicAudioCue('ending', 0, 0, at - 10, at + 10, 10000, clips);
+  const start = cageOpeningStartMs(clips.pickaxe);
+  assert.equal(cue(start), undefined, 'the pickaxe strike does not trigger the door sound');
+  assert.equal(cue(start + 100), 'lock-break');
+  clips.cageOpen.frameTimings[0].delayMs = 450;
+  assert.equal(cue(start + 100), undefined);
+  assert.equal(cue(start + 450), 'lock-break');
+  delete clips.cageOpen.frameTimings[1].tag;
+  clips.cageOpen.frameTimings[3].tag = 'break';
+  assert.equal(cue(start + 650), 'lock-break');
+  delete clips.pickaxe.frameTimings[3].tag;
+  assert.equal(cue(cageOpeningStartMs(clips.pickaxe) + 650), 'lock-break');
+  delete clips.cageOpen.frameTimings[3].tag;
+  assert.equal(cue(cageOpeningStartMs(clips.pickaxe) + 650), undefined, 'removing break silences the cue');
 });
 
 test('Orrin slurps once at the mug-to-mouth pose in each idle cycle', () => {
