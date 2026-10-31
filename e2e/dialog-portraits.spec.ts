@@ -144,16 +144,19 @@ test('Rowan uses recording timing for all four lines and rests when speech ends'
     scene.conversation.start('elder');
     const sound = scene.interactionSound;
     const audioAtStart = { playing: sound?.isPlaying, paused: sound?.isPaused, context: scene.sound.context?.state, locked: scene.sound.locked };
-    const sources = new Set<string>(), shapes = new Set<string>(); let maxTime = 0;
+    const sources = new Set<string>(), shapes = new Set<string>(), eyes = new Set<string>(), layers = new Set<string>(); let maxTime = 0;
     const until = performance.now() + 6500;
     while (performance.now() < until) {
       await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
       const canvas = document.querySelector<HTMLCanvasElement>('#dialog-portrait canvas');
-      if (canvas) { sources.add(canvas.dataset.lipSyncSource ?? ''); shapes.add(canvas.dataset.lipSyncShape ?? ''); maxTime = Math.max(maxTime, Number(canvas.dataset.lipSyncTime ?? 0)); }
+      if (canvas) { sources.add(canvas.dataset.lipSyncSource ?? ''); shapes.add(canvas.dataset.lipSyncShape ?? ''); eyes.add(canvas.dataset.eyePose ?? ''); layers.add(canvas.dataset.portraitLayers ?? ''); maxTime = Math.max(maxTime, Number(canvas.dataset.lipSyncTime ?? 0)); }
     }
-    return { sources: [...sources], shapes: [...shapes], maxTime, audioAtStart };
+    return { sources: [...sources], shapes: [...shapes], eyes: [...eyes], layers: [...layers], maxTime, audioAtStart };
   });
   expect(observed.sources).toContain('rhubarb');
+  expect(observed.layers).toContain('base mouth eyes');
+  expect(observed.eyes).toContain('closed');
+  expect(observed.eyes).toContain('open');
   expect(observed.maxTime, JSON.stringify(observed)).toBeGreaterThan(.1);
   expect(observed.shapes.some(shape => shape !== 'X' && shape !== '')).toBe(true);
   await expect(portrait(page)).toHaveAttribute('data-lip-sync-shape', 'X');

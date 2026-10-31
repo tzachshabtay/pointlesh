@@ -11961,6 +11961,10 @@
         "lip-sync": {
           "label": "Lip sync",
           "assetId": "portrait.elder.mouths"
+        },
+        "eyes": {
+          "assetId": "portrait.elder.eyes",
+          "label": "Eyes · blink and gaze"
         }
       },
       "activeVersion": "portrait",
@@ -11984,7 +11988,35 @@
         "voiceAssetId": "voice.elder",
         "language": "en",
         "wordsPerMinute": 150,
-        "mouthAssetId": "portrait.elder.mouths"
+        "mouthAssetId": "portrait.elder.mouths",
+        "layered": true,
+        "eyes": {
+          "assetId": "portrait.elder.eyes",
+          "region": {
+            "x": 84,
+            "y": 96,
+            "width": 89,
+            "height": 26
+          },
+          "frames": {
+            "open": 0,
+            "half": 1,
+            "closed": 2,
+            "left": 3,
+            "right": 4
+          },
+          "blink": true,
+          "gaze": true,
+          "blinkInterval": [
+            3,
+            6
+          ],
+          "blinkDuration": 0.24,
+          "gazeInterval": [
+            5,
+            9
+          ]
+        }
       }
     },
     "portrait.elder.speak": {
@@ -16448,6 +16480,44 @@
       "audioSettings": {},
       "audioPlayback": {},
       "voiceSettings": {}
+    },
+    "portrait.elder.eyes": {
+      "id": "portrait.elder.eyes",
+      "kind": "spritesheet",
+      "prompt": "Independent eyelids and subtle gaze for Elder Rowan. Full-size portrait cells, unchanged head and mouth. Frames: open, half closed, closed, look left, look right, open. Keep every pixel outside the eye region unchanged.",
+      "dimensions": {
+        "width": 768,
+        "height": 512
+      },
+      "frameGrid": {
+        "frameWidth": 256,
+        "frameHeight": 256,
+        "columns": 3,
+        "rows": 2,
+        "frameCount": 6
+      },
+      "activeVersion": "eyes",
+      "versions": {
+        "eyes": {
+          "name": "eyes",
+          "file": "art/portraits/elder.eyes.png",
+          "prompt": "Independent eyelids and subtle gaze for Elder Rowan. Full-size portrait cells, unchanged head and mouth. Frames: open, half closed, closed, look left, look right, open. Keep every pixel outside the eye region unchanged.",
+          "createdAt": "2026-10-31T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Independent eye layer. Source and registration workflow in art-source/portraits/elder-eyes.txt."
+        }
+      },
+      "tags": [
+        "forest",
+        "portrait",
+        "portrait-eyes",
+        "elder"
+      ],
+      "settings": {
+        "format": "png",
+        "background": "transparent",
+        "frameAlignment": "none"
+      }
     }
   },
   "styleGuide": {
@@ -17756,6 +17826,10 @@
       "Voices"
     ],
     "portrait.elder.mouths": [
+      "Graphics",
+      "Portraits"
+    ],
+    "portrait.elder.eyes": [
       "Graphics",
       "Portraits"
     ]

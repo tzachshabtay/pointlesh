@@ -1,0 +1,10 @@
+Generated with the built-in image tool, using public/art/portraits/elder.png as the edit target.
+
+Prompt:
+Create a tightly registered 3-column by 2-row sprite sheet of exact copies of Elder Rowan. Edit only eyelids and eyeball gaze. Keep face, eyebrows, mouth, nose, hat, beard, ears, palette, lighting, texture, scale and placement identical. Row-major: open/neutral, half closed, closed, subtle gaze toward viewer's left, subtle gaze toward viewer's right, open/neutral. Narrow elderly eyes, restrained motion, no enlarged whites. Transparent background, no text or dividers.
+
+Packing:
+pack-elder-eye-art.mjs registers the generated eye patches to the original portrait and preserves every other pixel, including alpha. Open/neutral is always the original artwork. The fully closed pose reuses the registered blink from elder.speak.png (frame 7); the generated half blink and gaze patches are aligned separately. The original generated sheet remains beside this file for reproducibility.
+
+Runtime:
+AI Assets composes the original base minus the replaced regions, the mouth/jaw crop from the selected mouth sheet, and the selected eye crop. No duplicated face or underlying eyes/lips are left beneath translucent layers. Blinking and gaze use an independent clock. Only Elder Rowan has layers enabled in this experiment.
