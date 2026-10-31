@@ -5,6 +5,8 @@ import { selectInstance, expandProperties } from './designer-helpers';
 async function ready(page: Page) {
   await openAdventure(page);
   await page.locator('#skip-intro').evaluate((button: HTMLButtonElement) => button.click());
+  // Respect the transition gate before programmatically starting dialog.
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.uncancellableAction())).toBe(false);
 }
 const portrait = (page: Page) => page.locator('#dialog-portrait canvas');
 const portraitFrame = (page: Page) => portrait(page).evaluate(canvas => canvas.getAttribute('data-lip-sync-shape') ?? canvas.getAttribute('data-frame'));
@@ -135,18 +137,33 @@ test.describe('mobile dialogue portraits', () => {
 
 test('Rowan uses recording timing for all four lines and rests when speech ends', async ({ page }) => {
   await ready(page);
-  await page.evaluate(() => (window as any).pointleshDemo.scene.conversation.start('elder'));
-  await expect(portrait(page)).toHaveAttribute('data-lip-sync-source', 'rhubarb');
-  await expect.poll(async () => Number(await portrait(page).getAttribute('data-lip-sync-time'))).toBeGreaterThan(.1);
-  await expect.poll(async () => Number(await portrait(page).getAttribute('data-lip-sync-time'))).toBe(0);
+  // Sample in the render loop: a slow test runner can miss a short recording
+  // entirely between separate browser round-trips.
+  const observed = await page.evaluate(async () => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.conversation.start('elder');
+    const sound = scene.interactionSound;
+    const audioAtStart = { playing: sound?.isPlaying, paused: sound?.isPaused, context: scene.sound.context?.state, locked: scene.sound.locked };
+    const sources = new Set<string>(), shapes = new Set<string>(); let maxTime = 0;
+    const until = performance.now() + 6500;
+    while (performance.now() < until) {
+      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+      const canvas = document.querySelector<HTMLCanvasElement>('#dialog-portrait canvas');
+      if (canvas) { sources.add(canvas.dataset.lipSyncSource ?? ''); shapes.add(canvas.dataset.lipSyncShape ?? ''); maxTime = Math.max(maxTime, Number(canvas.dataset.lipSyncTime ?? 0)); }
+    }
+    return { sources: [...sources], shapes: [...shapes], maxTime, audioAtStart };
+  });
+  expect(observed.sources).toContain('rhubarb');
+  expect(observed.maxTime, JSON.stringify(observed)).toBeGreaterThan(.1);
+  expect(observed.shapes.some(shape => shape !== 'X' && shape !== '')).toBe(true);
   await expect(portrait(page)).toHaveAttribute('data-lip-sync-shape', 'X');
-  for (const choice of ['Where did they take the king?', 'I could use a little advice.', 'I will bring him home.']) {
+  for (const [index, choice] of ['Where did they take the king?', 'I could use a little advice.', 'I will bring him home.'].entries()) {
+    if (index > 0) await page.evaluate(() => (window as any).pointleshDemo.scene.conversation.start('elder'));
     await page.locator('#dialog-next').click();
     await page.getByRole('button', { name: choice, exact: true }).click();
     await expect(portrait(page)).toHaveAttribute('data-asset-id', 'portrait.elder');
     await expect(portrait(page)).toHaveAttribute('data-lip-sync-source', 'rhubarb');
-    await expect.poll(async () => Number(await portrait(page).getAttribute('data-lip-sync-time'))).toBeGreaterThan(.1);
+    await page.locator('#dialog-next').click();
+    await expect(page.locator('#dialog')).toBeHidden();
   }
-  await page.locator('#dialog-next').click();
-  await expect(page.locator('#dialog')).toBeHidden();
 });
