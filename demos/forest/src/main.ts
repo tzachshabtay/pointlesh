@@ -47,6 +47,7 @@ import type { AdventureCursorAppearance } from '@pointlesh/phaser';
 import { CINEMATIC_DURATIONS, ForestCinematic, restoreCinematicElapsed, type EndingOpening } from './cinematics';
 import { addNarratorAssets, narrationLineId } from './narrator-assets';
 import { CutsceneVoice } from './cutscene-voice';
+import { VoiceAdvance } from './voice-advance';
 import { addBrewAssets, POUR_DURATION_MS } from './brew-assets';
 import { addPortraitAssets, addCharacterPortraits, portraitCharacters } from './portrait-assets';
 import { ForestDialogPortrait } from './dialog-portrait';
@@ -125,6 +126,9 @@ class ForestAdventure extends Phaser.Scene {
   cancelTitleDeparture?: () => void;
   interactionDesigner?: InteractionDesigner;
   private interactionSound?: Phaser.Sound.BaseSound;
+  private voiceAdvance = new VoiceAdvance(() => this.continueSpeech(), () => {
+    this.character.finishSpeech(); this.speakingVoice = '';
+  });
   private interactionPlayback = createInteractionPlaybackState();
   private interactionSpeechQueue: InteractionSpeechLine[] = [];
   started = false;
@@ -334,7 +338,7 @@ class ForestAdventure extends Phaser.Scene {
     el('loading').hidden = true;
     this.audio = new ForestSoundscape(this, this.aiRuntime, () => this.audioState(), this.audioAssets);
     this.cutsceneVoice = new CutsceneVoice(id => this.audio.playVoice(id));
-    this.events.once('shutdown', () => this.cutsceneVoice.reset());
+    this.events.once('shutdown', () => { this.cutsceneVoice.reset(); this.voiceAdvance.cancel(); });
     setupControls();
     // Capture the actual opening camera and character pose, rather than a bare
     // room texture whose framing and cast would jump when the intro starts.
@@ -981,6 +985,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   say(text: string, speaker = 'Borin', lineAssetId?: string) {
     this.interactionSpeechQueue = [];
+    this.voiceAdvance.cancel();
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.epoch++; this.clearMovementKeys(); this.talking = true;
     const speech = resolveGameSpeech(assets, text, speaker, lineAssetId);
@@ -992,10 +997,12 @@ class ForestAdventure extends Phaser.Scene {
     el('choices').replaceChildren(); el('dialog-next').hidden = false;
     this.showDialogPortrait(this.speakingVoice, true);
     if (speech.lineAssetId) this.interactionSound = this.audio.playVoice(speech.lineAssetId);
+    this.voiceAdvance.follow(this.interactionSound);
     this.portrait.speak(text, speech.lineAssetId ? this.audioAssets.asset(speech.lineAssetId) : undefined, this.interactionSound);
   }
-  dismissSpeech() { this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
+  dismissSpeech() { this.voiceAdvance.cancel(); this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
+    this.voiceAdvance.cancel();
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.clearMovementKeys();
     if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
@@ -1011,6 +1018,7 @@ class ForestAdventure extends Phaser.Scene {
       if (voice === 'borin') void this.character.say(turn.resolved.text, 3600000);
       else this.character.finishSpeech();
       this.showDialogPortrait(this.speakingVoice, true);
+      this.voiceAdvance.follow(this.interactionSound);
       this.portrait.speak(turn.resolved.text, this.audioAssets.asset(turn.resolved.lineAsset.id), this.interactionSound);
     } else {
       this.speakingVoice = '';
@@ -1032,6 +1040,7 @@ class ForestAdventure extends Phaser.Scene {
     this.binding.sync(); this.roomCamera.snap(); this.syncTransitionDoors(); this.renderNearby();
   }
   continueSpeech() {
+    this.voiceAdvance.cancel();
     if (this.conversationActive) { this.conversation.advance(); return; }
     if (this.interactionSpeechQueue.length) { this.playInteractionSpeech(this.interactionSpeechQueue); return; }
     this.dismissSpeech();
@@ -1301,6 +1310,7 @@ class ForestAdventure extends Phaser.Scene {
   }
   update(_time: number, delta: number) {
     if (!this.binding || !this.started) return;
+    this.voiceAdvance.update(Math.min(delta, 100), modalOpen || document.hidden);
     this.cutsceneVoice.pause(modalOpen || document.hidden || !!this.cancelTitleDeparture);
     const cameraEditing = this.worldEditorOpen() || this.editing;
     this.roomCamera.setEnabled(!cameraEditing);

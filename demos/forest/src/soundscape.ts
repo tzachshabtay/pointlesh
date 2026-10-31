@@ -54,7 +54,7 @@ export class ForestSoundscape {
   setVolume(channel: MixChannel, volume: number) {
     this.settings[channel] = clamp(volume);
     const sounds = channel === 'voices' ? this.voices : channel === 'sfx' ? this.hits : undefined;
-    for (const [sound, gain] of sounds ?? []) sound.setVolume(clamp(gain * this.settings[channel]));
+    for (const [sound, gain] of sounds ?? []) sound.setVolume(gain * this.settings[channel]);
     this.save();
   }
   /** Both dialog lines and simple interaction speech use the Voices channel. */
@@ -69,7 +69,7 @@ export class ForestSoundscape {
     if (!playAdventureAudio(sound, this.audioAssets?.asset(id) ?? this.runtime.manifest.assets[id])) { sound.destroy(); return; }
     return sound;
   }
-  playSfx(name: string, volume = .75): Sound | undefined {
+  playSfx(name: string, volume = name === 'lock-break' ? 1 : .75): Sound | undefined {
     if (this.hidden || !this.settings.enabled || this.scene.sound.locked) return;
     const id = `sfx.${name}`, key = this.audioKey(id);
     if (!this.scene.cache.audio.exists(key)) return;
@@ -78,7 +78,7 @@ export class ForestSoundscape {
     this.hits.set(sound, gain);
     sound.once('destroy', () => this.hits.delete(sound));
     sound.once('complete', () => sound.destroy());
-    if (!sound.play()) { sound.destroy(); return; }
+    if (!playAdventureAudio(sound, this.audioAssets?.asset(id) ?? this.runtime.manifest.assets[id])) { sound.destroy(); return; }
     return sound;
   }
   private save() { try { localStorage.setItem(preferenceKey, JSON.stringify(this.settings)); } catch { /* Optional preference. */ } }
@@ -119,7 +119,12 @@ export class ForestSoundscape {
     if (!sound.play()) { this.hits.delete(sound); sound.destroy(); }
   }
   private audioKey(id: string) { return this.audioAssets?.key(id) ?? this.runtime.key(id); }
-  private assetVolume(id: string) { return clamp((this.audioAssets?.asset(id) ?? this.runtime.manifest.assets[id])?.audioPlayback?.volume ?? 1); }
+  private assetVolume(id: string) {
+    const asset = this.audioAssets?.asset(id) ?? this.runtime.manifest.assets[id];
+    const playback = { ...asset?.audioPlayback, ...asset?.versions[asset.activeVersion]?.audioPlayback };
+    // Designer gain can boost a quiet recording above 100%; only the mixer slider is 0–1.
+    return Math.max(0, playback.volume ?? 1);
+  }
   private update(_time: number, delta: number) {
     if (this.hidden || !this.settings.enabled || this.scene.sound.locked) { this.cadence.reset(); return; }
     const state = this.state(), dt = Math.min(delta, 100);

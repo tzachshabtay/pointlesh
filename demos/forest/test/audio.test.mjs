@@ -102,7 +102,7 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
     sound: { locked: false, mute: false, add: (key, config) => {
       const events = new Map();
       const sound = { key, ...config, totalDuration: 20, seek: 0, isPlaying: false,
-        play() { this.isPlaying = true; return true; }, setVolume(n) { this.volume = n; },
+        play(config) { this.playConfig = config; this.isPlaying = true; return true; }, addMarker(marker) { this.marker = marker; }, setVolume(n) { this.volume = n; },
         once(name, fn) { events.set(name, fn); }, destroy() { this.destroyed = true; this.isPlaying = false; events.get('destroy')?.(); } };
       made.push(sound); return sound;
     } },
@@ -126,6 +126,18 @@ test('soundscape fades room changes, ducks speech, loops, mutes and cleans up', 
     const step = made.find(s => s.key.startsWith('step.')); assert.ok(step);
     const effect = soundscape.playSfx('coin'); assert.equal(effect.key, 'sfx.coin');
     assert.equal(effect.volume, .75 * .55);
+    const lockAsset = structuredClone(assets.assets['sfx.lock-break']);
+    const originalLockAsset = assets.assets['sfx.lock-break'];
+    lockAsset.versions[lockAsset.activeVersion].audioPlayback = { volume: 1.5, trimStartSeconds: .2, trimEndSeconds: .8, playbackRate: .9 };
+    assets.assets['sfx.lock-break'] = lockAsset;
+    try {
+      const lock = soundscape.playSfx('lock-break');
+      assert.equal(lock.volume, 1.5 * .55, 'designer boost is not clipped or reduced by the generic SFX gain');
+      assert.equal(lock.marker.start, .2); assert.ok(Math.abs(lock.marker.duration - .6) < 1e-8);
+      assert.equal(lock.marker.config.rate, .9, 'SFX use the selected take trim and rate');
+      soundscape.setVolume('sfx', 1); assert.equal(lock.volume, 1.5, 'changing the mixer keeps authored gain');
+      soundscape.setVolume('sfx', .55); lock.destroy();
+    } finally { assets.assets['sfx.lock-break'] = originalLockAsset; }
     soundscape.setVolume('sfx', 0); tick();
     assert.equal(step.volume, 0, 'active footsteps follow SFX');
     assert.equal(effect.volume, 0, 'active action effects follow SFX');
