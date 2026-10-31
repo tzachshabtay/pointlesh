@@ -653,8 +653,7 @@
     },
     "prefab:forest.object.tool-chest": {
       "verb:look": {
-        "kind": "simple",
-        "text": "The inscription reads: “What does the mountain remember?”"
+        "kind": "code"
       },
       "verb:interact": {
         "kind": "code"

@@ -458,7 +458,7 @@
             {
               "id": "open-chest",
               "enabled": true,
-              "voiceAssetId": "voice.chest",
+              "voiceAssetId": "voice.narrator",
               "lineAssetId": "line.chest-open.open-chest"
             }
           ]

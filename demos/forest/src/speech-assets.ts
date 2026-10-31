@@ -9,7 +9,7 @@ import { entityInteractionId } from './interactions';
 
 export function speechVoice(speaker = 'Borin'): string {
   return Object.entries(portraitCharacters).find(([id, name]) => id === speaker || name === speaker)?.[0]
-    ?? (speaker === 'Runed chest' ? 'chest' : 'borin');
+    ?? (speaker === 'Narrator' || speaker === 'narrator' ? 'narrator' : speaker === 'Runed chest' ? 'chest' : 'borin');
 }
 const lineText = (asset: AiAssetManifest['assets'][string]) =>
   asset.versions[asset.activeVersion]?.voiceSettings?.text ?? asset.voiceSettings?.text;

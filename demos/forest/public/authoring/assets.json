@@ -1582,6 +1582,14 @@
         "line.game.borin.look.camp-camp.door.camp.frame-7e1ba8a": {
           "assetId": "line.game.borin.look.camp-camp.door.camp.frame-7e1ba8a",
           "label": "Look · Door frame · Orc camp gate · inside"
+        },
+        "line.game.borin.look-chest-open": {
+          "assetId": "line.game.borin.look-chest-open",
+          "label": "Look · Open chest with pickaxe"
+        },
+        "line.game.borin.look-chest-empty": {
+          "assetId": "line.game.borin.look-chest-empty",
+          "label": "Look · Chest after taking pickaxe"
         }
       }
     },
@@ -1682,10 +1690,6 @@
         "line.chest-open.greeting": {
           "label": "Chest Open · Greeting",
           "assetId": "line.chest-open.greeting"
-        },
-        "line.chest-open.open-chest": {
-          "label": "Chest Open · Stone remembers.",
-          "assetId": "line.chest-open.open-chest"
         },
         "line.chest-locked.bar-tab": {
           "label": "Chest Locked · My bar tab? I was hoping it would forget.",
@@ -1919,11 +1923,40 @@
       "kind": "voice-line",
       "prompt": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.",
       "voiceSettings": {
-        "voiceAssetId": "voice.chest",
-        "text": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper."
+        "provider": "elevenlabs",
+        "voiceAssetId": "voice.narrator",
+        "text": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.",
+        "direction": "",
+        "model": "eleven_v4",
+        "voiceId": "uWXi22G95leMO5Tobkla"
       },
-      "activeVersion": "",
-      "versions": {}
+      "activeVersion": "chest-speech-1793406387387",
+      "versions": {
+        "chest-speech-1793406387387": {
+          "name": "chest-speech-1793406387387",
+          "file": "art/line.chest-open.open-chest.chest-speech-1793406387387.mp3",
+          "prompt": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.",
+          "createdAt": "2026-10-31T00:26:27.392Z",
+          "model": "eleven_v4",
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "voiceSettings": {
+            "provider": "elevenlabs",
+            "voiceAssetId": "voice.narrator",
+            "text": "The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.",
+            "direction": "",
+            "model": "eleven_v4",
+            "voiceId": "uWXi22G95leMO5Tobkla"
+          },
+          "notes": "Chest narration and state-dependent look descriptions."
+        }
+      },
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      }
     },
     "borin.idle-front": {
       "id": "borin.idle-front",
@@ -14391,6 +14424,10 @@
         "line.narrator.ending.homecoming": {
           "assetId": "line.narrator.ending.homecoming",
           "label": "Ending · Bramblehollow · home again"
+        },
+        "line.chest-open.open-chest": {
+          "label": "Chest Open · Stone remembers.",
+          "assetId": "line.chest-open.open-chest"
         }
       }
     },
@@ -15269,6 +15306,86 @@
         "voiceAssetId": "voice.borin",
         "text": "Door frame · Orc camp gate · inside",
         "direction": ""
+      }
+    },
+    "line.game.borin.look-chest-open": {
+      "id": "line.game.borin.look-chest-open",
+      "kind": "voice-line",
+      "prompt": "There’s Orrin’s pickaxe. All that magic to keep one good tool out of the wrong hands.",
+      "activeVersion": "chest-speech-1793406388875",
+      "versions": {
+        "chest-speech-1793406388875": {
+          "name": "chest-speech-1793406388875",
+          "file": "art/line.game.borin.look-chest-open.chest-speech-1793406388875.mp3",
+          "prompt": "There’s Orrin’s pickaxe. All that magic to keep one good tool out of the wrong hands.",
+          "createdAt": "2026-10-31T00:26:28.875Z",
+          "model": "eleven_v4",
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "voiceSettings": {
+            "provider": "elevenlabs",
+            "voiceAssetId": "voice.borin",
+            "text": "There’s Orrin’s pickaxe. All that magic to keep one good tool out of the wrong hands.",
+            "direction": "",
+            "model": "eleven_v4",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ"
+          },
+          "notes": "Chest narration and state-dependent look descriptions."
+        }
+      },
+      "voiceSettings": {
+        "provider": "elevenlabs",
+        "voiceAssetId": "voice.borin",
+        "text": "There’s Orrin’s pickaxe. All that magic to keep one good tool out of the wrong hands.",
+        "direction": "",
+        "model": "eleven_v4",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ"
+      },
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      }
+    },
+    "line.game.borin.look-chest-empty": {
+      "id": "line.game.borin.look-chest-empty",
+      "kind": "voice-line",
+      "prompt": "Empty now. I’ll return the pickaxe once it’s finished its royal duties.",
+      "activeVersion": "chest-speech-1793406390126",
+      "versions": {
+        "chest-speech-1793406390126": {
+          "name": "chest-speech-1793406390126",
+          "file": "art/line.game.borin.look-chest-empty.chest-speech-1793406390126.mp3",
+          "prompt": "Empty now. I’ll return the pickaxe once it’s finished its royal duties.",
+          "createdAt": "2026-10-31T00:26:30.127Z",
+          "model": "eleven_v4",
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "voiceSettings": {
+            "provider": "elevenlabs",
+            "voiceAssetId": "voice.borin",
+            "text": "Empty now. I’ll return the pickaxe once it’s finished its royal duties.",
+            "direction": "",
+            "model": "eleven_v4",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ"
+          },
+          "notes": "Chest narration and state-dependent look descriptions."
+        }
+      },
+      "voiceSettings": {
+        "provider": "elevenlabs",
+        "voiceAssetId": "voice.borin",
+        "text": "Empty now. I’ll return the pickaxe once it’s finished its royal duties.",
+        "direction": "",
+        "model": "eleven_v4",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ"
+      },
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
       }
     }
   },

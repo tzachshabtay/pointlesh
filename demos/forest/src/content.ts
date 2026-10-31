@@ -99,20 +99,20 @@ for (const [id, description] of Object.entries({ coin: 'A small gleaming copper 
 for (const [id, label] of Object.entries({ borin: 'Borin', elder: 'Elder Rowan', innkeeper: 'Mara', miner: 'Orrin', chest: 'The runed chest' })) {
   definitions[`voice.${id}`] = { id: `voice.${id}`, kind: 'voice', prompt: `Warm fantasy storytelling voice for ${label}.`, activeVersion: '', versions: {} };
 }
-function dialog(id: string, speaker: string, greeting: string, options: { id: string; text: string; reply: string }[]): DialogDefinition {
+function dialog(id: string, speaker: string, greeting: string, options: { id: string; text: string; reply: string; replySpeaker?: string }[]): DialogDefinition {
   const nodes: Record<string, DialogNode> = {};
-  const line = (key: string, text: string, label: string) => {
+  const line = (key: string, text: string, label: string, lineSpeaker = speaker) => {
     const assetId = `line.${id}.${key}`;
-    definitions[assetId] = { id: assetId, kind: 'voice-line', prompt: text, voiceSettings: { voiceAssetId: `voice.${speaker}`, text }, activeVersion: '', versions: {} };
+    definitions[assetId] = { id: assetId, kind: 'voice-line', prompt: text, voiceSettings: { voiceAssetId: `voice.${lineSpeaker}`, text }, activeVersion: '', versions: {} };
     // AI Assets uses these links for the voice's Line selector and regeneration.
-    const voice = definitions[`voice.${speaker}`]!;
+    const voice = definitions[`voice.${lineSpeaker}`]!;
     const dialogLabel = id.split('-').map(part => part[0]!.toUpperCase() + part.slice(1)).join(' ');
     (voice.linkedAnimationAssets ??= {})[assetId] = { label: id === speaker ? label : `${dialogLabel} · ${label}`, assetId };
-    return { id: key, enabled: true, voiceAssetId: `voice.${speaker}`, lineAssetId: assetId };
+    return { id: key, enabled: true, voiceAssetId: `voice.${lineSpeaker}`, lineAssetId: assetId };
   };
   nodes.opening = { id: 'opening', type: 'block', name: 'Greeting', enabled: true, lines: [line('greeting', greeting, 'Greeting')], nextNodeId: 'topics' };
   nodes.topics = { id: 'topics', type: 'decision', name: 'Topics', prompt: 'What will you say?', enabled: true, options: options.map(option => ({ id: option.id, text: option.text, enabled: true, nextNodeId: `answer-${option.id}` })) };
-  for (const option of options) nodes[`answer-${option.id}`] = { id: `answer-${option.id}`, type: 'block', name: option.text, enabled: true, lines: [line(option.id, option.reply, option.text)] };
+  for (const option of options) nodes[`answer-${option.id}`] = { id: `answer-${option.id}`, type: 'block', name: option.text, enabled: true, lines: [line(option.id, option.reply, option.text, option.replySpeaker)] };
   return { id, name: roomNames[id as keyof typeof roomNames] ?? id, enabled: true, entryNodeId: 'opening', nodes };
 }
 export const chestGuesses = [
@@ -121,6 +121,7 @@ export const chestGuesses = [
   { id: 'bad-beard', text: 'That terrible beard I had at sixteen?', reply: 'SOME THINGS EVEN A MOUNTAIN WOULD PREFER TO FORGET.' },
   { id: 'knock-knock', text: 'Knock knock. Who’s there? A pickaxe, hopefully.', reply: 'A DWARF WITH A BETTER JOKE MAY TRY AGAIN. YOURS IS NOT THE PASSWORD.' },
 ];
+addNarratorAssets({ schemaVersion: 1, assets: definitions });
 export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
   elder: dialog('elder', 'elder', 'Borin. You have your father’s stubborn look. Good. We will need it.', [
     { id: 'king', text: 'Where did they take the king?', reply: kingRescueReply },
@@ -140,7 +141,7 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
   'chest-locked': dialog('chest-locked', 'chest', 'WHAT DOES THE MOUNTAIN REMEMBER?', chestGuesses),
   'chest-open': dialog('chest-open', 'chest', 'WHAT DOES THE MOUNTAIN REMEMBER?', [
     ...chestGuesses,
-    { id: 'open-chest', text: 'Stone remembers.', reply: 'The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.' }
+    { id: 'open-chest', text: 'Stone remembers.', replySpeaker: 'narrator', reply: 'The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.' }
   ])
 } });
 const chestDefaults = structuredClone({ locked: dialogs.dialogs['chest-locked']!, open: dialogs.dialogs['chest-open']!,
@@ -159,8 +160,9 @@ export function addChestGuesses(dialogManifest: typeof dialogs, assetManifest: A
   }
   for (const [id, line] of Object.entries(chestDefaults.lines)) {
     assetManifest.assets[id] ??= structuredClone(line);
-    const voice = assetManifest.assets['voice.chest'];
-    if (voice) (voice.linkedAnimationAssets ??= {})[id] ??= structuredClone(definitions['voice.chest']!.linkedAnimationAssets![id]!);
+    const voiceId = line.voiceSettings!.voiceAssetId!;
+    const voice = assetManifest.assets[voiceId];
+    if (voice) (voice.linkedAnimationAssets ??= {})[id] ??= structuredClone(definitions[voiceId]!.linkedAnimationAssets![id]!);
   }
 }
 export const assets = {

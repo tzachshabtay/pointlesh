@@ -29,7 +29,8 @@ export function createForestInteractions(scenes: SceneDesignerManifest): Interac
       cells[verbInteractionColumn('interact')] = { kind: 'simple', text: 'Come on, Borin. There is a king to rescue.' };
       for (const item of inventory) cells[itemInteractionColumn(item.id.slice('prefab:'.length))] = { kind: 'simple', text: 'I had better save that for the rescue.' };
     } else if (target && row.properties.interactive !== false) {
-      cells[verbInteractionColumn('look')] = { kind: 'simple', text: typeof row.properties.description === 'string' ? row.properties.description : target.description };
+      cells[verbInteractionColumn('look')] = targetId === 'tool-chest' ? { kind: 'code' }
+        : { kind: 'simple', text: typeof row.properties.description === 'string' ? row.properties.description : target.description };
       cells[verbInteractionColumn('interact')] = targetId === 'gold'
         ? { kind: 'simple', text: target.description } : { kind: 'code' };
       // Inventory can be used on exits; empty cells inherit Defaults.

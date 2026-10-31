@@ -14,7 +14,7 @@ import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses, completeForestAssetManifest } from './content';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
-import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, intro, introArrivalLine, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
+import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, lookAtTarget, intro, introArrivalLine, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors } from './sprites';
 import { ForestSoundscape, spriteWalker } from './soundscape';
 import { addForestAudio } from './audio-assets';
@@ -522,7 +522,7 @@ class ForestAdventure extends Phaser.Scene {
     this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
     if (this.authoredInteraction(sceneInteractionTarget(this.story.roomId, entity), verbInteractionColumn('look'))) return;
     const target = targets[this.story.roomId].find(target => target.id === targetId);
-    this.say(typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name);
+    this.say(lookAtTarget(this.story, targetId, typeof entity.properties.description === 'string' ? entity.properties.description : target?.description ?? entity.name));
   }
   async act(targetId: string, instanceId?: string) {
     if (this.blocked()) return;
@@ -1005,7 +1005,7 @@ class ForestAdventure extends Phaser.Scene {
       this.interactionSound = this.audio.playVoice(turn.resolved.lineAsset.id);
       const voice = turn.resolved.voiceAsset.id.split('.').pop();
       this.speakingVoice = voice ?? 'borin';
-      el('speaker').textContent = ({ ...portraitCharacters, chest:'Runed chest' } as Record<string,string>)[voice ?? ''] ?? 'Borin';
+      el('speaker').textContent = ({ ...portraitCharacters, chest:'Runed chest', narrator: 'Narrator' } as Record<string,string>)[voice ?? ''] ?? 'Borin';
       el('speech').textContent = turn.resolved.text; el('dialog-next').hidden = false;
       if (voice === 'borin') void this.character.say(turn.resolved.text, 3600000);
       else this.character.finishSpeech();

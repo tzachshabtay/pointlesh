@@ -96,6 +96,14 @@ export const targets: Record<RoomId, Target[]> = {
     { id: 'camp-exit', name: 'Back to the wood', x: 90, y: 474, exit: 'forest', description: 'A discreet retreat is also a kind of strategy.' }
   ]
 };
+/** Stateful descriptions run through the same speech/voice lookup as other Borin lines. */
+export function lookAtTarget(state: StoryState, targetId: string, fallback: string): string {
+  if (state.roomId === 'mine' && targetId === 'tool-chest') {
+    if (state.flags.tookPickaxe) return spokenLines['look-chest-empty'].text;
+    if (state.flags.chestOpen) return spokenLines['look-chest-open'].text;
+  }
+  return fallback;
+}
 export function targetVisible(state: StoryState, id: string): boolean {
   return !(id === 'coin' && state.flags.tookCoin || id === 'rope' && state.flags.tookRope || id === 'mushroom' && state.flags.tookMushroom);
 }

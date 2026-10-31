@@ -85,6 +85,16 @@ export const spokenLines = {
     "text": "A dreamcap. Mara said it makes a very effective sleeping draught when mixed with stout.",
     "label": "A dreamcap. Mara said it makes a very effective sleeping draught when mixed with stout."
   },
+  "look-chest-open": {
+    "voice": "borin",
+    "text": "There’s Orrin’s pickaxe. All that magic to keep one good tool out of the wrong hands.",
+    "label": "Look · Open chest with pickaxe"
+  },
+  "look-chest-empty": {
+    "voice": "borin",
+    "text": "Empty now. I’ll return the pickaxe once it’s finished its royal duties.",
+    "label": "Look · Chest after taking pickaxe"
+  },
   "the-tool-chest-is-empty-its-pickaxe": {
     "voice": "borin",
     "text": "The tool chest is empty. Its pickaxe is in capable, if rather small, hands.",
