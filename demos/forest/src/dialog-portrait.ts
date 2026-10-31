@@ -21,6 +21,8 @@ export class ForestDialogPortrait {
     if (!asset || !['image', 'animation', 'spritesheet'].includes(asset.kind)) { this.hide(); return; }
     this.usingLipSync = this.lipSync.show(id);
     if (this.usingLipSync) {
+      this.lipSync.canvas.dataset.assetId = id;
+      this.lipSync.canvas.dataset.state = speaking ? 'speak' : 'idle';
       this.icon?.stop();
       if (this.host.firstChild !== this.lipSync.canvas) this.host.replaceChildren(this.lipSync.canvas);
       if (!speaking) this.lipSync.stop();
@@ -43,6 +45,6 @@ export class ForestDialogPortrait {
   }
   /** Keep promoted/previewed art current without restarting the conversation clock. */
   refresh(): void { this.icon?.refresh(); this.lipSync.refresh(); }
-  hide(): void { this.icon?.stop(); this.lipSync.stop(); this.host.hidden = true; }
+  hide(): void { this.icon?.stop(); this.lipSync.stop(); this.lipSync.canvas.dataset.state = 'idle'; this.host.hidden = true; }
   destroy = (): void => { this.icon?.destroy(); this.lipSync.destroy(); this.icon = undefined; this.host.replaceChildren(); this.host.hidden = true; };
 }

@@ -7,8 +7,9 @@ async function ready(page: Page) {
   await page.locator('#skip-intro').evaluate((button: HTMLButtonElement) => button.click());
 }
 const portrait = (page: Page) => page.locator('#dialog-portrait canvas');
+const portraitFrame = (page: Page) => portrait(page).evaluate(canvas => canvas.getAttribute('data-lip-sync-shape') ?? canvas.getAttribute('data-frame'));
 
-test('all six speakers animate above the dialog, survive multiple loops, and hide when dismissed', async ({ page }, testInfo) => {
+test('all six speakers animate above the dialog, preserve framing, and hide when dismissed', async ({ page }, testInfo) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
   await ready(page);
   for (const [id, speaker] of Object.entries({ borin: 'Borin', elder: 'Elder Rowan', innkeeper: 'Mara', miner: 'Orrin', king: 'King Aldric', guard: 'Orc guard' })) {
@@ -58,11 +59,11 @@ test('conversation changes speaker, pauses at choices, and restores the right po
   await expect(portrait(page)).toHaveAttribute('data-asset-id', 'portrait.elder');
   await expect(portrait(page)).toHaveAttribute('data-state', 'speak');
   await page.locator('#journal').click();
-  const heldFrame = await portrait(page).getAttribute('data-frame');
+  const heldFrame = await portraitFrame(page);
   await page.evaluate(() => (window as any).pointleshDemo.scene.events.emit('postupdate', 0, 3125));
-  await expect(portrait(page)).toHaveAttribute('data-frame', heldFrame!);
+  expect(await portraitFrame(page)).toBe(heldFrame);
   await page.locator('#modal-close').click();
-  await expect.poll(() => portrait(page).getAttribute('data-frame')).not.toBe(heldFrame);
+  await expect.poll(() => portraitFrame(page)).not.toBe(heldFrame);
   await page.evaluate(() => (window as any).pointleshDemo.scene.conversation.start('chest-locked'));
   await expect(page.locator('#speaker')).toHaveText('Runed chest');
   await expect(page.locator('#dialog-portrait')).toBeHidden();
@@ -129,4 +130,23 @@ test.describe('mobile dialogue portraits', () => {
     await page.screenshot({ path: testInfo.outputPath('mobile-dialog-portrait.png'), fullPage: true });
     await page.locator('#dialog-next').tap(); await expect(page.locator('#dialog')).toBeHidden();
   });
+});
+
+
+test('Rowan uses recording timing for all four lines and rests when speech ends', async ({ page }) => {
+  await ready(page);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.conversation.start('elder'));
+  await expect(portrait(page)).toHaveAttribute('data-lip-sync-source', 'rhubarb');
+  await expect.poll(async () => Number(await portrait(page).getAttribute('data-lip-sync-time'))).toBeGreaterThan(.1);
+  await expect.poll(async () => Number(await portrait(page).getAttribute('data-lip-sync-time'))).toBe(0);
+  await expect(portrait(page)).toHaveAttribute('data-lip-sync-shape', 'X');
+  for (const choice of ['Where did they take the king?', 'I could use a little advice.', 'I will bring him home.']) {
+    await page.locator('#dialog-next').click();
+    await page.getByRole('button', { name: choice, exact: true }).click();
+    await expect(portrait(page)).toHaveAttribute('data-asset-id', 'portrait.elder');
+    await expect(portrait(page)).toHaveAttribute('data-lip-sync-source', 'rhubarb');
+    await expect.poll(async () => Number(await portrait(page).getAttribute('data-lip-sync-time'))).toBeGreaterThan(.1);
+  }
+  await page.locator('#dialog-next').click();
+  await expect(page.locator('#dialog')).toBeHidden();
 });
