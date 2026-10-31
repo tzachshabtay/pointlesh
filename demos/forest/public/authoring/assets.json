@@ -12006,7 +12006,7 @@
             "right": 4
           },
           "blink": true,
-          "gaze": true,
+          "gaze": false,
           "blinkInterval": [
             3,
             6
