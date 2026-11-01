@@ -115,3 +115,18 @@ test('voice playback uses the favorite take trim and rate, with completion at it
   assert.equal(playAdventureAudio(sound, asset()), true);
   assert.deepEqual(calls, [{ rate: 1 }]);
 });
+
+
+test('selected voice take switches captions with audio and preserves the published script', async () => {
+  const f = fixture();
+  const original = { ...asset('old.wav'), kind: 'voice-line', voiceSettings: { text: 'Original sentence' } };
+  f.runtime.manifest.assets.door = original;
+  const draft = { ...original, versions: { active: { file: 'draft.wav', voiceSettings: { text: 'New sentence' } } } };
+  const loading = f.audio.select('door', 'draft.wav', draft);
+  assert.equal(f.audio.voiceText('door', 'fallback'), 'Original sentence');
+  f.complete(f.queued[0]); await loading;
+  assert.equal(f.audio.voiceText('door', 'fallback'), 'New sentence');
+  assert.equal(original.voiceSettings.text, 'Original sentence');
+  assert.equal(f.audio.voiceText(undefined, 'Narration'), 'Narration');
+  f.audio.destroy();
+});

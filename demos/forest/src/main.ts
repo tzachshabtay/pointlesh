@@ -912,15 +912,23 @@ class ForestAdventure extends Phaser.Scene {
         if (gameplay(previous) !== gameplay(this.resolved())) this.refreshDesign();
       }
     });
+    let assetDesignerManifest: import('@ai-game-assets/core').AiAssetManifest = assets;
     installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
       Object.assign(dialogs, manifest); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech();
-    }, onAiAssetsChange: next => { Object.assign(assets, completeForestAssetManifest(next)); void this.audioAssets.syncManifest(assets).catch(error => toast(String(error))); this.aiRuntime.syncManifest(assets); this.sceneDesigner?.inspector.setAiAssets(assets); this.refreshCharacterAnimations(); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech(); } });
+    }, onAiAssetsChange: next => {
+      Object.assign(assets, completeForestAssetManifest(next)); Object.assign(assetDesignerManifest, assets);
+      interactions = syncInteractionTextFromVoiceLines(interactions, assets);
+      this.interactionDesigner?.setAiAssets(assets);
+      void this.audioAssets.syncManifest(assets).catch(error => toast(String(error)));
+      this.aiRuntime.syncManifest(assets); this.sceneDesigner?.inspector.setAiAssets(assets);
+      this.refreshCharacterAnimations(); this.conversation.setManifest(dialogs, assets);
+      this.conversationActive = false; this.dismissSpeech();
+    } });
     const callbacks = this.aiRuntime.designerCallbacks();
     const refreshAtlas = (assetId: string, textureKey: string) => {
       if (!assetId.startsWith('background.')) return;
       for (const room of roomIds.filter(room => atlasRooms[room].asset === assetId)) this.drawRoomTexture(room, textureKey);
     };
-    let assetDesignerManifest: import('@ai-game-assets/core').AiAssetManifest = assets;
     installAiAssetDesigner({ scene: this, manifest: assets, autoFirstDrafts: false, generationRecoveryKey: 'pointlesh-forest', client: new ForestAssetDebugClient('http://127.0.0.1:4287'), ...callbacks,
       viewport: {
         target: document.querySelector<HTMLElement>('.game-shell')!,
@@ -989,7 +997,7 @@ class ForestAdventure extends Phaser.Scene {
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.epoch++; this.clearMovementKeys(); this.talking = true;
     const speech = resolveGameSpeech(assets, text, speaker, lineAssetId);
-    text = speech.text; this.speakingVoice = speech.voice;
+    text = this.audioAssets.voiceText(speech.lineAssetId, speech.text); this.speakingVoice = speech.voice;
     this.conversationActive = false; this.character.stop();
     if (this.speakingVoice === 'borin') void this.character.say(text, 3600000);
     else this.character.finishSpeech();
@@ -1011,15 +1019,16 @@ class ForestAdventure extends Phaser.Scene {
     if (turn.type === 'line') {
       // The live audio selection can have a recording even before it is promoted.
       this.interactionSound = this.audio.playVoice(turn.resolved.lineAsset.id);
+      const text = this.audioAssets.voiceText(turn.resolved.lineAsset.id, turn.resolved.text);
       const voice = turn.resolved.voiceAsset.id.split('.').pop();
       this.speakingVoice = voice ?? 'borin';
       el('speaker').textContent = ({ ...portraitCharacters, chest:'Runed chest', narrator: 'Narrator' } as Record<string,string>)[voice ?? ''] ?? 'Borin';
-      el('speech').textContent = turn.resolved.text; el('dialog-next').hidden = false;
-      if (voice === 'borin') void this.character.say(turn.resolved.text, 3600000);
+      el('speech').textContent = text; el('dialog-next').hidden = false;
+      if (voice === 'borin') void this.character.say(text, 3600000);
       else this.character.finishSpeech();
       this.showDialogPortrait(this.speakingVoice, true);
       this.voiceAdvance.follow(this.interactionSound);
-      this.portrait.speak(turn.resolved.text, this.audioAssets.asset(turn.resolved.lineAsset.id), this.interactionSound);
+      this.portrait.speak(text, this.audioAssets.asset(turn.resolved.lineAsset.id), this.interactionSound);
     } else {
       this.speakingVoice = '';
       this.character.finishSpeech(); el('speaker').textContent = 'Borin'; el('speech').textContent = turn.decision.prompt; el('dialog-next').hidden = true;
@@ -1102,8 +1111,7 @@ class ForestAdventure extends Phaser.Scene {
     if (voice && !narrationLineId(kind, index)) this.showDialogPortrait(voice, true, this.cinematicPortrait);
     else this.cinematicPortrait.hide();
     const lineId = cutsceneSpeechLine(assets, kind, index);
-    const line = lineId ? assets.assets[lineId] : undefined;
-    el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = line?.versions[line.activeVersion]?.voiceSettings?.text ?? line?.voiceSettings?.text ?? step.text ?? '';
+    el('cutscene-speaker').textContent = step.speaker ?? ''; el('cutscene-text').textContent = this.audioAssets.voiceText(lineId, step.text ?? '');
     this.cinematicPortrait.speak(el('cutscene-text').textContent ?? '', lineId ? this.audioAssets.asset(lineId) : undefined, this.cutsceneVoice.currentSound as Phaser.Sound.BaseSound | undefined, `${kind}:${index}`);
     el('cutscene-progress').textContent = sequence.map((_, i) => i === index ? '◆' : '◇').join(' ');
     el('skip-intro').hidden = false;

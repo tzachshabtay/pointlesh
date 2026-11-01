@@ -29,6 +29,11 @@ export class PhaserAdventureAudioAssets {
   }
   key(id: string): string { return this.selected.get(id)?.key ?? this.runtime.key(id); }
   asset(id: string): AiAssetDefinition | undefined { return this.selected.get(id)?.asset ?? this.runtime.manifest.assets[id]; }
+  /** Captions must use the same selected take as audio and lip sync, even before promotion. */
+  voiceText(id: string | undefined, fallback: string): string {
+    const asset = id ? this.asset(id) : undefined;
+    return asset?.versions[asset.activeVersion]?.voiceSettings?.text ?? asset?.voiceSettings?.text ?? fallback;
+  }
   private source(asset: AiAssetDefinition): string | undefined {
     const file = this.isAudio(asset) ? asset.versions[asset.activeVersion]?.file : undefined;
     if (!file) return;
