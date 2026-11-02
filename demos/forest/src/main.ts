@@ -1402,6 +1402,18 @@ class ForestAdventure extends Phaser.Scene {
 
 function setupControls() {
   const gameBars = Array.from(document.querySelectorAll<HTMLElement>('.scene-bar,.inventory-bar'));
+  const stage = document.querySelector<HTMLElement>('.stage-wrap')!;
+  const topBar = document.querySelector<HTMLElement>('.scene-bar')!;
+  // Fullscreen bars overlap the scene; fitted scenes may already sit below them.
+  const positionCinematicPortrait = () => {
+    const overlap = document.body.classList.contains('cinematic-playing')
+      ? Math.max(0, topBar.getBoundingClientRect().bottom - stage.getBoundingClientRect().top) : 0;
+    el('cinematic-portrait').style.setProperty('--cinematic-bar-overlap', `${overlap}px`);
+  };
+  const portraitLayout = new ResizeObserver(positionCinematicPortrait);
+  for (const element of [stage, topBar, document.querySelector('.game-shell')!]) portraitLayout.observe(element);
+  new MutationObserver(positionCinematicPortrait).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  positionCinematicPortrait();
   // Touch has no hover: tap an edge to reveal its bar, and tap elsewhere to hide it.
   document.addEventListener('pointerdown', event => {
     if (event.pointerType === 'mouse') return;
