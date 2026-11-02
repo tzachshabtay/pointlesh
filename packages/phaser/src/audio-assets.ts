@@ -48,32 +48,65 @@ export class PhaserAdventureAudioAssets {
       this.selected.get(id)!.asset = asset;
       return Promise.resolve();
     }
-    const key = `pointlesh-audio::${id}::${++this.serial}`;
     let cancel!: () => void;
     const promise = new Promise<void>((resolve, reject) => {
-      const event = `filecomplete-audio-${key}`;
-      let timer: ReturnType<typeof setTimeout>;
-      const clean = () => {
-        clearTimeout(timer); this.scene.load.off(event, ready); this.scene.load.off('loaderror', failed);
-        this.pending.delete(id);
+      let settled = false;
+      let attempt = 0;
+      let cleanup = () => {};
+      cancel = () => { settled = true; cleanup(); this.pending.delete(id); resolve(); };
+      const load = () => {
+        if (settled) return;
+        const key = `pointlesh-audio::${id}::${++this.serial}`;
+        const event = `filecomplete-audio-${key}`;
+        let timer: ReturnType<typeof setTimeout>;
+        let finished = false;
+        const detach = () => {
+          clearTimeout(timer);
+          this.scene.load.off(event, ready);
+          this.scene.load.off('loaderror', failed);
+          this.scene.load.off('complete', complete);
+        };
+        cleanup = () => {
+          finished = true; detach();
+          // A cancelled/timed-out decode can still finish later. Never install it.
+          this.scene.load.once(event, () => this.scene.cache.audio.remove(key));
+        };
+        const ready = () => {
+          if (finished || settled) return;
+          finished = true; settled = true; detach(); this.pending.delete(id);
+          const previous = this.selected.get(id);
+          this.selected.set(id, { source, key, asset }); this.owned.add(key);
+          // Existing sounds retain their decoded buffer, allowing music to crossfade.
+          if (previous) { this.scene.cache.audio.remove(previous.key); this.owned.delete(previous.key); }
+          resolve();
+        };
+        const failed = (file: { key: string }) => {
+          if (file.key !== key || finished || settled) return;
+          cleanup();
+          if (attempt++ === 0) {
+            // Wait until Phaser finishes dispatching the current loader events.
+            queueMicrotask(load);
+          } else {
+            settled = true; this.pending.delete(id);
+            reject(new Error(`Could not load audio for ${id} after retrying (${source}). The recording is saved; any previous recording is still available.`));
+          }
+        };
+        const complete = () => {
+          // Phaser emits loaderror for HTTP failures, but not decode failures.
+          // At queue completion, a missing cache entry means processing failed.
+          if (this.scene.cache.audio.exists(key)) ready(); else failed({ key });
+        };
+        this.scene.load.once(event, ready);
+        this.scene.load.on('loaderror', failed);
+        this.scene.load.once('complete', complete);
+        timer = setTimeout(() => failed({ key }), 20000);
+        const [url, fragment] = source.split('#', 2);
+        const retrySource = /^(data:|blob:)/i.test(source) ? source
+          : `${url}${url.includes('?') ? '&' : '?'}_pointlesh_audio_retry=${Date.now()}-${this.serial}${fragment === undefined ? '' : `#${fragment}`}`;
+        this.scene.load.audio(key, attempt ? retrySource : source);
+        if (attempt && !this.scene.load.isLoading()) this.scene.load.start();
       };
-      const ready = () => {
-        clean();
-        const previous = this.selected.get(id);
-        this.selected.set(id, { source, key, asset }); this.owned.add(key);
-        // Existing sounds retain their decoded buffer, allowing music to crossfade.
-        if (previous) { this.scene.cache.audio.remove(previous.key); this.owned.delete(previous.key); }
-        resolve();
-      };
-      const failed = (file: { key: string }) => {
-        if (file.key !== key) return;
-        clean(); this.scene.load.once(event, () => this.scene.cache.audio.remove(key)); reject(new Error(`Could not load audio for ${id}. The previous recording is still available.`));
-      };
-      cancel = () => { clean(); this.scene.load.once(event, () => this.scene.cache.audio.remove(key)); resolve(); };
-      this.scene.load.once(event, ready);
-      this.scene.load.on('loaderror', failed);
-      timer = setTimeout(() => failed({ key }), 20000);
-      this.scene.load.audio(key, source);
+      load();
     });
     this.pending.set(id, { source, promise, cancel });
     if (!this.scene.load.isLoading()) this.scene.load.start();

@@ -6,7 +6,7 @@ const asset = (file = 'door.mp3') => ({ id: 'door', kind: 'sound', activeVersion
 function fixture() {
   const load = new EventEmitter(), cache = new Map([['original', 'original buffer']]), queued = [];
   load.audio = (key, source) => queued.push({ key, source }); load.isLoading = () => false; load.start = () => {};
-  const scene = { load, events: new EventEmitter(), cache: { audio: { remove: key => cache.delete(key) } } };
+  const scene = { load, events: new EventEmitter(), cache: { audio: { remove: key => cache.delete(key), exists: key => cache.has(key) } } };
   const runtime = { key: () => 'original', manifest: { assets: { door: asset() } } };
   const audio = new PhaserAdventureAudioAssets(scene, runtime, '/');
   const complete = (job) => { cache.set(job.key, job.source); load.emit(`filecomplete-audio-${job.key}`); };
@@ -39,7 +39,10 @@ test('late results cannot override the newest selection and failed loads keep wo
   assert.equal(f.audio.key('door'), f.queued[1].key);
   const failed = f.audio.select('door', 'broken.mp3', asset());
   f.load.emit('loaderror', { key: f.queued[2].key });
-  await assert.rejects(failed, /previous recording is still available/);
+  const rejected = assert.rejects(failed, /previous recording is still available/);
+  await Promise.resolve();
+  f.load.emit('loaderror', { key: f.queued[3].key });
+  await rejected;
   assert.equal(f.audio.key('door'), f.queued[1].key);
   f.audio.destroy();
 });
@@ -128,5 +131,37 @@ test('selected voice take switches captions with audio and preserves the publish
   assert.equal(f.audio.voiceText('door', 'fallback'), 'New sentence');
   assert.equal(original.voiceSettings.text, 'Original sentence');
   assert.equal(f.audio.voiceText(undefined, 'Narration'), 'Narration');
+  f.audio.destroy();
+});
+
+
+test('decode failures retry with a fresh request and install the saved recording', async () => {
+  const f = fixture();
+  const saved = { assets: { door: asset('art/new-take.mp3') } };
+  const pending = f.audio.syncManifest(saved);
+  const first = f.queued[0];
+  // Phaser does not emit loaderror on decode failure, only queue completion.
+  f.load.emit('complete');
+  await Promise.resolve();
+  assert.equal(f.queued.length, 2);
+  assert.match(f.queued[1].source, /^\/art\/new-take\.mp3\?_pointlesh_audio_retry=/);
+  f.complete(f.queued[1]); await pending;
+  f.complete(first);
+  assert.equal(f.cache.has(first.key), false);
+  assert.equal(f.audio.key('door'), f.queued[1].key);
+  await f.audio.syncManifest(saved);
+  assert.equal(f.queued.length, 2, 'metadata refresh preserves the recovered buffer');
+  f.audio.destroy();
+});
+
+test('changing a selection during retry does not resurrect the failed take', async () => {
+  const f = fixture();
+  const failed = f.audio.select('door', 'old.mp3', asset());
+  f.load.emit('complete');
+  const newest = f.audio.select('door', 'newest.mp3', asset());
+  await Promise.resolve();
+  assert.equal(f.queued.length, 2, 'cancelled retry is not queued');
+  f.complete(f.queued[1]); await newest; await failed;
+  assert.equal(f.audio.key('door'), f.queued[1].key);
   f.audio.destroy();
 });
