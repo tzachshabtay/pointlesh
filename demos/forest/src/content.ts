@@ -1,7 +1,7 @@
 import { seedAudioFrameTags } from './audio-frame-tags';
 import { prepareForestDialogs } from './dialog-returns';
 import { defineAiAssets, type AiAssetDefinition, type AiAssetManifest } from '@ai-game-assets/core';
-import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
+import { defineDialogManifest, syncDialogOptionVoiceLines, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
 import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
 import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
 import { addForestPoints } from './points';
@@ -284,6 +284,7 @@ addForestInventoryPrefabs(scenes);
 // never old user-created assets, when accepting a fresh server manifest.
 seedAudioFrameTags(assets);
 addGameSpeechAssets(assets, scenes);
+Object.assign(assets, syncDialogOptionVoiceLines(dialogs, assets));
 const gameAssetDefaults = structuredClone(assets);
 export function completeForestAssetManifest(manifest: AiAssetManifest): AiAssetManifest {
   // Look lines are derived from the current catalog. Copying the startup set can

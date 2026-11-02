@@ -14,7 +14,8 @@ test('the opening reply uses narrator voice in both seeded and saved dialogs', (
   for (const [dialogManifest, assetManifest] of [[dialogs, assets], [authored('dialogs'), authored('assets')]]) {
     const conversation = new AdventureDialog(dialogManifest, assetManifest);
     conversation.start('chest-open'); conversation.advance();
-    const turn = conversation.choose('open-chest');
+    let turn = conversation.choose('open-chest');
+    if (turn.type === 'line' && turn.optionId) turn = conversation.advance();
     assert.equal(turn.type, 'line');
     assert.equal(turn.resolved.voiceAsset.id, 'voice.narrator');
     assert.match(turn.resolved.text, /runes glow/);

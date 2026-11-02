@@ -6,6 +6,11 @@ test('new authored hotspots show their labels and conversation topics return wit
   await openAdventure(page);
   await page.locator('#skip-intro').click();
   await expect(page.locator('body')).not.toHaveClass(/cinematic-playing/);
+  await page.waitForFunction(() => {
+    const s = (window as any).pointleshDemo.scene;
+    return !s.cutsceneCrossfade && !s.roomTransition?.active && s.introArrival !== 'walking';
+  });
+  await page.evaluate(() => (window as any).pointleshDemo.scene.continueSpeech());
   const pointer = await page.evaluate(() => {
     const demo = (window as any).pointleshDemo, s = demo.scene, manifest = demo.manifest;
     const layer = manifest.scenes.village.layers[0];

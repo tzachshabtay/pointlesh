@@ -14,7 +14,10 @@ function choose(state, dialogId, optionId) {
   const reply = dialog.choose(optionId);
   story.applyDialogChoice(state, optionId);
   assert.equal(reply.type, 'line');
-  assert.equal(dialog.advance().type, 'end');
+  let turn = dialog.advance();
+  for (let n=0;turn.type==='line' && n<50;n++) turn=dialog.advance();
+  const option=dialogs.dialogs[dialogId].nodes.topics.options.find(option=>option.id===optionId);
+  assert.equal(turn.type,option.exitDialog ? 'end' : 'decision');
 }
 
 test('full authored-dialog rescue walkthrough travels through all six room exits', () => {

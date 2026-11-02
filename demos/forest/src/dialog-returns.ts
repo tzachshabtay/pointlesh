@@ -1,20 +1,22 @@
-import type { DialogDesignerManifest } from '@dialog-designer/core';
-import type { DialogCheckpoint } from '@pointlesh/core';
+import { dialogOptionVoiceLineId, type DialogDesignerManifest } from '@dialog-designer/core';
+import type { AiAssetDefinition } from '@ai-game-assets/core';
 
-/** The password completes the chest puzzle, so it belongs at the end. */
-export function prepareForestDialogs(manifest: DialogDesignerManifest): void {
-  const topics = manifest.dialogs['chest-open']?.nodes.topics;
-  if (topics?.type !== 'decision') return;
-  const password = topics.options.find(option => option.id === 'open-chest');
-  if (password) topics.options = [...topics.options.filter(option => option !== password), password];
+/** Auditioned takes are playable too, provided they match the current choice. */
+export function optionRecordingMatches(asset: AiAssetDefinition | undefined, text: string, voiceId: string): boolean {
+  const version = asset?.versions[asset.activeVersion];
+  const recorded = version?.voiceSettings ?? asset?.voiceSettings;
+  return !!version?.file && recorded?.text === text && recorded.voiceAssetId === voiceId;
 }
 
-/** Game policy: finish the entire reply tree, then return unless the final topic was chosen. */
-export function dialogReturnNode(manifest: DialogDesignerManifest, checkpoint: DialogCheckpoint | null): string | undefined {
-  if (!checkpoint) return;
-  const topics = manifest.dialogs[checkpoint.dialogId]?.nodes.topics;
-  if (topics?.type !== 'decision') return;
-  const choice = checkpoint.commands.find(command => command.type === 'choose');
-  if (choice?.type !== 'choose') return;
-  if (topics.options.slice(0, -1).some(option => option.id === choice.optionId)) return topics.id;
+/** Initial game defaults only: explicit designer choices always win. */
+export function prepareForestDialogs(manifest: DialogDesignerManifest): void {
+  for (const dialog of Object.values(manifest.dialogs)) for (const node of Object.values(dialog.nodes)) {
+    if (node.type !== 'decision') continue;
+    for (const [index, option] of node.options.entries()) {
+      option.exitDialog ??= dialog.id.startsWith('chest-') || index === node.options.length - 1;
+      option.spokenByCharacter ??= true;
+      option.voiceAssetId ??= 'voice.borin';
+      if (option.spokenByCharacter) option.lineAssetId ??= dialogOptionVoiceLineId(dialog.id, node.id, option.id);
+    }
+  }
 }

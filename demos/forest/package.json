@@ -20,9 +20,9 @@
     "@scene-designer/phaser": "^0.2.2",
     "@ai-game-assets/core": "^0.11.36",
     "@ai-game-assets/phaser": "^0.11.36",
-    "@dialog-designer/core": "^0.1.2",
-    "@dialog-designer/designer": "^0.1.2",
-    "@dialog-designer/phaser": "^0.1.2",
+    "@dialog-designer/core": "^0.2.1",
+    "@dialog-designer/designer": "^0.2.1",
+    "@dialog-designer/phaser": "^0.2.1",
     "phaser": "^4.2.0"
   },
   "devDependencies": {

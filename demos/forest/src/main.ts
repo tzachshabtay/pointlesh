@@ -5,13 +5,13 @@ import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKe
 import { loadForestAssets } from './asset-loading';
 import { animationDuration, animationTagTime, crossedAnimationTag, crossedAnimationFrameTag } from '@pointlesh/phaser/animation-tags';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
-import { prepareForestDialogs, dialogReturnNode } from './dialog-returns';
+import { prepareForestDialogs, optionRecordingMatches } from './dialog-returns';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, isPointleshPrefab, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
 import { PhaserAdventureAudioAssets, PhaserAdventureLighting, PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
 import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer/core';
-import { assertDialogManifest, type DialogTurn } from '@dialog-designer/core';
+import { assertDialogManifest, syncDialogOptionVoiceLines, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses, completeForestAssetManifest } from './content';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
@@ -916,7 +916,7 @@ class ForestAdventure extends Phaser.Scene {
       }
     });
     let assetDesignerManifest: import('@ai-game-assets/core').AiAssetManifest = assets;
-    installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
+    installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, defaultOptionVoiceAssetId: 'voice.borin', client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
       prepareForestDialogs(manifest);
       Object.assign(dialogs, manifest); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech();
     }, onAiAssetsChange: next => {
@@ -1017,17 +1017,15 @@ class ForestAdventure extends Phaser.Scene {
     this.voiceAdvance.cancel();
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.clearMovementKeys();
-    if (turn.type === 'end') {
-      const returnNode = turn.reason === 'completed' ? dialogReturnNode(dialogs, this.conversation.snapshot()) : undefined;
-      if (returnNode) { this.conversation.start(turn.dialogId, returnNode); return; }
-      this.dismissSpeech(); this.render(); return;
-    }
+    if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
     this.talking = true; this.conversationActive = true;
     el('dialog').hidden = false; el('choices').replaceChildren();
     if (turn.type === 'line') {
       // The live audio selection can have a recording even before it is promoted.
-      this.interactionSound = this.audio.playVoice(turn.resolved.lineAsset.id);
-      const text = this.audioAssets.voiceText(turn.resolved.lineAsset.id, turn.resolved.text);
+      const lineId = turn.resolved.lineAsset.id;
+      const canPlay = !turn.optionId || optionRecordingMatches(this.audioAssets.asset(lineId), turn.resolved.text, turn.resolved.voiceAsset.id);
+      this.interactionSound = canPlay ? this.audio.playVoice(lineId) : undefined;
+      const text = turn.optionId ? turn.resolved.text : this.audioAssets.voiceText(turn.resolved.lineAsset.id, turn.resolved.text);
       const voice = turn.resolved.voiceAsset.id.split('.').pop();
       this.speakingVoice = voice ?? 'borin';
       el('speaker').textContent = ({ ...portraitCharacters, chest:'Runed chest', narrator: 'Narrator' } as Record<string,string>)[voice ?? ''] ?? 'Borin';
@@ -1042,7 +1040,7 @@ class ForestAdventure extends Phaser.Scene {
       this.character.finishSpeech(); el('speaker').textContent = 'Borin'; el('speech').textContent = turn.decision.prompt; el('dialog-next').hidden = true;
       this.showDialogPortrait('borin', false);
       for (const option of turn.options) el('choices').append(button(option.text, () => {
-        applyDialogChoice(this.story, option.id);
+        if (!option.spokenByCharacter) applyDialogChoice(this.story, option.id);
         this.conversation.choose(option.id); this.render();
       }));
     }
@@ -1058,7 +1056,11 @@ class ForestAdventure extends Phaser.Scene {
   }
   continueSpeech() {
     this.voiceAdvance.cancel();
-    if (this.conversationActive) { this.conversation.advance(); return; }
+    if (this.conversationActive) {
+      const turn = this.conversation.current();
+      if (turn?.type === 'line' && turn.optionId) applyDialogChoice(this.story, turn.optionId);
+      this.conversation.advance(); this.render(); return;
+    }
     if (this.interactionSpeechQueue.length) { this.playInteractionSpeech(this.interactionSpeechQueue); return; }
     this.dismissSpeech();
     if (this.introArrival === 'speech') this.introArrival = undefined;
@@ -1631,6 +1633,7 @@ addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
 prepareForestDialogs(dialogs);
+Object.assign(assets, syncDialogOptionVoiceLines(dialogs, assets));
 addCharacterPortraits(authoredScenes);
 const seededInteractions = createForestInteractions(authoredScenes);
 interactions = seededInteractions;

@@ -24,7 +24,8 @@ test('the chest offers the same four jokes before and after learning the passwor
   before.start('chest-locked'); after.start('chest-open');
   const unknown = before.advance().options, known = after.advance().options;
   assert.equal(unknown.length, 4); assert.equal(known.length, 5);
-  assert.deepEqual(known.filter(option => option.id !== 'open-chest'), unknown);
+  const withoutVoiceId = ({ lineAssetId, ...option }) => option;
+  assert.deepEqual(known.filter(option => option.id !== 'open-chest').map(withoutVoiceId), unknown.map(withoutVoiceId));
   assert.equal(known.find(option => option.id === 'open-chest').text, 'Stone remembers.');
   for (const option of unknown) { before.start('chest-locked'); before.advance(); assert.equal(before.choose(option.id).type, 'line'); }
   const copy = structuredClone(dialogs), art = structuredClone(assets); const previous = structuredClone({copy,art});
