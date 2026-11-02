@@ -88,7 +88,7 @@ export class PhaserAdventureAudioAssets {
             queueMicrotask(load);
           } else {
             settled = true; this.pending.delete(id);
-            reject(new Error(`Could not load audio for ${id} after retrying (${source}). The recording is saved; any previous recording is still available.`));
+            reject(new Error(`Could not load audio for ${id} after retrying. Any previous recording is still available. Try selecting this take again.`));
           }
         };
         const complete = () => {
