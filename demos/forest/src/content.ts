@@ -1,4 +1,5 @@
 import { seedAudioFrameTags } from './audio-frame-tags';
+import { prepareForestDialogs } from './dialog-returns';
 import { defineAiAssets, type AiAssetDefinition, type AiAssetManifest } from '@ai-game-assets/core';
 import { defineDialogManifest, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
 import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
@@ -144,6 +145,7 @@ export const dialogs = defineDialogManifest({ schemaVersion: 1, dialogs: {
     { id: 'open-chest', text: 'Stone remembers.', replySpeaker: 'narrator', reply: 'The runes glow like embers. The lid lifts, revealing Orrin’s finest pickaxe. “For the king,” you whisper.' }
   ])
 } });
+prepareForestDialogs(dialogs);
 const chestDefaults = structuredClone({ locked: dialogs.dialogs['chest-locked']!, open: dialogs.dialogs['chest-open']!,
   lines: Object.fromEntries(Object.entries(definitions).filter(([id]) => id.startsWith('line.chest-'))) });
 /** Add new chest topics without replacing edited dialogs or promoted voice lines. */

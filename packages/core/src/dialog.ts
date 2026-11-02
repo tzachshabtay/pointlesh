@@ -6,6 +6,8 @@ export type DialogCommand = { type: 'advance' } | { type: 'choose'; optionId: st
 export type DialogEnablementCheck = { target: string; value: boolean | null };
 export type DialogCheckpoint = {
   dialogId: string;
+  /** Optional starting node, for resuming a topic menu without replaying its greeting. */
+  entryNodeId?: string;
   commands: DialogCommand[];
   /** Ordered external enablement results for start, followed by each recorded command. null means no override. */
   enablement?: DialogEnablementCheck[][];
@@ -29,11 +31,11 @@ export class AdventureDialog {
     return () => this.listeners.delete(listener);
   }
   current(): DialogTurn | undefined { return this.runtime.current(); }
-  start(dialogId: string): DialogTurn {
-    const candidate = this.createRuntime();
+  start(dialogId: string, entryNodeId?: string): DialogTurn {
+    const candidate = this.createRuntimeAt(dialogId, entryNodeId);
     const operation = this.evaluateOperation(() => candidate.start(dialogId));
     this.runtime = candidate;
-    this.checkpoint = { dialogId, commands: [], enablement: [operation.checks] };
+    this.checkpoint = { dialogId, ...(entryNodeId === undefined ? {} : { entryNodeId }), commands: [], enablement: [operation.checks] };
     return this.emit(operation.turn);
   }
   advance(): DialogTurn {
@@ -53,11 +55,12 @@ export class AdventureDialog {
   snapshot(): DialogCheckpoint | null { return this.checkpoint ? structuredClone(this.checkpoint) : null; }
   /** Replay into a candidate before replacing the active conversation; emits no gameplay effects. */
   restore(checkpoint: DialogCheckpoint | null): DialogTurn | undefined {
-    const candidate = this.createRuntime();
+    let candidate = this.createRuntime();
     let restored: DialogCheckpoint | undefined;
     if (checkpoint !== null) {
       assertJSON(checkpoint);
       if (!checkpoint || typeof checkpoint !== 'object' || typeof checkpoint.dialogId !== 'string' || !Array.isArray(checkpoint.commands) || checkpoint.commands.length > 10000) throw new Error('Invalid dialog checkpoint');
+      if (checkpoint.entryNodeId !== undefined) candidate = this.createRuntimeAt(checkpoint.dialogId, checkpoint.entryNodeId);
       if (checkpoint.enablement !== undefined) this.validateHistory(checkpoint.enablement, checkpoint.commands.length + 1);
       const enablement = [this.evaluateOperation(() => candidate.start(checkpoint.dialogId), checkpoint.enablement?.[0]).checks];
       for (let index = 0; index < checkpoint.commands.length; index++) {
@@ -70,7 +73,7 @@ export class AdventureDialog {
         };
         enablement.push(this.evaluateOperation(operation, checkpoint.enablement?.[index + 1]).checks);
       }
-      restored = { dialogId: checkpoint.dialogId, commands: structuredClone(checkpoint.commands), enablement };
+      restored = { dialogId: checkpoint.dialogId, ...(checkpoint.entryNodeId === undefined ? {} : { entryNodeId: checkpoint.entryNodeId }), commands: structuredClone(checkpoint.commands), enablement };
     }
     this.runtime = candidate;
     this.checkpoint = restored;
@@ -91,6 +94,26 @@ export class AdventureDialog {
   }
   private createRuntime(manifest = this.manifest, assets = this.assets): DialogRuntime {
     return new DialogRuntime(manifest, assets, { ...this.options, isEnabled: target => this.evaluateEnabled(target) });
+  }
+  private createRuntimeAt(dialogId: string, entryNodeId?: string): DialogRuntime {
+    if (entryNodeId === undefined) return this.createRuntime();
+    const manifest = structuredClone(this.manifest), dialog = manifest.dialogs[dialogId];
+    if (typeof entryNodeId !== 'string' || !dialog?.nodes[entryNodeId]) throw new Error('Unknown dialog entry node');
+    dialog.entryNodeId = entryNodeId;
+    // The runtime validates that every node is reachable from its entry. Keep
+    // only this branch in the private runtime; the authored manifest stays intact.
+    const reachable = new Set<string>();
+    const visit = (id: string | undefined) => {
+      if (!id || reachable.has(id)) return;
+      reachable.add(id);
+      const node = dialog.nodes[id];
+      if (!node) return;
+      visit(node.nextNodeId);
+      if (node.type === 'decision') for (const option of node.options) visit(option.nextNodeId);
+    };
+    visit(entryNodeId);
+    dialog.nodes = Object.fromEntries(Object.entries(dialog.nodes).filter(([id]) => reachable.has(id)));
+    return this.createRuntime(manifest);
   }
   private evaluateEnabled(target: DialogElementTarget): boolean | undefined {
     const key = targetKey(target), evaluation = this.evaluation;

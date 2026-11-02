@@ -5,6 +5,7 @@ import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKe
 import { loadForestAssets } from './asset-loading';
 import { animationDuration, animationTagTime, crossedAnimationTag, crossedAnimationFrameTag } from '@pointlesh/phaser/animation-tags';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
+import { prepareForestDialogs, dialogReturnNode } from './dialog-returns';
 import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, isPointleshPrefab, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
@@ -491,7 +492,9 @@ class ForestAdventure extends Phaser.Scene {
   hit(x: number, y: number) { return this.resolved().areas.find(area => area.kind === 'hotspot' && area.enabled && area.closed && area.properties.interactive !== false && targetVisible(this.story, area.id) && pointInPolygon({ x, y }, area.polygon)); }
   hover(id?: string) {
     this.hoveredTarget = id;
-    const target = id ? targets[this.story.roomId].find(target => target.id === id) ?? this.resolved().objects.find(object => entityInteractionId(object) === id) : undefined;
+    const target = id ? this.resolved().areas.find(area => area.kind === 'hotspot' && area.id === id)
+      ?? this.resolved().objects.find(object => entityInteractionId(object) === id)
+      ?? targets[this.story.roomId].find(target => target.id === id) : undefined;
     el('hover-label').textContent = target ? this.selected ? `Use ${items[this.selected].name} with ${target.name}` : target.name : '';
     el('hover-label').classList.toggle('visible', !!target);
   }
@@ -914,6 +917,7 @@ class ForestAdventure extends Phaser.Scene {
     });
     let assetDesignerManifest: import('@ai-game-assets/core').AiAssetManifest = assets;
     installPhaserDialogDesigner({ scene: this, manifest: dialogs, aiAssets: assets, client: new DialogDesignerDebugClient('http://127.0.0.1:4289'), onManifestChange: manifest => {
+      prepareForestDialogs(manifest);
       Object.assign(dialogs, manifest); this.conversation.setManifest(dialogs, assets); this.conversationActive = false; this.dismissSpeech();
     }, onAiAssetsChange: next => {
       Object.assign(assets, completeForestAssetManifest(next)); Object.assign(assetDesignerManifest, assets);
@@ -1013,7 +1017,11 @@ class ForestAdventure extends Phaser.Scene {
     this.voiceAdvance.cancel();
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
     this.clearMovementKeys();
-    if (turn.type === 'end') { this.dismissSpeech(); this.render(); return; }
+    if (turn.type === 'end') {
+      const returnNode = turn.reason === 'completed' ? dialogReturnNode(dialogs, this.conversation.snapshot()) : undefined;
+      if (returnNode) { this.conversation.start(turn.dialogId, returnNode); return; }
+      this.dismissSpeech(); this.render(); return;
+    }
     this.talking = true; this.conversationActive = true;
     el('dialog').hidden = false; el('choices').replaceChildren();
     if (turn.type === 'line') {
@@ -1622,6 +1630,7 @@ addForestInterfaceAssets(assets);
 addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
+prepareForestDialogs(dialogs);
 addCharacterPortraits(authoredScenes);
 const seededInteractions = createForestInteractions(authoredScenes);
 interactions = seededInteractions;

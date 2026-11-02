@@ -152,3 +152,20 @@ test('malformed, reordered or unconsumed enablement history never replaces the a
   assert.deepEqual(dialog.snapshot(), valid);
   assert.equal(dialog.advance().type, 'end', 'A failed replay must not leave the live gate in replay mode');
 });
+
+
+test('starting at a topic skips the greeting, survives save/load, and leaves normal entry unchanged', () => {
+ const dialog = new AdventureDialog(manifest, assets);
+ assert.equal(dialog.start('miner', 'topics').type, 'decision');
+ dialog.choose('password');
+ const saved = dialog.snapshot();
+ const restored = new AdventureDialog(manifest, assets);
+ assert.deepEqual(restored.restore(saved), dialog.current());
+ assert.equal(restored.advance().type, 'end');
+ assert.equal(restored.start('miner').resolved.text, 'Welcome');
+ const before = restored.snapshot();
+ assert.throws(() => restored.start('miner', 'missing'), /entry node/);
+ assert.deepEqual(restored.snapshot(), before);
+ assert.throws(() => restored.restore({ ...saved, entryNodeId: 'missing' }), /entry node/);
+ assert.deepEqual(restored.snapshot(), before);
+});

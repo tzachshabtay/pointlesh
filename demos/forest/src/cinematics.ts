@@ -20,6 +20,7 @@ import { forestDoors, doorObjectId, doorWorldAperture } from './door-layout';
 import { DoorForeground } from './door-foreground';
 import { createForestOverscan } from './forest-overscan';
 import { liftCinematicWorld } from './cinematic-framing';
+import { drawEndingRainbow } from './ending-rainbow';
 
 export type CinematicKind = 'intro' | 'ending';
 export type EndingOpening = { position: Point; facing: Direction; zoom: number; x: number; y: number };
@@ -72,6 +73,7 @@ export class ForestCinematic {
   private readonly world: Phaser.GameObjects.Container;
   private readonly camera: Phaser.Cameras.Scene2D.Camera;
   private readonly background: Phaser.GameObjects.Image;
+  private rainbow?: Phaser.GameObjects.Image;
   private readonly forestOverscan: ReturnType<typeof createForestOverscan>;
   private readonly atmosphere: Phaser.GameObjects.Graphics;
   private readonly outdoorAtmosphere: OutdoorAtmosphere;
@@ -151,6 +153,7 @@ export class ForestCinematic {
     this.excludeGameplayObjects();
     for (const actor of this.cast.values()) { actor.sprite.setVisible(false); actor.walking = false; }
     this.atmosphere.clear(); this.props.clear(); this.foreground.clear();
+    this.rainbow?.setVisible(false);
     this.cageDoor.setVisible(false);
     const duration = CINEMATIC_DURATIONS[this.kind][stepIndex]!;
     const t = clamp(elapsedMs / duration);
@@ -210,6 +213,7 @@ export class ForestCinematic {
     this.ambient = [];
     for (const overlay of this.overlays) overlay.destroy();
     this.root.destroy(true);
+    if (this.rainbow) this.scene.textures.remove('homecoming-rainbow');
     this.cast.clear();
   }
 
@@ -490,13 +494,16 @@ export class ForestCinematic {
       this.pose('innkeeper', { x: 274, y: 438 - Math.max(0, Math.sin(this.elapsedMs / 300)) * segment(t, 0.36, 0.62) * 8 });
       this.pose('miner', { x: 690, y: 441 - Math.max(0, Math.sin(this.elapsedMs / 320 + 1)) * segment(t, 0.36, 0.62) * 8 });
       this.mist(0xd9d49b, 0.025);
-      const cheer = segment(t, 0.44, 0.7);
-      for (let i = 0; i < 27; i++) {
-        const cycle = (this.elapsedMs / 1700 + i * 0.117) % 1;
-        const x = 198 + (i * 139) % 565 + Math.sin(cycle * 8 + i) * 15;
-        const y = lerp(172, 436, cycle);
-        this.foreground.fillStyle([0xedd58e, 0xb7ca91, 0xe1a26f][i % 3]!, cheer * 0.8).fillRect(x, y, 3, i % 2 ? 5 : 3);
+      if (!this.rainbow) {
+        const key = 'homecoming-rainbow';
+        if (this.scene.textures.exists(key)) this.scene.textures.remove(key);
+        const texture = this.scene.textures.createCanvas(key, W, H)!;
+        drawEndingRainbow(texture.context, this.background.texture.getSourceImage() as HTMLCanvasElement);
+        texture.refresh();
+        this.rainbow = this.scene.add.image(0, 0, key).setOrigin(0).setDepth(-999).setName('homecoming-rainbow');
+        this.world.add(this.rainbow);
       }
+      this.rainbow.setVisible(true).setAlpha(smooth(segment(t, .12, .65)));
     }
   }
 
