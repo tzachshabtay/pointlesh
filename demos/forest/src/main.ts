@@ -1,12 +1,12 @@
 import { spokenLines } from './spoken-lines';
 import { addGameSpeechAssets, resolveGameSpeech, cutsceneSpeechLine } from './speech-assets';
 import Phaser from 'phaser';
-import { AiAssetRuntime, installAiAssetDesigner, AiAssetDebugClient, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
+import { AiAssetRuntime, installAiAssetDesigner, aiTextureKey, aiScaledVariantTextureKey } from '@ai-game-assets/phaser';
 import { loadForestAssets } from './asset-loading';
 import { animationDuration, animationTagTime, crossedAnimationTag, crossedAnimationFrameTag } from '@pointlesh/phaser/animation-tags';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { prepareForestDialogs, optionRecordingMatches } from './dialog-returns';
-import { installPhaserDialogDesigner } from '@dialog-designer/phaser';
+import { installPhaserDialogDesigner, DialogOptionAssetClient } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, isPointleshPrefab, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
 import { PhaserAdventureAudioAssets, PhaserAdventureLighting, PhaserAdventureObject, PhaserAdventureIcon, PhaserAdventureCursor, PhaserAdventureCharacter, PhaserAdventureNavigation, defaultNavigationFootprint, PhaserRoomCamera, installPhaserTextureScaling, installPhaserDisplayResolution, bindAdventureInput, bindAdventureSpriteInteraction, createWalkBehindOverlay, installPhaserPointleshDesigner } from '@pointlesh/phaser';
@@ -88,7 +88,10 @@ function setFullScreen(enabled: boolean) {
 const button = (text: string, action: () => void) => { const node = document.createElement('button'); node.textContent = text; node.onclick = action; return node; };
 
 // Authoring requests use the companion service; image previews use the same public files as the game.
-class ForestAssetDebugClient extends AiAssetDebugClient {
+class ForestAssetDebugClient extends DialogOptionAssetClient {
+  constructor(endpoint: string) {
+    super(endpoint, () => dialogs, new DialogDesignerDebugClient('http://127.0.0.1:4289'));
+  }
   override assetUrl(file: string): string {
     if (/^(data:|blob:|https?:\/\/)/i.test(file)) return file;
     return new URL(file.replace(/^\/+/, ''), new URL(import.meta.env.BASE_URL, location.href)).href;

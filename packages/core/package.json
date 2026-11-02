@@ -33,6 +33,6 @@
   "peerDependencies": {
     "@scene-designer/core": "^0.2.2",
     "@ai-game-assets/core": "^0.11.36",
-    "@dialog-designer/core": "^0.2.1"
+    "@dialog-designer/core": "^0.2.2"
   }
 }
