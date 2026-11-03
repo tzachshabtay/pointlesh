@@ -682,6 +682,104 @@
         "kind": "simple",
         "text": "I cannot see how that would help here."
       }
+    },
+    "prefab:forest.character.borin": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "A fine beard, sturdy boots, and only a slightly unreasonable rescue plan."
+      },
+      "verb:interact": {
+        "kind": "simple",
+        "text": "Come on, Borin. There is a king to rescue."
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I had better save that for the rescue."
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I had better save that for the rescue."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "text": "I had better save that for the rescue."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "text": "I had better save that for the rescue."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "text": "I had better save that for the rescue."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "text": "I had better save that for the rescue."
+      }
+    },
+    "defaults": {
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "No. This is not what the coin is for."
+      },
+      "verb:interact": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "That doesn't work."
+      },
+      "verb:look": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "I'm not sure what I'm looking at."
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "There's no point in tying that."
+      },
+      "item:forest.inventory.mushroom": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "This is not what the dreamcap is meant for."
+      },
+      "item:forest.inventory.sleepyStout": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "This is not what the stout is meant for."
+      },
+      "item:forest.inventory.pickaxe": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "I don't want to break this."
+      },
+      "item:forest.inventory.stout": {
+        "kind": "simple",
+        "mode": "sequence",
+        "text": "This is not what the stout is for."
+      }
+    },
+    "scene:[\"village\",\"hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90\"]": {
+      "verb:look": {
+        "kind": "simple",
+        "text": "I almost fell here as a dwarfling.",
+        "mode": "sequence"
+      },
+      "verb:interact": {
+        "kind": "simple",
+        "text": "I don't need a drink right now, thank you for offering.",
+        "mode": "sequence"
+      },
+      "item:forest.inventory.rope": {
+        "kind": "simple",
+        "text": "I don't need to get down there.",
+        "mode": "sequence"
+      },
+      "item:forest.inventory.coin": {
+        "kind": "simple",
+        "text": "I would make a wish but I don't want to lose the coin.",
+        "mode": "sequence"
+      }
     }
   }
 }

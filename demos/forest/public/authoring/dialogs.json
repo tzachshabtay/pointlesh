@@ -37,7 +37,7 @@
             },
             {
               "id": "advice",
-              "text": "I could use a little advice.",
+              "text": "Why did they take the king?",
               "enabled": true,
               "nextNodeId": "answer-advice"
             },
@@ -66,7 +66,7 @@
         "answer-advice": {
           "id": "answer-advice",
           "type": "block",
-          "name": "I could use a little advice.",
+          "name": "Why did they take the king?",
           "enabled": true,
           "lines": [
             {
@@ -74,6 +74,18 @@
               "enabled": true,
               "voiceAssetId": "voice.elder",
               "lineAssetId": "line.elder.advice"
+            },
+            {
+              "id": "line-mvyhqe6p-tubkdl",
+              "enabled": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.borin.but.why.now"
+            },
+            {
+              "id": "line-mvyhrdtv-yd2gml",
+              "enabled": true,
+              "voiceAssetId": "voice.elder",
+              "lineAssetId": "voice.line.elder.that.i.do.not.know.but"
             }
           ]
         },

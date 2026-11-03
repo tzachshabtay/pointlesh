@@ -180,10 +180,16 @@
                 "flipX": true
               }
             }
-          }
+          },
+          "receiveLighting": true
         },
         "behaviors": [],
-        "propertySchema": {},
+        "propertySchema": {
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
+          }
+        },
         "editor": {
           "template": true
         }
@@ -333,6 +339,7 @@
               }
             }
           },
+          "receiveLighting": true,
           "portraitAssetId": "portrait.borin",
           "portraitAnimationKey": "speak"
         },
@@ -349,6 +356,10 @@
           "role": {
             "type": "string",
             "label": "Story role"
+          },
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
           }
         }
       }
@@ -500,13 +511,19 @@
           "displayedScale": 2.1,
           "targetId": "elder",
           "description": "The oldest beard in Bramblehollow. He knows every story.",
+          "receiveLighting": true,
           "portraitAssetId": "portrait.elder",
           "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
+          }
+        }
       }
     },
     "forest.character.innkeeper": {
@@ -656,13 +673,19 @@
           "displayedScale": 2.1,
           "targetId": "innkeeper",
           "description": "A brewer, a storyteller, and a formidable keeper of tabs.",
+          "receiveLighting": true,
           "portraitAssetId": "portrait.innkeeper",
           "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
+          }
+        }
       }
     },
     "forest.character.miner": {
@@ -812,13 +835,19 @@
           "displayedScale": 2.1,
           "targetId": "miner",
           "description": "Orrin warms his boots and guards the mine’s secrets.",
+          "receiveLighting": true,
           "portraitAssetId": "portrait.miner",
           "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
+          }
+        }
       }
     },
     "forest.object.coin": {
@@ -1052,13 +1081,19 @@
           "displayedScale": 3.1,
           "targetId": "guard",
           "description": "An enormous orc with a well-worn route between the cage and the stew.",
+          "receiveLighting": true,
           "portraitAssetId": "portrait.guard",
           "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
+          }
+        }
       }
     },
     "forest.character.king": {
@@ -1208,13 +1243,19 @@
           "displayedScale": 2.1,
           "targetId": "cage",
           "description": "A heavy lock keeps the king in this wooden cage. One good strike should open it.",
+          "receiveLighting": true,
           "portraitAssetId": "portrait.king",
           "portraitAnimationKey": "speak"
         },
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {
+          "receiveLighting": {
+            "type": "boolean",
+            "label": "Receive room lighting"
+          }
+        }
       }
     },
     "pointlesh.point": {
@@ -1483,7 +1524,11 @@
             0.97,
             0.63,
             0.33
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -1524,6 +1569,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -1587,7 +1655,11 @@
             0.985,
             0.925,
             0.905
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -1628,6 +1700,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -1691,7 +1786,11 @@
             0.985,
             0.925,
             0.905
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -1732,6 +1831,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -1795,7 +1917,11 @@
             0.89,
             0.965,
             1
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -1836,6 +1962,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -1899,7 +2048,11 @@
             0.94,
             0.865,
             0.985
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -1940,6 +2093,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2003,7 +2179,11 @@
             0.925,
             0.905,
             0.89
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2044,6 +2224,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2107,7 +2310,11 @@
             0.965,
             1,
             0.94
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2148,6 +2355,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2211,7 +2441,11 @@
             0.985,
             0.925,
             0.905
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2252,6 +2486,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2315,7 +2572,11 @@
             0.89,
             0.965,
             1
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2356,6 +2617,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2419,7 +2703,11 @@
             0.94,
             0.865,
             0.985
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2460,6 +2748,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2523,7 +2834,11 @@
             0.985,
             0.925,
             0.905
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2564,6 +2879,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2627,7 +2965,11 @@
             0.89,
             0.965,
             1
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2668,6 +3010,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2731,7 +3096,11 @@
             0.94,
             0.865,
             0.985
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2772,6 +3141,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2835,7 +3227,11 @@
             0.985,
             0.925,
             0.905
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2876,6 +3272,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -2939,7 +3358,11 @@
             0.89,
             0.965,
             1
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -2980,6 +3403,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -3043,7 +3489,11 @@
             0.94,
             0.865,
             0.985
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -3084,6 +3534,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -3147,7 +3620,11 @@
             0.82,
             0.67,
             0.68
-          ]
+          ],
+          "lightAffectsCharacters": true,
+          "lightCharacterRadiusScale": 2.2,
+          "lightCharacterIntensityScale": 0.9,
+          "lightCharacterHeightRatio": 0.35
         },
         "behaviors": [],
         "propertySchema": {
@@ -3188,6 +3665,29 @@
             "type": "number",
             "label": "Light depth",
             "step": 0.1
+          },
+          "lightAffectsCharacters": {
+            "type": "boolean",
+            "label": "Light characters"
+          },
+          "lightCharacterRadiusScale": {
+            "type": "number",
+            "label": "Character light reach multiplier",
+            "min": 0.1,
+            "step": 0.1
+          },
+          "lightCharacterIntensityScale": {
+            "type": "number",
+            "label": "Character light intensity multiplier",
+            "min": 0,
+            "step": 0.1
+          },
+          "lightCharacterHeightRatio": {
+            "type": "number",
+            "label": "Character light elevation / radius",
+            "min": 0,
+            "max": 1,
+            "step": 0.05
           }
         }
       }
@@ -3684,7 +4184,7 @@
           "id": "interactionX",
           "name": "Interaction point X",
           "number": {
-            "value": 0.5,
+            "value": 0.1263,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3695,7 +4195,7 @@
           "id": "interactionY",
           "name": "Interaction point Y",
           "number": {
-            "value": 0.5,
+            "value": 0.1518,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3731,7 +4231,7 @@
           "id": "interactionX",
           "name": "Interaction point X",
           "number": {
-            "value": 0.5,
+            "value": 0.1078,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3742,7 +4242,7 @@
           "id": "interactionY",
           "name": "Interaction point Y",
           "number": {
-            "value": 0.5,
+            "value": 0.1158,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3778,7 +4278,7 @@
           "id": "interactionX",
           "name": "Interaction point X",
           "number": {
-            "value": 0.5,
+            "value": 0.1335,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3789,7 +4289,7 @@
           "id": "interactionY",
           "name": "Interaction point Y",
           "number": {
-            "value": 0.5,
+            "value": 0.146,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3825,7 +4325,7 @@
           "id": "interactionX",
           "name": "Interaction point X",
           "number": {
-            "value": 0.5,
+            "value": 0.1091,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3836,7 +4336,7 @@
           "id": "interactionY",
           "name": "Interaction point Y",
           "number": {
-            "value": 0.5,
+            "value": 0.1205,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3872,7 +4372,7 @@
           "id": "interactionX",
           "name": "Interaction point X",
           "number": {
-            "value": 0.5,
+            "value": 0.2138,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -3883,7 +4383,7 @@
           "id": "interactionY",
           "name": "Interaction point Y",
           "number": {
-            "value": 0.5,
+            "value": 0.3844,
             "min": 0,
             "max": 1,
             "step": 0.01
@@ -4135,10 +4635,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 481
+                  "value": 426.3416010590295
                 },
                 "y": {
-                  "value": 247
+                  "value": 261.6109506023209
                 }
               }
             }
@@ -4890,23 +5390,23 @@
               "closed": true,
               "vertices": [
                 {
-                  "x": 419.3367371816581,
-                  "y": 202,
+                  "x": 405.09148901664764,
+                  "y": 216.57542259834685,
                   "id": "vertex-0"
                 },
                 {
-                  "x": 525,
-                  "y": 202,
+                  "x": 494.21325210686484,
+                  "y": 336.02237294283907,
                   "id": "vertex-1"
                 },
                 {
-                  "x": 525,
-                  "y": 439.0794996717723,
+                  "x": 512.9336019673952,
+                  "y": 365.85899712601537,
                   "id": "vertex-2"
                 },
                 {
-                  "x": 419.3367371816581,
-                  "y": 439.0794996717723,
+                  "x": 407.92452990043876,
+                  "y": 366.62548847719137,
                   "id": "vertex-3"
                 }
               ],
@@ -4923,10 +5423,10 @@
                   "scaleAxis": "y",
                   "zoomAxis": "y",
                   "transitionTo": "forest",
-                  "minScale": 0.3579479193150274,
-                  "maxScale": 0.9780848178664759,
-                  "minZoom": 1.0641953677105829,
-                  "maxZoom": 1.0180149603716453,
+                  "minScale": 0.25,
+                  "maxScale": 0.75,
+                  "minZoom": 1.061356240102921,
+                  "maxZoom": 1.0321281829612747,
                   "smoothing": 5,
                   "baseline": 160
                 },
@@ -4971,86 +5471,61 @@
               }
             },
             {
-              "id": "village.forest-canopy",
-              "tag": "pointlesh:area",
+              "id": "hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90",
+              "tag": "pointlesh:hotspot",
               "visible": true,
               "locked": false,
               "closed": true,
               "vertices": [
                 {
-                  "x": 390,
-                  "y": -200,
-                  "id": "vertex-0"
+                  "id": "vertex-mvysp7h7-i22xs4",
+                  "x": 522.7157316791996,
+                  "y": 404.91465834142537
                 },
                 {
-                  "x": 570,
-                  "y": -200,
-                  "id": "vertex-1"
+                  "id": "vertex-mvysp8m7-hpsqeh",
+                  "x": 525.6958990056553,
+                  "y": 280.74101973910103
                 },
                 {
-                  "x": 570,
-                  "y": 295,
-                  "id": "vertex-2"
+                  "id": "vertex-mvysp9c4-b9swk0",
+                  "x": 593.2463584053198,
+                  "y": 274.7806850861895
                 },
                 {
-                  "x": 390,
-                  "y": 295,
-                  "id": "vertex-3"
+                  "id": "vertex-mvyspa1w-deuyb0",
+                  "x": 596.2265257317756,
+                  "y": 395.974156362058
                 }
               ],
               "pointlesh": {
-                "kind": "area",
-                "name": "Forest path canopy",
+                "kind": "hotspot",
+                "name": "Well",
                 "properties": {
                   "enabled": true,
-                  "walkable": false,
-                  "scaleEnabled": false,
-                  "zoomEnabled": false,
-                  "walkBehindEnabled": true,
-                  "scaleAxis": "y",
-                  "zoomAxis": "y",
-                  "minScale": 0.65,
-                  "maxScale": 1,
-                  "minZoom": 1.2,
-                  "maxZoom": 1,
-                  "smoothing": 5,
-                  "baseline": 343
+                  "label": "Well",
+                  "cursor": "interact",
+                  "walkPointId": "",
+                  "approachX": 0,
+                  "approachY": 0,
+                  "approachRadius": 10
                 },
                 "behaviors": [],
                 "propertySchema": {
-                  "minScale": {
+                  "approachX": {
                     "type": "number",
-                    "label": "Scale at start",
-                    "min": 0.01,
-                    "step": 0.05
+                    "label": "Approach X",
+                    "step": 1
                   },
-                  "maxScale": {
+                  "approachY": {
                     "type": "number",
-                    "label": "Scale at end",
-                    "min": 0.01,
-                    "step": 0.05
+                    "label": "Approach Y",
+                    "step": 1
                   },
-                  "minZoom": {
+                  "approachRadius": {
                     "type": "number",
-                    "label": "Zoom at start",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "maxZoom": {
-                    "type": "number",
-                    "label": "Zoom at end",
-                    "min": 0.01,
-                    "step": 0.05
-                  },
-                  "smoothing": {
-                    "type": "number",
-                    "label": "Camera response",
+                    "label": "Approach distance",
                     "min": 0,
-                    "step": 0.5
-                  },
-                  "baseline": {
-                    "type": "number",
-                    "label": "Baseline",
                     "step": 1
                   }
                 }
@@ -7065,13 +7540,13 @@
                 },
                 {
                   "id": "floor-5",
-                  "x": 680,
-                  "y": 445
+                  "x": 636.2009700420076,
+                  "y": 459.1268352211917
                 },
                 {
                   "id": "floor-6",
-                  "x": 920,
-                  "y": 438
+                  "x": 917.6579505557518,
+                  "y": 454.8751976218116
                 },
                 {
                   "id": "vertex-muhqfab0-fd9lsy",
@@ -8390,23 +8865,33 @@
               "vertices": [
                 {
                   "id": "a",
-                  "x": 624,
-                  "y": 296
+                  "x": 782.3838574932385,
+                  "y": 415.00608517139756
+                },
+                {
+                  "id": "vertex-muq3z1wi-sui8u9",
+                  "x": 870.4215653747399,
+                  "y": 390.71976471751327
                 },
                 {
                   "id": "b",
-                  "x": 692,
-                  "y": 296
+                  "x": 946.1109330227064,
+                  "y": 418.13359373875835
                 },
                 {
                   "id": "c",
-                  "x": 692,
-                  "y": 360
+                  "x": 940.2445750738617,
+                  "y": 493.17767913233763
+                },
+                {
+                  "id": "vertex-muq3z50f-7adji0",
+                  "x": 863.5910535563474,
+                  "y": 512.9103145011185
                 },
                 {
                   "id": "d",
-                  "x": 624,
-                  "y": 360
+                  "x": 782.3838574932385,
+                  "y": 476.48083382029216
                 }
               ],
               "id": "gold::area",
@@ -8685,14 +9170,14 @@
               "id": "camp.walk.cauldron",
               "prefabId": "forest.point.interaction",
               "name": "Walk to Stew cauldron",
-              "visible": false,
+              "visible": true,
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 402
+                  "value": 197.0504272454425
                 },
                 "y": {
-                  "value": 466
+                  "value": 385.9215148697368
                 }
               }
             },
@@ -8719,10 +9204,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 473.48902342802154
+                  "value": 79.67748420801968
                 },
                 "y": {
-                  "value": 503.51511366656666
+                  "value": 343.0408412450137
                 }
               }
             },
@@ -9571,7 +10056,7 @@
             {
               "id": "camp.transition.to-forest::area",
               "tag": "pointlesh:area",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [
