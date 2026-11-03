@@ -4641,6 +4641,21 @@
                   "value": 261.6109506023209
                 }
               }
+            },
+            {
+              "id": "village.walk.hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to Well",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 35
+                },
+                "y": {
+                  "value": 494
+                }
+              }
             }
           ],
           "objects": [],
@@ -5505,7 +5520,7 @@
                   "enabled": true,
                   "label": "Well",
                   "cursor": "interact",
-                  "walkPointId": "",
+                  "walkPointId": "village.walk.hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90",
                   "approachX": 0,
                   "approachY": 0,
                   "approachRadius": 10
@@ -9352,10 +9367,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 87.1310765290626
+                  "value": 112.19252416252229
                 },
                 "y": {
-                  "value": 284.9541409121139
+                  "value": 277.21111031744107
                 }
               }
             },
