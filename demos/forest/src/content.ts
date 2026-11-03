@@ -79,6 +79,33 @@ for (const id of CHARACTER_IDS) {
     tags: ['forest', 'character', id]
   };
 }
+// Borin's old back-facing "speak" sheet depicts reaching for an item. Keep it
+// as a separate action so dialogue can use an upright speaking loop.
+const borinSpeechBack = characterAssetDefinitions['borin.speak-back']!;
+const pickupBack = structuredClone(borinSpeechBack);
+pickupBack.id = 'borin.pick-up-back';
+pickupBack.prompt = 'Borin reaches forward while facing away to pick up an item, then settles back to standing.';
+pickupBack.dimensions = { width: 300, height: 420 };
+pickupBack.frameGrid = { frameWidth: 100, frameHeight: 140, columns: 3, rows: 3, frameCount: 8 };
+pickupBack.animations = [{ key: pickupBack.id, frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 6, repeat: -1 }];
+pickupBack.activeVersion = 'pickup';
+pickupBack.versions = { pickup: {
+  name: 'pickup', file: 'art/borin.speak-back.promoted-1790475721109.png', prompt: pickupBack.prompt,
+  createdAt: '2026-09-27T02:22:01.176Z', model: 'gpt-image-2.5-sunburst',
+  notes: 'Former Borin speak-back artwork, preserved for item pickup.'
+} };
+pickupBack.tags = ['forest', 'character', 'borin', 'pick-up', 'back'];
+characterAssetDefinitions[pickupBack.id] = pickupBack;
+characterAssetDefinitions.borin!.linkedAnimationAssets!['pick-up-back'] = { label: 'Pick up · back', assetId: pickupBack.id };
+borinSpeechBack.prompt = 'Borin speaks while facing away, standing upright with small conversational hand gestures. Eight consistent frames.';
+borinSpeechBack.dimensions = { width: 300, height: 420 };
+borinSpeechBack.frameGrid = { frameWidth: 100, frameHeight: 140, columns: 3, rows: 3, frameCount: 8 };
+borinSpeechBack.activeVersion = 'generated-20261102';
+borinSpeechBack.versions['generated-20261102'] = {
+  name: 'generated-20261102', file: 'art/borin.speak-back.generated-20261102.png', prompt: borinSpeechBack.prompt,
+  createdAt: '2026-11-02T00:00:00.000Z', model: 'imagegen',
+  notes: 'Generated from Borin idle-back and speak-front references; eight-frame upright speech loop.'
+};
 Object.assign(characterAssetDefinitions, guardAnimationDefinitions);
 Object.assign(characterAssetDefinitions.guard.linkedAnimationAssets!, guardAnimationLinks);
 Object.assign(definitions, characterAssetDefinitions);

@@ -86,6 +86,25 @@ test('seed and authored catalogs group short asset names and resolve every scene
   }
 });
 
+test('Borin has separate promoted artwork for back-facing dialogue and pickup speech', async () => {
+  for (const manifest of [seedAssets, authoredAssets]) {
+    const links = manifest.assets.borin.linkedAnimationAssets;
+    assert.equal(links['speak-back'].assetId, 'borin.speak-back');
+    assert.equal(links['pick-up-back'].assetId, 'borin.pick-up-back');
+    const speech = manifest.assets['borin.speak-back'];
+    const pickup = manifest.assets['borin.pick-up-back'];
+    assert.notEqual(speech.versions[speech.activeVersion].file, pickup.versions[pickup.activeVersion].file);
+    assert.equal(pickup.versions[pickup.activeVersion].file, 'art/borin.speak-back.promoted-1790475721109.png');
+    for (const asset of [speech, pickup]) {
+      assert.equal(asset.frameGrid.frameCount, 8);
+      assert.equal(asset.animations[0].key, asset.id);
+      const bytes = await readFile(new URL(asset.versions[asset.activeVersion].file, publicDirectory));
+      assert.equal(bytes.readUInt32BE(16), asset.dimensions.width);
+      assert.equal(bytes.readUInt32BE(20), asset.dimensions.height);
+    }
+  }
+});
+
 test('characters have distinct front/back/profile art and changing walk, idle, and speech poses', () => {
   for (const id of CHARACTER_IDS) {
     const front = characterFramePixels(id, 'front', 0).data;

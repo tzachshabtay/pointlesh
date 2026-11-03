@@ -177,6 +177,10 @@
           "label": "Speak · back",
           "assetId": "borin.speak-back"
         },
+        "pick-up-back": {
+          "label": "Pick up · back",
+          "assetId": "borin.pick-up-back"
+        },
         "speak-left": {
           "label": "Speak · left",
           "assetId": "borin.speak-left"
@@ -3931,7 +3935,7 @@
     "borin.speak-back": {
       "id": "borin.speak-back",
       "kind": "animation",
-      "prompt": "An animation for a small pixel-art dwarf named borin, full body, transparent background. he's facing back the entire time (face not visible), and picking something up at a little below his height level, meaning he should not bend, just reach forward (his forward) with his hands.",
+      "prompt": "Borin speaks while facing away, standing upright with small conversational hand gestures. Eight consistent frames.",
       "dimensions": {
         "width": 300,
         "height": 420
@@ -3960,7 +3964,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790475721109",
+      "activeVersion": "generated-20261102",
       "versions": {
         "original": {
           "name": "original",
@@ -3988,6 +3992,66 @@
           "parentVersion": "original",
           "notes": "Promoted from the AI asset designer."
         },
+        "generated-20261102": {
+          "name": "generated-20261102",
+          "file": "art/borin.speak-back.generated-20261102.png",
+          "prompt": "Borin speaks while facing away, standing upright with small conversational hand gestures. Eight consistent frames.",
+          "createdAt": "2026-11-02T00:00:00.000Z",
+          "model": "imagegen",
+          "notes": "Generated from Borin idle-back and speak-front references; eight-frame upright speech loop."
+        }
+      },
+      "tags": [
+        "forest",
+        "character",
+        "borin",
+        "speak",
+        "back"
+      ],
+      "settings": {
+        "format": "png",
+        "model": "gpt-image-2.5-sunburst",
+        "background": "transparent",
+        "frameAlignment": "center"
+      },
+      "audioSettings": {},
+      "audioPlayback": {},
+      "voiceSettings": {}
+    },
+    "borin.pick-up-back": {
+      "id": "borin.pick-up-back",
+      "kind": "animation",
+      "prompt": "Borin reaches forward while facing away to pick up an item, then settles back to standing.",
+      "dimensions": {
+        "width": 300,
+        "height": 420
+      },
+      "frameGrid": {
+        "frameWidth": 100,
+        "frameHeight": 140,
+        "columns": 3,
+        "rows": 3,
+        "frameCount": 8
+      },
+      "animations": [
+        {
+          "key": "borin.pick-up-back",
+          "frameRate": 6,
+          "repeat": -1,
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      ],
+      "activeVersion": "promoted-1790475721109",
+      "versions": {
         "promoted-1790475721109": {
           "name": "promoted-1790475721109",
           "file": "art/borin.speak-back.promoted-1790475721109.png",
@@ -4003,7 +4067,6 @@
           "audioSettings": {},
           "audioPlayback": {},
           "voiceSettings": {},
-          "parentVersion": "promoted-1790386631413",
           "notes": "Promoted from the AI asset designer."
         }
       },
@@ -4011,7 +4074,7 @@
         "forest",
         "character",
         "borin",
-        "speak",
+        "pick-up",
         "back"
       ],
       "settings": {
@@ -18083,6 +18146,10 @@
       "Characters"
     ],
     "borin.speak-back": [
+      "Graphics",
+      "Characters"
+    ],
+    "borin.pick-up-back": [
       "Graphics",
       "Characters"
     ],
