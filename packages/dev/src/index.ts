@@ -5,6 +5,7 @@ import { assertJSON } from '@pointlesh/core';
 import { createSceneDesignerDevServer, type SceneDesignerDevServerOptions } from '@scene-designer/dev';
 import { createDialogDesignerDevServer, type DialogDesignerDevServerOptions } from '@dialog-designer/dev';
 import { createAiAssetDevServer, type AiAssetDevServerOptions } from '@ai-game-assets/dev';
+import type { Server } from 'node:http';
 import { createInteractionDevServer, type InteractionDevServerOptions } from './interactions.js';
 export { createInteractionDevServer } from './interactions.js';
 export type { InteractionDevServerOptions } from './interactions.js';
@@ -41,10 +42,33 @@ export type PointleshDevOptions = {
   interactions?: InteractionDevServerOptions;
 };
 
+/** Keep the local authoring APIs inaccessible to pages from public sites. */
+function restrictAuthoringOrigin(server: Server) {
+  const handlers = server.listeners('request');
+  server.removeAllListeners('request');
+  server.on('request', (request, response) => {
+    const origin = request.headers.origin;
+    let allowed = !origin && request.headers['sec-fetch-site'] !== 'cross-site';
+    if (origin) {
+      try {
+        const url = new URL(origin);
+        allowed = ['http:', 'https:'].includes(url.protocol) && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+      } catch { allowed = false; }
+    }
+    if (!allowed) {
+      response.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+      response.end('Local authoring origins only');
+      return;
+    }
+    for (const handler of handlers) handler.call(server, request, response);
+  });
+}
+
 /** A single lifecycle for the native authoring services and optional interaction editor. */
 export function createPointleshDevServer(options: PointleshDevOptions) {
   const services = [createAiAssetDevServer(options.assets), createSceneDesignerDevServer(options.scenes), createDialogDesignerDevServer(options.dialogs)];
   if (options.interactions) services.push(createInteractionDevServer({ scenesManifestPath: options.scenes.manifestPath, ...options.interactions }));
+  for (const service of services) restrictAuthoringOrigin(service.server);
   return {
     services,
     async listen() {

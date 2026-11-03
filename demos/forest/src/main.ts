@@ -67,6 +67,7 @@ import './world-map.css';
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
+el('designer').hidden = !import.meta.env.DEV;
 type ScreenFit = 'stretch' | 'fit';
 let screenFit: ScreenFit = 'fit';
 try { if (localStorage.getItem('pointlesh.screen-fit') === 'stretch') screenFit = 'stretch'; } catch { /* Storage may be unavailable. */ }
@@ -344,7 +345,7 @@ class ForestAdventure extends Phaser.Scene {
       },
     });
     this.changeRoom('village', false);
-    this.installTools();
+    if (import.meta.env.DEV) this.installTools();
     this.render();
     el('loading').hidden = true;
     this.audio = new ForestSoundscape(this, this.aiRuntime, () => this.audioState(), this.audioAssets);

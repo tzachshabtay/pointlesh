@@ -42,6 +42,24 @@ test('combined services return their actual addresses, serve all manifests, and 
   await server.close();
 });
 
+test('public sites cannot use local generation or promotion services', { timeout: 10000 }, async t => {
+  const { options } = await fixture(t);
+  const server = createPointleshDevServer(options);
+  t.after(() => server.close());
+  const addresses = await server.listen();
+  const routes = ['__ai-assets/generate', '__scene-designer/promote', '__dialog-designer/promote'];
+  for (let index = 0; index < routes.length; index++) {
+    const { host, port } = addresses[index];
+    const url = `http://${host}:${port}/${routes[index]}`;
+    const blocked = await fetch(url, { method: 'POST', headers: { Origin: 'https://tzachshabtay.github.io', 'Content-Type': 'application/json' }, body: '{}' });
+    assert.equal(blocked.status, 403, routes[index]);
+    const local = await fetch(`http://${host}:${port}/${['__ai-assets/manifest', '__scene-designer/manifest', '__dialog-designer/manifest'][index]}`, {
+      headers: { Origin: 'http://127.0.0.1:5186' },
+    });
+    assert.equal(local.status, 200, routes[index]);
+  }
+});
+
 for (const failedService of ['scenes', 'dialogs']) {
   test(`occupied ${failedService} port rejects startup and rolls back every earlier service`, { timeout: 10000 }, async t => {
     const { options } = await fixture(t);
