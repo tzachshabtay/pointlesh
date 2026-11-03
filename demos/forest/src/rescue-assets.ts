@@ -9,7 +9,7 @@ export const PICKAXE_START_MS = 1400;
 export const PICKAXE_IMPACT_MS = 640;
 
 const version = (file: string, prompt: string) => ({ name: 'rescue', file, prompt, model: 'imagegen',
-  createdAt: '2026-09-26T00:00:00.000Z', notes: 'Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors.' });
+  createdAt: '2026-09-26T00:00:00.000Z', notes: 'Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors.' });
 const animation = (id: string, file: string, width: number, height: number, timings: number[], prompt: string): AiAssetDefinition => {
   const columns = timings.length === 1 ? 1 : 4, rows = Math.ceil(timings.length / columns);
   return { id, kind: 'animation', prompt, dimensions: { width: width * columns, height: height * rows },

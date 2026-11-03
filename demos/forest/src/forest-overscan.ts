@@ -10,7 +10,7 @@ const EDGE_HEIGHT = 48;
 export function addForestOverscanAsset(manifest: AiAssetManifest): void {
   manifest.assets[FOREST_OVERSCAN_ASSET] ??= {
     id: FOREST_OVERSCAN_ASSET, kind: 'image', dimensions: { width: 1774, height: 887 },
-    prompt: 'Extend only the bottom of the Whispering Wood with shaded dirt, small stones, leaf litter and moss. Keep the original panorama in the upper two thirds unchanged. Full outpainting prompt in docs/art-prompts.md.',
+    prompt: 'Extend only the bottom of the Whispering Wood with shaded dirt, small stones, leaf litter and moss. Keep the original panorama in the upper two thirds unchanged. Full outpainting prompt in demos/forest/docs/art-prompts.md.',
     activeVersion: 'outpaint', versions: { outpaint: { name: 'outpaint', file: 'art/forest-overscan.png',
       model: 'imagegen', createdAt: '2026-10-08T00:00:00.000Z',
       prompt: 'Outpaint only the gray bottom third; preserve the existing forest panorama, its placement, scale, shadows and palette.',

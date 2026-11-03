@@ -27,7 +27,7 @@ export const fireplaceLightSchema: Record<string, PointleshPropertySchema> = {
   lightDepth: { type: 'number', label: 'Light depth', step: .1 },
 };
 const version = (file: string, prompt: string) => ({ name: 'hearth', file, prompt, model: 'imagegen',
-  createdAt: '2026-09-26T00:00:00.000Z', notes: 'Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md.' });
+  createdAt: '2026-09-26T00:00:00.000Z', notes: 'Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in demos/forest/docs/art-prompts.md.' });
 export const fireplaceAssetDefinitions: Record<string, AiAssetDefinition> = {
   fireplace: { id: 'fireplace', kind: 'image', dimensions: { width: 80, height: 104 },
     prompt: 'Warm yellow-white and orange pixel-art flames and glowing embers from the Copper Tankard hearth. Transparent background, no masonry. Fixed position and scale.',
@@ -38,7 +38,7 @@ export const fireplaceAssetDefinitions: Record<string, AiAssetDefinition> = {
     frameGrid: { frameWidth: 80, frameHeight: 104, columns: 4, rows: 2, frameCount: 8 },
     animations: [{ key: 'fireplace.burn', frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 8, repeat: -1 }],
     settings: { format: 'png', background: 'transparent', frameAlignment: 'none' },
-    activeVersion: 'hearth', versions: { hearth: version('art/objects/fireplace-burn.png', 'Eight-frame pixel-art hearth fire, fixed cells and alpha extraction; full prompts in docs/art-prompts.md.') },
+    activeVersion: 'hearth', versions: { hearth: version('art/objects/fireplace-burn.png', 'Eight-frame pixel-art hearth fire, fixed cells and alpha extraction; full prompts in demos/forest/docs/art-prompts.md.') },
     tags: ['forest', 'object', 'pub', 'animation'] },
   'background.pub': { id: 'background.pub', kind: 'image', dimensions: { width: 1182, height: 664 },
     prompt: 'The original Copper Tankard with only the static flames removed from the firebox; preserve the stonework, grate, logs, ambient lighting and every other part of the room.',
@@ -47,15 +47,15 @@ export const fireplaceAssetDefinitions: Record<string, AiAssetDefinition> = {
   'background.house': { id: 'background.house', kind: 'image', dimensions: { width: 1182, height: 664 },
     prompt: 'The original Borin cottage with only the small painted flames and luminous embers under the hanging cooking pot removed. Preserve the pot, chain, grate, stonework, lighting and every other part of the room.',
     activeVersion: 'hearth', versions: { hearth: { ...version('art/house-unlit.png', 'A local clean plate beneath the cottage cooking pot. Every pixel outside the firebox remains original.'),
-      notes: 'Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in docs/art-prompts.md.' } },
+      notes: 'Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in demos/forest/docs/art-prompts.md.' } },
     tags: ['forest', 'background', 'house'] },
   'background.camp': { id: 'background.camp', kind: 'image', dimensions: { width: 1182, height: 664 },
     prompt: 'The original orc camp with its extracted cage door and painted cauldron and torch flames removed. Preserve the torch holder, cauldron, tripod, stone ring, cage and all other scenery.',
     activeVersion: 'torch', versions: { hearth: { ...version('art/camp-unlit.png', 'Local clean plate beneath the camp cauldron, retaining the extracted cage-door background.'),
-      notes: 'Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in docs/art-prompts.md.' },
+      notes: 'Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in demos/forest/docs/art-prompts.md.' },
     torch: { ...version('art/camp-ambient.png', 'The camp clean plate with only the remaining torch flame removed, preserving the holder, cauldron patch and extracted cage door.'),
       name: 'torch', createdAt: '2026-09-27T00:00:00.000Z',
-      notes: 'Built-in image generation from the original torch crop. Only the small flame patch is imported; full prompt in docs/art-prompts.md.' } },
+      notes: 'Built-in image generation from the original torch crop. Only the small flame patch is imported; full prompt in demos/forest/docs/art-prompts.md.' } },
     tags: ['forest', 'background', 'camp'] },
 };
 

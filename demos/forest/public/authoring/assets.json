@@ -4,7 +4,7 @@
     "background.village-pub": {
       "id": "background.village-pub",
       "kind": "image",
-      "prompt": "Two vertically stacked pixel-art adventure rooms: village-pub. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.",
+      "prompt": "Two vertically stacked pixel-art adventure rooms: village-pub. 16:9 each, no characters or text. See demos/forest/docs/art-prompts.md for full production prompt.",
       "dimensions": {
         "width": 1182,
         "height": 1330
@@ -24,14 +24,14 @@
           "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       }
     },
     "background.house-forest": {
       "id": "background.house-forest",
       "kind": "image",
-      "prompt": "Two vertically stacked pixel-art adventure rooms: house-forest. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.",
+      "prompt": "Two vertically stacked pixel-art adventure rooms: house-forest. 16:9 each, no characters or text. See demos/forest/docs/art-prompts.md for full production prompt.",
       "dimensions": {
         "width": 1182,
         "height": 1330
@@ -50,7 +50,7 @@
     "background.mine-camp": {
       "id": "background.mine-camp",
       "kind": "image",
-      "prompt": "Two vertically stacked pixel-art adventure rooms: mine-camp. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.",
+      "prompt": "Two vertically stacked pixel-art adventure rooms: mine-camp. 16:9 each, no characters or text. See demos/forest/docs/art-prompts.md for full production prompt.",
       "dimensions": {
         "width": 1182,
         "height": 1330
@@ -70,7 +70,7 @@
           "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       }
     },
@@ -11331,7 +11331,7 @@
     "background.forest-wide": {
       "id": "background.forest-wide",
       "kind": "image",
-      "prompt": "A continuous 3:1 pixel-art panorama of the Whispering Wood. Ancient mossy trees frame a broad walkable forest path, with violet dreamcaps at the left roots, a timbered gold mine in the left quarter, an old oak and unlettered signpost in the middle, and an orc palisade gate at the far right. Match the Bramblehollow style reference. No characters, UI or lettering. See docs/art-prompts.md for the full production prompt.",
+      "prompt": "A continuous 3:1 pixel-art panorama of the Whispering Wood. Ancient mossy trees frame a broad walkable forest path, with violet dreamcaps at the left roots, a timbered gold mine in the left quarter, an old oak and unlettered signpost in the middle, and an orc palisade gate at the far right. Match the Bramblehollow style reference. No characters, UI or lettering. See demos/forest/docs/art-prompts.md for the full production prompt.",
       "dimensions": {
         "width": 2172,
         "height": 724
@@ -11346,7 +11346,7 @@
         "original": {
           "name": "original",
           "file": "art/forest-wide.png",
-          "prompt": "Horizontally extended Whispering Wood panorama; full prompt in docs/art-prompts.md.",
+          "prompt": "Horizontally extended Whispering Wood panorama; full prompt in demos/forest/docs/art-prompts.md.",
           "createdAt": "2026-09-07T00:00:00.000Z",
           "model": "imagegen"
         },
@@ -11356,7 +11356,7 @@
           "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       }
     },
@@ -12168,7 +12168,7 @@
           "prompt": "The exact guard from the base image turns smoothly in place from front-facing through a side view to fully back-facing. Eight consecutive frames, stable scale and planted feet; preserve his armor, helmet, spear, palette and proportions. Transparent background; no scenery or shadows.",
           "createdAt": "2026-09-24T00:00:00.000Z",
           "model": "imagegen",
-          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in demos/forest/docs/art-prompts.md."
         },
         "promoted-1790303629873": {
           "name": "promoted-1790303629873",
@@ -12245,7 +12245,7 @@
           "prompt": "The exact guard from the base image turns in place from fully back-facing to a left-facing profile. Eight consecutive quarter-turn frames that also play smoothly in reverse; stable scale and planted feet. Preserve all equipment and proportions. Transparent background; no scenery or shadows.",
           "createdAt": "2026-09-24T00:00:00.000Z",
           "model": "imagegen",
-          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -12369,7 +12369,7 @@
           "prompt": "The exact guard from the base image bends toward a cauldron off-canvas to his left, drinks, and straightens. Eight consecutive frames: lean down, bend and gulp, then stand upright. Preserve his gear, scale and planted feet. Do not draw the cauldron, scenery, cast shadows or text; transparent background.",
           "createdAt": "2026-09-24T00:00:00.000Z",
           "model": "imagegen",
-          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in docs/art-prompts.md."
+          "notes": "Generated from the promoted guard reference. Packed into foot-aligned 40 × 80 cells; prompts in demos/forest/docs/art-prompts.md."
         },
         "promoted-1790302566750": {
           "name": "promoted-1790302566750",
@@ -12458,7 +12458,7 @@
     "guard.collapse": {
       "id": "guard.collapse",
       "kind": "animation",
-      "prompt": "The exact guard from the base image becomes drowsy, staggers, drops to his knees and collapses onto his left side. End fully horizontal, head left and boots right, eyes closed, spear on the ground. Preserve costume and anatomical scale. Eight consecutive frames, transparent background, no scenery or labels. A double-width canvas leaves room for the lying body. Full prompt in docs/art-prompts.md.",
+      "prompt": "The exact guard from the base image becomes drowsy, staggers, drops to his knees and collapses onto his left side. End fully horizontal, head left and boots right, eyes closed, spear on the ground. Preserve costume and anatomical scale. Eight consecutive frames, transparent background, no scenery or labels. A double-width canvas leaves room for the lying body. Full prompt in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 960,
         "height": 400
@@ -12520,10 +12520,10 @@
         "patrol": {
           "name": "patrol",
           "file": "art/characters/guard/collapse.png",
-          "prompt": "The exact guard from the base image becomes drowsy, staggers, drops to his knees and collapses onto his left side. End fully horizontal, head left and boots right, eyes closed, spear on the ground. Preserve costume and anatomical scale. Eight consecutive frames, transparent background, no scenery or labels. A double-width canvas leaves room for the lying body. Full prompt in docs/art-prompts.md.",
+          "prompt": "The exact guard from the base image becomes drowsy, staggers, drops to his knees and collapses onto his left side. End fully horizontal, head left and boots right, eyes closed, spear on the ground. Preserve costume and anatomical scale. Eight consecutive frames, transparent background, no scenery or labels. A double-width canvas leaves room for the lying body. Full prompt in demos/forest/docs/art-prompts.md.",
           "createdAt": "2026-09-26T00:00:00.000Z",
           "model": "imagegen",
-          "notes": "Generated from the current guard reference. 240 × 200 cells, a double-width animation stage, uniform scale and ground baseline; final frame is the sleeping pose. Prompts in docs/art-prompts.md."
+          "notes": "Generated from the current guard reference. 240 × 200 cells, a double-width animation stage, uniform scale and ground baseline; final frame is the sleeping pose. Prompts in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -12541,7 +12541,7 @@
         "width": 120,
         "height": 120
       },
-      "prompt": "A closed dwarven oak tool chest with aged iron bands, lock and three amber runes. Match the Goldroot Mine pixel art; transparent background. Full production prompt in docs/art-prompts.md.",
+      "prompt": "A closed dwarven oak tool chest with aged iron bands, lock and three amber runes. Match the Goldroot Mine pixel art; transparent background. Full production prompt in demos/forest/docs/art-prompts.md.",
       "activeVersion": "opening",
       "versions": {
         "runed": {
@@ -12554,7 +12554,7 @@
         "opening": {
           "name": "opening",
           "file": "art/objects/runed-tool-chest-padded.png",
-          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-10-01T00:00:00.000Z"
         }
@@ -12618,7 +12618,7 @@
           "prompt": "The exact sleeping orc from the final collapse frame, head left and boots right, securely tied with painted rope around his torso, arms and ankles. Preserve armor, pose, scale, spear and transparent canvas.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         }
       },
       "tags": [
@@ -12698,7 +12698,7 @@
           "prompt": "Borin viewed from behind: kneel, reach forward with rope, wrap, cross ends, pull knot tight, rise. Eight distinct frames, fixed anatomical scale and feet, transparent background. Only Borin and rope.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         }
       },
       "tags": [
@@ -12778,7 +12778,7 @@
           "prompt": "The exact Borin viewed from behind slightly right: raise a wooden-handled steel pickaxe, strike a lock ahead at chest height, follow through, lower the weapon. Eight frames, fixed body size and feet; no door or scenery.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         }
       },
       "tags": [
@@ -12898,7 +12898,7 @@
           "prompt": "The original narrow wooden barred cage door: padlock shackle breaks and falls, then the door swings outward left around its fixed left hinge. Eight frames. Preserve timber, bars, rails, knots and perspective. Transparent through the bars, no stationary cage or scenery.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         },
         "promoted-1793411582544": {
           "name": "promoted-1793411582544",
@@ -12942,7 +12942,7 @@
           "prompt": "Closed frame of the original cage door animation; no stationary frame or background.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         }
       },
       "linkedAnimationAssets": {
@@ -12977,7 +12977,7 @@
           "prompt": "Original camp background with a locally generated clean plate behind the extracted door. Every pixel outside the door patch is unchanged.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         },
         "hearth": {
           "name": "hearth",
@@ -12985,7 +12985,7 @@
           "prompt": "Local clean plate beneath the camp cauldron, retaining the extracted cage-door background.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in docs/art-prompts.md."
+          "notes": "Built-in image generation from the original cauldron crop. Only the flame patch is imported; full prompt in demos/forest/docs/art-prompts.md."
         },
         "torch": {
           "name": "torch",
@@ -12993,7 +12993,7 @@
           "prompt": "The camp clean plate with only the remaining torch flame removed, preserving the holder, cauldron patch and extracted cage door.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Built-in image generation from the original torch crop. Only the small flame patch is imported; full prompt in docs/art-prompts.md."
+          "notes": "Built-in image generation from the original torch crop. Only the small flame patch is imported; full prompt in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13018,7 +13018,7 @@
           "prompt": "First frame of the Copper Tankard fire loop.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13075,10 +13075,10 @@
         "hearth": {
           "name": "hearth",
           "file": "art/objects/fireplace-burn.png",
-          "prompt": "Eight-frame pixel-art hearth fire, fixed cells and alpha extraction; full prompts in docs/art-prompts.md.",
+          "prompt": "Eight-frame pixel-art hearth fire, fixed cells and alpha extraction; full prompts in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13104,7 +13104,7 @@
           "prompt": "Copper Tankard clean plate. The original background is unchanged outside a small patch inside the hearth.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in docs/art-prompts.md."
+          "notes": "Built-in image generation from the Copper Tankard hearth. Fixed 4 × 2 cells, uniform scale, transparent flames. Full prompts in demos/forest/docs/art-prompts.md."
         },
         "lamps": {
           "name": "lamps",
@@ -13112,7 +13112,7 @@
           "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13137,7 +13137,7 @@
           "prompt": "A local clean plate beneath the cottage cooking pot. Every pixel outside the firebox remains original.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in docs/art-prompts.md."
+          "notes": "Built-in image generation from the original cottage hearth. Only the small firebox patch is imported; full prompt in demos/forest/docs/art-prompts.md."
         },
         "lamps": {
           "name": "lamps",
@@ -13145,7 +13145,7 @@
           "prompt": "Original room with only its static lamp flames removed from the glass panes. All fixtures and other artwork remain unchanged.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13170,7 +13170,7 @@
           "prompt": "Tavern sign lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13231,7 +13231,7 @@
           "prompt": "Tavern sign lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13258,7 +13258,7 @@
           "prompt": "Left wall lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13319,7 +13319,7 @@
           "prompt": "Left wall lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13346,7 +13346,7 @@
           "prompt": "Hanging bar lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13407,7 +13407,7 @@
           "prompt": "Hanging bar lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13434,7 +13434,7 @@
           "prompt": "Barrel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13495,7 +13495,7 @@
           "prompt": "Barrel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13522,7 +13522,7 @@
           "prompt": "Back door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13583,7 +13583,7 @@
           "prompt": "Back door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13610,7 +13610,7 @@
           "prompt": "Entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13671,7 +13671,7 @@
           "prompt": "Entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13698,7 +13698,7 @@
           "prompt": "Bedside lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13759,7 +13759,7 @@
           "prompt": "Bedside lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13786,7 +13786,7 @@
           "prompt": "Workbench lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13847,7 +13847,7 @@
           "prompt": "Workbench lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13874,7 +13874,7 @@
           "prompt": "Cottage door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -13935,7 +13935,7 @@
           "prompt": "Cottage door lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -13962,7 +13962,7 @@
           "prompt": "Mine entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14023,7 +14023,7 @@
           "prompt": "Mine entrance lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14050,7 +14050,7 @@
           "prompt": "Winch lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14111,7 +14111,7 @@
           "prompt": "Winch lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14138,7 +14138,7 @@
           "prompt": "Distant tunnel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14199,7 +14199,7 @@
           "prompt": "Distant tunnel lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14226,7 +14226,7 @@
           "prompt": "Mine doorway lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14287,7 +14287,7 @@
           "prompt": "Mine doorway lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14314,7 +14314,7 @@
           "prompt": "Left gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14375,7 +14375,7 @@
           "prompt": "Left gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14402,7 +14402,7 @@
           "prompt": "Right gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14463,7 +14463,7 @@
           "prompt": "Right gate lantern: subtle flicker of the original diffuse amber light behind the glass; no open fire, coal bed, sparks or enlarged flames. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14490,7 +14490,7 @@
           "prompt": "Distant gate torch: a small exposed torch flame. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "linkedAnimationAssets": {
@@ -14551,7 +14551,7 @@
           "prompt": "Distant gate torch: a small exposed torch flame. Preserve the original painted detail, scale, metal dividers and baseline. Transparent outside the panes.",
           "model": "imagegen",
           "createdAt": "2026-09-27T00:00:00.000Z",
-          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md."
+          "notes": "Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14607,7 +14607,7 @@
           "prompt": "The exact orc guard faces left and lowers his existing spear from upright to a horizontal threat, holding it with both hands. Eight consecutive frames with planted feet and stable body size. End holding the pose. One spear, no attack/contact, no other characters, ropes, scenery or glow; transparent background.",
           "createdAt": "2026-09-28T00:00:00.000Z",
           "model": "imagegen",
-          "notes": "Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in docs/art-prompts.md."
+          "notes": "Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14661,7 +14661,7 @@
           "prompt": "The exact dwarf king raises both empty hands above his crown in surrender. Eight consecutive frames, fixed body size and planted feet; end holding both palms up. Preserve his crown, beard, red ermine cape and blue-gold tunic. No weapon, rope, scenery or glow; transparent background.",
           "createdAt": "2026-09-28T00:00:00.000Z",
           "model": "imagegen",
-          "notes": "Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in docs/art-prompts.md."
+          "notes": "Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -14673,7 +14673,7 @@
     "door.village-pub": {
       "id": "door.village-pub",
       "kind": "image",
-      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 105,
         "height": 185
@@ -14683,7 +14683,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/village-pub.png",
-          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -14706,7 +14706,7 @@
     "door.village-pub.open": {
       "id": "door.village-pub.open",
       "kind": "animation",
-      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 420,
         "height": 370
@@ -14757,7 +14757,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/village-pub-open.png",
-          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -14770,7 +14770,7 @@
     "door.village-pub.close": {
       "id": "door.village-pub.close",
       "kind": "animation",
-      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 420,
         "height": 370
@@ -14821,7 +14821,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/village-pub-open.png",
-          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Copper Tankard door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -14834,7 +14834,7 @@
     "door.village-house": {
       "id": "door.village-house",
       "kind": "image",
-      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 110,
         "height": 150
@@ -14844,7 +14844,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/village-house.png",
-          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -14867,7 +14867,7 @@
     "door.village-house.open": {
       "id": "door.village-house.open",
       "kind": "animation",
-      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 440,
         "height": 300
@@ -14918,7 +14918,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/village-house-open.png",
-          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -14931,7 +14931,7 @@
     "door.village-house.close": {
       "id": "door.village-house.close",
       "kind": "animation",
-      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 440,
         "height": 300
@@ -14982,7 +14982,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/village-house-open.png",
-          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · outside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -14995,7 +14995,7 @@
     "door.pub": {
       "id": "door.pub",
       "kind": "image",
-      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 159,
         "height": 275
@@ -15005,7 +15005,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/pub.png",
-          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15028,7 +15028,7 @@
     "door.pub.open": {
       "id": "door.pub.open",
       "kind": "animation",
-      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 636,
         "height": 550
@@ -15079,7 +15079,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/pub-open.png",
-          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15092,7 +15092,7 @@
     "door.pub.close": {
       "id": "door.pub.close",
       "kind": "animation",
-      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 636,
         "height": 550
@@ -15143,7 +15143,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/pub-open.png",
-          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Copper Tankard door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15156,7 +15156,7 @@
     "door.house": {
       "id": "door.house",
       "kind": "image",
-      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 128,
         "height": 300
@@ -15166,7 +15166,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/house.png",
-          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15189,7 +15189,7 @@
     "door.house.open": {
       "id": "door.house.open",
       "kind": "animation",
-      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 512,
         "height": 600
@@ -15240,7 +15240,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/house-open.png",
-          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15253,7 +15253,7 @@
     "door.house.close": {
       "id": "door.house.close",
       "kind": "animation",
-      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 512,
         "height": 600
@@ -15359,14 +15359,14 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/house-open.png",
-          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         },
         "promoted-1793237540751": {
           "name": "promoted-1793237540751",
           "file": "art/door.house.close.promoted-1793237540751.png",
-          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Cottage door · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "createdAt": "2026-10-29T01:32:21.104Z",
           "model": "imagegen",
           "settings": {
@@ -15392,7 +15392,7 @@
     "door.forest-mine": {
       "id": "door.forest-mine",
       "kind": "image",
-      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 120,
         "height": 145
@@ -15402,7 +15402,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/forest-mine.png",
-          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15425,7 +15425,7 @@
     "door.forest-mine.open": {
       "id": "door.forest-mine.open",
       "kind": "animation",
-      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 480,
         "height": 290
@@ -15476,7 +15476,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/forest-mine-open.png",
-          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15489,7 +15489,7 @@
     "door.forest-mine.close": {
       "id": "door.forest-mine.close",
       "kind": "animation",
-      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 480,
         "height": 290
@@ -15595,14 +15595,14 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/forest-mine-open.png",
-          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         },
         "promoted-1793237632644": {
           "name": "promoted-1793237632644",
           "file": "art/door.forest-mine.close.promoted-1793237632644.png",
-          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Goldroot Mine gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "createdAt": "2026-10-29T01:33:52.698Z",
           "model": "imagegen",
           "settings": {
@@ -15628,7 +15628,7 @@
     "door.forest-camp": {
       "id": "door.forest-camp",
       "kind": "image",
-      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 142,
         "height": 170
@@ -15638,7 +15638,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/forest-camp.png",
-          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15661,7 +15661,7 @@
     "door.forest-camp.open": {
       "id": "door.forest-camp.open",
       "kind": "animation",
-      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 568,
         "height": 340
@@ -15712,7 +15712,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/forest-camp-open.png",
-          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15725,7 +15725,7 @@
     "door.forest-camp.close": {
       "id": "door.forest-camp.close",
       "kind": "animation",
-      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 568,
         "height": 340
@@ -15831,14 +15831,14 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/forest-camp-open.png",
-          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         },
         "promoted-1793237604185": {
           "name": "promoted-1793237604185",
           "file": "art/door.forest-camp.close.promoted-1793237604185.png",
-          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "createdAt": "2026-10-29T01:33:24.254Z",
           "model": "imagegen",
           "settings": {
@@ -15864,7 +15864,7 @@
     "door.camp": {
       "id": "door.camp",
       "kind": "image",
-      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 118,
         "height": 195
@@ -15874,7 +15874,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/camp.png",
-          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15897,7 +15897,7 @@
     "door.camp.open": {
       "id": "door.camp.open",
       "kind": "animation",
-      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 472,
         "height": 390
@@ -15948,7 +15948,7 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/camp-open.png",
-          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         }
@@ -15961,7 +15961,7 @@
     "door.camp.close": {
       "id": "door.camp.close",
       "kind": "animation",
-      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+      "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 472,
         "height": 390
@@ -16067,14 +16067,14 @@
         "doors": {
           "name": "doors",
           "file": "art/objects/doors/camp-open.png",
-          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-09-28T00:00:00.000Z"
         },
         "promoted-1793237578679": {
           "name": "promoted-1793237578679",
           "file": "art/door.camp.close.promoted-1793237578679.png",
-          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.",
+          "prompt": "The existing Orc camp gate · inside opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.",
           "createdAt": "2026-10-29T01:32:58.766Z",
           "model": "imagegen",
           "settings": {
@@ -16142,7 +16142,7 @@
           "model": "imagegen",
           "createdAt": "2026-09-29T00:00:00.000Z",
           "prompt": "The current Borin slowly reaches right and leans to peek through a gate; eight consecutive poses with fixed foot anchors and anatomical scale, transparent background.",
-          "notes": "Generated from the promoted Borin base and profile references. Fixed anatomical scale and planted feet. Full prompt in docs/art-prompts.md."
+          "notes": "Generated from the promoted Borin base and profile references. Fixed anatomical scale and planted feet. Full prompt in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -16196,7 +16196,7 @@
           "model": "imagegen",
           "createdAt": "2026-09-30T00:00:00.000Z",
           "prompt": "An eight-frame peeking idle loop continuing the final peeking pose with subtle breathing and blinking, fixed feet, proportions and palette, transparent background.",
-          "notes": "First frame is the exact last frame of borin.peek. Generated idle poses use one anatomical scale and fixed feet. Full prompt in docs/art-prompts.md."
+          "notes": "First frame is the exact last frame of borin.peek. Generated idle poses use one anatomical scale and fixed feet. Full prompt in demos/forest/docs/art-prompts.md."
         }
       },
       "tags": [
@@ -16208,7 +16208,7 @@
     "tool-chest.open": {
       "id": "tool-chest.open",
       "kind": "animation",
-      "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+      "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 360,
         "height": 360
@@ -16274,7 +16274,7 @@
         "opening": {
           "name": "opening",
           "file": "art/objects/runed-tool-chest-open.png",
-          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-10-01T00:00:00.000Z"
         }
@@ -16288,7 +16288,7 @@
     "tool-chest.empty": {
       "id": "tool-chest.empty",
       "kind": "animation",
-      "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+      "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in demos/forest/docs/art-prompts.md.",
       "dimensions": {
         "width": 360,
         "height": 360
@@ -16325,7 +16325,7 @@
         "opening": {
           "name": "opening",
           "file": "art/objects/runed-tool-chest-open.png",
-          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.",
+          "prompt": "Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in demos/forest/docs/art-prompts.md.",
           "model": "imagegen",
           "createdAt": "2026-10-01T00:00:00.000Z"
         }
@@ -43084,7 +43084,7 @@
           "prompt": "The original narrow wooden barred cage door: padlock shackle breaks and falls, then the door swings outward left around its fixed left hinge. Eight frames. Preserve timber, bars, rails, knots and perspective. Transparent through the bars, no stationary cage or scenery.",
           "model": "imagegen",
           "createdAt": "2026-09-26T00:00:00.000Z",
-          "notes": "Generated from the current character/cage reference. Full prompts in docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
+          "notes": "Generated from the current character/cage reference. Full prompts in demos/forest/docs/art-prompts.md. Imported with fixed anatomical scale and feet/hinge anchors."
         }
       },
       "tags": [

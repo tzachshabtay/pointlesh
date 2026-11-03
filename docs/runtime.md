@@ -29,7 +29,7 @@ Restored paths also validate against the bound source and replan to their saved 
 
 ## Room entrances and exits
 
-Games own room transitions: when to change scenes, which doors to animate, where actors appear, and how those actions are sequenced. Pointlesh supplies the character movement, animation, area effects, rendering, and save primitives used to implement them. The forest demo's [doorway sequence](walkthrough.md#room-transition-implementation) lives entirely in its game source and stores its checkpoint in the saved game's extension data.
+Games own room transitions: when to change scenes, which doors to animate, where actors appear, and how those actions are sequenced. Pointlesh supplies the character movement, animation, area effects, rendering, and save primitives used to implement them. For a concrete example, see the [forest demo doorway sequence](../demos/forest/docs/walkthrough.md#room-transition-implementation).
 
 ## Area effects and foreground rendering
 
@@ -215,8 +215,6 @@ cursor.click('inventory.rope');
 ```
 
 The overlay ignores pointer events and is below designer UI. It restores the native cursor outside the game surfaces returned by `resolve`. Touch displays click feedback without leaving a persistent mouse cursor behind. Call `refresh()` after forwarding AI Assets designer callbacks to update an animation already in progress. Destroy removed inventory icons with `destroy()`; both adapters clean up automatically when the scene shuts down.
-
-The forest demo supplies separate **Graphics / Cursors** and **Graphics / Inventory** folders, each base image containing its native **Click** animation. The inventory art covers the coin, rope, both stouts, mushroom and pickaxe. `npx tsx demos/forest/scripts/generate-interface-art.ts --promote` reproduces the original PNGs and registers missing entries while preserving existing authored versions.
 
 ## Client behavior extensions
 

@@ -26,7 +26,7 @@ export function updateRescueAssetText(assets: AiAssetManifest): void {
 
 export const chestAsset: AiAssetDefinition = {
   id: 'tool-chest', kind: 'image', dimensions: { width: 120, height: 80 },
-  prompt: 'A closed dwarven oak tool chest with aged iron bands, lock and three amber runes. Match the Goldroot Mine pixel art; transparent background. Full production prompt in docs/art-prompts.md.',
+  prompt: 'A closed dwarven oak tool chest with aged iron bands, lock and three amber runes. Match the Goldroot Mine pixel art; transparent background. Full production prompt in demos/forest/docs/art-prompts.md.',
   activeVersion: 'runed', versions: { runed: { name: 'runed', file: 'art/objects/runed-tool-chest.png',
     prompt: 'Runed dwarven tool chest matching the Goldroot Mine.', model: 'imagegen', createdAt: '2026-09-26T00:00:00.000Z' } },
   tags: ['forest', 'object', 'mine'],

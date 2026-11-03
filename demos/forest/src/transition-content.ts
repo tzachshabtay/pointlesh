@@ -37,7 +37,7 @@ function doorwayCorridor(ground: Point, outside: Point): Point[] {
 export function addDoorAssets(manifest: AiAssetManifest): void {
   for (const door of forestDoors) {
     const id = `door.${door.id}`, { width, height } = door.crop;
-    const prompt = `The existing ${door.name} opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in docs/art-prompts.md.`;
+    const prompt = `The existing ${door.name} opens inward, revealing an empty passage; the frame and masonry stay fixed. Close by reversing the same poses. Full prompt and import registration in demos/forest/docs/art-prompts.md.`;
     const version = (file: string) => ({ name: 'doors', file, prompt, model: 'imagegen', createdAt: '2026-09-28T00:00:00.000Z' });
     manifest.assets[id] ??= { id, kind: 'image', prompt, dimensions: { width, height }, activeVersion: 'doors',
       versions: { doors: version(`art/objects/doors/${door.id}.png`) }, tags: ['forest', 'door'],

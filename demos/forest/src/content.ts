@@ -41,16 +41,16 @@ const definitions: Record<string, AiAssetDefinition> = {};
 for (const id of ['village-pub', 'house-forest', 'mine-camp']) {
   const assetId = `background.${id}`;
   definitions[assetId] = {
-    id: assetId, kind: 'image', prompt: `Two vertically stacked pixel-art adventure rooms: ${id}. 16:9 each, no characters or text. See docs/art-prompts.md for full production prompt.`,
+    id: assetId, kind: 'image', prompt: `Two vertically stacked pixel-art adventure rooms: ${id}. 16:9 each, no characters or text. See demos/forest/docs/art-prompts.md for full production prompt.`,
     dimensions: { width: 1182, height: 1330 }, activeVersion: 'original',
     versions: { original: { name: 'original', file: `art/atlas-${id}.png`, prompt: `Pixel-art ${id} room atlas`, createdAt: '2026-09-07T00:00:00.000Z', model: 'imagegen' } }
   };
 }
 definitions['background.forest-wide'] = {
   id: 'background.forest-wide', kind: 'image',
-  prompt: 'A continuous 3:1 pixel-art panorama of the Whispering Wood. Ancient mossy trees frame a broad walkable forest path, with violet dreamcaps at the left roots, a timbered gold mine in the left quarter, an old oak and unlettered signpost in the middle, and an orc palisade gate at the far right. Match the Bramblehollow style reference. No characters, UI or lettering. See docs/art-prompts.md for the full production prompt.',
+  prompt: 'A continuous 3:1 pixel-art panorama of the Whispering Wood. Ancient mossy trees frame a broad walkable forest path, with violet dreamcaps at the left roots, a timbered gold mine in the left quarter, an old oak and unlettered signpost in the middle, and an orc palisade gate at the far right. Match the Bramblehollow style reference. No characters, UI or lettering. See demos/forest/docs/art-prompts.md for the full production prompt.',
   dimensions: { width: 2172, height: 724 }, activeVersion: 'original', tags: ['forest', 'background', 'panorama'],
-  versions: { original: { name: 'original', file: 'art/forest-wide.png', prompt: 'Horizontally extended Whispering Wood panorama; full prompt in docs/art-prompts.md.', createdAt: '2026-09-07T00:00:00.000Z', model: 'imagegen' } },
+  versions: { original: { name: 'original', file: 'art/forest-wide.png', prompt: 'Horizontally extended Whispering Wood panorama; full prompt in demos/forest/docs/art-prompts.md.', createdAt: '2026-09-07T00:00:00.000Z', model: 'imagegen' } },
 };
 /** Real AI Assets animation children keep the same pixels available in the designer and game. */
 export const characterAssetDefinitions: Record<string, AiAssetDefinition> = {};

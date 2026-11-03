@@ -69,8 +69,6 @@ actor.place(resolvePointleshPoint(room, entryPointId).position);
 
 `pointleshApproachTarget(room, entity, livePosition?)` exposes the resolved approach target for custom integrations. `resolvePointleshWalkPoint(room, entity)` resolves only the named reference. Walking to an inaccessible point uses the closest reachable walkable position, including when that point is outside the floor or blocked by an object. The authored point remains unchanged, and interactions run after arrival at the resolved destination. `actOnPoint(controller, point, 'move' | 'walk')` powers the designer preview actions and is also available to game code.
 
-The demo has a separate `room.entry.from-<sourceRoom>` point for every incoming connection. For example, the forest has points for arriving from Bramblehollow, the mine and the camp. Each exit hotspot shares its walk point with that doorway's entry point; pickups and other scenery have separate interaction points. Dragging a point changes subsequent arrivals and approaches immediately. Room arrivals snap to the nearest ground reachable from the room's default player placement, so an entry outside the floor cannot strand the player. The point's authored coordinates remain unchanged. The one-time migration can be rerun with `node --import tsx demos/forest/scripts/add-points.ts`; it preserves existing point edits and promoted scene content.
-
 ## Extending a prefab
 
 Scene Designer stores native object, area, platform, and number attributes. Pointlesh adds a JSON sidecar called `pointlesh` containing the prefab kind, custom properties, behavior IDs, optional property schemas, and authoring metadata in `editor`. Upstream validation accepts this sidecar and its cloning, editing, promotion, and export preserve it. No fork of Scene Designer is required.
@@ -118,12 +116,10 @@ If an engine adapter already installed Scene Designer, call `installPointleshIns
 
 The library leaves game-specific interaction code in TypeScript. Rebuild geometry and visual settings from `onPreview`, while preserving transient runtime state such as the player's current walking position. To persist designer changes in source, run the local dev servers and use Scene Designer's promotion action, or export the complete JSON manifest from the embedded inspector.
 
-## Named entities in the forest demo
+## Prefab browser
 
 The prefab browser shows **Characters**, **Objects** and **Points**, with clickable breadcrumbs. Generic templates stay hidden from browsing and placement; **New prefab** creates a named definition. Each expanded scene layer lists its own **Areas** and **Hotspots**, with **Add area** and **Add hotspot** controls that start native shape drawing.
 
-Borin, Rowan, Mara, Orrin, Grub, Aldric, the coin, rope and mushroom each have a named prefab. Borin’s six room instances share `forest.character.borin`; NPCs use `forest.character.<actorName>` and pickups use `forest.object.<pickupId>`. Artwork, animations, shared scale/movement settings and behaviors are defaults. Sprite room coordinates and facing overrides remain instance data. Each room owns its ground, foreground and exit polygons, including their capabilities, approach points and custom behavior data. Editing an area affects that scene only.
-
 Factories accept `editor: { template?: boolean, folderPath?: string[] }`. Folder paths default to the prefab kind's category. `pointleshPrefabs()` marks the generic templates, and `extendPointleshPrefab()` makes the result visible unless explicitly marked as another template. This metadata affects authoring only; hiding a template never removes its definition or changes existing instances.
 
-`extendPointleshPrefab` builds a concrete definition from shared defaults; it does not establish a live inheritance link between two prefab definitions. Scene instances inherit live edits from their named prefab. The demo migration (`demos/forest/scripts/specialize-entity-prefabs.ts`) preserves resolved room data and can be rerun safely. It updates scene data only; it does not regenerate assets or reset authored placements.
+`extendPointleshPrefab` builds a concrete definition from shared defaults; it does not establish a live inheritance link between two prefab definitions. Scene instances inherit live edits from their named prefab.

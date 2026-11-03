@@ -11,7 +11,7 @@ export function mineOverscanBounds(width: number, height: number) {
 export function addMineOverscanAsset(manifest: AiAssetManifest): void {
   manifest.assets[MINE_OVERSCAN_ASSET] ??= {
     id: MINE_OVERSCAN_ASSET, kind: 'image', dimensions: { width: 1536, height: 1024 },
-    prompt: 'Extend only the margins around the existing Goldroot Mine: gold-veined rock ceiling and walls, warm ochre rock floor. Preserve the original 1182×664 scene at (177,180) unchanged. No new objects or landmarks. Full outpainting prompt in docs/art-prompts.md.',
+    prompt: 'Extend only the margins around the existing Goldroot Mine: gold-veined rock ceiling and walls, warm ochre rock floor. Preserve the original 1182×664 scene at (177,180) unchanged. No new objects or landmarks. Full outpainting prompt in demos/forest/docs/art-prompts.md.',
     activeVersion: 'outpaint', versions: { outpaint: { name: 'outpaint', file: 'art/mine-overscan.png',
       model: 'imagegen', createdAt: '2026-10-08T00:00:00.000Z',
       prompt: 'Outpaint the gray padding around the original mine crop without reframing or altering its center. Match the pixel scale, palette, rock and floor textures.',

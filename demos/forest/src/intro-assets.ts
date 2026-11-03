@@ -14,7 +14,7 @@ function clip(id: string, width: number, height: number, prompt: string): AiAsse
     settings: { format: 'png', background: 'transparent', frameAlignment: 'none' },
     activeVersion: 'intro', versions: { intro: { name: 'intro', file: `art/characters/${id.replace('.', '/')}.png`,
       prompt, createdAt: '2026-09-28T00:00:00.000Z', model: 'imagegen',
-      notes: 'Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in docs/art-prompts.md.' } },
+      notes: 'Generated from the promoted character references. Packed at one anatomical scale with planted feet and transparent margins. Full prompts in demos/forest/docs/art-prompts.md.' } },
     tags: ['forest', 'character', 'intro'],
   };
 }

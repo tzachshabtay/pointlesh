@@ -11,7 +11,7 @@ export const peekAsset: AiAssetDefinition = {
   settings: { format: 'png', background: 'transparent', frameAlignment: 'none' },
   activeVersion: 'stealth', versions: { stealth: { name: 'stealth', file: 'art/characters/borin/peek.png', model: 'imagegen', createdAt: '2026-09-29T00:00:00.000Z',
     prompt: 'The current Borin slowly reaches right and leans to peek through a gate; eight consecutive poses with fixed foot anchors and anatomical scale, transparent background.',
-    notes: 'Generated from the promoted Borin base and profile references. Fixed anatomical scale and planted feet. Full prompt in docs/art-prompts.md.' } }, tags: ['forest', 'character', 'stealth'],
+    notes: 'Generated from the promoted Borin base and profile references. Fixed anatomical scale and planted feet. Full prompt in demos/forest/docs/art-prompts.md.' } }, tags: ['forest', 'character', 'stealth'],
 };
 export const peekIdleAsset: AiAssetDefinition = {
   ...structuredClone(peekAsset), id: 'borin.peek-idle',
@@ -19,7 +19,7 @@ export const peekIdleAsset: AiAssetDefinition = {
   animations: [{ key: 'borin.peek-idle', frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 5, repeat: -1 }],
   versions: { stealth: { name: 'stealth', file: 'art/characters/borin/peek-idle.png', model: 'imagegen', createdAt: '2026-09-30T00:00:00.000Z',
     prompt: 'An eight-frame peeking idle loop continuing the final peeking pose with subtle breathing and blinking, fixed feet, proportions and palette, transparent background.',
-    notes: 'First frame is the exact last frame of borin.peek. Generated idle poses use one anatomical scale and fixed feet. Full prompt in docs/art-prompts.md.' } },
+    notes: 'First frame is the exact last frame of borin.peek. Generated idle poses use one anatomical scale and fixed feet. Full prompt in demos/forest/docs/art-prompts.md.' } },
 };
 export function addStealthAssets(manifest: AiAssetManifest): void {
   for (const asset of [peekAsset, peekIdleAsset]) {

@@ -5,7 +5,7 @@ import { fireplaceLightSchema } from './fireplace-assets';
 import { lampRooms, lampBounds, lampBrightness, torchBrightness } from './lamp-layout';
 
 const version = (file: string, prompt: string) => ({ name: 'lamps', file, prompt, model: 'imagegen', createdAt: '2026-09-27T00:00:00.000Z',
-  notes: 'Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in docs/art-prompts.md.' });
+  notes: 'Original painted lantern light with subtle intensity variation, packed over generated dim glass inside fixed pane masks. Only the exposed gate torch uses the generated flame sheet. Prompts and import details in demos/forest/docs/art-prompts.md.' });
 
 export const lampAssetDefinitions: Record<string, AiAssetDefinition> = {};
 for (const [roomId, room] of Object.entries(lampRooms)) for (const [index, lamp] of room.lamps.entries()) {

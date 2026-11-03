@@ -2,7 +2,7 @@ import type { AiAssetDefinition, AiAssetManifest } from '@ai-game-assets/core';
 
 export const CHEST_OPEN_TIMINGS = [160, 220, 220, 220, 240, 240, 220, 480];
 export const CHEST_OPEN_DURATION_MS = CHEST_OPEN_TIMINGS.reduce((sum, delay) => sum + delay, 0);
-const prompt = 'Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in docs/art-prompts.md.';
+const prompt = 'Animate the exact runed oak chest: amber runes brighten, the fixed rear hinge lifts the lid, and a pickaxe is revealed. Final empty pose after collection. Same chest body, scale and foot anchor; transparent background. Full prompt in demos/forest/docs/art-prompts.md.';
 const version = (file: string) => ({ name: 'opening', file, prompt, model: 'imagegen', createdAt: '2026-10-01T00:00:00.000Z' });
 const animation = (id: string, frames: number[], timings: number[]): AiAssetDefinition => ({
   id, kind: 'animation', prompt, dimensions: { width: 360, height: 360 },
