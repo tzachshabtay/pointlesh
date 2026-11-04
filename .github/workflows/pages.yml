@@ -1,4 +1,4 @@
-name: Deploy forest demo
+name: Deploy Pointlesh site and demo
 
 on:
   push:
@@ -34,12 +34,16 @@ jobs:
         run: npm run typecheck
       - name: Build forest demo with relative assets
         run: npm run build:pages --workspace pointlesh-forest-demo
+      - name: Assemble website and playable demo
+        run: npm run build:site
+      - name: Verify Pages routes
+        run: npm run test:site
       - name: Configure Pages
         uses: actions/configure-pages@v6
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: demos/forest/dist
+          path: site/dist
 
   deploy:
     runs-on: ubuntu-latest

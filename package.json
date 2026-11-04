@@ -12,6 +12,8 @@
   ],
   "scripts": {
     "build": "npm run build:packages && npm run build --workspace pointlesh-forest-demo",
+    "build:site": "node site/build.mjs",
+    "test:site": "node --test site/test.mjs",
     "build:packages": "tsc -b packages/core packages/designer packages/dev packages/phaser",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run build:packages && node --test packages/*/test/*.test.mjs demos/forest/test/*.test.mjs",

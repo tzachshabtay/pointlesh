@@ -1,6 +1,8 @@
 # pointlesh
 
-[![Play The King Under the Mountain](demos/forest/docs/play-button.svg)](https://tzachshabtay.github.io/pointlesh/)
+[![Play The King Under the Mountain](demos/forest/docs/play-button.svg)](https://tzachshabtay.github.io/pointlesh/demo/)
+
+[Explore the Pointlesh website](https://tzachshabtay.github.io/pointlesh/)
 
 [Demo README](demos/forest/README.md)
 
@@ -25,7 +27,7 @@ The repository follows the same four-package structure as the existing libraries
 
 **The King Under the Mountain** is a six-room pixel-art adventure built with Pointlesh. Play as Borin and rescue King Aldric through conversations, inventory puzzles and animated cutscenes.
 
-[▶ Play the game](https://tzachshabtay.github.io/pointlesh/) · [Demo README](demos/forest/README.md)
+[▶ Play the game](https://tzachshabtay.github.io/pointlesh/demo/) · [Demo README](demos/forest/README.md)
 
 ## Prefabs that remain extensible
 

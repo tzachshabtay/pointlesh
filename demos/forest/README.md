@@ -1,6 +1,6 @@
 # The King Under the Mountain
 
-[![Play The King Under the Mountain](docs/play-button.svg)](https://tzachshabtay.github.io/pointlesh/)
+[![Play The King Under the Mountain](docs/play-button.svg)](https://tzachshabtay.github.io/pointlesh/demo/)
 
 **The King Under the Mountain** is a six-room pixel-art adventure. You play Borin, a dwarf searching for King Aldric after an orc kidnapping. Explore Bramblehollow, its pub and your cottage, the Whispering Wood, Goldroot Mine and the orc camp. Conversation clues, inventory combinations and a recoverable timing puzzle lead to the king's rescue.
 
@@ -79,4 +79,4 @@ The demo supplies separate **Graphics → Cursors** and **Graphics → Inventory
 
 Door-art production notes: [follow-up](docs/doorway-art-followup.md), [palette correction](docs/door-palette-correction.md), and [fully opening cottage doors](docs/cottage-door-opening.md).
 
-The Pages workflow builds this demo with a relative asset base and deploys `demos/forest/dist` from `main`. Repository Pages must use **GitHub Actions** as its source.
+The Pages workflow builds this demo with a relative asset base and publishes it at `/pointlesh/demo/`, alongside the Pointlesh website at `/pointlesh/`. Repository Pages must use **GitHub Actions** as its source.
