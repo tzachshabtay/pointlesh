@@ -94,11 +94,13 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
 .workflow-card p { color: #bdcbbd; font-size: 13px; line-height: 1.6; margin: 0; }
 .workflow-stage { display: block; width: 100%; position: relative; aspect-ratio: 1.25; padding: 0; overflow: hidden; background: #0b1612; border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); cursor: zoom-in; text-align: left; }
 .workflow-stage img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.workflow-stage video { display: block; width: 100%; height: 100%; object-fit: contain; }
 .workflow-stage-label { position: absolute; left: 12px; bottom: 12px; padding: 7px 10px; background: rgba(8,22,16,.91); border: 1px solid rgba(232,186,112,.5); color: #f4ecd8; font: 10px var(--mono); letter-spacing: .03em; }
 .workflow-steps { display: flex; gap: 4px; padding: 11px; margin-top: auto; }
-.workflow-steps button { flex: 1; cursor: pointer; border: 1px solid transparent; background: transparent; color: #aebdac; padding: 10px 4px; font: 10px var(--mono); white-space: nowrap; }
+.workflow-steps button, .workflow-steps span { flex: 1; text-align: center; border: 1px solid transparent; background: transparent; color: #aebdac; padding: 10px 4px; font: 10px var(--mono); white-space: nowrap; }
+.workflow-steps button { cursor: pointer; }
 .workflow-steps button:hover { color: var(--cream); }
-.workflow-steps button.is-active { border-color: rgba(232,186,112,.55); color: var(--gold); background: rgba(232,186,112,.09); }
+.workflow-steps .is-active { border-color: rgba(232,186,112,.55); color: var(--gold); background: rgba(232,186,112,.09); }
 .feature-section { background: #eae0c9; color: #17261e; padding: 110px 0 115px; }
 .feature-section .section-number { color: #6d735a; }
 .feature-section .section-number span { background: #8c906d; }
@@ -128,6 +130,9 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
 .media-dialog { border: 1px solid var(--gold); background: #0d1915; color: var(--cream); padding: 14px; max-width: min(94vw,1250px); max-height: 94vh; box-shadow: 0 30px 90px #000a; }
 .media-dialog::backdrop { background: rgba(3,11,6,.86); }
 .media-dialog img { max-height: calc(94vh - 85px); width: auto; margin: auto; }
+.media-dialog video { display: none; max-height: calc(94vh - 85px); width: min(90vw, 1100px); margin: auto; }
+.media-dialog.is-video img { display: none; }
+.media-dialog.is-video video { display: block; }
 .media-dialog p { text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin: 13px 0 0; }
 .dialog-close { position: absolute; right: 22px; top: 20px; width: 38px; height: 38px; background: #13251de8; border: 1px solid var(--gold); color: var(--cream); cursor: pointer; font-size: 28px; line-height: 1; z-index: 2; }
 .suite-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 10%; align-items: end; margin-bottom: 45px; }

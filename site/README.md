@@ -8,4 +8,4 @@ npm run build:site
 npm run test:site
 ```
 
-The homepage centers on the in-game authoring loop. Its three interactive storyboards use captures of the real scene, asset and interaction designers over the running forest demo. The walkable-area frames show a local draft edit; they do not modify the promoted game. Keep the captures and feature descriptions in sync with the demo when its tools change.
+The homepage centers on the in-game authoring loop. A short screen recording shows a walkable area being dragged and tested in the running game; the other interactive storyboards use captures of the asset, interaction, and dialog designers. The walkable-area edit is a local draft and does not modify the promoted game. The public game is play-only, so the site links to local setup instructions for the authoring tools. Keep the media and feature descriptions in sync with the demo when its tools change.

@@ -34,6 +34,7 @@ const summary = document.querySelector('#filter-summary');
 const filters = [...document.querySelectorAll('.feature-filter')];
 const mediaDialog = document.querySelector('#media-dialog');
 const dialogImage = mediaDialog.querySelector('img');
+const dialogVideo = mediaDialog.querySelector('video');
 const dialogCaption = mediaDialog.querySelector('p');
 
 function featureCard(feature) {
@@ -56,6 +57,8 @@ function featureCard(feature) {
   expand.textContent = '↗';
   picture.append(expand);
   picture.addEventListener('click', () => {
+    mediaDialog.classList.remove('is-video');
+    dialogVideo.pause();
     dialogImage.src = `media/${feature.image}.jpg`;
     dialogImage.alt = feature.alt;
     dialogCaption.textContent = `${feature.title} · ${library.label}`;
@@ -95,6 +98,7 @@ function showFeatures(category) {
 filters.forEach((filter) => filter.addEventListener('click', () => showFeatures(filter.dataset.filter)));
 mediaDialog.querySelector('.dialog-close').addEventListener('click', () => mediaDialog.close());
 mediaDialog.addEventListener('click', (event) => { if (event.target === mediaDialog) mediaDialog.close(); });
+mediaDialog.addEventListener('close', () => dialogVideo.pause());
 showFeatures('highlights');
 
 const workflows = {
@@ -125,12 +129,14 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 function setWorkflowStep(card, step) {
   const frame = workflows[card.dataset.workflow][step];
   const image = card.querySelector('.workflow-stage img');
-  image.src = `media/${frame.image}.jpg`;
-  image.alt = frame.alt;
+  if (image) {
+    image.src = `media/${frame.image}.jpg`;
+    image.alt = frame.alt;
+  }
   card.querySelector('.workflow-stage-label').textContent = frame.label;
-  card.querySelectorAll('.workflow-steps button').forEach((button, index) => {
-    button.classList.toggle('is-active', index === step);
-    button.setAttribute('aria-pressed', String(index === step));
+  card.querySelectorAll('.workflow-steps button, .workflow-steps span').forEach((stepLabel, index) => {
+    stepLabel.classList.toggle('is-active', index === step);
+    if (stepLabel instanceof HTMLButtonElement) stepLabel.setAttribute('aria-pressed', String(index === step));
   });
   card.dataset.step = String(step);
 }
@@ -139,17 +145,35 @@ workflowCards.forEach(card => {
     button.addEventListener('click', () => setWorkflowStep(card, step)));
   card.querySelector('.workflow-stage').addEventListener('click', () => {
     const frame = workflows[card.dataset.workflow][Number(card.dataset.step)];
-    dialogImage.src = `media/${frame.image}.jpg`;
-    dialogImage.alt = frame.alt;
+    const video = card.querySelector('.workflow-stage video');
+    if (video) {
+      mediaDialog.classList.add('is-video');
+      dialogVideo.src = video.querySelector('source').src;
+      dialogVideo.currentTime = video.currentTime;
+    } else {
+      mediaDialog.classList.remove('is-video');
+      dialogVideo.pause();
+      dialogImage.src = `media/${frame.image}.jpg`;
+      dialogImage.alt = frame.alt;
+    }
     dialogCaption.textContent = `${card.querySelector('h3').textContent} · ${frame.label}`;
     mediaDialog.showModal();
+    if (video) dialogVideo.play().catch(() => {});
   });
+  const video = card.querySelector('.workflow-stage video');
+  if (video) {
+    video.addEventListener('timeupdate', () => {
+      const step = video.currentTime < 4 ? 0 : video.currentTime < 11 ? 1 : 2;
+      if (step !== Number(card.dataset.step)) setWorkflowStep(card, step);
+    });
+    if (!prefersReducedMotion.matches) video.play().catch(() => {});
+  }
   setWorkflowStep(card, 0);
 });
 if (!prefersReducedMotion.matches) {
   window.setInterval(() => {
     workflowCards.forEach(card => {
-      if (!card.matches(':hover, :focus-within') && !document.hidden) {
+      if (!card.querySelector('video') && !card.matches(':hover, :focus-within') && !document.hidden) {
         setWorkflowStep(card, (Number(card.dataset.step) + 1) % workflows[card.dataset.workflow].length);
       }
     });
