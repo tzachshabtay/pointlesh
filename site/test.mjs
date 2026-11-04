@@ -12,7 +12,11 @@ test('Pages publishes the showcase at the root and the game at /demo/', async ()
   ]);
   assert.match(site, /href="demo\/"/);
   assert.match(site, /id="feature-grid"/);
+  assert.match(site, /id="workflows"/);
+  assert.match(site, /A smaller engine/);
   assert.match(game, /\.\/assets\//);
   assert.ok((await stat(resolve(output, 'demo/assets'))).isDirectory());
-  assert.ok((await stat(resolve(output, 'media/village-scene.jpg'))).isFile());
+  for (const image of ['workflow-walkable-edit', 'workflow-walkable-changed', 'workflow-walkable-test', 'workflow-animation-generate', 'interaction-editor', 'dialog-designer']) {
+    assert.ok((await stat(resolve(output, `media/${image}.jpg`))).isFile());
+  }
 });

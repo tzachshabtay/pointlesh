@@ -8,4 +8,4 @@ npm run build:site
 npm run test:site
 ```
 
-The feature images are cropped or resized from the forest demo's own gameplay and designer screenshots. The walking loop uses Borin's promoted eight-frame sprite sheet over the demo's Bramblehollow background. Keep the images and feature descriptions in sync with the demo when its UI changes.
+The homepage centers on the in-game authoring loop. Its three interactive storyboards use captures of the real scene, asset and interaction designers over the running forest demo. The walkable-area frames show a local draft edit; they do not modify the promoted game. Keep the captures and feature descriptions in sync with the demo when its tools change.

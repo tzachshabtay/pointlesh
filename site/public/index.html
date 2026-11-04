@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0d1915" />
-    <meta name="description" content="Pointlesh is a TypeScript toolkit for point-and-click adventures. Explore its runtime, visual designers, AI asset workflow, and playable forest demo." />
-    <meta property="og:title" content="Pointlesh — make an adventure worth exploring" />
-    <meta property="og:description" content="A TypeScript toolkit for point-and-click adventures, with a playable demo and visual tools for scenes, assets, and dialogue." />
-    <meta property="og:image" content="https://tzachshabtay.github.io/pointlesh/media/village-scene.jpg" />
-    <title>Pointlesh — make an adventure worth exploring</title>
+    <meta name="description" content="Pointlesh keeps the point-and-click runtime small and puts visual design tools inside the running game. Edit scenes, assets, dialogue and interactions, then test immediately." />
+    <meta property="og:title" content="Pointlesh — design in the game" />
+    <meta property="og:description" content="A small TypeScript adventure runtime and in-game design tools for fast visual feedback." />
+    <meta property="og:image" content="https://tzachshabtay.github.io/pointlesh/media/workflow-walkable-edit.jpg" />
+    <title>Pointlesh — design in the game</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,8 +22,9 @@
       <nav class="nav shell" aria-label="Main navigation">
         <a class="brand" href="#top" aria-label="Pointlesh home"><span class="brand-mark" aria-hidden="true">✦</span> pointlesh</a>
         <div class="nav-links">
-          <a href="#story">The toolkit</a>
-          <a href="#features">Features</a>
+          <a href="#story">The idea</a>
+          <a href="#workflows">See the workflow</a>
+          <a href="#features">Explore tools</a>
           <a href="#suite">The suite</a>
           <a class="nav-github" href="https://github.com/tzachshabtay/pointlesh">GitHub <span aria-hidden="true">↗</span></a>
         </div>
@@ -36,19 +37,19 @@
         <div class="hero-backdrop" aria-hidden="true"></div>
         <div class="shell hero-content">
           <div class="hero-copy">
-            <p class="eyebrow"><span class="eyebrow-line"></span> The point &amp; click adventure toolkit</p>
-            <h1 id="hero-title">Make an adventure<br /><em>worth exploring.</em></h1>
-            <p class="hero-deck">Build the world in TypeScript. Shape what matters by eye. Let your characters walk, speak, react, and remember.</p>
+            <p class="eyebrow"><span class="eyebrow-line"></span> Design inside the running game</p>
+            <h1 id="hero-title">Change the world.<br /><em>Play the change.</em></h1>
+            <p class="hero-deck">Pointlesh keeps the engine small. Draw, adjust, generate and test in the game itself, where visual decisions get immediate feedback.</p>
             <div class="hero-actions">
               <a class="button button-primary" href="demo/"><span aria-hidden="true">▶</span> Play The King Under the Mountain</a>
-              <a class="button button-quiet" href="#features">Explore features <span aria-hidden="true">↓</span></a>
+              <a class="button button-quiet" href="#workflows">Watch the workflow <span aria-hidden="true">↓</span></a>
             </div>
-            <div class="hero-footnote"><span class="dot"></span> A six-room playable adventure, built with Pointlesh and its companion libraries.</div>
+            <div class="hero-footnote"><span class="dot"></span> The editor and the playable adventure share the same screen.</div>
           </div>
-          <div class="hero-frame" aria-label="Bramblehollow village from the playable demo">
-            <div class="frame-top"><span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>THE KING UNDER THE MOUNTAIN</span><span>01 / 06</span></div>
-            <div class="hero-picture"><img src="media/village-scene.jpg" alt="Borin and Elder Rowan in the pixel-art dwarf village of Bramblehollow" fetchpriority="high" /></div>
-            <div class="frame-bottom"><span><i class="tiny-star" aria-hidden="true">✦</i> BRAMBLEHOLLOW</span><span>Explore the demo <span aria-hidden="true">↗</span></span></div>
+          <div class="hero-frame" aria-label="The scene designer open over the running game">
+            <div class="frame-top"><span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>SCENE DESIGNER · LIVE GAME</span><span>EDIT / PLAY</span></div>
+            <div class="hero-picture"><img src="media/workflow-walkable-edit.jpg" alt="The Scene Designer open over the playable village, with a walkable polygon and its controls" fetchpriority="high" /></div>
+            <div class="frame-bottom"><span><i class="tiny-star" aria-hidden="true">✦</i> DRAW IT HERE</span><span>TEST IT HERE <span aria-hidden="true">↗</span></span></div>
           </div>
         </div>
         <a class="scroll-cue" href="#story" aria-label="Scroll to learn about the toolkit"><span></span> Scroll to explore</a>
@@ -57,48 +58,70 @@
       <section class="intro-section shell" id="story" aria-labelledby="story-title">
         <div class="section-number">01 <span></span> THE IDEA</div>
         <div class="intro-grid">
-          <div><h2 id="story-title">A living world,<br /><em>not a blank canvas.</em></h2></div>
-          <div class="intro-text"><p>Pointlesh gives you the common machinery of a point-and-click game: places to walk, people to meet, things to use, conversations to have, and a world that can be saved and restored.</p><p>Visual decisions stay visual. Draw a walkable polygon, drag a character into place, or tune a dialogue choice in the designer and see the result in the running game.</p><a class="text-link" href="https://github.com/tzachshabtay/pointlesh#packages">Meet the four packages <span aria-hidden="true">↗</span></a></div>
+          <div><h2 id="story-title">A smaller engine.<br /><em>A faster feedback loop.</em></h2></div>
+          <div class="intro-text"><p>AI can now write much of a game's custom behavior. That changes what an engine needs to be. Pointlesh keeps the shared adventure runtime small and invests in the harder part: visual decisions you need to see and feel.</p><p>Drag a walkable boundary and immediately try the path. Choose an animation and watch it on the character. Change a conversation and play it in context. The designer is part of the game, so iteration stays close to the result.</p><a class="text-link" href="#workflows">See the edit-to-play loop <span aria-hidden="true">↓</span></a></div>
         </div>
-        <div class="story-strip" aria-label="A glimpse of the demo">
-          <div class="story-shot"><img src="media/forest-scene.jpg" alt="Orcs escort King Aldric through the Whispering Wood" loading="lazy" /><span>01 · A king is taken</span></div>
-          <div class="story-shot"><img src="media/dialog-scene.jpg" alt="Mara speaks to Borin in the Copper Tankard" loading="lazy" /><span>02 · Clues are traded</span></div>
-          <div class="story-shot"><img src="media/rescue-scene.jpg" alt="Borin rescues the king at the orc camp" loading="lazy" /><span>03 · A rescue unfolds</span></div>
+      </section>
+
+      <section class="workflow-section shell" id="workflows" aria-labelledby="workflow-title">
+        <div class="section-number">02 <span></span> IN-GAME DESIGN</div>
+        <div class="workflow-heading"><h2 id="workflow-title">Edit. Try it.<br /><em>Keep what works.</em></h2><p>These are views of the real tools over the running demo. Step through each change to see the design decision and the game in one loop.</p></div>
+        <div class="workflow-grid">
+          <article class="workflow-card" data-workflow="ground">
+            <div class="workflow-card-heading"><span>01 / SCENE DESIGNER</span><h3>Shape the playable ground</h3><p>Move a polygon edge, then walk the revised route without rebuilding the game.</p></div>
+            <button class="workflow-stage" type="button" aria-label="Enlarge walkable area workflow"><img src="media/workflow-walkable-edit.jpg" alt="Walkable polygon selected in the scene designer" loading="lazy" /><span class="workflow-stage-label">Select the walkable area</span></button>
+            <div class="workflow-steps" role="group" aria-label="Walkable area workflow"><button type="button" class="is-active" data-step="0">1 · Select</button><button type="button" data-step="1">2 · Change</button><button type="button" data-step="2">3 · Test</button></div>
+          </article>
+          <article class="workflow-card" data-workflow="animation">
+            <div class="workflow-card-heading"><span>02 / AI ASSETS</span><h3>Generate and test motion</h3><p>Start from a prompt and reference, inspect the frames, then try the selected animation on the live character.</p></div>
+            <button class="workflow-stage" type="button" aria-label="Enlarge animation workflow"><img src="media/workflow-animation-generate.jpg" alt="Borin’s walk animation and regeneration controls in AI Assets" loading="lazy" /><span class="workflow-stage-label">Generate from the asset editor</span></button>
+            <div class="workflow-steps" role="group" aria-label="Animation workflow"><button type="button" class="is-active" data-step="0">1 · Generate</button><button type="button" data-step="1">2 · Inspect</button><button type="button" data-step="2">3 · Play</button></div>
+          </article>
+          <article class="workflow-card" data-workflow="interaction">
+            <div class="workflow-card-heading"><span>03 / POINTLESH</span><h3>Author interactions in context</h3><p>Find a target in the matrix, set its response and try it immediately in the room.</p></div>
+            <button class="workflow-stage" type="button" aria-label="Enlarge interaction workflow"><img src="media/workflow-interaction-matrix.jpg" alt="The live interaction matrix beside the game" loading="lazy" /><span class="workflow-stage-label">Find the target and action</span></button>
+            <div class="workflow-steps" role="group" aria-label="Interaction workflow"><button type="button" class="is-active" data-step="0">1 · Find</button><button type="button" data-step="1">2 · Set</button><button type="button" data-step="2">3 · Try</button></div>
+          </article>
+          <article class="workflow-card" data-workflow="dialogue">
+            <div class="workflow-card-heading"><span>04 / DIALOG DESIGNER</span><h3>Tune a conversation</h3><p>Edit the branching choices and linked voice lines, then hear them in the scene.</p></div>
+            <button class="workflow-stage" type="button" aria-label="Enlarge dialogue workflow"><img src="media/dialog-designer.jpg" alt="The Dialog Designer showing the elder's branching choices" loading="lazy" /><span class="workflow-stage-label">Edit the choice tree</span></button>
+            <div class="workflow-steps" role="group" aria-label="Dialogue workflow"><button type="button" class="is-active" data-step="0">1 · Branch</button><button type="button" data-step="1">2 · Voice</button><button type="button" data-step="2">3 · Play</button></div>
+          </article>
         </div>
       </section>
 
       <section class="feature-section" id="features" aria-labelledby="feature-title">
         <div class="shell">
-          <div class="section-number">02 <span></span> FEATURE ATLAS</div>
+          <div class="section-number">03 <span></span> EXPLORE THE TOOLS</div>
           <div class="section-heading">
-            <div><h2 id="feature-title">Everything an adventure<br /><em>needs to feel alive.</em></h2><p>Explore the systems behind the demo. Each view comes from the game or its real authoring tools.</p></div>
-            <a class="text-link" href="demo/">Try them in the game <span aria-hidden="true">↗</span></a>
+            <div><h2 id="feature-title">The tools behind<br /><em>the fast loop.</em></h2><p>Explore how Pointlesh and its companion libraries let you edit scenes, assets, dialogue and interactions where they play.</p></div>
+            <a class="text-link" href="demo/?designer=1">Open the demo designer <span aria-hidden="true">↗</span></a>
           </div>
           <div class="feature-controls" role="group" aria-label="Filter features by library">
-            <button class="feature-filter is-active" data-filter="highlights" aria-pressed="true">Highlights <span>6</span></button>
+            <button class="feature-filter is-active" data-filter="highlights" aria-pressed="true">In-game tools <span>6</span></button>
             <button class="feature-filter" data-filter="pointlesh" aria-pressed="false">Pointlesh <span>11</span></button>
             <button class="feature-filter" data-filter="ai-assets" aria-pressed="false">AI Assets <span>4</span></button>
             <button class="feature-filter" data-filter="scene-designer" aria-pressed="false">Scene Designer <span>3</span></button>
             <button class="feature-filter" data-filter="dialog-designer" aria-pressed="false">Dialog Designer <span>3</span></button>
             <button class="feature-filter" data-filter="all" aria-pressed="false">Show all <span>21</span></button>
           </div>
-          <p class="filter-summary" id="filter-summary" aria-live="polite">6 highlights from the suite</p>
+          <p class="filter-summary" id="filter-summary" aria-live="polite">6 in-game design tools</p>
           <div class="feature-grid" id="feature-grid"></div>
         </div>
       </section>
 
       <section class="suite-section shell" id="suite" aria-labelledby="suite-title">
-        <div class="section-number">03 <span></span> BUILT TOGETHER</div>
-        <div class="suite-heading"><h2 id="suite-title">Four libraries.<br /><em>One creative flow.</em></h2><p>Pointlesh focuses on adventure behavior. The connected tools own asset creation, scene editing, and dialogue authoring. Each stands on its own; together they make a practical game-making workbench.</p></div>
+        <div class="section-number">04 <span></span> BUILT TOGETHER</div>
+        <div class="suite-heading"><h2 id="suite-title">Four libraries.<br /><em>One live workbench.</em></h2><p>Pointlesh supplies the small set of adventure primitives worth sharing. AI Assets, Scene Designer and Dialog Designer bring their own authoring tools into the running game. Custom mechanics stay in TypeScript.</p></div>
         <div class="suite-grid">
-          <a class="suite-card" href="https://github.com/tzachshabtay/pointlesh"><span class="suite-index">01 / RUNTIME</span><span class="suite-icon" aria-hidden="true">✦</span><h3>Pointlesh</h3><p>Navigation, characters, interactions, inventory hooks, cutscenes, and dependable saves.</p><span class="suite-link">Explore repository ↗</span></a>
+          <a class="suite-card" href="https://github.com/tzachshabtay/pointlesh"><span class="suite-index">01 / ADVENTURE</span><span class="suite-icon" aria-hidden="true">✦</span><h3>Pointlesh</h3><p>A small common runtime for movement, interactions and saves, plus in-game prefab and interaction editors.</p><span class="suite-link">Explore repository ↗</span></a>
           <a class="suite-card" href="https://github.com/tzachshabtay/ai-assets"><span class="suite-index">02 / ASSETS</span><span class="suite-icon" aria-hidden="true">◈</span><h3>AI Assets</h3><p>Create and refine images, animations, sound, and voices with versions you can choose and promote.</p><span class="suite-link">Explore library ↗</span></a>
           <a class="suite-card" href="https://github.com/tzachshabtay/scene-designer"><span class="suite-index">03 / WORLD</span><span class="suite-icon" aria-hidden="true">⌁</span><h3>Scene Designer</h3><p>Shape rooms with vector areas, reusable prefabs, and direct manipulation on the canvas.</p><span class="suite-link">Explore library ↗</span></a>
           <a class="suite-card" href="https://github.com/tzachshabtay/dialog-designer"><span class="suite-index">04 / STORY</span><span class="suite-icon" aria-hidden="true">❞</span><h3>Dialog Designer</h3><p>Author branching conversations and connect spoken lines to the characters who say them.</p><span class="suite-link">Explore library ↗</span></a>
         </div>
       </section>
 
-      <section class="final-cta" aria-labelledby="cta-title"><div class="shell final-inner"><div><p class="eyebrow">The world is waiting</p><h2 id="cta-title">See what you can make<br /><em>out of a story.</em></h2><p>Play through the demo, then open the source to see how its scenes, characters and puzzles fit together.</p></div><div class="final-actions"><a class="button button-primary" href="demo/"><span aria-hidden="true">▶</span> Play the adventure</a><a class="button button-outline" href="https://github.com/tzachshabtay/pointlesh">View on GitHub ↗</a></div></div></section>
+      <section class="final-cta" aria-labelledby="cta-title"><div class="shell final-inner"><div><p class="eyebrow">Try the loop yourself</p><h2 id="cta-title">Open the world.<br /><em>Change it as you play.</em></h2><p>Play the demo, or open its designer and explore the same rooms with their scenes, assets and interactions exposed.</p></div><div class="final-actions"><a class="button button-primary" href="demo/?designer=1">Open the live designer ↗</a><a class="button button-outline" href="demo/">Play the adventure ↗</a></div></div></section>
     </main>
     <footer class="site-footer"><div class="shell footer-inner"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">✦</span> pointlesh</a><p>Made for worlds with something to say.</p><div><a href="demo/">Play demo</a><a href="https://github.com/tzachshabtay/pointlesh">Source</a><a href="https://github.com/tzachshabtay/pointlesh/blob/main/LICENSE">MIT License</a></div></div></footer>
 

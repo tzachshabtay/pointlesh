@@ -83,6 +83,22 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
 .story-shot:hover img { transform: scale(1.05); }
 .story-shot:after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent,rgba(6,17,11,.9)); }
 .story-shot span { position: absolute; bottom: 17px; left: 19px; z-index: 1; color: #f4eedb; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.workflow-section { padding-bottom: 118px; }
+.workflow-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 10%; align-items: end; margin-bottom: 42px; }
+.workflow-heading p { color: #c5d0c2; font-size: 17px; line-height: 1.8; max-width: 540px; margin: 0 0 5px; }
+.workflow-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.workflow-card { min-width: 0; border: 1px solid rgba(232,186,112,.28); background: #162820; display: flex; flex-direction: column; }
+.workflow-card-heading { padding: 22px 23px 18px; min-height: 180px; }
+.workflow-card-heading>span { font: 10px var(--mono); color: var(--gold); letter-spacing: .13em; }
+.workflow-card h3 { font: 600 27px/1.14 var(--serif); letter-spacing: -.04em; margin: 14px 0 9px; }
+.workflow-card p { color: #bdcbbd; font-size: 13px; line-height: 1.6; margin: 0; }
+.workflow-stage { display: block; width: 100%; position: relative; aspect-ratio: 1.25; padding: 0; overflow: hidden; background: #0b1612; border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); cursor: zoom-in; text-align: left; }
+.workflow-stage img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.workflow-stage-label { position: absolute; left: 12px; bottom: 12px; padding: 7px 10px; background: rgba(8,22,16,.91); border: 1px solid rgba(232,186,112,.5); color: #f4ecd8; font: 10px var(--mono); letter-spacing: .03em; }
+.workflow-steps { display: flex; gap: 4px; padding: 11px; margin-top: auto; }
+.workflow-steps button { flex: 1; cursor: pointer; border: 1px solid transparent; background: transparent; color: #aebdac; padding: 10px 4px; font: 10px var(--mono); white-space: nowrap; }
+.workflow-steps button:hover { color: var(--cream); }
+.workflow-steps button.is-active { border-color: rgba(232,186,112,.55); color: var(--gold); background: rgba(232,186,112,.09); }
 .feature-section { background: #eae0c9; color: #17261e; padding: 110px 0 115px; }
 .feature-section .section-number { color: #6d735a; }
 .feature-section .section-number span { background: #8c906d; }
@@ -101,9 +117,6 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
 .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(30,43,31,.14); }
 .feature-picture { position: relative; display: block; width: 100%; height: 225px; padding: 0; border: 0; overflow: hidden; background: #14251c; cursor: zoom-in; }
 .feature-picture img { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; transition: transform .5s; }
-.walking-sprite { position: absolute; bottom: 14px; left: 63%; width: 100px; height: 140px; background: url('media/borin-walk-left.png') 0 0 / 300px 420px no-repeat; image-rendering: pixelated; pointer-events: none; transform-origin: bottom center; animation: borin-cycle .8s linear infinite, borin-travel 7s linear infinite; }
-@keyframes borin-cycle { 0%,12.49% { background-position: 0 0; } 12.5%,24.99% { background-position: -100px 0; } 25%,37.49% { background-position: -200px 0; } 37.5%,49.99% { background-position: 0 -140px; } 50%,62.49% { background-position: -100px -140px; } 62.5%,74.99% { background-position: -200px -140px; } 75%,87.49% { background-position: 0 -280px; } 87.5%,100% { background-position: -100px -280px; } }
-@keyframes borin-travel { 0% { left: 63%; transform: scale(.62); } 48% { left: 38%; transform: scale(.62); } 50% { left: 38%; transform: scale(-.62,.62); } 98% { left: 63%; transform: scale(-.62,.62); } 100% { left: 63%; transform: scale(.62); } }
 .feature-card:hover .feature-picture img { transform: scale(1.045); }
 .picture-expand { position: absolute; top: 12px; right: 12px; background: rgba(10,26,17,.82); color: var(--cream); border: 1px solid rgba(255,255,255,.35); width: 31px; height: 31px; display: grid; place-items: center; font-size: 16px; }
 .feature-body { padding: 20px 22px 26px; flex: 1; }
@@ -146,6 +159,7 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
   .hero-picture { min-height: 260px; }
   .nav-links { gap: 16px; }
   .feature-grid, .suite-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .workflow-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .suite-card { min-height: 310px; }
   .story-shot { height: 210px; }
 }
@@ -171,11 +185,14 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
   .frame-top, .frame-bottom { height: 32px; font-size: 7px; }
   .scroll-cue { bottom: 18px; }
   .intro-section, .suite-section { padding-top: 78px; padding-bottom: 85px; }
+  .workflow-section { padding-bottom: 86px; }
   .section-number { margin-bottom: 25px; }
-  .intro-grid, .suite-heading { grid-template-columns: 1fr; gap: 22px; }
+  .intro-grid, .suite-heading, .workflow-heading { grid-template-columns: 1fr; gap: 22px; }
   h2 { font-size: clamp(40px,9vw,59px); }
   .intro-text { padding: 0; }
-  .intro-text p, .suite-heading p { font-size: 15px; line-height: 1.7; }
+  .intro-text p, .suite-heading p, .workflow-heading p { font-size: 15px; line-height: 1.7; }
+  .workflow-card-heading { min-height: 165px; }
+  .workflow-grid { grid-template-columns: 1fr; }
   .story-strip { gap: 8px; margin-top: 35px; }
   .story-shot { height: 145px; }
   .story-shot span { font-size: 7px; left: 9px; bottom: 10px; }
@@ -208,6 +225,9 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
   .story-shot { height: 165px; }
   .story-shot:nth-child(n+3) { display: none; }
   .feature-grid { grid-template-columns: 1fr; }
+  .workflow-grid { grid-template-columns: 1fr; }
+  .workflow-card-heading { min-height: 0; }
+  .workflow-stage { aspect-ratio: 1.25; }
   .feature-picture { height: 205px; }
   .feature-body h3 { font-size: 24px; }
   .suite-grid { grid-template-columns: 1fr; }
