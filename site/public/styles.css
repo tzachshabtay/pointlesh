@@ -95,19 +95,14 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
 .workflow-stage { display: block; width: 100%; position: relative; aspect-ratio: 1.25; padding: 0; overflow: hidden; background: #0b1612; border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); cursor: zoom-in; text-align: left; }
 .workflow-stage img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .workflow-card.is-promote-step .workflow-stage img { object-position: right top; }
-.workflow-stage video { display: block; width: 100%; height: 100%; object-fit: contain; }
-.workflow-stage-label { position: absolute; left: 12px; bottom: 12px; padding: 7px 10px; background: rgba(8,22,16,.91); border: 1px solid rgba(232,186,112,.5); color: #f4ecd8; font: 10px var(--mono); letter-spacing: .03em; }
-.workflow-promote-callout { display: none; position: absolute; left: 22px; top: 22px; padding: 15px 20px; border: 2px solid var(--gold); background: #202c25; color: var(--cream); box-shadow: 0 12px 36px #000b, 0 0 0 999px #050e0a33; font: 600 17px var(--sans); }
-.workflow-promote-callout span { color: var(--gold); margin-left: 18px; }
-.workflow-card.is-promote-step .workflow-promote-callout { display: block; }
-.workflow-card.is-promote-step .workflow-stage-label { z-index: 1; }
+.workflow-stage video { display: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #101a16; pointer-events: none; }
+.workflow-card.video-ready .workflow-stage video { display: block; }
+.workflow-stage-label { position: absolute; z-index: 1; left: 12px; bottom: 12px; padding: 7px 10px; background: rgba(8,22,16,.91); border: 1px solid rgba(232,186,112,.5); color: #f4ecd8; font: 10px var(--mono); letter-spacing: .03em; }
 .workflow-steps { display: flex; gap: 4px; padding: 11px; margin-top: auto; }
 .workflow-steps button { flex: 1; text-align: center; border: 1px solid transparent; background: transparent; color: #aebdac; padding: 10px 4px; font: 10px var(--mono); white-space: nowrap; }
 .workflow-steps button { cursor: pointer; }
 .workflow-steps button:hover { color: var(--cream); }
 .workflow-steps .is-active { border-color: rgba(232,186,112,.55); color: var(--gold); background: rgba(232,186,112,.09); }
-.workflow-recording { position: absolute; right: 12px; bottom: 69px; padding: 8px 10px; border: 1px solid rgba(232,186,112,.5); background: rgba(8,22,16,.91); color: var(--gold); font: 10px var(--mono); letter-spacing: .03em; cursor: pointer; }
-.workflow-recording:hover { color: var(--cream); text-decoration: underline; }
 .feature-section { background: #eae0c9; color: #17261e; padding: 110px 0 115px; }
 .feature-section .section-number { color: #6d735a; }
 .feature-section .section-number span { background: #8c906d; }
@@ -240,8 +235,6 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
   .workflow-grid { grid-template-columns: 1fr; }
   .workflow-card-heading { min-height: 0; }
   .workflow-stage { aspect-ratio: 1.25; }
-  .workflow-promote-callout { left: 12px; top: 12px; padding: 10px 12px; font-size: 14px; }
-  .workflow-recording { position: static; align-self: flex-start; margin: 0 11px 11px; }
   .feature-picture { height: 205px; }
   .feature-body h3 { font-size: 24px; }
   .suite-grid { grid-template-columns: 1fr; }
@@ -252,4 +245,5 @@ h2 { font-size: clamp(45px,4.4vw,70px); margin-bottom: 0; }
 @media(prefers-reduced-motion:reduce) {
   html { scroll-behavior: auto; }
   *, *:before, *:after { animation-duration: .01ms!important; transition-duration: .01ms!important; }
+  .workflow-card.video-ready .workflow-stage video { display: none; }
 }

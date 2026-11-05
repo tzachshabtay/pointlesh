@@ -130,11 +130,24 @@ const workflows = {
 
 const workflowCards = [...document.querySelectorAll('.workflow-card')];
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const visibleWorkflowCards = new WeakSet();
+
+function playVisibleWorkflow(card) {
+  if (visibleWorkflowCards.has(card) && !document.hidden && !mediaDialog.open && !prefersReducedMotion.matches) {
+    card.querySelector('.workflow-stage video').play().catch(() => {});
+  }
+}
+
 function setWorkflowStep(card, step) {
   const frame = workflows[card.dataset.workflow][step];
   const image = card.querySelector('.workflow-stage img');
+  const video = card.querySelector('.workflow-stage video');
+  video.pause();
+  card.classList.remove('video-ready');
   image.src = `media/${frame.image}.jpg`;
   image.alt = frame.alt;
+  video.src = `media/workflow-${card.dataset.workflow}-${step}.webm`;
+  video.load();
   card.classList.toggle('is-promote-step', Boolean(frame.promote));
   card.querySelector('.workflow-stage-label').textContent = frame.label;
   card.querySelectorAll('.workflow-steps button').forEach((stepLabel, index) => {
@@ -144,40 +157,34 @@ function setWorkflowStep(card, step) {
   card.dataset.step = String(step);
 }
 workflowCards.forEach(card => {
-  if (!card.querySelector('.workflow-promote-callout')) {
-    const callout = document.createElement('span');
-    callout.className = 'workflow-promote-callout';
-    callout.setAttribute('aria-hidden', 'true');
-    callout.innerHTML = 'Promote <span>↗</span>';
-    card.querySelector('.workflow-stage').append(callout);
-  }
+  const video = document.createElement('video');
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = 'metadata';
+  video.setAttribute('aria-hidden', 'true');
+  video.addEventListener('loadeddata', () => { card.classList.add('video-ready'); playVisibleWorkflow(card); });
+  video.addEventListener('ended', () => setWorkflowStep(card, (Number(card.dataset.step) + 1) % workflows[card.dataset.workflow].length));
+  card.querySelector('.workflow-stage').append(video);
   card.querySelectorAll('.workflow-steps button').forEach((button, step) =>
     button.addEventListener('click', () => setWorkflowStep(card, step)));
   card.querySelector('.workflow-stage').addEventListener('click', () => {
     const frame = workflows[card.dataset.workflow][Number(card.dataset.step)];
-    mediaDialog.classList.remove('is-video');
-    dialogVideo.pause();
-    dialogImage.src = `media/${frame.image}.jpg`;
-    dialogImage.alt = frame.alt;
-    dialogCaption.textContent = `${card.querySelector('h3').textContent} · ${frame.label}`;
-    mediaDialog.showModal();
-  });
-  card.querySelector('.workflow-recording')?.addEventListener('click', event => {
+    workflowCards.forEach(workflow => workflow.querySelector('.workflow-stage video').pause());
     mediaDialog.classList.add('is-video');
-    dialogVideo.src = event.currentTarget.dataset.video;
-    dialogVideo.currentTime = 0;
-    dialogCaption.textContent = 'Shape the playable ground · Real edit-to-play recording';
+    dialogVideo.src = video.currentSrc || video.src;
+    dialogVideo.muted = true;
+    dialogCaption.textContent = `${card.querySelector('h3').textContent} · ${frame.label}`;
     mediaDialog.showModal();
     dialogVideo.play().catch(() => {});
   });
   setWorkflowStep(card, 0);
 });
-if (!prefersReducedMotion.matches) {
-  window.setInterval(() => {
-    workflowCards.forEach(card => {
-      if (!card.matches(':hover, :focus-within') && !document.hidden) {
-        setWorkflowStep(card, (Number(card.dataset.step) + 1) % workflows[card.dataset.workflow].length);
-      }
-    });
-  }, 3600);
-}
+const workflowObserver = new IntersectionObserver(entries => {
+  entries.forEach(({ target, isIntersecting }) => {
+    if (isIntersecting) { visibleWorkflowCards.add(target); playVisibleWorkflow(target); }
+    else { visibleWorkflowCards.delete(target); target.querySelector('.workflow-stage video').pause(); }
+  });
+}, { threshold: 0.15 });
+workflowCards.forEach(card => workflowObserver.observe(card));
+document.addEventListener('visibilitychange', () => workflowCards.forEach(card => document.hidden ? card.querySelector('.workflow-stage video').pause() : playVisibleWorkflow(card)));
+mediaDialog.addEventListener('close', () => workflowCards.forEach(playVisibleWorkflow));

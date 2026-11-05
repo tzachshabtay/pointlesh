@@ -14,7 +14,8 @@ test('Pages publishes the showcase at the root and the game at /demo/', async ()
   assert.match(site, /id="feature-grid"/);
   assert.match(site, /id="workflows"/);
   assert.match(site, /A smaller engine/);
-  assert.match(site, /walkable-workflow\.webm/);
+  assert.match(site, /Pointlesh is a toolkit for developing point-and-click games/);
+  assert.doesNotMatch(site, /Watch the real edit-to-play recording/);
   const workflows = [...site.matchAll(/<article class="workflow-card"[\s\S]*?<\/article>/g)];
   assert.equal(workflows.length, 4);
   for (const [workflow] of workflows) {
@@ -30,5 +31,9 @@ test('Pages publishes the showcase at the root and the game at /demo/', async ()
   for (const image of ['workflow-walkable-edit', 'workflow-walkable-changed', 'workflow-walkable-test', 'workflow-animation-generate', 'workflow-animation-choose', 'workflow-animation-play', 'workflow-interaction-coin-editor', 'workflow-dialogue-voice', 'dialog-designer']) {
     assert.ok((await stat(resolve(output, `media/${image}.jpg`))).isFile());
   }
-  assert.ok((await stat(resolve(output, 'media/walkable-workflow.webm'))).isFile());
+  for (const workflow of ['ground', 'animation', 'interaction', 'dialogue']) {
+    for (let step = 0; step < 4; step++) {
+      assert.ok((await stat(resolve(output, `media/workflow-${workflow}-${step}.webm`))).isFile());
+    }
+  }
 });
