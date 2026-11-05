@@ -15,10 +15,19 @@ test('Pages publishes the showcase at the root and the game at /demo/', async ()
   assert.match(site, /id="workflows"/);
   assert.match(site, /A smaller engine/);
   assert.match(site, /walkable-workflow\.webm/);
+  const workflows = [...site.matchAll(/<article class="workflow-card"[\s\S]*?<\/article>/g)];
+  assert.equal(workflows.length, 4);
+  for (const [workflow] of workflows) {
+    const steps = [...workflow.matchAll(/<button type="button"(?: class="is-active")? data-step="(\d)">([^<]+)<\/button>/g)];
+    assert.deepEqual(steps.map(([, index]) => index), ['0', '1', '2', '3']);
+    assert.match(steps[2][2], /Play/);
+    assert.match(steps[3][2], /Promote/);
+  }
+  assert.match(site, /Every change is a live draft/);
   assert.doesNotMatch(site, /demo\/\?designer=1/);
   assert.match(game, /\.\/assets\//);
   assert.ok((await stat(resolve(output, 'demo/assets'))).isDirectory());
-  for (const image of ['workflow-walkable-edit', 'workflow-walkable-changed', 'workflow-walkable-test', 'workflow-animation-generate', 'interaction-editor', 'dialog-designer']) {
+  for (const image of ['workflow-walkable-edit', 'workflow-walkable-changed', 'workflow-walkable-test', 'workflow-animation-generate', 'workflow-animation-choose', 'workflow-animation-play', 'workflow-interaction-coin-editor', 'workflow-dialogue-voice', 'dialog-designer']) {
     assert.ok((await stat(resolve(output, `media/${image}.jpg`))).isFile());
   }
   assert.ok((await stat(resolve(output, 'media/walkable-workflow.webm'))).isFile());

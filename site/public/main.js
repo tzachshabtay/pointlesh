@@ -17,7 +17,7 @@ const features = [
   { category: 'pointlesh', title: 'Saves you can trust', text: 'Versioned, validated saves restore inventory, characters, conversation and cutscene checkpoints. The demo adds screenshot previews to its slots.', image: 'save', alt: 'The demo’s load menu shows a saved game with a screenshot.', tag: 'Persistence' },
   { category: 'pointlesh', title: 'Sound in the moment', text: 'Music, voices and sound effects have separate controls. Animation-frame tags let game code cue sounds at the exact action.', image: 'chest', alt: 'The runed chest opens as part of an animated, sound-timed scene.', tag: 'Audio' },
   { category: 'pointlesh', title: 'Light, depth and atmosphere', text: 'Characters respond to scene lighting, foreground shapes occlude them, and the forest gains life from subtle environmental motion.', image: 'camp', alt: 'Borin peeks into the firelit orc encampment.', tag: 'Presentation' },
-  { category: 'ai-assets', title: 'Generate, compare, choose', text: 'Create new candidates beside the live game, compare versions, select one and test the result before promoting it.', image: 'workflow-animation-generate', alt: 'The AI Asset Designer open over the running game with Borin’s animation and regeneration controls.', tag: 'Asset workflow', featured: true },
+  { category: 'ai-assets', title: 'Generate, compare, choose', text: 'Create new candidates beside the live game, compare versions, choose one and play with it before promoting it.', image: 'workflow-animation-generate', alt: 'The AI Asset Designer open over the running game with Borin’s animation and regeneration controls.', tag: 'Asset workflow', featured: true },
   { category: 'ai-assets', title: 'Animation frame editing', text: 'Inspect a sheet as individual frames, tune timing and offsets, add action tags, and touch up art without leaving the designer.', image: 'assets', alt: 'Individual Borin walk frames and timing controls in the asset editor.', tag: 'Animation', featured: true },
   { category: 'ai-assets', title: 'Scaled variants', text: 'Keep source art and alternate sizes in one asset. Pointlesh chooses the closest variant before display scaling.', image: 'assets', alt: 'Scaled variants are available beside the selected animation in AI Assets.', tag: 'Image sizes' },
   { category: 'ai-assets', title: 'Voices and line takes', text: 'Create or record lines, keep alternate takes and select a favorite. The same asset catalog connects text, audio and portrait lip sync.', image: 'voice-recording', alt: 'The AI Assets record-all-lines workflow shows multiple takes over the running game.', tag: 'Voice' },
@@ -105,22 +105,26 @@ const workflows = {
   ground: [
     { image: 'workflow-walkable-edit', label: 'Select the walkable area', alt: 'Walkable polygon selected in the Scene Designer over the running village' },
     { image: 'workflow-walkable-changed', label: 'Change the boundary', alt: 'The selected polygon boundary changed directly on the scene canvas' },
-    { image: 'workflow-walkable-test', label: 'Test the route in-game', alt: 'The village running immediately after the walkable area edit' },
+    { image: 'workflow-walkable-test', label: 'Play the changed route', alt: 'Borin walking in the village after the walkable area edit' },
+    { image: 'workflow-walkable-changed', label: 'Promote the new walkable area', alt: 'The Scene Designer showing the changed walkable area and Promote all button', promote: true },
   ],
   animation: [
     { image: 'workflow-animation-generate', label: 'Generate from the asset editor', alt: 'Borin’s walk animation prompt and regeneration controls in the AI Asset Designer beside the running game' },
-    { image: 'assets', label: 'Inspect and adjust its frames', alt: 'Borin’s sprite frames open in the animation editor' },
-    { image: 'workflow-walkable-test', label: 'Try it on the live character', alt: 'Borin visible in the running game after working on his animation' },
+    { image: 'workflow-animation-choose', label: 'Choose and adjust the left-walk frames', alt: 'Borin’s left-walk sprite frames open in the animation editor' },
+    { image: 'workflow-animation-play', label: 'Play Borin’s left walk in the village', alt: 'Borin walking left in the village with the same left-walk asset selected in AI Assets' },
+    { image: 'workflow-animation-generate', label: 'Promote the chosen animation', alt: 'AI Assets showing Borin’s walk animation and its Promote control', promote: true },
   ],
   interaction: [
     { image: 'workflow-interaction-matrix', label: 'Find an action and target', alt: 'The interactions matrix showing verbs, items and targets beside the live game' },
-    { image: 'interaction-editor', label: 'Write the response', alt: 'The interaction editor showing a simple speech response over the game' },
-    { image: 'workflow-interaction-test', label: 'Hear it in the scene', alt: 'Borin speaking the inventory interaction response in the running adventure' },
+    { image: 'workflow-interaction-coin-editor', label: 'Set the Copper coin default response', alt: 'The interaction editor setting the default Copper coin response: No. This is not what the coin is for.' },
+    { image: 'workflow-interaction-test', label: 'Play: use the coin on the door', alt: 'Borin saying No. This is not what the coin is for. after using the Copper coin on the cottage door' },
+    { image: 'workflow-interaction-matrix', label: 'Promote the coin response', alt: 'The interaction matrix showing the Copper coin default and its Promote button', promote: true },
   ],
   dialogue: [
     { image: 'dialog-designer', label: 'Edit the choice tree', alt: 'The Dialog Designer showing the elder’s branching choices and option settings' },
-    { image: 'dialog-voice-edit', label: 'Connect the spoken line', alt: 'The Dialog Designer connecting a line to a voice asset and director notes' },
+    { image: 'workflow-dialogue-voice', label: 'Mark “Why did they take the king?” as spoken', alt: 'The Why did they take the king? option with Spoken by the character enabled in Dialog Designer' },
     { image: 'dialog-choice', label: 'Play it in the room', alt: 'The elder conversation choices in the running village' },
+    { image: 'dialog-designer', label: 'Promote the conversation', alt: 'The Dialog Designer showing the elder conversation and its Promote button', promote: true },
   ],
 };
 
@@ -129,51 +133,49 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 function setWorkflowStep(card, step) {
   const frame = workflows[card.dataset.workflow][step];
   const image = card.querySelector('.workflow-stage img');
-  if (image) {
-    image.src = `media/${frame.image}.jpg`;
-    image.alt = frame.alt;
-  }
+  image.src = `media/${frame.image}.jpg`;
+  image.alt = frame.alt;
+  card.classList.toggle('is-promote-step', Boolean(frame.promote));
   card.querySelector('.workflow-stage-label').textContent = frame.label;
-  card.querySelectorAll('.workflow-steps button, .workflow-steps span').forEach((stepLabel, index) => {
+  card.querySelectorAll('.workflow-steps button').forEach((stepLabel, index) => {
     stepLabel.classList.toggle('is-active', index === step);
-    if (stepLabel instanceof HTMLButtonElement) stepLabel.setAttribute('aria-pressed', String(index === step));
+    stepLabel.setAttribute('aria-pressed', String(index === step));
   });
   card.dataset.step = String(step);
 }
 workflowCards.forEach(card => {
+  if (!card.querySelector('.workflow-promote-callout')) {
+    const callout = document.createElement('span');
+    callout.className = 'workflow-promote-callout';
+    callout.setAttribute('aria-hidden', 'true');
+    callout.innerHTML = 'Promote <span>↗</span>';
+    card.querySelector('.workflow-stage').append(callout);
+  }
   card.querySelectorAll('.workflow-steps button').forEach((button, step) =>
     button.addEventListener('click', () => setWorkflowStep(card, step)));
   card.querySelector('.workflow-stage').addEventListener('click', () => {
     const frame = workflows[card.dataset.workflow][Number(card.dataset.step)];
-    const video = card.querySelector('.workflow-stage video');
-    if (video) {
-      mediaDialog.classList.add('is-video');
-      dialogVideo.src = video.querySelector('source').src;
-      dialogVideo.currentTime = video.currentTime;
-    } else {
-      mediaDialog.classList.remove('is-video');
-      dialogVideo.pause();
-      dialogImage.src = `media/${frame.image}.jpg`;
-      dialogImage.alt = frame.alt;
-    }
+    mediaDialog.classList.remove('is-video');
+    dialogVideo.pause();
+    dialogImage.src = `media/${frame.image}.jpg`;
+    dialogImage.alt = frame.alt;
     dialogCaption.textContent = `${card.querySelector('h3').textContent} · ${frame.label}`;
     mediaDialog.showModal();
-    if (video) dialogVideo.play().catch(() => {});
   });
-  const video = card.querySelector('.workflow-stage video');
-  if (video) {
-    video.addEventListener('timeupdate', () => {
-      const step = video.currentTime < 4 ? 0 : video.currentTime < 11 ? 1 : 2;
-      if (step !== Number(card.dataset.step)) setWorkflowStep(card, step);
-    });
-    if (!prefersReducedMotion.matches) video.play().catch(() => {});
-  }
+  card.querySelector('.workflow-recording')?.addEventListener('click', event => {
+    mediaDialog.classList.add('is-video');
+    dialogVideo.src = event.currentTarget.dataset.video;
+    dialogVideo.currentTime = 0;
+    dialogCaption.textContent = 'Shape the playable ground · Real edit-to-play recording';
+    mediaDialog.showModal();
+    dialogVideo.play().catch(() => {});
+  });
   setWorkflowStep(card, 0);
 });
 if (!prefersReducedMotion.matches) {
   window.setInterval(() => {
     workflowCards.forEach(card => {
-      if (!card.querySelector('video') && !card.matches(':hover, :focus-within') && !document.hidden) {
+      if (!card.matches(':hover, :focus-within') && !document.hidden) {
         setWorkflowStep(card, (Number(card.dataset.step) + 1) % workflows[card.dataset.workflow].length);
       }
     });
