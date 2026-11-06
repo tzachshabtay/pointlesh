@@ -969,6 +969,7 @@ class ForestAdventure extends Phaser.Scene {
       client: new InteractionDesignerDebugClient(), storageKey: 'pointlesh.forest.interactions.draft.v1',
       onChange: (manifest, nextAssets) => {
         interactions = manifest; Object.assign(assets, nextAssets); Object.assign(assetDesignerManifest, nextAssets); callbacks.onManifestUpdated(assets);
+        void this.audioAssets.syncManifest(assets).catch(error => toast(String(error)));
         this.sceneDesigner?.inspector.setAiAssets(assets);
       },
     });

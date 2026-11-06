@@ -69,6 +69,28 @@ test('a previously unrecorded voice line becomes playable after batch promotion'
   f.audio.destroy();
 });
 
+test('edited speech keeps historical takes without playing stale audio, and a new audition remains playable', async () => {
+  const f = fixture(), id = 'line.edited';
+  const recorded = { id, kind: 'voice-line', activeVersion: 'take', voiceSettings: { text: 'Old line.' },
+    versions: { take: { file: 'old.mp3', recordedText: 'Old line.', voiceSettings: { text: 'Old line.' } } } };
+  const first = f.audio.syncManifest({ assets: { [id]: recorded } });
+  f.complete(f.queued[0]); await first;
+  assert.equal(f.audio.isCurrentVoiceRecording(id), true);
+  const edited = structuredClone(recorded); edited.voiceSettings.text = 'New line.'; edited.versions.take.voiceSettings.text = 'New line.';
+  await f.audio.syncManifest({ assets: { [id]: edited } });
+  assert.equal(f.audio.voiceText(id, 'fallback'), 'New line.');
+  assert.equal(f.audio.isCurrentVoiceRecording(id), false);
+  assert.equal(f.queued.length, 1, 'changing script text does not reload the historical take');
+  const audition = structuredClone(edited);
+  audition.activeVersion = 'fresh';
+  audition.versions.fresh = { file: 'fresh.mp3', recordedText: 'New line.', voiceSettings: { text: 'New line.' } };
+  const preview = f.audio.select(id, 'data:audio/mpeg;base64,fresh', audition);
+  f.complete(f.queued[1]); await preview;
+  assert.equal(f.audio.isCurrentVoiceRecording(id), true);
+  assert.equal(f.audio.voiceText(id, 'fallback'), 'New line.');
+  f.audio.destroy();
+});
+
 
 test('deleting the final promoted recording clears cached playback without clearing unpromoted auditions', async () => {
   const f = fixture();

@@ -126,7 +126,7 @@ export function syncInteractionTextFromVoiceLines(manifest: InteractionManifest,
   return result;
 }
 
-/** Retains generated versions; changed speech clears the active recording so stale audio cannot play. */
+/** Retains recorded takes while marking the active take stale when its script changes. */
 export function syncInteractionVoiceLines(manifest: InteractionManifest, source: AiAssetManifest, targets: InteractionTarget[] = []): AiAssetManifest {
   assertInteractionManifest(manifest);
   const assets = structuredClone(source), voice = assets.assets[manifest.heroVoiceAssetId];
@@ -136,12 +136,14 @@ export function syncInteractionVoiceLines(manifest: InteractionManifest, source:
     for (const [index, text] of interactionSentences(cell).entries()) {
       const id = interactionVoiceLineId(row, column, index), existing = assets.assets[id];
       if (existing && existing.kind !== 'voice-line') throw new Error(`Interaction voice id is already used: ${id}`);
-      const settings = { ...existing?.voiceSettings, ...existing?.versions[existing.activeVersion]?.voiceSettings };
-      const changed = settings.text !== text || settings.voiceAssetId !== manifest.heroVoiceAssetId;
       const asset = existing ?? { id, kind: 'voice-line' as const, prompt: text, activeVersion: '', versions: {} };
+      const active = asset.versions[asset.activeVersion];
+      if (active && (active.voiceSettings?.text !== text || active.voiceSettings?.voiceAssetId !== manifest.heroVoiceAssetId)) {
+        active.recordedText ??= active.lipSyncTrack?.text ?? active.voiceSettings?.text ?? asset.voiceSettings?.text ?? asset.prompt;
+        active.voiceSettings = { ...active.voiceSettings, voiceAssetId: manifest.heroVoiceAssetId, text };
+      }
       asset.prompt = text;
       asset.voiceSettings = { ...asset.voiceSettings, voiceAssetId: manifest.heroVoiceAssetId, text };
-      if (changed) asset.activeVersion = '';
       assets.assets[id] = asset;
       for (const other of Object.values(assets.assets)) if (other.kind === 'voice' && other.id !== voice.id) {
         for (const [key, link] of Object.entries(other.linkedAnimationAssets ?? {})) if (link.assetId === id) delete other.linkedAnimationAssets![key];

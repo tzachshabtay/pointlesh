@@ -23,7 +23,7 @@ test('speech and code dispatch, while red X metadata without a default has no ru
   assert.throws(() => assertInteractionManifest({ ...manifest, cells: { chest: { 'verb:look': { kind: 'simple', text: ' ' } } } }), /speech text/);
 });
 
-test('speech sync links native voice lines, retains generated history, and disables stale recordings', () => {
+test('speech sync links native voice lines and retains valid recording history when text changes', () => {
   const manifest = make(), source = assets(), id = interactionVoiceLineId('chest', 'verb:look');
   const first = syncInteractionVoiceLines(manifest, source); assertManifest(first);
   assert.equal(source.assets[id], undefined);
@@ -35,9 +35,12 @@ test('speech sync links native voice lines, retains generated history, and disab
   assert.equal(syncInteractionVoiceLines(manifest, first).assets[id].activeVersion, 'recorded');
   manifest.cells.chest['verb:look'].text = 'It is open!';
   const next = syncInteractionVoiceLines(manifest, first);
-  assert.equal(next.assets[id].activeVersion, '');
+  assert.equal(next.assets[id].activeVersion, 'recorded');
   assert.equal(next.assets[id].versions.recorded.file, 'speech.mp3');
   assert.equal(next.assets[id].voiceSettings.text, 'It is open!');
+  assert.equal(next.assets[id].versions.recorded.voiceSettings.text, 'It is open!');
+  assert.equal(next.assets[id].versions.recorded.recordedText, 'A stubborn chest.');
+  assert.doesNotThrow(() => assertManifest(next));
   assert.equal(Object.keys(next.assets.hero.linkedAnimationAssets).length, 1);
   assert.equal(first.assets[id].activeVersion, 'recorded');
 });
@@ -172,5 +175,8 @@ test('promoted voice text hydrates interactions on reload and still allows subse
   const changed = syncInteractionVoiceLines(restored, source);
   assert.equal(changed.assets[id].voiceSettings.text, 'Edited from the matrix');
   assert.equal(changed.assets[id].voiceSettings.direction, 'Impressed');
-  assert.equal(changed.assets[id].activeVersion, '');
+  assert.equal(changed.assets[id].activeVersion, 'take');
+  assert.equal(changed.assets[id].versions.take.voiceSettings.text, 'Edited from the matrix');
+  assert.equal(changed.assets[id].versions.take.recordedText, 'A recently polished chest.');
+  assert.doesNotThrow(() => assertManifest(changed));
 });

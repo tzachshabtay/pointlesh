@@ -59,6 +59,7 @@ export class ForestSoundscape {
   }
   /** Both dialog lines and simple interaction speech use the Voices channel. */
   playVoice(id: string): Sound | undefined {
+    if (this.audioAssets && !this.audioAssets.isCurrentVoiceRecording(id)) return;
     const key = this.audioKey(id);
     if (!this.scene.cache.audio.exists(key)) return;
     const gain = this.assetVolume(id);

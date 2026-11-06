@@ -34,6 +34,17 @@ export class PhaserAdventureAudioAssets {
     const asset = id ? this.asset(id) : undefined;
     return asset?.versions[asset.activeVersion]?.voiceSettings?.text ?? asset?.voiceSettings?.text ?? fallback;
   }
+  /** Keep historical takes available while refusing to play one recorded for older wording. */
+  isCurrentVoiceRecording(id: string): boolean {
+    const asset = this.asset(id);
+    if (asset?.kind !== 'voice-line') return true;
+    const version = asset.versions[asset.activeVersion];
+    if (!version?.file) return false;
+    const script = version.voiceSettings?.text ?? asset.voiceSettings?.text;
+    const recorded = version.recordedText ?? version.lipSyncTrack?.text ?? version.voiceSettings?.text;
+    const normalize = (value: string) => value.replace(/\s+/g, ' ').trim();
+    return !script || !recorded || normalize(script) === normalize(recorded);
+  }
   private source(asset: AiAssetDefinition): string | undefined {
     const file = this.isAudio(asset) ? asset.versions[asset.activeVersion]?.file : undefined;
     if (!file) return;
