@@ -1,5 +1,5 @@
 import { registerInGameDesignerPanel, type AiAssetManifest } from '@ai-game-assets/core';
-import { assertInteractionManifest, DEFAULT_INTERACTION_TARGET, interactionSentences, interactionTargets, itemInteractionColumn, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget, type InteractionSpeechMode } from '@pointlesh/core';
+import { assertInteractionManifest, DEFAULT_INTERACTION_TARGET, interactionSentences, interactionTargets, interactionVoiceLineId, itemInteractionColumn, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget, type InteractionSpeechMode } from '@pointlesh/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
 
 export class InteractionDesignerDebugClient {
@@ -14,6 +14,8 @@ export type InteractionDesignerOptions = {
   manifest: InteractionManifest;
   getScenes(): SceneDesignerManifest;
   getAiAssets(): AiAssetManifest;
+  /** Optional display names for voice assets in the per-sentence speaker menu. */
+  speakerLabels?: Record<string, string>;
   onChange(manifest: InteractionManifest, assets: AiAssetManifest): void;
   client?: Pick<InteractionDesignerDebugClient, 'promote'>;
   storageKey?: string;
@@ -48,7 +50,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   });
   tools.append(search, kinds, makeButton('Marathon', marathonSetup), undo, redo, exportButton, promote); root.append(tools);
   const legend = document.createElement('p'); legend.className = 'pointlesh-interactions-legend';
-  legend.innerHTML = '<span>Empty · use Defaults</span><span>★ Game code</span><span class="simple">✓ Hero speech</span><span class="impossible">✕ Should not happen · use Defaults</span>';
+  legend.innerHTML = '<span>Empty · use Defaults</span><span>★ Game code</span><span class="simple">✓ Simple speech</span><span class="impossible">✕ Should not happen · use Defaults</span>';
   root.append(legend);
   const scroll = document.createElement('div'); scroll.className = 'pointlesh-interactions-scroll'; root.append(scroll);
   const count = document.createElement('p'); count.className = 'pointlesh-interactions-count'; root.append(count);
@@ -142,7 +144,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       const entries = selected(); if (entries.length) edit(entries[0]!.row, entries[0]!.column, { entries, index: 0 });
     });
     const refresh = () => { const length = selected().length; total.textContent = `${length} interactions selected`; start.disabled = !length; };
-    for (const [value, name] of [['empty', 'Empty'], ['impossible', '✕ Should not happen'], ['simple', '✓ Hero speech'], ['code', '★ Game code']] as const) {
+    for (const [value, name] of [['empty', 'Empty'], ['impossible', '✕ Should not happen'], ['simple', '✓ Simple speech'], ['code', '★ Game code']] as const) {
       const label = document.createElement('label'), check = document.createElement('input');
       check.type = 'checkbox'; check.checked = value === 'empty'; check.setAttribute('aria-label', name); label.className = value;
       check.onchange = refresh; checks.set(value, check);
@@ -174,20 +176,35 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     for (const value of ['random', 'rotation', 'sequence']) mode.add(new Option(value[0]!.toUpperCase() + value.slice(1), value));
     mode.value = cell?.kind === 'simple' ? cell.mode ?? 'sequence' : 'sequence'; modeLabel.append(mode);
     const sentenceList = document.createElement('div'); sentenceList.className = 'pointlesh-interaction-sentences';
-    const inputs: HTMLTextAreaElement[] = [];
-    const addSentence = (value = '') => {
+    const inputs: { text: HTMLTextAreaElement; voice: HTMLSelectElement; direction: HTMLTextAreaElement }[] = [];
+    const voiceAssets = options.getAiAssets().assets;
+    const speakerOptions = Object.values(voiceAssets).filter(asset => asset.kind === 'voice').sort((a, b) =>
+      (options.speakerLabels?.[a.id] ?? a.id).localeCompare(options.speakerLabels?.[b.id] ?? b.id));
+    const addSentence = (value = '', voiceId = manifest.heroVoiceAssetId, notes = '') => {
       const entry = document.createElement('div'), label = document.createElement('label'), text = document.createElement('textarea');
       const caption = document.createElement('span'); label.append(caption, text); text.rows = 2; text.value = value;
-      inputs.push(text); text.oninput = () => refresh();
-      const remove = makeButton('Remove', () => { inputs.splice(inputs.indexOf(text), 1); entry.remove(); refresh(); });
-      entry.append(label, remove); sentenceList.append(entry); return text;
+      const speakerLabel = document.createElement('label'); speakerLabel.textContent = 'Speaker';
+      const voice = document.createElement('select');
+      for (const asset of speakerOptions) voice.add(new Option(options.speakerLabels?.[asset.id] ?? asset.id.replace(/^voice\./, '').replaceAll('.', ' '), asset.id));
+      if (!speakerOptions.some(asset => asset.id === voiceId)) voice.add(new Option(voiceId, voiceId));
+      voice.value = voiceId; speakerLabel.append(voice);
+      const directionLabel = document.createElement('label'); directionLabel.textContent = 'Direction notes';
+      const direction = document.createElement('textarea'); direction.rows = 2; direction.placeholder = 'Optional delivery notes for this sentence'; direction.value = notes;
+      directionLabel.append(direction);
+      const input = { text, voice, direction }; inputs.push(input); text.oninput = () => refresh();
+      const remove = makeButton('Remove', () => { inputs.splice(inputs.indexOf(input), 1); entry.remove(); refresh(); });
+      entry.append(label, speakerLabel, directionLabel, remove); sentenceList.append(entry); return text;
     };
-    for (const value of cell?.kind === 'simple' ? interactionSentences(cell) : ['']) addSentence(value);
+    for (const [index, value] of (cell?.kind === 'simple' ? interactionSentences(cell) : ['']).entries()) {
+      const settings = cell?.kind === 'simple' ? cell.sentenceSettings?.[index] : undefined;
+      const assetSettings = options.getAiAssets().assets[interactionVoiceLineId(row.id, column.id, index)]?.voiceSettings;
+      addSentence(value, settings?.voiceAssetId ?? assetSettings?.voiceAssetId ?? manifest.heroVoiceAssetId, settings?.direction ?? assetSettings?.direction ?? '');
+    }
     speech.append(modeLabel, sentenceList, makeButton('+ Add sentence', () => { const input = addSentence(); refresh(); input.focus(); }));
     const help = document.createElement('p'); const actions = document.createElement('div'); actions.className = 'pointlesh-interaction-actions';
-    const values = () => JSON.stringify([select.value, mode.value, inputs.map(input => input.value)]);
+    const values = () => JSON.stringify([select.value, mode.value, inputs.map(input => [input.text.value, input.voice.value, input.direction.value])]);
     const initialValues = values();
-    const emptySpeech = () => select.value === 'simple' && inputs.every(input => !input.value.trim());
+    const emptySpeech = () => select.value === 'simple' && inputs.every(input => !input.text.value.trim());
     const commit = () => {
       // Browsing untouched cells must not replace empty cells or rewrite existing speech.
       if (marathon && values() === initialValues) return true;
@@ -196,9 +213,10 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
         delete next.cells[row.id]?.[column.id];
         if (next.cells[row.id] && !Object.keys(next.cells[row.id]!).length) delete next.cells[row.id];
       } else {
-        const sentences = inputs.map(input => input.value.trim());
+        const sentences = inputs.map(input => input.text.value.trim());
+        const sentenceSettings = inputs.map(input => ({ ...(input.voice.value !== manifest.heroVoiceAssetId ? { voiceAssetId: input.voice.value } : {}), direction: input.direction.value.trim() }));
         (next.cells[row.id] ??= {})[column.id] = select.value === 'simple'
-          ? { kind: 'simple', ...(sentences.length === 1 ? { text: sentences[0]! } : { sentences }), mode: mode.value as InteractionSpeechMode }
+          ? { kind: 'simple', ...(sentences.length === 1 ? { text: sentences[0]! } : { sentences }), mode: mode.value as InteractionSpeechMode, sentenceSettings }
           : { kind: select.value as 'code' | 'impossible' };
       }
       try { if (JSON.stringify(next) !== JSON.stringify(manifest)) change(next); return true; }
@@ -218,17 +236,19 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     const apply = makeButton(marathon ? marathon.index === marathon.entries.length - 1 ? 'Done' : 'Next' : 'Apply', () => move(marathon ? marathon.index + 1 : 0));
     const refresh = () => {
       speech.hidden = select.value !== 'simple';
-      const invalid = select.value === 'simple' && (!inputs.length || inputs.some(input => !input.value.trim()));
+      const invalid = select.value === 'simple' && (!inputs.length || inputs.some(input => !input.text.value.trim()));
       apply.disabled = marathon ? invalid && !emptySpeech() : !select.value || invalid;
       if (previous) previous.disabled = marathon!.index === 0 || apply.disabled;
       inputs.forEach((input, index) => {
-        input.setAttribute('aria-label', index === 0 ? 'Hero speech' : `Hero speech ${index + 1}`);
-        input.previousElementSibling!.textContent = `Sentence ${index + 1}`;
-        const remove = input.parentElement!.nextElementSibling as HTMLButtonElement;
+        input.text.setAttribute('aria-label', `Sentence ${index + 1}`);
+        input.voice.setAttribute('aria-label', `Sentence ${index + 1} speaker`);
+        input.direction.setAttribute('aria-label', `Sentence ${index + 1} direction notes`);
+        input.text.previousElementSibling!.textContent = `Sentence ${index + 1}`;
+        const remove = input.text.parentElement!.parentElement!.lastElementChild as HTMLButtonElement;
         remove.disabled = inputs.length === 1; remove.setAttribute('aria-label', `Remove sentence ${index + 1}`);
       });
       const modeHelp = mode.value === 'random' ? 'Chooses one sentence at random each time.' : mode.value === 'rotation' ? 'Says the next sentence each time, wrapping back to the first.' : 'Says every sentence in order, one after another.';
-      help.textContent = select.value === 'simple' ? `${modeHelp} Each sentence is linked to ${manifest.heroVoiceAssetId} in Assets → Voices.`
+      help.textContent = select.value === 'simple' ? `${modeHelp} Each sentence is linked to its selected speaker in Assets → Voices.`
         : select.value === 'code' ? 'Runs the interaction handler registered by the game. This does not generate or edit code.'
         : select.value === 'impossible' ? 'Designer note only: this combination cannot occur in the game. At runtime it uses Defaults, just like an empty cell.' : 'Empty cells use Defaults when assigned.';
     };
@@ -241,7 +261,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       dialog.append(note);
     }
     dialog.append(actions); refresh(); if (!dialog.open) dialog.showModal();
-    if (select.value === 'simple') inputs[0]!.focus(); else select.focus();
+    if (select.value === 'simple') inputs[0]!.text.focus(); else select.focus();
   }
   render(); if (dirty) publish();
   return { root, open: () => dock.open(), close: () => dock.close(), isOpen: () => dock.isOpen(), refresh: render,
@@ -271,7 +291,7 @@ const styles = `
 .pointlesh-interactions table{border-collapse:separate;border-spacing:0;width:100%;table-layout:auto}.pointlesh-interactions th,.pointlesh-interactions td{border-bottom:1px solid #2d3647;border-right:1px solid #2d3647;padding:0;text-align:center;min-width:110px}
 .pointlesh-interactions th{padding:10px;background:#202938;font-weight:600}.pointlesh-interactions thead th{position:sticky;top:0;z-index:2}.pointlesh-interactions tbody th{position:sticky;left:0;z-index:1;text-align:left;min-width:235px;max-width:300px}.pointlesh-interactions thead th:first-child{left:0;z-index:3;min-width:235px}.pointlesh-interactions small{display:block;font-size:10px;font-weight:400;color:#99a8bf;margin-top:5px}
 .pointlesh-interactions td button{display:block;border:0;border-radius:0;width:100%;height:51px;font-size:21px;background:#171e29}.pointlesh-interactions tr:nth-child(even) td button{background:#1b2330}.pointlesh-interactions tr td button:hover{background:#35435a}.pointlesh-interactions-count{font-size:11px;color:#aab6ca;margin:0;flex:none}
-.pointlesh-interaction-defaults th,.pointlesh-interactions .pointlesh-interaction-defaults td button{background:#283449;border-bottom:2px solid #6883a8}.pointlesh-interaction-sentences>div{display:flex;align-items:center;gap:10px}.pointlesh-interaction-sentences label{flex:1}.pointlesh-interaction-edit [hidden]{display:none!important}
+.pointlesh-interaction-defaults th,.pointlesh-interactions .pointlesh-interaction-defaults td button{background:#283449;border-bottom:2px solid #6883a8}.pointlesh-interaction-sentences>div{border:1px solid #49546b;border-radius:7px;padding:12px;margin-bottom:12px}.pointlesh-interaction-sentences textarea{min-height:58px}.pointlesh-interaction-sentences label{margin-bottom:10px}.pointlesh-interaction-sentences button{margin-left:auto;display:block}.pointlesh-interaction-edit [hidden]{display:none!important}
 .pointlesh-marathon-categories{border:1px solid #49546b;border-radius:6px;padding:14px}.pointlesh-interaction-edit .pointlesh-marathon-categories label{display:flex;align-items:center;gap:10px;margin:8px 0}.pointlesh-marathon-categories input{accent-color:#8cbaff}.pointlesh-marathon-progress{margin:0 32px 12px 0;font-size:12px}.pointlesh-interaction-edit .pointlesh-marathon-close{position:absolute;right:12px;top:12px;font-size:20px;padding:2px 8px}.pointlesh-interaction-edit .pointlesh-marathon-note{font-size:11px}.pointlesh-interaction-actions{flex-wrap:wrap}
 .pointlesh-interaction-edit{max-height:85vh;overflow:auto;width:min(540px,90vw);padding:24px;color:#e6eaf2;background:#192230;border:1px solid #677a99;border-radius:10px;font:13px system-ui}.pointlesh-interaction-edit::backdrop{background:#060b1399}.pointlesh-interaction-edit h3{margin:0 0 20px;font-size:17px}.pointlesh-interaction-edit label{display:grid;gap:8px;margin-bottom:16px}.pointlesh-interaction-edit label[hidden]{display:none}.pointlesh-interaction-edit textarea{resize:vertical;min-height:100px}.pointlesh-interaction-edit p{color:#aab9cf;line-height:1.5}.pointlesh-interaction-actions{display:flex;gap:8px;justify-content:flex-end}.pointlesh-interaction-actions button:first-child{margin-right:auto}
 `;

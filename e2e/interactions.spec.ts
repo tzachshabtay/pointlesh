@@ -33,7 +33,7 @@ async function editSpeech(page: Page, text: string) {
   await cell(page, rope, 'verb:look').click();
   const dialog = page.getByRole('dialog', { name: 'Edit interaction', exact: true });
   await dialog.getByRole('combobox', { name: 'Interaction state', exact: true }).selectOption('simple');
-  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill(text);
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill(text);
   await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
   await expect(dialog).not.toBeVisible();
 }
@@ -104,6 +104,44 @@ test('speech edits sync native voice lines, survive reload and promotion, and ru
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.story.inventory.includes('sleepyStout'))).toBe(true);
 });
 
+test('per-sentence speaker and direction sync to voice assets and play in sequence', async ({ page }) => {
+  await ready(page);
+  await panel(page).getByRole('combobox', { name: 'Interaction target type' }).selectOption('inventory-item');
+  await cell(page, rope, 'verb:look').click();
+  const dialog = page.getByRole('dialog', { name: 'Edit interaction' });
+  await expect(dialog.getByRole('combobox', { name: 'Sentence 1 speaker' })).toHaveValue('voice.borin');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('Have you seen this rope?');
+  await dialog.getByRole('combobox', { name: 'Sentence 1 speaker' }).selectOption('voice.elder');
+  await dialog.getByRole('textbox', { name: 'Sentence 1 direction notes' }).fill('Softly, then amused');
+  await dialog.getByRole('button', { name: '+ Add sentence' }).click();
+  await expect(dialog.getByRole('combobox', { name: 'Sentence 2 speaker' })).toHaveValue('voice.borin');
+  await dialog.getByRole('textbox', { name: 'Sentence 2', exact: true }).fill('It is a fine rope.');
+  await dialog.getByRole('button', { name: 'Apply' }).click();
+  const metadata = await page.evaluate(ids => {
+    const s = (window as any).pointleshDemo.scene;
+    return { cell: s.interactionDesigner.getManifest().cells['prefab:forest.inventory.rope']['verb:look'],
+      first: s.aiRuntime.manifest.assets[ids[0]].voiceSettings,
+      elderLink: s.aiRuntime.manifest.assets['voice.elder'].linkedAnimationAssets[ids[0]],
+      borinLink: s.aiRuntime.manifest.assets['voice.borin'].linkedAnimationAssets[ids[0]],
+      second: s.aiRuntime.manifest.assets[ids[1]].voiceSettings };
+  }, [lineId, interactionVoiceLineId(rope, 'verb:look', 1)]);
+  expect(metadata.cell.sentenceSettings[0]).toEqual({ voiceAssetId: 'voice.elder', direction: 'Softly, then amused' });
+  expect(metadata.first).toMatchObject({ voiceAssetId: 'voice.elder', direction: 'Softly, then amused' });
+  expect(metadata.elderLink.assetId).toBe(lineId);
+  expect(metadata.borinLink).toBeUndefined();
+  expect(metadata.second.voiceAssetId).toBe('voice.borin');
+  await cell(page, rope, 'verb:look').click();
+  await expect(dialog.getByRole('textbox', { name: 'Sentence 1 direction notes' })).toHaveValue('Softly, then amused');
+  await expect(dialog.getByRole('combobox', { name: 'Sentence 1 speaker' })).toHaveValue('voice.elder');
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await page.getByRole('button', { name: 'Toggle interaction designer' }).click(); await page.locator('#designer').click();
+  await page.locator('#inventory').getByRole('button', { name: 'Climbing rope', exact: true }).click({ button: 'right' });
+  await expect(page.locator('#speaker')).toHaveText('Elder Rowan');
+  await page.locator('#dialog-next').click();
+  await expect(page.locator('#speaker')).toHaveText('Borin');
+  await expect(page.locator('#speech')).toHaveText('It is a fine rope.');
+});
+
 test('world speech overrides, cleared cells and scripted pickup and exit actions use the matrix', async ({ page }) => {
   await ready(page);
   await panel(page).getByRole('searchbox', { name: 'Find interaction target' }).fill('Copper coin');
@@ -112,7 +150,7 @@ test('world speech overrides, cleared cells and scripted pickup and exit actions
   const look = objectRow.locator('button[data-column="verb:look"]');
   await look.click();
   const dialog = page.getByRole('dialog', { name: 'Edit interaction' });
-  await dialog.getByRole('textbox', { name: 'Hero speech' }).fill('Breakfast money, now officially rescue money.');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('Breakfast money, now officially rescue money.');
   await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
   await page.getByRole('button', { name: 'Toggle interaction designer', exact: true }).click();
   await page.locator('#designer').click();
@@ -147,10 +185,10 @@ test('Defaults stay first when filtering; sentence modes edit, sync and play thr
   await dialog.getByRole('button', { name: '× Clear interaction', exact: true }).click();
   await cell(page, 'defaults', 'verb:look').click();
   await dialog.getByRole('combobox', { name: 'Interaction state' }).selectOption('simple');
-  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('First default sentence.');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('First default sentence.');
   await dialog.getByRole('button', { name: '+ Add sentence', exact: true }).click();
   await expect(dialog.getByRole('button', { name: 'Apply', exact: true })).toBeDisabled();
-  await dialog.getByRole('textbox', { name: 'Hero speech 2', exact: true }).fill('Second default sentence.');
+  await dialog.getByRole('textbox', { name: 'Sentence 2', exact: true }).fill('Second default sentence.');
   await dialog.getByRole('combobox', { name: 'Sentence playback' }).selectOption('rotation');
   await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
   const secondId = interactionVoiceLineId('defaults', 'verb:look', 1);
@@ -182,11 +220,11 @@ test('Defaults stay first when filtering; sentence modes edit, sync and play thr
   await cell(page, 'defaults', 'verb:look').click();
   await dialog.getByRole('combobox', { name: 'Sentence playback' }).selectOption('random');
   await dialog.getByRole('button', { name: 'Remove sentence 2', exact: true }).click();
-  await expect(dialog.getByRole('textbox')).toHaveCount(1);
+  await expect(dialog.getByRole('textbox')).toHaveCount(2);
   await dialog.getByRole('button', { name: 'Apply', exact: true }).click();
   await cell(page, 'defaults', 'verb:look').click();
   await expect(dialog.getByRole('combobox', { name: 'Sentence playback' })).toHaveValue('random');
-  await expect(dialog.getByRole('textbox', { name: 'Hero speech', exact: true })).toHaveValue('First default sentence.');
+  await expect(dialog.getByRole('textbox', { name: 'Sentence 1', exact: true })).toHaveValue('First default sentence.');
 });
 
 
@@ -211,7 +249,7 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
   await panel(page).getByRole('button', { name: 'Marathon', exact: true }).click();
   const setup = page.getByRole('dialog', { name: 'Marathon', exact: true });
   await expect(setup.getByRole('checkbox', { name: 'Empty', exact: true })).toBeChecked();
-  for (const name of ['✕ Should not happen', '✓ Hero speech', '★ Game code']) await expect(setup.getByRole('checkbox', { name, exact: true })).not.toBeChecked();
+  for (const name of ['✕ Should not happen', '✓ Simple speech', '★ Game code']) await expect(setup.getByRole('checkbox', { name, exact: true })).not.toBeChecked();
   await expect(setup.getByRole('status')).toHaveText('2 interactions selected');
   await setup.getByRole('checkbox', { name: 'Empty', exact: true }).uncheck();
   await expect(setup.getByRole('button', { name: 'Start marathon', exact: true })).toBeDisabled();
@@ -222,26 +260,26 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
   await expect(dialog.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
   await expect(dialog.getByRole('button', { name: 'Apply', exact: true })).toHaveCount(0);
   // Even after changing playback or typing whitespace, blank speech stays empty.
-  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('   ');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('   ');
   await dialog.getByRole('combobox', { name: 'Sentence playback', exact: true }).selectOption('random');
   await expect(dialog.getByRole('button', { name: 'Next', exact: true })).toBeEnabled();
   await dialog.getByRole('button', { name: 'Next', exact: true }).click();
   await expect(dialog.getByRole('status')).toHaveText('Marathon · 2 of 2');
   await dialog.getByRole('button', { name: 'Previous', exact: true }).click();
-  await expect(dialog.getByRole('textbox', { name: 'Hero speech', exact: true })).toHaveValue('');
-  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('First marathon line.');
+  await expect(dialog.getByRole('textbox', { name: 'Sentence 1', exact: true })).toHaveValue('');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('First marathon line.');
   await dialog.getByRole('button', { name: '+ Add sentence', exact: true }).click();
   await expect(dialog.getByRole('button', { name: 'Next', exact: true })).toBeDisabled();
-  await dialog.getByRole('textbox', { name: 'Hero speech 2', exact: true }).fill('Second marathon line.');
+  await dialog.getByRole('textbox', { name: 'Sentence 2', exact: true }).fill('Second marathon line.');
   await dialog.getByRole('combobox', { name: 'Sentence playback', exact: true }).selectOption('rotation');
   await dialog.getByRole('button', { name: 'Next', exact: true }).click();
   await expect(dialog.getByRole('heading')).toHaveText('Use Copper coin on Grub the guard');
   await expect(dialog.getByRole('status')).toHaveText('Marathon · 2 of 2');
   await dialog.getByRole('button', { name: 'Previous', exact: true }).click();
-  await expect(dialog.getByRole('textbox', { name: 'Hero speech 2', exact: true })).toHaveValue('Second marathon line.');
+  await expect(dialog.getByRole('textbox', { name: 'Sentence 2', exact: true })).toHaveValue('Second marathon line.');
   await expect(dialog.getByRole('combobox', { name: 'Sentence playback', exact: true })).toHaveValue('rotation');
   await dialog.getByRole('button', { name: 'Next', exact: true }).click();
-  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('   ');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('   ');
   await dialog.getByRole('button', { name: '+ Add sentence', exact: true }).click();
   await expect(dialog.getByRole('button', { name: 'Done', exact: true })).toBeEnabled();
   await dialog.getByRole('button', { name: 'Done', exact: true }).click();
@@ -253,10 +291,10 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
     interactionVoiceLineId('defaults', 'verb:look', 1))).toBe('Second marathon line.');
   await panel(page).getByRole('button', { name: 'Marathon', exact: true }).click();
   await setup.getByRole('checkbox', { name: 'Empty', exact: true }).uncheck();
-  for (const name of ['✕ Should not happen', '✓ Hero speech', '★ Game code']) await setup.getByRole('checkbox', { name, exact: true }).check();
+  for (const name of ['✕ Should not happen', '✓ Simple speech', '★ Game code']) await setup.getByRole('checkbox', { name, exact: true }).check();
   await expect(setup.getByRole('status')).toHaveText(`${(rows.length + 1) * columns.length - 1} interactions selected`);
   // Isolate the one red X, then clear it through Done.
-  for (const name of ['✓ Hero speech', '★ Game code']) await setup.getByRole('checkbox', { name, exact: true }).uncheck();
+  for (const name of ['✓ Simple speech', '★ Game code']) await setup.getByRole('checkbox', { name, exact: true }).uncheck();
   await setup.getByRole('button', { name: 'Start marathon', exact: true }).click();
   await expect(dialog.getByRole('status')).toHaveText('Marathon · 1 of 1');
   await expect(dialog.getByRole('combobox', { name: 'Interaction state', exact: true })).toHaveValue('impossible');
@@ -270,7 +308,7 @@ test('Marathon saves a fixed queue, revisits speech, skips untouched cells, and 
   await panel(page).getByRole('searchbox', { name: 'Find interaction target' }).fill('Grub');
   await cell(page, guard, coin).click();
   await expect(dialog.getByRole('heading')).toHaveText('Use Copper coin on Grub the guard');
-  await dialog.getByRole('textbox', { name: 'Hero speech', exact: true }).fill('Discard this.');
+  await dialog.getByRole('textbox', { name: 'Sentence 1', exact: true }).fill('Discard this.');
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await expect(cell(page, guard, coin)).toHaveAttribute('data-state', 'empty');
 });
@@ -288,7 +326,7 @@ test('promoted recording-session wording appears in the matrix and in-game after
   await expect(cell(page, rope, 'verb:look')).toHaveAttribute('title', text);
   await cell(page, rope, 'verb:look').click();
   const dialog = page.getByRole('dialog', { name: 'Edit interaction', exact: true });
-  await expect(dialog.getByRole('textbox', { name: 'Hero speech', exact: true })).toHaveValue(text);
+  await expect(dialog.getByRole('textbox', { name: 'Sentence 1', exact: true })).toHaveValue(text);
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await page.getByRole('button', { name: 'Toggle interaction designer', exact: true }).click();
   await page.locator('#designer').click();

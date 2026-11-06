@@ -115,6 +115,37 @@ test('each sentence and default has its own linked voice line, retaining the ori
   assert.match(synced.assets.hero.linkedAnimationAssets[interactionVoiceLineId('defaults', 'verb:look', 1)].label, /Defaults.*Sentence 2/);
 });
 
+test('each sentence can use its own speaker and direction without changing legacy hero speech', async () => {
+  const manifest = make(), source = assets(), firstId = interactionVoiceLineId('chest', 'verb:look');
+  source.assets.elder = { id: 'elder', kind: 'voice', prompt: 'Elder', activeVersion: '', versions: {} };
+  manifest.cells.chest['verb:look'] = { kind: 'simple', mode: 'sequence', sentences: ['Ask the elder.', 'I know.'],
+    sentenceSettings: [{ voiceAssetId: 'elder', direction: 'Quietly, with concern' }, { direction: '' }] };
+  assertInteractionManifest(manifest);
+  const synced = syncInteractionVoiceLines(manifest, source), secondId = interactionVoiceLineId('chest', 'verb:look', 1);
+  assert.equal(synced.assets[firstId].voiceSettings.voiceAssetId, 'elder');
+  assert.equal(synced.assets[firstId].voiceSettings.direction, 'Quietly, with concern');
+  assert.equal(synced.assets[secondId].voiceSettings.voiceAssetId, 'hero');
+  assert.equal(synced.assets.elder.linkedAnimationAssets[firstId].assetId, firstId);
+  assert.equal(synced.assets.hero.linkedAnimationAssets[firstId], undefined);
+  assertManifest(synced);
+  const spoken = [];
+  await runInteraction(manifest, 'chest', 'verb:look', { say: (...args) => spoken.push(args) });
+  assert.deepEqual(spoken, [['Ask the elder.', firstId, 'elder'], ['I know.', secondId]]);
+  const hydrated = syncInteractionTextFromVoiceLines(manifest, synced);
+  assert.deepEqual(hydrated.cells.chest['verb:look'].sentenceSettings[0], manifest.cells.chest['verb:look'].sentenceSettings[0]);
+  synced.assets[firstId].activeVersion = 'take';
+  synced.assets[firstId].versions.take = { name: 'take', file: 'elder.mp3', prompt: 'Speak', model: 'test', createdAt: '2026-10-03T00:00:00Z',
+    voiceSettings: { voiceAssetId: 'elder', text: 'Ask the elder.' } };
+  manifest.cells.chest['verb:look'].sentenceSettings[0].voiceAssetId = 'hero';
+  const switched = syncInteractionVoiceLines(manifest, synced);
+  assert.equal(switched.assets[firstId].voiceSettings.voiceAssetId, 'hero');
+  assert.equal(switched.assets[firstId].versions.take.voiceSettings.voiceAssetId, 'elder', 'old recording keeps its original speaker');
+  assert.equal(switched.assets.hero.linkedAnimationAssets[firstId].assetId, firstId);
+  assert.equal(switched.assets.elder.linkedAnimationAssets[firstId], undefined);
+  assertManifest(switched);
+  assert.throws(() => assertInteractionManifest({ ...manifest, cells: { chest: { 'verb:look': { kind: 'simple', text: 'Hi', sentenceSettings: [{ voiceAssetId: '' }] } } } }), /speaker/);
+});
+
 
 test('interactive matrix targets respect prefab and instance settings without discarding authored data', () => {
   const prefabs = [

@@ -4,7 +4,8 @@ import { isPointleshPrefab, resolvePointleshScene, type ResolvedPointleshEntity,
 import { assertJSON } from './types.js';
 
 export type InteractionSpeechMode = 'random' | 'rotation' | 'sequence';
-export type SimpleInteraction = { kind: 'simple'; mode?: InteractionSpeechMode } &
+export type InteractionSentenceSettings = { voiceAssetId?: string; direction?: string };
+export type SimpleInteraction = { kind: 'simple'; mode?: InteractionSpeechMode; sentenceSettings?: InteractionSentenceSettings[] } &
   ({ text: string; sentences?: never } | { sentences: string[]; text?: never });
 export type Interaction = { kind: 'code' } | SimpleInteraction | { kind: 'impossible' };
 /** Reserved row: empty cells and designer-only red X markers inherit this column. */
@@ -18,7 +19,7 @@ export function resolveInteraction(manifest: InteractionManifest, row: string, c
 }
 export type InteractionPlaybackState = { rotations: Record<string, number> };
 export const createInteractionPlaybackState = (): InteractionPlaybackState => ({ rotations: {} });
-export type InteractionSpeechLine = { text: string; lineAssetId: string };
+export type InteractionSpeechLine = { text: string; lineAssetId: string; voiceAssetId?: string };
 /** Defaults share their rotation across targets. Each explicit cell has its own cursor. */
 export function selectInteractionSpeech(cell: SimpleInteraction, sourceRow: string, column: string,
   state: InteractionPlaybackState, random: () => number = Math.random): InteractionSpeechLine[] {
@@ -29,7 +30,8 @@ export function selectInteractionSpeech(cell: SimpleInteraction, sourceRow: stri
     const key = JSON.stringify([sourceRow, column]), index = (state.rotations[key] ?? 0) % sentences.length;
     indexes = [index]; state.rotations[key] = (index + 1) % sentences.length;
   }
-  return indexes.map(index => ({ text: sentences[index]!, lineAssetId: interactionVoiceLineId(sourceRow, column, index) }));
+  return indexes.map(index => ({ text: sentences[index]!, lineAssetId: interactionVoiceLineId(sourceRow, column, index),
+    ...(cell.sentenceSettings?.[index]?.voiceAssetId ? { voiceAssetId: cell.sentenceSettings[index]!.voiceAssetId } : {}) }));
 }
 export type InteractionVerb = { id: string; label: string };
 export type InteractionManifest = {
@@ -97,6 +99,10 @@ export function assertInteractionManifest(value: unknown): asserts value is Inte
         if (!Array.isArray(sentences) || !sentences.length || sentences.some(text => typeof text !== 'string' || !text.trim()) ||
           (cell.sentences !== undefined && cell.text !== undefined)) throw new Error('A simple interaction needs speech text in each sentence');
         if (cell.mode !== undefined && !['random', 'rotation', 'sequence'].includes(cell.mode)) throw new Error('Invalid speech playback mode');
+        if (cell.sentenceSettings !== undefined && (!Array.isArray(cell.sentenceSettings) || cell.sentenceSettings.length > sentences.length ||
+          cell.sentenceSettings.some(settings => !settings || typeof settings !== 'object' || Array.isArray(settings) ||
+            (settings.voiceAssetId !== undefined && (typeof settings.voiceAssetId !== 'string' || !settings.voiceAssetId.trim())) ||
+            (settings.direction !== undefined && typeof settings.direction !== 'string')))) throw new Error('Invalid sentence speaker or direction');
       }
     }
   }
@@ -121,7 +127,15 @@ export function syncInteractionTextFromVoiceLines(manifest: InteractionManifest,
       const authored = asset?.voiceSettings?.text ?? asset?.versions[asset.activeVersion]?.voiceSettings?.text;
       return typeof authored === 'string' && authored.trim() ? authored : text;
     });
-    cells[column] = { kind: 'simple', ...(cell.mode ? { mode: cell.mode } : {}), ...(cell.sentences ? { sentences } : { text: sentences[0]! }) };
+    const sentenceSettings = sentences.map((_, index) => {
+      const asset = assets.assets[interactionVoiceLineId(row, column, index)];
+      const authored = asset?.voiceSettings ?? asset?.versions[asset.activeVersion]?.voiceSettings;
+      const voiceAssetId = authored?.voiceAssetId ?? cell.sentenceSettings?.[index]?.voiceAssetId;
+      const direction = authored?.direction ?? cell.sentenceSettings?.[index]?.direction;
+      return { ...(voiceAssetId && voiceAssetId !== manifest.heroVoiceAssetId ? { voiceAssetId } : {}), ...(direction ? { direction } : {}) };
+    });
+    cells[column] = { kind: 'simple', ...(cell.mode ? { mode: cell.mode } : {}), ...(cell.sentences ? { sentences } : { text: sentences[0]! }),
+      ...(sentenceSettings.some(settings => Object.keys(settings).length) ? { sentenceSettings } : {}) };
   }
   return result;
 }
@@ -129,21 +143,27 @@ export function syncInteractionTextFromVoiceLines(manifest: InteractionManifest,
 /** Retains recorded takes while marking the active take stale when its script changes. */
 export function syncInteractionVoiceLines(manifest: InteractionManifest, source: AiAssetManifest, targets: InteractionTarget[] = []): AiAssetManifest {
   assertInteractionManifest(manifest);
-  const assets = structuredClone(source), voice = assets.assets[manifest.heroVoiceAssetId];
-  if (!voice || voice.kind !== 'voice') throw new Error(`Missing hero voice: ${manifest.heroVoiceAssetId}`);
+  const assets = structuredClone(source), heroVoice = assets.assets[manifest.heroVoiceAssetId];
+  if (!heroVoice || heroVoice.kind !== 'voice') throw new Error(`Missing hero voice: ${manifest.heroVoiceAssetId}`);
   for (const [row, cells] of Object.entries(manifest.cells)) for (const [column, cell] of Object.entries(cells)) {
     if (cell.kind !== 'simple') continue;
     for (const [index, text] of interactionSentences(cell).entries()) {
+      const settings = cell.sentenceSettings?.[index];
+      const voiceAssetId = settings?.voiceAssetId ?? manifest.heroVoiceAssetId;
+      const voice = assets.assets[voiceAssetId];
+      if (!voice || voice.kind !== 'voice') throw new Error(`Missing interaction speaker voice: ${voiceAssetId}`);
       const id = interactionVoiceLineId(row, column, index), existing = assets.assets[id];
       if (existing && existing.kind !== 'voice-line') throw new Error(`Interaction voice id is already used: ${id}`);
       const asset = existing ?? { id, kind: 'voice-line' as const, prompt: text, activeVersion: '', versions: {} };
       const active = asset.versions[asset.activeVersion];
-      if (active && (active.voiceSettings?.text !== text || active.voiceSettings?.voiceAssetId !== manifest.heroVoiceAssetId)) {
+      if (active && (active.voiceSettings?.text !== text || active.voiceSettings?.voiceAssetId !== voiceAssetId)) {
         active.recordedText ??= active.lipSyncTrack?.text ?? active.voiceSettings?.text ?? asset.voiceSettings?.text ?? asset.prompt;
-        active.voiceSettings = { ...active.voiceSettings, voiceAssetId: manifest.heroVoiceAssetId, text };
+        // The recording belongs to its original speaker until a new take replaces it.
+        active.voiceSettings = { ...active.voiceSettings, voiceAssetId: active.voiceSettings?.voiceAssetId ?? asset.voiceSettings?.voiceAssetId ?? voiceAssetId,
+          text, direction: settings?.direction ?? '' };
       }
       asset.prompt = text;
-      asset.voiceSettings = { ...asset.voiceSettings, voiceAssetId: manifest.heroVoiceAssetId, text };
+      asset.voiceSettings = { ...asset.voiceSettings, voiceAssetId, text, direction: settings?.direction ?? '' };
       assets.assets[id] = asset;
       for (const other of Object.values(assets.assets)) if (other.kind === 'voice' && other.id !== voice.id) {
         for (const [key, link] of Object.entries(other.linkedAnimationAssets ?? {})) if (link.assetId === id) delete other.linkedAnimationAssets![key];
@@ -161,7 +181,7 @@ export function syncInteractionVoiceLines(manifest: InteractionManifest, source:
 const defaultPlayback = new WeakMap<InteractionManifest, InteractionPlaybackState>();
 /** Empty and red X cells inherit Defaults; sequence awaits each speech callback. */
 export async function runInteraction(manifest: InteractionManifest, row: string, column: string, handlers: {
-  say(text: string, lineAssetId: string): unknown | Promise<unknown>;
+  say(text: string, lineAssetId: string, voiceAssetId?: string): unknown | Promise<unknown>;
   code?(row: string, column: string): unknown | Promise<unknown>;
   /** @deprecated Red X is designer metadata and does not dispatch a runtime callback. */
   impossible?(row: string, column: string): unknown | Promise<unknown>;
@@ -171,7 +191,10 @@ export async function runInteraction(manifest: InteractionManifest, row: string,
   if (cell.kind === 'simple') {
     let state = playback?.state ?? defaultPlayback.get(manifest);
     if (!state) { state = createInteractionPlaybackState(); defaultPlayback.set(manifest, state); }
-    for (const line of selectInteractionSpeech(cell, sourceRow, column, state, playback?.random)) await handlers.say(line.text, line.lineAssetId);
+    for (const line of selectInteractionSpeech(cell, sourceRow, column, state, playback?.random)) {
+      if (line.voiceAssetId) await handlers.say(line.text, line.lineAssetId, line.voiceAssetId);
+      else await handlers.say(line.text, line.lineAssetId);
+    }
   }
   else {
     if (!handlers.code) throw new Error(`No game handler for ${row} / ${column}`);

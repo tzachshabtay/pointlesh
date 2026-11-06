@@ -91,6 +91,22 @@ test('edited speech keeps historical takes without playing stale audio, and a ne
   f.audio.destroy();
 });
 
+test('changing an interaction speaker does not play the old speaker recording', async () => {
+  const f = fixture(), id = 'line.speaker';
+  const oldTake = { id, kind: 'voice-line', activeVersion: 'take', voiceSettings: { voiceAssetId: 'voice.elder', text: 'Hello.' },
+    versions: { take: { file: 'elder.mp3', voiceSettings: { voiceAssetId: 'voice.elder', text: 'Hello.' } } } };
+  const first = f.audio.syncManifest({ assets: { [id]: oldTake } }); f.complete(f.queued[0]); await first;
+  assert.equal(f.audio.isCurrentVoiceRecording(id), true);
+  const switched = structuredClone(oldTake); switched.voiceSettings.voiceAssetId = 'voice.borin';
+  await f.audio.syncManifest({ assets: { [id]: switched } });
+  assert.equal(f.audio.isCurrentVoiceRecording(id), false);
+  const fresh = structuredClone(switched); fresh.activeVersion = 'new';
+  fresh.versions.new = { file: 'borin.mp3', voiceSettings: { voiceAssetId: 'voice.borin', text: 'Hello.' } };
+  const loaded = f.audio.syncManifest({ assets: { [id]: fresh } }); f.complete(f.queued[1]); await loaded;
+  assert.equal(f.audio.isCurrentVoiceRecording(id), true);
+  f.audio.destroy();
+});
+
 
 test('deleting the final promoted recording clears cached playback without clearing unpromoted auditions', async () => {
   const f = fixture();

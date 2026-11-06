@@ -621,7 +621,9 @@ class ForestAdventure extends Phaser.Scene {
   }
   private playInteractionSpeech(lines: InteractionSpeechLine[]) {
     const [line, ...remaining] = lines; if (!line) return;
-    this.say(line.text, 'Borin', line.lineAssetId); this.interactionSpeechQueue = remaining;
+    const voice = line.voiceAssetId?.replace(/^voice\./, '') ?? 'borin';
+    const speaker = ({ ...portraitCharacters, chest: 'Runed chest', narrator: 'Narrator' } as Record<string, string>)[voice] ?? voice;
+    this.say(line.text, speaker, line.lineAssetId); this.interactionSpeechQueue = remaining;
   }
   changeRoom(room: RoomId, move = true, transitioning = false) {
     if (!transitioning) this.roomTransition?.cancel();
@@ -966,6 +968,7 @@ class ForestAdventure extends Phaser.Scene {
     });
     this.interactionDesigner = installInteractionDesigner({
       manifest: interactions, getScenes: () => authoredScenes, getAiAssets: () => assets,
+      speakerLabels: Object.fromEntries(Object.entries({ ...portraitCharacters, chest: 'Runed chest', narrator: 'Narrator' }).map(([id, name]) => [`voice.${id}`, name])),
       client: new InteractionDesignerDebugClient(), storageKey: 'pointlesh.forest.interactions.draft.v1',
       onChange: (manifest, nextAssets) => {
         interactions = manifest; Object.assign(assets, nextAssets); Object.assign(assetDesignerManifest, nextAssets); callbacks.onManifestUpdated(assets);
