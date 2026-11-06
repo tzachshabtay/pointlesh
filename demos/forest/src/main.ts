@@ -979,7 +979,8 @@ class ForestAdventure extends Phaser.Scene {
     if (!this.showHotspots) return;
     for (const area of this.resolved().areas.filter(area => area.kind === 'hotspot' && area.enabled && area.properties.interactive !== false && targetVisible(this.story, area.id))) {
       const target = targets[this.story.roomId].find(target => target.id === area.id);
-      if (target) this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, target.name, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
+      const label = target?.name ?? (typeof area.properties.label === 'string' && area.properties.label.trim() ? area.properties.label : area.name);
+      this.labels.push(this.add.text(area.polygon[0].x, area.polygon[0].y - 19, label, { fontFamily: 'monospace', fontSize: '11px', color: '#fff0bb', backgroundColor: '#132019e8', padding: { x: 5, y: 3 } }).setDepth(2100));
     }
     for (const object of this.resolved().objects.filter(object => object.enabled && object.properties.interactive !== false)) {
       const target = targets[this.story.roomId].find(target => target.id === entityInteractionId(object)) ?? object;

@@ -27,6 +27,8 @@ test('new authored hotspots show their labels and conversation topics return wit
   await page.mouse.move(pointer.x,pointer.y);
   await expect(page.locator('#hover-label')).toHaveText('Village well');
   await expect(page.locator('#hover-label')).toHaveClass('visible');
+  await page.locator('#hotspots').click();
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.labels.map((label: any) => label.text))).toContain('Village well');
   await page.evaluate(() => { const s=(window as any).pointleshDemo.scene; s.story.inventory=['coin']; s.selected='coin'; s.hover('test-well'); });
   await expect(page.locator('#hover-label')).toHaveText('Use Copper coin with Village well');
   await page.evaluate(() => { const s=(window as any).pointleshDemo.scene; s.selected=undefined; s.applyInteraction('elder'); });
