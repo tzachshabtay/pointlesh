@@ -42,6 +42,19 @@
               "nextNodeId": "answer-advice"
             },
             {
+              "id": "father",
+              "text": "What was my father like?",
+              "enabled": false,
+              "nextNodeId": "answer-father",
+              "metadata": {
+                "requiresFlag": "askedElderWhy"
+              },
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.46070ea3d971e5cb"
+            },
+            {
               "id": "goodbye",
               "text": "I will bring him home.",
               "enabled": true,
@@ -102,6 +115,23 @@
               "lineAssetId": "line.elder.goodbye"
             }
           ]
+        },
+        "answer-father": {
+          "id": "answer-father",
+          "type": "block",
+          "name": "What was my father like?",
+          "enabled": false,
+          "metadata": {
+            "requiresFlag": "askedElderWhy"
+          },
+          "lines": [
+            {
+              "id": "father",
+              "enabled": true,
+              "voiceAssetId": "voice.elder",
+              "lineAssetId": "line.elder.father"
+            }
+          ]
         }
       }
     },
@@ -137,13 +167,32 @@
               "id": "dreamcap",
               "text": "How do I get past an orc guard?",
               "enabled": true,
-              "nextNodeId": "answer-dreamcap"
+              "nextNodeId": "answer-dreamcap",
+              "metadata": {
+                "hideAfterFlag": "knowsDreamcap"
+              }
             },
             {
               "id": "buy",
               "text": "Do you have any honey stout?",
               "enabled": true,
-              "nextNodeId": "answer-buy"
+              "nextNodeId": "answer-buy",
+              "metadata": {
+                "hideAfterFlag": "boughtStout"
+              }
+            },
+            {
+              "id": "king-tab",
+              "text": "Did Aldric ever come in here?",
+              "enabled": false,
+              "nextNodeId": "answer-king-tab",
+              "metadata": {
+                "requiresFlag": "boughtStout"
+              },
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.63cb2ed5f1e997ed"
             },
             {
               "id": "goodbye",
@@ -194,6 +243,23 @@
               "lineAssetId": "line.innkeeper.goodbye"
             }
           ]
+        },
+        "answer-king-tab": {
+          "id": "answer-king-tab",
+          "type": "block",
+          "name": "Did Aldric ever come in here?",
+          "enabled": false,
+          "metadata": {
+            "requiresFlag": "boughtStout"
+          },
+          "lines": [
+            {
+              "id": "king-tab",
+              "enabled": true,
+              "voiceAssetId": "voice.innkeeper",
+              "lineAssetId": "line.innkeeper.king-tab"
+            }
+          ]
         }
       }
     },
@@ -213,7 +279,29 @@
               "id": "greeting",
               "enabled": true,
               "voiceAssetId": "voice.miner",
-              "lineAssetId": "line.miner.greeting"
+              "lineAssetId": "line.miner.greeting",
+              "metadata": {
+                "hideAfterFlag": "chestOpen"
+              }
+            },
+            {
+              "id": "chest-open",
+              "enabled": false,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.chest-open",
+              "metadata": {
+                "requiresFlag": "chestOpen",
+                "hideAfterFlag": "tookPickaxe"
+              }
+            },
+            {
+              "id": "pickaxe-taken",
+              "enabled": false,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.pickaxe-taken",
+              "metadata": {
+                "requiresFlag": "tookPickaxe"
+              }
             }
           ],
           "nextNodeId": "topics"
@@ -229,7 +317,10 @@
               "id": "password",
               "text": "The king needs us. How do I open the chest?",
               "enabled": true,
-              "nextNodeId": "answer-password"
+              "nextNodeId": "answer-password",
+              "metadata": {
+                "hideAfterFlag": "knowsPassword"
+              }
             },
             {
               "id": "mining",
@@ -238,8 +329,21 @@
               "nextNodeId": "answer-mining"
             },
             {
+              "id": "pickaxe",
+              "text": "I found your pickaxe.",
+              "enabled": false,
+              "nextNodeId": "answer-pickaxe",
+              "metadata": {
+                "requiresFlag": "tookPickaxe"
+              },
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.5d392ff104c1ae13"
+            },
+            {
               "id": "goodbye",
-              "text": "I will return your pickaxe.",
+              "text": "I should get back to the road.",
               "enabled": true,
               "nextNodeId": "answer-goodbye"
             }
@@ -276,7 +380,7 @@
         "answer-goodbye": {
           "id": "answer-goodbye",
           "type": "block",
-          "name": "I will return your pickaxe.",
+          "name": "I should get back to the road.",
           "enabled": true,
           "lines": [
             {
@@ -284,6 +388,23 @@
               "enabled": true,
               "voiceAssetId": "voice.miner",
               "lineAssetId": "line.miner.goodbye"
+            }
+          ]
+        },
+        "answer-pickaxe": {
+          "id": "answer-pickaxe",
+          "type": "block",
+          "name": "I found your pickaxe.",
+          "enabled": false,
+          "metadata": {
+            "requiresFlag": "tookPickaxe"
+          },
+          "lines": [
+            {
+              "id": "pickaxe",
+              "enabled": true,
+              "voiceAssetId": "voice.miner",
+              "lineAssetId": "line.miner.pickaxe"
             }
           ]
         }

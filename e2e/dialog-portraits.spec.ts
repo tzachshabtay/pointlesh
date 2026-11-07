@@ -162,15 +162,17 @@ test('Rowan uses recording timing for all four lines and rests when speech ends'
   expect(observed.shapes.some(shape => shape !== 'X' && shape !== '')).toBe(true);
   await expect(portrait(page)).toHaveAttribute('data-lip-sync-shape', 'X');
   await expect(page.locator('#choices button')).toHaveCount(3);
-  for (const [index, choice] of ['Where did they take the king?', 'I could use a little advice.', 'I will bring him home.'].entries()) {
-    if (index > 0) {
-      await page.evaluate(() => (window as any).pointleshDemo.scene.conversation.start('elder'));
-      await page.locator('#dialog-next').click();
-    }
+  for (const choice of ['Where did they take the king?', 'Why did they take the king?', 'I will bring him home.']) {
     await page.getByRole('button', { name: choice, exact: true }).click();
+    // Borin speaks the choice, then Rowan answers in his recorded portrait.
+    await page.evaluate(() => (window as any).pointleshDemo.scene.continueSpeech());
     await expect(portrait(page)).toHaveAttribute('data-asset-id', 'portrait.elder');
     await expect(portrait(page)).toHaveAttribute('data-lip-sync-source', 'rhubarb');
-    await page.locator('#dialog-next').click();
-    await expect(page.locator('#dialog')).toBeHidden();
+    await page.evaluate(() => {
+      const scene = (window as any).pointleshDemo.scene;
+      for (let index = 0; index < 10 && scene.conversation.current()?.type === 'line'; index++) scene.continueSpeech();
+    });
+    if (choice === 'I will bring him home.') await expect(page.locator('#dialog')).toBeHidden();
+    else await expect(page.locator('#choices button').first()).toBeVisible();
   }
 });

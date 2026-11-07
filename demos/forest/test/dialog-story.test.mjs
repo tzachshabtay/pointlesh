@@ -1,0 +1,66 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { tsImport } from 'tsx/esm/api';
+import { AdventureDialog } from '@pointlesh/core';
+
+const manifest = JSON.parse(readFileSync(new URL('../public/authoring/dialogs.json', import.meta.url), 'utf8'));
+const assets = JSON.parse(readFileSync(new URL('../public/authoring/assets.json', import.meta.url), 'utf8'));
+const { addForestStoryDialogs, forestDialogEnabled } = await tsImport('../src/dialog-story.ts', import.meta.url);
+const { prepareForestDialogs } = await tsImport('../src/dialog-returns.ts', import.meta.url);
+const { applyDialogChoice, newStory } = await tsImport('../src/story.ts', import.meta.url);
+
+function begin(dialogId, flags = {}) {
+  const state = { flags };
+  const conversation = new AdventureDialog(manifest, assets,
+    { isEnabled: target => forestDialogEnabled(manifest, state, target) });
+  let turn = conversation.start(dialogId);
+  const greeting = turn.type === 'line' ? turn.resolved.text : '';
+  while (turn.type === 'line') turn = conversation.advance();
+  assert.equal(turn.type, 'decision');
+  return { greeting, options: turn.options.map(option => option.id), conversation };
+}
+
+test('new optional branches are authored as disabled and unlock with story progress', () => {
+  for (const [dialogId, optionId, assetId] of [
+    ['elder', 'father', 'line.elder.father'],
+    ['innkeeper', 'king-tab', 'line.innkeeper.king-tab'],
+    ['miner', 'pickaxe', 'line.miner.pickaxe'],
+  ]) {
+    const dialog = manifest.dialogs[dialogId];
+    assert.equal(dialog.nodes.topics.options.find(option => option.id === optionId).enabled, false);
+    assert.equal(dialog.nodes[`answer-${optionId}`].enabled, false);
+    assert.ok(assets.assets[assetId]);
+  }
+  assert.deepEqual(begin('elder').options, ['king', 'advice', 'goodbye']);
+  const story = newStory();
+  applyDialogChoice(story, 'advice');
+  assert.ok(begin('elder', story.flags).options.includes('father'));
+  assert.deepEqual(begin('innkeeper').options, ['dreamcap', 'buy', 'goodbye']);
+  assert.deepEqual(begin('innkeeper', { knowsDreamcap: true, boughtStout: true }).options,
+    ['king-tab', 'goodbye']);
+});
+
+test('Orrin follows chest state and no longer offers the password after it is learned', () => {
+  assert.match(begin('miner').greeting, /locked in the runed chest/);
+  assert.deepEqual(begin('miner', { knowsPassword: true }).options,
+    ['mining', 'goodbye']);
+  assert.match(begin('miner', { chestOpen: true }).greeting, /runes finally had something to say/);
+  const after = begin('miner', { chestOpen: true, tookPickaxe: true, knowsPassword: true });
+  assert.match(after.greeting, /borrow my best steel/);
+  assert.deepEqual(after.options, ['mining', 'pickaxe', 'goodbye']);
+  assert.equal(manifest.dialogs.miner.nodes.topics.options.find(option => option.id === 'goodbye').text,
+    'I should get back to the road.');
+});
+
+test('story additions are idempotent and the known-password chest does not refer Borin back to Orrin', () => {
+  const copy = structuredClone(manifest), copyAssets = structuredClone(assets);
+  addForestStoryDialogs(copy, copyAssets); prepareForestDialogs(copy);
+  addForestStoryDialogs(copy, copyAssets); prepareForestDialogs(copy);
+  for (const dialogId of ['elder', 'innkeeper', 'miner']) {
+    const ids = copy.dialogs[dialogId].nodes.topics.options.map(option => option.id);
+    assert.equal(ids.length, new Set(ids).size);
+  }
+  assert.equal(copy.dialogs.miner.nodes.opening.lines.length, 3);
+  assert.doesNotMatch(copyAssets.assets['line.chest-open.guess'].voiceSettings.text, /Orrin/);
+});

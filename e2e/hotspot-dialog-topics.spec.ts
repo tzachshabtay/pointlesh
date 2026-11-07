@@ -43,7 +43,8 @@ test('new authored hotspots show their labels and conversation topics return wit
   await expect(page.locator('#choices button')).toHaveCount(3);
   await page.locator('#choices button').nth(1).click();
   await finishReply();
-  await expect(page.locator('#choices button')).toHaveCount(3);
+  await expect(page.locator('#choices button')).toHaveCount(4);
+  await expect(page.locator('#choices')).toContainText('What was my father like?');
   await page.locator('#choices button').last().click();
   await finishReply();
   await expect(page.locator('#dialog')).toBeHidden();

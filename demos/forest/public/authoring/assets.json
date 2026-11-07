@@ -1737,7 +1737,7 @@
         },
         "voice.line.dialog-option.f7174de91b1af51f": {
           "assetId": "voice.line.dialog-option.f7174de91b1af51f",
-          "label": "miner · I will return your pickaxe."
+          "label": "miner · I should get back to the road."
         },
         "voice.line.dialog-option.5bf20e4bc535db3a": {
           "assetId": "voice.line.dialog-option.5bf20e4bc535db3a",
@@ -1778,6 +1778,18 @@
         "line.game.borin.look.village-hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90-74e1ca29": {
           "assetId": "line.game.borin.look.village-hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90-74e1ca29",
           "label": "Well"
+        },
+        "voice.line.dialog-option.46070ea3d971e5cb": {
+          "assetId": "voice.line.dialog-option.46070ea3d971e5cb",
+          "label": "elder · What was my father like?"
+        },
+        "voice.line.dialog-option.63cb2ed5f1e997ed": {
+          "assetId": "voice.line.dialog-option.63cb2ed5f1e997ed",
+          "label": "innkeeper · Did Aldric ever come in here?"
+        },
+        "voice.line.dialog-option.5d392ff104c1ae13": {
+          "assetId": "voice.line.dialog-option.5d392ff104c1ae13",
+          "label": "miner · I found your pickaxe."
         }
       },
       "settings": {},
@@ -1845,6 +1857,10 @@
         "that-i-do-not-know-but-we-do-not-have-a-lot-of-times-their": {
           "label": "That I do not know. But we do not have a lot of times. Their...",
           "assetId": "voice.line.elder.that.i.do.not.know.but"
+        },
+        "line.elder.father": {
+          "assetId": "line.elder.father",
+          "label": "elder · What was my father like?"
         }
       },
       "settings": {},
@@ -1912,6 +1928,10 @@
         "line.game.innkeeper.stout-sale": {
           "assetId": "line.game.innkeeper.stout-sale",
           "label": "Selling honey stout"
+        },
+        "line.innkeeper.king-tab": {
+          "assetId": "line.innkeeper.king-tab",
+          "label": "innkeeper · Did Aldric ever come in here?"
         }
       },
       "settings": {},
@@ -1975,6 +1995,18 @@
         "line.miner.goodbye": {
           "label": "I will return your pickaxe.",
           "assetId": "line.miner.goodbye"
+        },
+        "line.miner.chest-open": {
+          "assetId": "line.miner.chest-open",
+          "label": "Orrin · chest-open"
+        },
+        "line.miner.pickaxe-taken": {
+          "assetId": "line.miner.pickaxe-taken",
+          "label": "Orrin · pickaxe-taken"
+        },
+        "line.miner.pickaxe": {
+          "assetId": "line.miner.pickaxe",
+          "label": "miner · I found your pickaxe."
         }
       },
       "settings": {},
@@ -6261,16 +6293,16 @@
     "line.miner.goodbye": {
       "id": "line.miner.goodbye",
       "kind": "voice-line",
-      "prompt": "Bring the king back first. The pickaxe can wait.",
+      "prompt": "Aye. Bring him home. We can argue about my pickaxe later.",
       "voiceSettings": {
         "voiceAssetId": "voice.miner",
-        "text": "Bring the king back first. The pickaxe can wait.",
+        "text": "Aye. Bring him home. We can argue about my pickaxe later.",
         "provider": "elevenlabs",
         "voiceId": "J6KOvhFRxt7YCo4Igg4n",
         "direction": "",
         "model": "eleven_v4"
       },
-      "activeVersion": "promoted-1793402901431-4",
+      "activeVersion": "promoted-1794017131952-4",
       "versions": {
         "promoted-1793402901431-4": {
           "name": "promoted-1793402901431-4",
@@ -6395,6 +6427,182 @@
             ],
             "sourceFile": "art/line.miner.goodbye.promoted-1793402901431-4.mp3"
           }
+        },
+        "promoted-1794017131952-4": {
+          "recordedText": "Aye. Bring him home. We can argue about my pickaxe later.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Aye. Bring him home. We can argue about my pickaxe later.",
+            "language": "en",
+            "duration": 3.92,
+            "audioHash": "9dfc59ae6eb062983573c9573dbbd3fed1649edeb0c643e3e35a3f0379ddea42",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.19,
+                "shape": "D"
+              },
+              {
+                "start": 0.19,
+                "end": 0.23,
+                "shape": "C"
+              },
+              {
+                "start": 0.23,
+                "end": 0.63,
+                "shape": "B"
+              },
+              {
+                "start": 0.63,
+                "end": 0.75,
+                "shape": "A"
+              },
+              {
+                "start": 0.75,
+                "end": 0.97,
+                "shape": "B"
+              },
+              {
+                "start": 0.97,
+                "end": 1.05,
+                "shape": "A"
+              },
+              {
+                "start": 1.05,
+                "end": 1.21,
+                "shape": "E"
+              },
+              {
+                "start": 1.21,
+                "end": 1.28,
+                "shape": "F"
+              },
+              {
+                "start": 1.28,
+                "end": 1.4,
+                "shape": "A"
+              },
+              {
+                "start": 1.4,
+                "end": 1.8,
+                "shape": "X"
+              },
+              {
+                "start": 1.8,
+                "end": 1.86,
+                "shape": "F"
+              },
+              {
+                "start": 1.86,
+                "end": 2.05,
+                "shape": "C"
+              },
+              {
+                "start": 2.05,
+                "end": 2.12,
+                "shape": "D"
+              },
+              {
+                "start": 2.12,
+                "end": 2.33,
+                "shape": "F"
+              },
+              {
+                "start": 2.33,
+                "end": 2.41,
+                "shape": "A"
+              },
+              {
+                "start": 2.41,
+                "end": 2.48,
+                "shape": "C"
+              },
+              {
+                "start": 2.48,
+                "end": 2.54,
+                "shape": "B"
+              },
+              {
+                "start": 2.54,
+                "end": 2.61,
+                "shape": "A"
+              },
+              {
+                "start": 2.61,
+                "end": 2.67,
+                "shape": "C"
+              },
+              {
+                "start": 2.67,
+                "end": 2.73,
+                "shape": "A"
+              },
+              {
+                "start": 2.73,
+                "end": 2.87,
+                "shape": "B"
+              },
+              {
+                "start": 2.87,
+                "end": 3.15,
+                "shape": "C"
+              },
+              {
+                "start": 3.15,
+                "end": 3.29,
+                "shape": "B"
+              },
+              {
+                "start": 3.29,
+                "end": 3.43,
+                "shape": "H"
+              },
+              {
+                "start": 3.43,
+                "end": 3.5,
+                "shape": "C"
+              },
+              {
+                "start": 3.5,
+                "end": 3.71,
+                "shape": "E"
+              },
+              {
+                "start": 3.71,
+                "end": 3.92,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.miner.goodbye.promoted-1794017131952-4.mp3"
+          },
+          "name": "promoted-1794017131952-4",
+          "file": "art/line.miner.goodbye.promoted-1794017131952-4.mp3",
+          "prompt": "Aye. Bring him home. We can argue about my pickaxe later.",
+          "createdAt": "2026-11-07T02:18:59.724Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.miner",
+            "text": "Aye. Bring him home. We can argue about my pickaxe later.",
+            "provider": "elevenlabs",
+            "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+            "direction": "",
+            "model": "eleven_v4"
+          },
+          "parentVersion": "promoted-1793402901431-4",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "settings": {},
@@ -17382,16 +17590,16 @@
     "line.chest-open.guess": {
       "id": "line.chest-open.guess",
       "kind": "voice-line",
-      "prompt": "THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words.",
+      "prompt": "THE MOUNTAIN KNOWS THE WORDS. IT ALSO KNOWS YOU SAID THE WRONG ONES.",
       "voiceSettings": {
         "voiceAssetId": "voice.chest",
-        "text": "THE CHEST REMAINS UNIMPRESSED. Perhaps Orrin at the pub knows the words.",
+        "text": "THE MOUNTAIN KNOWS THE WORDS. IT ALSO KNOWS YOU SAID THE WRONG ONES.",
         "provider": "elevenlabs",
         "voiceId": "6u5xefe89lLbNzd1nGsE",
         "direction": "",
         "model": "eleven_v4"
       },
-      "activeVersion": "promoted-1793405140782-8",
+      "activeVersion": "promoted-1794017940887-1",
       "versions": {
         "promoted-1793405140782-8": {
           "name": "promoted-1793405140782-8",
@@ -17414,6 +17622,187 @@
             "model": "eleven_v4"
           },
           "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        },
+        "promoted-1794017940887-1": {
+          "recordedText": "THE MOUNTAIN KNOWS THE WORDS. IT ALSO KNOWS YOU SAID THE WRONG ONES.",
+          "name": "promoted-1794017940887-1",
+          "file": "art/line.chest-open.guess.promoted-1794017940887-1.mp3",
+          "prompt": "THE MOUNTAIN KNOWS THE WORDS. IT ALSO KNOWS YOU SAID THE WRONG ONES.",
+          "createdAt": "2026-11-07T02:19:03.293Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.chest",
+            "text": "THE MOUNTAIN KNOWS THE WORDS. IT ALSO KNOWS YOU SAID THE WRONG ONES.",
+            "provider": "elevenlabs",
+            "voiceId": "6u5xefe89lLbNzd1nGsE",
+            "direction": "",
+            "model": "eleven_v4"
+          },
+          "parentVersion": "promoted-1793405140782-8",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "THE MOUNTAIN KNOWS THE WORDS. IT ALSO KNOWS YOU SAID THE WRONG ONES.",
+            "language": "en",
+            "duration": 5.2,
+            "audioHash": "b35261d42517726683e17860448da078ce9e18657aba8193edca57ef477d41a2",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.11,
+                "shape": "B"
+              },
+              {
+                "start": 0.11,
+                "end": 0.17,
+                "shape": "C"
+              },
+              {
+                "start": 0.17,
+                "end": 0.27,
+                "shape": "A"
+              },
+              {
+                "start": 0.27,
+                "end": 0.41,
+                "shape": "C"
+              },
+              {
+                "start": 0.41,
+                "end": 0.83,
+                "shape": "B"
+              },
+              {
+                "start": 0.83,
+                "end": 0.97,
+                "shape": "E"
+              },
+              {
+                "start": 0.97,
+                "end": 1.18,
+                "shape": "F"
+              },
+              {
+                "start": 1.18,
+                "end": 1.25,
+                "shape": "C"
+              },
+              {
+                "start": 1.25,
+                "end": 1.39,
+                "shape": "F"
+              },
+              {
+                "start": 1.39,
+                "end": 1.53,
+                "shape": "E"
+              },
+              {
+                "start": 1.53,
+                "end": 1.95,
+                "shape": "B"
+              },
+              {
+                "start": 1.95,
+                "end": 2.58,
+                "shape": "X"
+              },
+              {
+                "start": 2.58,
+                "end": 2.64,
+                "shape": "B"
+              },
+              {
+                "start": 2.64,
+                "end": 2.83,
+                "shape": "E"
+              },
+              {
+                "start": 2.83,
+                "end": 2.97,
+                "shape": "B"
+              },
+              {
+                "start": 2.97,
+                "end": 3.04,
+                "shape": "E"
+              },
+              {
+                "start": 3.04,
+                "end": 3.18,
+                "shape": "C"
+              },
+              {
+                "start": 3.18,
+                "end": 3.32,
+                "shape": "E"
+              },
+              {
+                "start": 3.32,
+                "end": 3.67,
+                "shape": "F"
+              },
+              {
+                "start": 3.67,
+                "end": 3.81,
+                "shape": "B"
+              },
+              {
+                "start": 3.81,
+                "end": 3.88,
+                "shape": "C"
+              },
+              {
+                "start": 3.88,
+                "end": 4.02,
+                "shape": "B"
+              },
+              {
+                "start": 4.02,
+                "end": 4.16,
+                "shape": "C"
+              },
+              {
+                "start": 4.16,
+                "end": 4.51,
+                "shape": "E"
+              },
+              {
+                "start": 4.51,
+                "end": 4.58,
+                "shape": "F"
+              },
+              {
+                "start": 4.58,
+                "end": 4.86,
+                "shape": "C"
+              },
+              {
+                "start": 4.86,
+                "end": 5.07,
+                "shape": "B"
+              },
+              {
+                "start": 5.07,
+                "end": 5.2,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.chest-open.guess.promoted-1794017940887-1.mp3"
+          }
         }
       },
       "settings": {},
@@ -58309,7 +58698,7 @@
       "id": "voice.line.dialog-option.f7174de91b1af51f",
       "kind": "voice-line",
       "prompt": "Natural conversational delivery.",
-      "activeVersion": "promoted-1793664858779-9",
+      "activeVersion": "promoted-1794016093134-4",
       "versions": {
         "promoted-1793664858779-9": {
           "recordedText": "I will return your pickaxe.",
@@ -58405,11 +58794,107 @@
             "model": "eleven_v4"
           },
           "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        },
+        "promoted-1794016093134-4": {
+          "recordedText": "I should get back to the road.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I should get back to the road.",
+            "language": "en",
+            "duration": 1.76,
+            "audioHash": "770251a9cf6802e93d600dcec62c29f563742e4e95cbd45317f804952c1e22e8",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.06,
+                "shape": "X"
+              },
+              {
+                "start": 0.06,
+                "end": 0.21,
+                "shape": "D"
+              },
+              {
+                "start": 0.21,
+                "end": 0.28,
+                "shape": "B"
+              },
+              {
+                "start": 0.28,
+                "end": 0.35,
+                "shape": "F"
+              },
+              {
+                "start": 0.35,
+                "end": 0.56,
+                "shape": "B"
+              },
+              {
+                "start": 0.56,
+                "end": 0.64,
+                "shape": "A"
+              },
+              {
+                "start": 0.64,
+                "end": 0.75,
+                "shape": "C"
+              },
+              {
+                "start": 0.75,
+                "end": 0.96,
+                "shape": "F"
+              },
+              {
+                "start": 0.96,
+                "end": 1.03,
+                "shape": "C"
+              },
+              {
+                "start": 1.03,
+                "end": 1.24,
+                "shape": "E"
+              },
+              {
+                "start": 1.24,
+                "end": 1.66,
+                "shape": "B"
+              },
+              {
+                "start": 1.66,
+                "end": 1.76,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.dialog-option.f7174de91b1af51f.promoted-1794016093134-4.mp3"
+          },
+          "name": "promoted-1794016093134-4",
+          "file": "art/voice.line.dialog-option.f7174de91b1af51f.promoted-1794016093134-4.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-07T01:57:43.983Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "I should get back to the road.",
+            "direction": "Natural conversational delivery.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4"
+          },
+          "parentVersion": "promoted-1793664858779-9",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I will return your pickaxe.",
+        "text": "I should get back to the road.",
         "direction": "Natural conversational delivery.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
@@ -59749,6 +60234,1502 @@
           },
           "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.elder.father": {
+      "id": "line.elder.father",
+      "kind": "voice-line",
+      "prompt": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.elder",
+        "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "direction": "",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1794016665432-1",
+      "versions": {
+        "promoted-1794016665432-1": {
+          "recordedText": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+            "language": "en",
+            "duration": 6.8,
+            "audioHash": "a1bcefcdd6116cf776b7d168ccb105ed4c9826b8ea2070b56d1a84b0715b3dcf",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.09,
+                "shape": "X"
+              },
+              {
+                "start": 0.09,
+                "end": 0.35,
+                "shape": "B"
+              },
+              {
+                "start": 0.35,
+                "end": 0.56,
+                "shape": "F"
+              },
+              {
+                "start": 0.56,
+                "end": 0.7,
+                "shape": "A"
+              },
+              {
+                "start": 0.7,
+                "end": 0.8,
+                "shape": "C"
+              },
+              {
+                "start": 0.8,
+                "end": 1.01,
+                "shape": "B"
+              },
+              {
+                "start": 1.01,
+                "end": 1.08,
+                "shape": "G"
+              },
+              {
+                "start": 1.08,
+                "end": 1.43,
+                "shape": "B"
+              },
+              {
+                "start": 1.43,
+                "end": 1.5,
+                "shape": "H"
+              },
+              {
+                "start": 1.5,
+                "end": 1.64,
+                "shape": "D"
+              },
+              {
+                "start": 1.64,
+                "end": 1.99,
+                "shape": "B"
+              },
+              {
+                "start": 1.99,
+                "end": 2.03,
+                "shape": "C"
+              },
+              {
+                "start": 2.03,
+                "end": 2.07,
+                "shape": "B"
+              },
+              {
+                "start": 2.07,
+                "end": 2.15,
+                "shape": "A"
+              },
+              {
+                "start": 2.15,
+                "end": 2.2,
+                "shape": "C"
+              },
+              {
+                "start": 2.2,
+                "end": 2.53,
+                "shape": "B"
+              },
+              {
+                "start": 2.53,
+                "end": 2.61,
+                "shape": "A"
+              },
+              {
+                "start": 2.61,
+                "end": 2.81,
+                "shape": "C"
+              },
+              {
+                "start": 2.81,
+                "end": 2.95,
+                "shape": "B"
+              },
+              {
+                "start": 2.95,
+                "end": 3.02,
+                "shape": "F"
+              },
+              {
+                "start": 3.02,
+                "end": 3.16,
+                "shape": "B"
+              },
+              {
+                "start": 3.16,
+                "end": 3.3,
+                "shape": "G"
+              },
+              {
+                "start": 3.3,
+                "end": 3.37,
+                "shape": "E"
+              },
+              {
+                "start": 3.37,
+                "end": 3.44,
+                "shape": "C"
+              },
+              {
+                "start": 3.44,
+                "end": 3.58,
+                "shape": "F"
+              },
+              {
+                "start": 3.58,
+                "end": 3.86,
+                "shape": "B"
+              },
+              {
+                "start": 3.86,
+                "end": 4.43,
+                "shape": "X"
+              },
+              {
+                "start": 4.43,
+                "end": 4.92,
+                "shape": "B"
+              },
+              {
+                "start": 4.92,
+                "end": 4.99,
+                "shape": "C"
+              },
+              {
+                "start": 4.99,
+                "end": 5.27,
+                "shape": "B"
+              },
+              {
+                "start": 5.27,
+                "end": 5.36,
+                "shape": "A"
+              },
+              {
+                "start": 5.36,
+                "end": 5.5,
+                "shape": "E"
+              },
+              {
+                "start": 5.5,
+                "end": 5.88,
+                "shape": "B"
+              },
+              {
+                "start": 5.88,
+                "end": 6.02,
+                "shape": "F"
+              },
+              {
+                "start": 6.02,
+                "end": 6.09,
+                "shape": "C"
+              },
+              {
+                "start": 6.09,
+                "end": 6.37,
+                "shape": "B"
+              },
+              {
+                "start": 6.37,
+                "end": 6.44,
+                "shape": "G"
+              },
+              {
+                "start": 6.44,
+                "end": 6.65,
+                "shape": "B"
+              },
+              {
+                "start": 6.65,
+                "end": 6.8,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.elder.father.promoted-1794016665432-1.mp3"
+          },
+          "name": "promoted-1794016665432-1",
+          "file": "art/line.elder.father.promoted-1794016665432-1.mp3",
+          "prompt": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+          "createdAt": "2026-11-07T02:00:33.021Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.elder",
+            "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+            "voiceId": "607NIeNPjD2aeZAq4oGc",
+            "direction": "",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.innkeeper.king-tab": {
+      "id": "line.innkeeper.king-tab",
+      "kind": "voice-line",
+      "prompt": "He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.innkeeper",
+        "text": "He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.",
+        "voiceId": "VycMiF4EfDgGtO36rRFW",
+        "direction": "",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1794016833381-1",
+      "versions": {
+        "promoted-1794016833381-1": {
+          "recordedText": "He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.",
+            "language": "en",
+            "duration": 8.64,
+            "audioHash": "1392b4f9aa1589593e412ed1c221c74d4caccf45b25c84681b0cb9510ea1fbb0",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.29,
+                "shape": "B"
+              },
+              {
+                "start": 0.29,
+                "end": 0.34,
+                "shape": "X"
+              },
+              {
+                "start": 0.34,
+                "end": 0.5,
+                "shape": "F"
+              },
+              {
+                "start": 0.5,
+                "end": 0.85,
+                "shape": "B"
+              },
+              {
+                "start": 0.85,
+                "end": 0.92,
+                "shape": "F"
+              },
+              {
+                "start": 0.92,
+                "end": 1.03,
+                "shape": "B"
+              },
+              {
+                "start": 1.03,
+                "end": 1.13,
+                "shape": "E"
+              },
+              {
+                "start": 1.13,
+                "end": 1.69,
+                "shape": "B"
+              },
+              {
+                "start": 1.69,
+                "end": 1.76,
+                "shape": "C"
+              },
+              {
+                "start": 1.76,
+                "end": 1.97,
+                "shape": "D"
+              },
+              {
+                "start": 1.97,
+                "end": 2.16,
+                "shape": "E"
+              },
+              {
+                "start": 2.16,
+                "end": 2.26,
+                "shape": "C"
+              },
+              {
+                "start": 2.26,
+                "end": 2.61,
+                "shape": "F"
+              },
+              {
+                "start": 2.61,
+                "end": 2.75,
+                "shape": "B"
+              },
+              {
+                "start": 2.75,
+                "end": 3.01,
+                "shape": "D"
+              },
+              {
+                "start": 3.01,
+                "end": 3.06,
+                "shape": "C"
+              },
+              {
+                "start": 3.06,
+                "end": 3.24,
+                "shape": "B"
+              },
+              {
+                "start": 3.24,
+                "end": 3.31,
+                "shape": "F"
+              },
+              {
+                "start": 3.31,
+                "end": 4.37,
+                "shape": "B"
+              },
+              {
+                "start": 4.37,
+                "end": 4.94,
+                "shape": "X"
+              },
+              {
+                "start": 4.94,
+                "end": 4.98,
+                "shape": "B"
+              },
+              {
+                "start": 4.98,
+                "end": 5.06,
+                "shape": "A"
+              },
+              {
+                "start": 5.06,
+                "end": 5.6,
+                "shape": "C"
+              },
+              {
+                "start": 5.6,
+                "end": 5.67,
+                "shape": "G"
+              },
+              {
+                "start": 5.67,
+                "end": 5.81,
+                "shape": "B"
+              },
+              {
+                "start": 5.81,
+                "end": 6.02,
+                "shape": "C"
+              },
+              {
+                "start": 6.02,
+                "end": 6.51,
+                "shape": "A"
+              },
+              {
+                "start": 6.51,
+                "end": 6.67,
+                "shape": "B"
+              },
+              {
+                "start": 6.67,
+                "end": 6.88,
+                "shape": "F"
+              },
+              {
+                "start": 6.88,
+                "end": 7.09,
+                "shape": "B"
+              },
+              {
+                "start": 7.09,
+                "end": 7.37,
+                "shape": "C"
+              },
+              {
+                "start": 7.37,
+                "end": 7.79,
+                "shape": "B"
+              },
+              {
+                "start": 7.79,
+                "end": 7.86,
+                "shape": "C"
+              },
+              {
+                "start": 7.86,
+                "end": 7.93,
+                "shape": "D"
+              },
+              {
+                "start": 7.93,
+                "end": 8.13,
+                "shape": "B"
+              },
+              {
+                "start": 8.13,
+                "end": 8.37,
+                "shape": "E"
+              },
+              {
+                "start": 8.37,
+                "end": 8.51,
+                "shape": "F"
+              },
+              {
+                "start": 8.51,
+                "end": 8.64,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.innkeeper.king-tab.promoted-1794016833381-1.mp3"
+          },
+          "name": "promoted-1794016833381-1",
+          "file": "art/line.innkeeper.king-tab.promoted-1794016833381-1.mp3",
+          "prompt": "He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.",
+          "createdAt": "2026-11-07T02:05:31.079Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.innkeeper",
+            "text": "He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.",
+            "voiceId": "VycMiF4EfDgGtO36rRFW",
+            "direction": "",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.miner.chest-open": {
+      "id": "line.miner.chest-open",
+      "kind": "voice-line",
+      "prompt": "I hear the runes finally had something to say. They do love an audience.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "I hear the runes finally had something to say. They do love an audience.",
+        "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+        "direction": "",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1794017131952-1",
+      "versions": {
+        "promoted-1794017131952-1": {
+          "recordedText": "I hear the runes finally had something to say. They do love an audience.",
+          "name": "promoted-1794017131952-1",
+          "file": "art/line.miner.chest-open.promoted-1794017131952-1.mp3",
+          "prompt": "I hear the runes finally had something to say. They do love an audience.",
+          "createdAt": "2026-11-07T02:12:35.789Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.miner",
+            "text": "I hear the runes finally had something to say. They do love an audience.",
+            "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+            "direction": "",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I hear the runes finally had something to say. They do love an audience.",
+            "language": "en",
+            "duration": 4.64,
+            "audioHash": "724988247a11d1851a7d1f6987ce5ac39b38bb98c8d143e3e775bc105373f911",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.1,
+                "shape": "C"
+              },
+              {
+                "start": 0.1,
+                "end": 0.36,
+                "shape": "B"
+              },
+              {
+                "start": 0.36,
+                "end": 0.5,
+                "shape": "C"
+              },
+              {
+                "start": 0.5,
+                "end": 0.85,
+                "shape": "F"
+              },
+              {
+                "start": 0.85,
+                "end": 0.99,
+                "shape": "B"
+              },
+              {
+                "start": 0.99,
+                "end": 1.06,
+                "shape": "G"
+              },
+              {
+                "start": 1.06,
+                "end": 1.13,
+                "shape": "C"
+              },
+              {
+                "start": 1.13,
+                "end": 1.41,
+                "shape": "B"
+              },
+              {
+                "start": 1.41,
+                "end": 1.48,
+                "shape": "C"
+              },
+              {
+                "start": 1.48,
+                "end": 1.69,
+                "shape": "B"
+              },
+              {
+                "start": 1.69,
+                "end": 1.77,
+                "shape": "A"
+              },
+              {
+                "start": 1.77,
+                "end": 1.85,
+                "shape": "B"
+              },
+              {
+                "start": 1.85,
+                "end": 1.99,
+                "shape": "F"
+              },
+              {
+                "start": 1.99,
+                "end": 2.13,
+                "shape": "B"
+              },
+              {
+                "start": 2.13,
+                "end": 2.34,
+                "shape": "C"
+              },
+              {
+                "start": 2.34,
+                "end": 2.48,
+                "shape": "B"
+              },
+              {
+                "start": 2.48,
+                "end": 2.92,
+                "shape": "X"
+              },
+              {
+                "start": 2.92,
+                "end": 2.99,
+                "shape": "B"
+              },
+              {
+                "start": 2.99,
+                "end": 3.06,
+                "shape": "C"
+              },
+              {
+                "start": 3.06,
+                "end": 3.13,
+                "shape": "B"
+              },
+              {
+                "start": 3.13,
+                "end": 3.47,
+                "shape": "F"
+              },
+              {
+                "start": 3.47,
+                "end": 3.55,
+                "shape": "E"
+              },
+              {
+                "start": 3.55,
+                "end": 3.62,
+                "shape": "H"
+              },
+              {
+                "start": 3.62,
+                "end": 3.69,
+                "shape": "C"
+              },
+              {
+                "start": 3.69,
+                "end": 3.76,
+                "shape": "G"
+              },
+              {
+                "start": 3.76,
+                "end": 3.83,
+                "shape": "B"
+              },
+              {
+                "start": 3.83,
+                "end": 3.9,
+                "shape": "C"
+              },
+              {
+                "start": 3.9,
+                "end": 3.97,
+                "shape": "E"
+              },
+              {
+                "start": 3.97,
+                "end": 4.46,
+                "shape": "B"
+              },
+              {
+                "start": 4.46,
+                "end": 4.64,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.miner.chest-open.promoted-1794017131952-1.mp3"
+          }
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.miner.pickaxe-taken": {
+      "id": "line.miner.pickaxe-taken",
+      "kind": "voice-line",
+      "prompt": "I see Goldroot let you borrow my best steel. It still knows its way home.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "I see Goldroot let you borrow my best steel. It still knows its way home.",
+        "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+        "direction": "",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1794017131952-2",
+      "versions": {
+        "promoted-1794017131952-2": {
+          "recordedText": "I see Goldroot let you borrow my best steel. It still knows its way home.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I see Goldroot let you borrow my best steel. It still knows its way home.",
+            "language": "en",
+            "duration": 4.72,
+            "audioHash": "9b6d4bc9dc62ac8c6ac5af9e7f0d15abb66dbd2d8369730e6dfdf95623f3f3ca",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.1,
+                "shape": "C"
+              },
+              {
+                "start": 0.1,
+                "end": 0.38,
+                "shape": "B"
+              },
+              {
+                "start": 0.38,
+                "end": 0.59,
+                "shape": "E"
+              },
+              {
+                "start": 0.59,
+                "end": 0.87,
+                "shape": "F"
+              },
+              {
+                "start": 0.87,
+                "end": 0.94,
+                "shape": "B"
+              },
+              {
+                "start": 0.94,
+                "end": 1.08,
+                "shape": "H"
+              },
+              {
+                "start": 1.08,
+                "end": 1.12,
+                "shape": "E"
+              },
+              {
+                "start": 1.12,
+                "end": 1.22,
+                "shape": "F"
+              },
+              {
+                "start": 1.22,
+                "end": 1.3,
+                "shape": "A"
+              },
+              {
+                "start": 1.3,
+                "end": 1.51,
+                "shape": "D"
+              },
+              {
+                "start": 1.51,
+                "end": 1.58,
+                "shape": "E"
+              },
+              {
+                "start": 1.58,
+                "end": 1.65,
+                "shape": "A"
+              },
+              {
+                "start": 1.65,
+                "end": 1.72,
+                "shape": "C"
+              },
+              {
+                "start": 1.72,
+                "end": 1.79,
+                "shape": "A"
+              },
+              {
+                "start": 1.79,
+                "end": 2.01,
+                "shape": "C"
+              },
+              {
+                "start": 2.01,
+                "end": 2.43,
+                "shape": "B"
+              },
+              {
+                "start": 2.43,
+                "end": 2.64,
+                "shape": "H"
+              },
+              {
+                "start": 2.64,
+                "end": 3.01,
+                "shape": "X"
+              },
+              {
+                "start": 3.01,
+                "end": 3.48,
+                "shape": "B"
+              },
+              {
+                "start": 3.48,
+                "end": 3.55,
+                "shape": "C"
+              },
+              {
+                "start": 3.55,
+                "end": 3.62,
+                "shape": "E"
+              },
+              {
+                "start": 3.62,
+                "end": 3.9,
+                "shape": "B"
+              },
+              {
+                "start": 3.9,
+                "end": 4.04,
+                "shape": "F"
+              },
+              {
+                "start": 4.04,
+                "end": 4.11,
+                "shape": "B"
+              },
+              {
+                "start": 4.11,
+                "end": 4.32,
+                "shape": "E"
+              },
+              {
+                "start": 4.32,
+                "end": 4.39,
+                "shape": "F"
+              },
+              {
+                "start": 4.39,
+                "end": 4.53,
+                "shape": "A"
+              },
+              {
+                "start": 4.53,
+                "end": 4.72,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.miner.pickaxe-taken.promoted-1794017131952-2.mp3"
+          },
+          "name": "promoted-1794017131952-2",
+          "file": "art/line.miner.pickaxe-taken.promoted-1794017131952-2.mp3",
+          "prompt": "I see Goldroot let you borrow my best steel. It still knows its way home.",
+          "createdAt": "2026-11-07T02:14:04.877Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.miner",
+            "text": "I see Goldroot let you borrow my best steel. It still knows its way home.",
+            "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+            "direction": "",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.miner.pickaxe": {
+      "id": "line.miner.pickaxe",
+      "kind": "voice-line",
+      "prompt": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.miner",
+        "text": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
+        "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+        "direction": "",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1794017131952-3",
+      "versions": {
+        "promoted-1794017131952-3": {
+          "recordedText": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
+            "language": "en",
+            "duration": 6.08,
+            "audioHash": "fb2cec6ac0ba4c3463b87782c17e1178856479be696d71153bec995246173459",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.11,
+                "shape": "B"
+              },
+              {
+                "start": 0.11,
+                "end": 0.18,
+                "shape": "C"
+              },
+              {
+                "start": 0.18,
+                "end": 0.32,
+                "shape": "E"
+              },
+              {
+                "start": 0.32,
+                "end": 0.67,
+                "shape": "B"
+              },
+              {
+                "start": 0.67,
+                "end": 0.81,
+                "shape": "C"
+              },
+              {
+                "start": 0.81,
+                "end": 0.88,
+                "shape": "B"
+              },
+              {
+                "start": 0.88,
+                "end": 1.02,
+                "shape": "C"
+              },
+              {
+                "start": 1.02,
+                "end": 1.51,
+                "shape": "B"
+              },
+              {
+                "start": 1.51,
+                "end": 1.65,
+                "shape": "C"
+              },
+              {
+                "start": 1.65,
+                "end": 2.14,
+                "shape": "B"
+              },
+              {
+                "start": 2.14,
+                "end": 2.28,
+                "shape": "F"
+              },
+              {
+                "start": 2.28,
+                "end": 2.63,
+                "shape": "C"
+              },
+              {
+                "start": 2.63,
+                "end": 2.7,
+                "shape": "B"
+              },
+              {
+                "start": 2.7,
+                "end": 2.87,
+                "shape": "A"
+              },
+              {
+                "start": 2.87,
+                "end": 3.11,
+                "shape": "X"
+              },
+              {
+                "start": 3.11,
+                "end": 3.23,
+                "shape": "A"
+              },
+              {
+                "start": 3.23,
+                "end": 3.5,
+                "shape": "B"
+              },
+              {
+                "start": 3.5,
+                "end": 3.58,
+                "shape": "A"
+              },
+              {
+                "start": 3.58,
+                "end": 3.77,
+                "shape": "C"
+              },
+              {
+                "start": 3.77,
+                "end": 3.98,
+                "shape": "B"
+              },
+              {
+                "start": 3.98,
+                "end": 4.12,
+                "shape": "E"
+              },
+              {
+                "start": 4.12,
+                "end": 4.73,
+                "shape": "B"
+              },
+              {
+                "start": 4.73,
+                "end": 4.82,
+                "shape": "C"
+              },
+              {
+                "start": 4.82,
+                "end": 4.89,
+                "shape": "B"
+              },
+              {
+                "start": 4.89,
+                "end": 4.96,
+                "shape": "F"
+              },
+              {
+                "start": 4.96,
+                "end": 5.24,
+                "shape": "E"
+              },
+              {
+                "start": 5.24,
+                "end": 5.31,
+                "shape": "H"
+              },
+              {
+                "start": 5.31,
+                "end": 5.38,
+                "shape": "C"
+              },
+              {
+                "start": 5.38,
+                "end": 5.66,
+                "shape": "B"
+              },
+              {
+                "start": 5.66,
+                "end": 5.73,
+                "shape": "G"
+              },
+              {
+                "start": 5.73,
+                "end": 5.94,
+                "shape": "B"
+              },
+              {
+                "start": 5.94,
+                "end": 6.08,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.miner.pickaxe.promoted-1794017131952-3.mp3"
+          },
+          "name": "promoted-1794017131952-3",
+          "file": "art/line.miner.pickaxe.promoted-1794017131952-3.mp3",
+          "prompt": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
+          "createdAt": "2026-11-07T02:17:08.108Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.miner",
+            "text": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
+            "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+            "direction": "",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "voice.line.dialog-option.46070ea3d971e5cb": {
+      "id": "voice.line.dialog-option.46070ea3d971e5cb",
+      "kind": "voice-line",
+      "prompt": "Natural conversational delivery.",
+      "activeVersion": "promoted-1794016093134-1",
+      "versions": {
+        "promoted-1794016093134-1": {
+          "recordedText": "What was my father like?",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "What was my father like?",
+            "language": "en",
+            "duration": 1.76,
+            "audioHash": "676fe8ffab977d4b6ba7297d99fd1dbd8006afd48a812235100b5021fa5d063c",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.18,
+                "shape": "X"
+              },
+              {
+                "start": 0.18,
+                "end": 0.24,
+                "shape": "F"
+              },
+              {
+                "start": 0.24,
+                "end": 0.37,
+                "shape": "B"
+              },
+              {
+                "start": 0.37,
+                "end": 0.44,
+                "shape": "F"
+              },
+              {
+                "start": 0.44,
+                "end": 0.51,
+                "shape": "B"
+              },
+              {
+                "start": 0.51,
+                "end": 0.59,
+                "shape": "A"
+              },
+              {
+                "start": 0.59,
+                "end": 0.66,
+                "shape": "C"
+              },
+              {
+                "start": 0.66,
+                "end": 0.79,
+                "shape": "G"
+              },
+              {
+                "start": 0.79,
+                "end": 0.93,
+                "shape": "D"
+              },
+              {
+                "start": 0.93,
+                "end": 1,
+                "shape": "B"
+              },
+              {
+                "start": 1,
+                "end": 1.07,
+                "shape": "E"
+              },
+              {
+                "start": 1.07,
+                "end": 1.14,
+                "shape": "H"
+              },
+              {
+                "start": 1.14,
+                "end": 1.28,
+                "shape": "C"
+              },
+              {
+                "start": 1.28,
+                "end": 1.49,
+                "shape": "B"
+              },
+              {
+                "start": 1.49,
+                "end": 1.76,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.dialog-option.46070ea3d971e5cb.promoted-1794016093134-1.mp3"
+          },
+          "name": "promoted-1794016093134-1",
+          "file": "art/voice.line.dialog-option.46070ea3d971e5cb.promoted-1794016093134-1.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-07T01:49:55.063Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "What was my father like?",
+            "direction": "Natural conversational delivery.",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "What was my father like?",
+        "direction": "Natural conversational delivery.",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "voice.line.dialog-option.63cb2ed5f1e997ed": {
+      "id": "voice.line.dialog-option.63cb2ed5f1e997ed",
+      "kind": "voice-line",
+      "prompt": "Natural conversational delivery.",
+      "activeVersion": "promoted-1794016093134-2",
+      "versions": {
+        "promoted-1794016093134-2": {
+          "recordedText": "Did Aldric ever come in here?",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Did Aldric ever come in here?",
+            "language": "en",
+            "duration": 2.24,
+            "audioHash": "be4c08856ad88c2cd45d43c16890d45f67d64d2097910e76ae89b3bab72d5976",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.1,
+                "shape": "X"
+              },
+              {
+                "start": 0.1,
+                "end": 0.61,
+                "shape": "B"
+              },
+              {
+                "start": 0.61,
+                "end": 0.75,
+                "shape": "E"
+              },
+              {
+                "start": 0.75,
+                "end": 0.96,
+                "shape": "B"
+              },
+              {
+                "start": 0.96,
+                "end": 1.1,
+                "shape": "C"
+              },
+              {
+                "start": 1.1,
+                "end": 1.17,
+                "shape": "G"
+              },
+              {
+                "start": 1.17,
+                "end": 1.38,
+                "shape": "C"
+              },
+              {
+                "start": 1.38,
+                "end": 1.46,
+                "shape": "A"
+              },
+              {
+                "start": 1.46,
+                "end": 1.97,
+                "shape": "B"
+              },
+              {
+                "start": 1.97,
+                "end": 2.24,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.dialog-option.63cb2ed5f1e997ed.promoted-1794016093134-2.mp3"
+          },
+          "name": "promoted-1794016093134-2",
+          "file": "art/voice.line.dialog-option.63cb2ed5f1e997ed.promoted-1794016093134-2.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-07T01:52:04.644Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "Did Aldric ever come in here?",
+            "direction": "Natural conversational delivery.",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Did Aldric ever come in here?",
+        "direction": "Natural conversational delivery.",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "voice.line.dialog-option.5d392ff104c1ae13": {
+      "id": "voice.line.dialog-option.5d392ff104c1ae13",
+      "kind": "voice-line",
+      "prompt": "Natural conversational delivery.",
+      "activeVersion": "promoted-1794016093134-3",
+      "versions": {
+        "promoted-1794016093134-3": {
+          "recordedText": "I found your pickaxe.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I found your pickaxe.",
+            "language": "en",
+            "duration": 1.68,
+            "audioHash": "dc01b0b20585ea1dc6a951b476b4843dd2c27d024d4224801f7cbbd384ee0f77",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.1,
+                "shape": "X"
+              },
+              {
+                "start": 0.1,
+                "end": 0.16,
+                "shape": "C"
+              },
+              {
+                "start": 0.16,
+                "end": 0.21,
+                "shape": "B"
+              },
+              {
+                "start": 0.21,
+                "end": 0.35,
+                "shape": "G"
+              },
+              {
+                "start": 0.35,
+                "end": 0.42,
+                "shape": "C"
+              },
+              {
+                "start": 0.42,
+                "end": 0.49,
+                "shape": "E"
+              },
+              {
+                "start": 0.49,
+                "end": 0.56,
+                "shape": "F"
+              },
+              {
+                "start": 0.56,
+                "end": 0.64,
+                "shape": "A"
+              },
+              {
+                "start": 0.64,
+                "end": 0.85,
+                "shape": "B"
+              },
+              {
+                "start": 0.85,
+                "end": 1.06,
+                "shape": "C"
+              },
+              {
+                "start": 1.06,
+                "end": 1.41,
+                "shape": "B"
+              },
+              {
+                "start": 1.41,
+                "end": 1.68,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.dialog-option.5d392ff104c1ae13.promoted-1794016093134-3.mp3"
+          },
+          "name": "promoted-1794016093134-3",
+          "file": "art/voice.line.dialog-option.5d392ff104c1ae13.promoted-1794016093134-3.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-07T01:53:58.326Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "I found your pickaxe.",
+            "direction": "Natural conversational delivery.",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "I found your pickaxe.",
+        "direction": "Natural conversational delivery.",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
       },
       "settings": {},
       "audioSettings": {
@@ -61239,6 +63220,30 @@
       "Voices"
     ],
     "line.game.borin.look.village-hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90-74e1ca29": [
+      "Voices"
+    ],
+    "line.elder.father": [
+      "Voices"
+    ],
+    "line.innkeeper.king-tab": [
+      "Voices"
+    ],
+    "line.miner.chest-open": [
+      "Voices"
+    ],
+    "line.miner.pickaxe-taken": [
+      "Voices"
+    ],
+    "line.miner.pickaxe": [
+      "Voices"
+    ],
+    "voice.line.dialog-option.46070ea3d971e5cb": [
+      "Voices"
+    ],
+    "voice.line.dialog-option.63cb2ed5f1e997ed": [
+      "Voices"
+    ],
+    "voice.line.dialog-option.5d392ff104c1ae13": [
       "Voices"
     ]
   }

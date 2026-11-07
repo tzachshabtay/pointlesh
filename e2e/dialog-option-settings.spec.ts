@@ -9,11 +9,13 @@ test('option flags are editable, choice speech is linked and live edits change t
  await panel.getByRole('combobox',{name:'Selected dialog'}).selectOption('elder');
  await panel.locator('.dialog-designer__node-select').filter({hasText:'Topics'}).click();
  const cards=panel.locator('.dialog-designer__option-card');
- await expect(cards).toHaveCount(3);
+ await expect(cards).toHaveCount(4);
  await expect(cards.nth(0).getByLabel('Should exit dialog',{exact:true})).not.toBeChecked();
  await expect(cards.nth(1).getByLabel('Should exit dialog',{exact:true})).not.toBeChecked();
- await expect(cards.nth(2).getByLabel('Should exit dialog',{exact:true})).toBeChecked();
- for(let i=0;i<3;i++)await expect(cards.nth(i).getByLabel('Spoken by the character',{exact:true})).toBeChecked();
+ await expect(cards.nth(2).getByLabel('Enabled',{exact:true})).not.toBeChecked();
+ await expect(cards.nth(2).getByLabel('Should exit dialog',{exact:true})).not.toBeChecked();
+ await expect(cards.nth(3).getByLabel('Should exit dialog',{exact:true})).toBeChecked();
+ for(let i=0;i<4;i++)await expect(cards.nth(i).getByLabel('Spoken by the character',{exact:true})).toBeChecked();
  await cards.first().getByLabel('Choice text',{exact:true}).fill('Does the well know where the king went?');
  await cards.first().getByLabel('Choice text',{exact:true}).press('Tab');
  await cards.first().getByLabel('Should exit dialog',{exact:true}).check();

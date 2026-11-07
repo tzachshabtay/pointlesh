@@ -176,6 +176,7 @@ export function interact(state: StoryState, targetId: string, item?: ItemId): In
   return { text: target.description };
 }
 export function applyDialogChoice(state: StoryState, optionId: string): void {
+  if (optionId === 'advice') state.flags.askedElderWhy = true;
   if (optionId === 'dreamcap') addClue(state, 'knowsDreamcap', 'Mara says dreamcaps grow in the wood. Mix one with honey stout to make a sleeping draught.');
   if (optionId === 'password') addClue(state, 'knowsPassword', 'Orrin’s secret: the tool chest opens to “Stone remembers.”');
   if (optionId === 'open-chest' && state.flags.knowsPassword && !state.flags.chestOpen && !state.flags.tookPickaxe && !state.chestOpening) state.chestOpening = { elapsedMs: 0 };

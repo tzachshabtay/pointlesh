@@ -6,6 +6,7 @@ import { loadForestAssets } from './asset-loading';
 import { animationDuration, animationTagTime, crossedAnimationTag, crossedAnimationFrameTag } from '@pointlesh/phaser/animation-tags';
 import { DialogDesignerDebugClient } from '@dialog-designer/designer';
 import { prepareForestDialogs, optionRecordingMatches } from './dialog-returns';
+import { addForestStoryDialogs, forestDialogEnabled } from './dialog-story';
 import { installPhaserDialogDesigner, DialogOptionAssetClient } from '@dialog-designer/phaser';
 import { SceneDesignerDebugClient } from '@scene-designer/designer';
 import { approachPointleshEntity, resolvePointleshPoint, findClosestReachablePath, AdventureDialog, BehaviorRegistry, CharacterController, CutsceneRunner, LocalStorageSaveStorage, SaveStore, isPointleshPrefab, pointInPolygon, pointleshAreaCapabilities, readCharacterAnimations, resolvePointleshScene, walkablePolygons, type DialogCheckpoint, type Direction, type GameState, type JSONValue, type ResolvedPointleshObject } from '@pointlesh/core';
@@ -169,7 +170,7 @@ class ForestAdventure extends Phaser.Scene {
   overlays: ReturnType<typeof createWalkBehindOverlay>[] = [];
   sceneDesigner?: ReturnType<typeof installPhaserPointleshDesigner>;
   aiRuntime!: AiAssetRuntime;
-  conversation = new AdventureDialog(dialogs, assets);
+  conversation = new AdventureDialog(dialogs, assets, { isEnabled: target => forestDialogEnabled(dialogs, this.story, target) });
   conversationActive = false;
   introRunner = new CutsceneRunner(cutsceneDefinition('intro'));
   endingRunner = new CutsceneRunner(cutsceneDefinition('ending'));
@@ -1315,13 +1316,16 @@ class ForestAdventure extends Phaser.Scene {
     if (opening !== undefined && (!opening || !Number.isFinite(opening.elapsedMs) || opening.elapsedMs < 0 || save.roomId !== 'mine' || !save.flags.knowsPassword || save.flags.chestOpen || save.flags.tookPickaxe)) throw new Error('Invalid chest-opening checkpoint');
     const tying = save.extensions.tyingGuard as { elapsedMs: number } | undefined;
     if (tying !== undefined && (!tying || !Number.isFinite(tying.elapsedMs) || tying.elapsedMs < 0 || save.roomId !== 'camp' || !save.flags.guardAsleep || save.flags.guardBound || !save.inventory.includes('rope'))) throw new Error('Invalid rope-tying checkpoint');
-    const checkDialog = new AdventureDialog(dialogs, assets); checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
+    const checkDialog = new AdventureDialog(dialogs, assets, { isEnabled: target => forestDialogEnabled(dialogs, { flags: save.flags as Record<string, boolean> }, target) });
+    checkDialog.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const actor = new CharacterController(this.character.config); actor.restore(save.characters.borin);
   }
   restore(save: GameState) {
     this.validateSave(save);
-    const conversation = new AdventureDialog(dialogs, assets); const turn = conversation.restore((save.dialog ?? null) as DialogCheckpoint | null);
     const checkpoint = save.cutscene as ForestCheckpoint;
+    const restoredStory = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: Math.min(checkpoint.introStep, intro.length), endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
+    const conversation = new AdventureDialog(dialogs, assets, { isEnabled: target => forestDialogEnabled(dialogs, restoredStory, target) });
+    const turn = conversation.restore((save.dialog ?? null) as DialogCheckpoint | null);
     this.cutsceneVoice.reset();
     this.epoch++; this.clearMovementKeys(); this.dismissSpeech();
     this.skipIntroArrival = false;
@@ -1330,7 +1334,7 @@ class ForestAdventure extends Phaser.Scene {
     this.endingOpening = save.extensions.endingOpening as unknown as EndingOpening | undefined;
     this.cutsceneCrossfade?.destroy(); this.cutsceneCrossfade = undefined;
     this.cinematic?.destroy(); this.cinematic = undefined;
-    this.story = migrateRescueStory({ roomId: save.roomId as RoomId, inventory: save.inventory as ItemId[], flags: save.flags as Record<string, boolean>, journal: save.extensions.journal as string[], guardClock: save.extensions.guardClock as number, introStep: Math.min(checkpoint.introStep, intro.length), endingStep: checkpoint.endingStep, ...(save.extensions.chestOpening ? { chestOpening: save.extensions.chestOpening as { elapsedMs: number } } : {}), ...(save.extensions.tyingGuard ? { tyingGuard: save.extensions.tyingGuard as { elapsedMs: number } } : {}) });
+    this.story = restoredStory;
     this.journal.reset(this.story.journal);
     this.inventoryPickup.reset(this.story.inventory); this.pickupOrigin = undefined;
     for (const kind of ['intro', 'ending'] as const) this[`${kind}Runner`].restore({ cutsceneId: `forest.${kind}`, version: 1, stepIndex: Math.min(Math.max(0, checkpoint[`${kind}Step`]), (kind === 'intro' ? intro : ending).length), elapsedMs: restoreCinematicElapsed(kind, checkpoint[`${kind}Step`], checkpoint[`${kind}ElapsedMs`] ?? 0) });
@@ -1662,6 +1666,7 @@ addForestInterfaceAssets(assets);
 addForestInventoryPrefabs(authoredScenes);
 addBrewAssets(assets);
 addChestGuesses(dialogs, assets);
+addForestStoryDialogs(dialogs, assets);
 prepareForestDialogs(dialogs);
 Object.assign(assets, syncDialogOptionVoiceLines(dialogs, assets));
 addCharacterPortraits(authoredScenes);

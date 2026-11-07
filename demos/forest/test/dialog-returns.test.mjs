@@ -31,6 +31,8 @@ for (const [name, source, voices] of [['seed', dialogs, assets], ['authored', au
     assert.equal(option.spokenByCharacter,true);
     assert.equal(option.voiceAssetId,'voice.borin');
     assert.equal(speech.assets[option.lineAssetId].voiceSettings.text,option.text);
+    // Story-gated topics are covered with their live flags in dialog-story.test.mjs.
+    if (!option.enabled) continue;
     const runtime = new AdventureDialog(manifest, speech);
     let turn = runtime.start(dialog.id);
     for (let i=0; turn.type === 'line' && i<50; i++) turn = runtime.advance();
