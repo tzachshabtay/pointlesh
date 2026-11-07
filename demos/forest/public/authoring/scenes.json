@@ -1005,7 +1005,7 @@
           "label": "character",
           "interactive": true,
           "ignoreScaling": false,
-          "movementLinkedToAnimation": true,
+          "movementLinkedToAnimation": false,
           "facing": "down",
           "directions": 4,
           "animations": {
