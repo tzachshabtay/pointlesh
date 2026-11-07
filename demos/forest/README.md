@@ -17,11 +17,7 @@ Open [http://127.0.0.1:5186](http://127.0.0.1:5186). Choose **New game** to star
 
 ## Authoring and promotion
 
-To promote designer edits to project files, run this in a second terminal:
-
-```sh
-npm run dev:server
-```
+The root `npm run dev` starts both the game preview and the local authoring API. Generation and promotion work without a second terminal. If you start only the demo workspace's Vite server, run `npm run dev:server` from the repository root as well.
 
 The local services use ports **4287** (AI Assets), **4288** (Scene Designer), **4289** (Dialog Designer), and **4290** (Interactions). The demo's designer panels target those addresses. Start or load a game, then click **Designer** to edit the scene. The older `?designer=1` URL also opens the title screen and no longer skips the intro. Visual editing and JSON export work without these services; promotion and asset generation require the corresponding local service.
 

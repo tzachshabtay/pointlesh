@@ -12,7 +12,7 @@ pointlesh-dev serve --project=./authoring --assets-dir=./public/art --port=4287
 
 The project directory supplies `assets.json`, `scenes.json`, `dialogs.json` and `interactions.json`. AI Assets uses the supplied assets directory. Ports are consecutive: AI Assets on 4287, Scene Designer on 4288, Dialog Designer on 4289 and Interactions on 4290. Set a different starting port with `--port`; accepted values are 1024–65532. `SIGINT` and `SIGTERM` close all four services.
 
-For the included demo, use `npm run dev:server` at repository root. Start `npm run dev` separately to serve the game at `http://127.0.0.1:5186`. These services support local promotion and asset authoring; the built demo can be hosted as static files without them.
+For the included demo, `npm run dev` at the repository root starts both this authoring service and the game at `http://127.0.0.1:5186`. Use `npm run dev:server` only when running the demo's Vite server separately. These services support local promotion and asset authoring; the built demo can be hosted as static files without them.
 
 ## Programmatic lifecycle
 
