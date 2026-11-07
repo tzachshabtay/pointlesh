@@ -55,7 +55,7 @@ export function addForestStoryDialogs(manifest: DialogDesignerManifest, assets: 
   };
 
   clearOldHide('innkeeper', 'dreamcap', 'knowsDreamcap');
-  clearOldHide('innkeeper', 'buy', 'boughtStout');
+  gatedOption('innkeeper', 'buy', { hideAfterFlag: 'boughtStout' });
   const oldMaraQuestion = 'Did Aldric ever come in here?';
   const maraQuestion = 'What was Aldric like on his last visit?';
   addTopic('innkeeper', { id: 'king-tab', text: maraQuestion, enabled: false,

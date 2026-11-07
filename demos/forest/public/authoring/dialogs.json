@@ -173,7 +173,10 @@
               "id": "buy",
               "text": "Do you have any honey stout?",
               "enabled": true,
-              "nextNodeId": "answer-buy"
+              "nextNodeId": "answer-buy",
+              "metadata": {
+                "hideAfterFlag": "boughtStout"
+              }
             },
             {
               "id": "king-tab",

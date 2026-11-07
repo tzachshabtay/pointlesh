@@ -38,7 +38,7 @@ test('new optional branches are authored as disabled and unlock with story progr
   assert.ok(begin('elder', story.flags).options.includes('father'));
   assert.deepEqual(begin('innkeeper').options, ['dreamcap', 'buy', 'goodbye']);
   assert.deepEqual(begin('innkeeper', { knowsDreamcap: true, boughtStout: true }).options,
-    ['dreamcap', 'buy', 'king-tab', 'goodbye']);
+    ['dreamcap', 'king-tab', 'goodbye']);
   assert.equal(manifest.dialogs.innkeeper.nodes.topics.options.find(option => option.id === 'king-tab').text,
     'What was Aldric like on his last visit?');
   assert.match(assets.assets['line.innkeeper.king-tab'].voiceSettings.text, /Same as every visit/);
@@ -82,7 +82,7 @@ test('older authored dialogs gain the corrected availability and Mara exchange',
     'He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.';
   addForestStoryDialogs(copy, copyAssets);
   assert.equal(mara.topics.options.find(option => option.id === 'dreamcap').metadata, undefined);
-  assert.equal(mara.topics.options.find(option => option.id === 'buy').metadata, undefined);
+  assert.equal(mara.topics.options.find(option => option.id === 'buy').metadata.hideAfterFlag, 'boughtStout');
   assert.equal(copy.dialogs.miner.nodes.topics.options.find(option => option.id === 'password').metadata.hideAfterFlag,
     'tookPickaxe');
   assert.equal(mara.topics.options.find(option => option.id === 'king-tab').text,
