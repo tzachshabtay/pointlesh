@@ -19,8 +19,11 @@ const groups: [string, string[]][] = [
   ]],
   ['voice.chest', ['line.chest-open.guess']],
 ];
+const requestedIds = new Set(process.argv.slice(2));
 const client = new AiAssetDebugClient('http://127.0.0.1:4287');
-for (const [voiceAssetId, ids] of groups) {
+for (const [voiceAssetId, allIds] of groups) {
+  const ids = requestedIds.size ? allIds.filter(id => requestedIds.has(id)) : allIds;
+  if (!ids.length) continue;
   const manifest = JSON.parse(await readFile(source, 'utf8')) as AiAssetManifest;
   const voice = manifest.assets[voiceAssetId];
   if (voice?.kind !== 'voice') throw new Error(`Missing voice ${voiceAssetId}`);

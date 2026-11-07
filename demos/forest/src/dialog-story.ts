@@ -45,14 +45,33 @@ export function addForestStoryDialogs(manifest: DialogDesignerManifest, assets: 
     const option = topics.options.find(candidate => candidate.id === id);
     if (option) gate(option, conditions);
   };
+  const clearOldHide = (dialogId: string, id: string, oldFlag: string) => {
+    const topics = manifest.dialogs[dialogId]?.nodes.topics;
+    if (topics?.type !== 'decision') return;
+    const option = topics.options.find(candidate => candidate.id === id);
+    if (option?.metadata?.hideAfterFlag !== oldFlag) return;
+    delete option.metadata.hideAfterFlag;
+    if (!Object.keys(option.metadata).length) delete option.metadata;
+  };
 
-  gatedOption('innkeeper', 'dreamcap', { hideAfterFlag: 'knowsDreamcap' });
-  gatedOption('innkeeper', 'buy', { hideAfterFlag: 'boughtStout' });
-  addTopic('innkeeper', { id: 'king-tab', text: 'Did Aldric ever come in here?', enabled: false,
+  clearOldHide('innkeeper', 'dreamcap', 'knowsDreamcap');
+  clearOldHide('innkeeper', 'buy', 'boughtStout');
+  const oldMaraQuestion = 'Did Aldric ever come in here?';
+  const maraQuestion = 'What was Aldric like on his last visit?';
+  addTopic('innkeeper', { id: 'king-tab', text: maraQuestion, enabled: false,
     nextNodeId: 'answer-king-tab', metadata: { requiresFlag: 'boughtStout' } }, 'voice.innkeeper',
-    'He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.');
+    'Same as every visit. He lost at cards with great dignity, paid everyone’s tab, and insisted my stout made him a better player.');
+  const maraTopics = manifest.dialogs.innkeeper?.nodes.topics;
+  const maraOption = maraTopics?.type === 'decision' ? maraTopics.options.find(option => option.id === 'king-tab') : undefined;
+  if (maraOption?.text === oldMaraQuestion) maraOption.text = maraQuestion;
+  const maraReply = manifest.dialogs.innkeeper?.nodes['answer-king-tab'];
+  if (maraReply?.type === 'block' && maraReply.name === oldMaraQuestion) maraReply.name = maraQuestion;
+  replaceText(assets, dialogOptionVoiceLineId('innkeeper', 'topics', 'king-tab'), oldMaraQuestion, maraQuestion);
+  replaceText(assets, 'line.innkeeper.king-tab',
+    'He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.',
+    'Same as every visit. He lost at cards with great dignity, paid everyone’s tab, and insisted my stout made him a better player.');
 
-  gatedOption('miner', 'password', { hideAfterFlag: 'knowsPassword' });
+  gatedOption('miner', 'password', { hideAfterFlag: 'tookPickaxe' });
   const miner = manifest.dialogs.miner;
   const opening = miner?.nodes.opening;
   if (opening?.type === 'block') {

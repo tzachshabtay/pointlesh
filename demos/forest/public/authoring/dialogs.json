@@ -167,23 +167,17 @@
               "id": "dreamcap",
               "text": "How do I get past an orc guard?",
               "enabled": true,
-              "nextNodeId": "answer-dreamcap",
-              "metadata": {
-                "hideAfterFlag": "knowsDreamcap"
-              }
+              "nextNodeId": "answer-dreamcap"
             },
             {
               "id": "buy",
               "text": "Do you have any honey stout?",
               "enabled": true,
-              "nextNodeId": "answer-buy",
-              "metadata": {
-                "hideAfterFlag": "boughtStout"
-              }
+              "nextNodeId": "answer-buy"
             },
             {
               "id": "king-tab",
-              "text": "Did Aldric ever come in here?",
+              "text": "What was Aldric like on his last visit?",
               "enabled": false,
               "nextNodeId": "answer-king-tab",
               "metadata": {
@@ -247,7 +241,7 @@
         "answer-king-tab": {
           "id": "answer-king-tab",
           "type": "block",
-          "name": "Did Aldric ever come in here?",
+          "name": "What was Aldric like on his last visit?",
           "enabled": false,
           "metadata": {
             "requiresFlag": "boughtStout"
@@ -319,7 +313,7 @@
               "enabled": true,
               "nextNodeId": "answer-password",
               "metadata": {
-                "hideAfterFlag": "knowsPassword"
+                "hideAfterFlag": "tookPickaxe"
               }
             },
             {

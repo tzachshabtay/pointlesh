@@ -38,14 +38,18 @@ test('new optional branches are authored as disabled and unlock with story progr
   assert.ok(begin('elder', story.flags).options.includes('father'));
   assert.deepEqual(begin('innkeeper').options, ['dreamcap', 'buy', 'goodbye']);
   assert.deepEqual(begin('innkeeper', { knowsDreamcap: true, boughtStout: true }).options,
-    ['king-tab', 'goodbye']);
+    ['dreamcap', 'buy', 'king-tab', 'goodbye']);
+  assert.equal(manifest.dialogs.innkeeper.nodes.topics.options.find(option => option.id === 'king-tab').text,
+    'What was Aldric like on his last visit?');
+  assert.match(assets.assets['line.innkeeper.king-tab'].voiceSettings.text, /Same as every visit/);
 });
 
-test('Orrin follows chest state and no longer offers the password after it is learned', () => {
+test('Orrin keeps the chest question until Borin actually has the pickaxe', () => {
   assert.match(begin('miner').greeting, /locked in the runed chest/);
   assert.deepEqual(begin('miner', { knowsPassword: true }).options,
-    ['mining', 'goodbye']);
+    ['password', 'mining', 'goodbye']);
   assert.match(begin('miner', { chestOpen: true }).greeting, /runes finally had something to say/);
+  assert.ok(begin('miner', { chestOpen: true, knowsPassword: true }).options.includes('password'));
   const after = begin('miner', { chestOpen: true, tookPickaxe: true, knowsPassword: true });
   assert.match(after.greeting, /borrow my best steel/);
   assert.deepEqual(after.options, ['mining', 'pickaxe', 'goodbye']);
@@ -63,4 +67,25 @@ test('story additions are idempotent and the known-password chest does not refer
   }
   assert.equal(copy.dialogs.miner.nodes.opening.lines.length, 3);
   assert.doesNotMatch(copyAssets.assets['line.chest-open.guess'].voiceSettings.text, /Orrin/);
+});
+
+test('older authored dialogs gain the corrected availability and Mara exchange', () => {
+  const copy = structuredClone(manifest), copyAssets = structuredClone(assets);
+  const mara = copy.dialogs.innkeeper.nodes;
+  mara.topics.options.find(option => option.id === 'dreamcap').metadata = { hideAfterFlag: 'knowsDreamcap' };
+  mara.topics.options.find(option => option.id === 'buy').metadata = { hideAfterFlag: 'boughtStout' };
+  mara.topics.options.find(option => option.id === 'king-tab').text = 'Did Aldric ever come in here?';
+  mara['answer-king-tab'].name = 'Did Aldric ever come in here?';
+  copy.dialogs.miner.nodes.topics.options.find(option => option.id === 'password').metadata =
+    { hideAfterFlag: 'knowsPassword' };
+  copyAssets.assets['line.innkeeper.king-tab'].voiceSettings.text =
+    'He used to sit where Orrin sits now and lose at cards with great dignity. He paid every tab, including the ones he did not owe.';
+  addForestStoryDialogs(copy, copyAssets);
+  assert.equal(mara.topics.options.find(option => option.id === 'dreamcap').metadata, undefined);
+  assert.equal(mara.topics.options.find(option => option.id === 'buy').metadata, undefined);
+  assert.equal(copy.dialogs.miner.nodes.topics.options.find(option => option.id === 'password').metadata.hideAfterFlag,
+    'tookPickaxe');
+  assert.equal(mara.topics.options.find(option => option.id === 'king-tab').text,
+    'What was Aldric like on his last visit?');
+  assert.match(copyAssets.assets['line.innkeeper.king-tab'].voiceSettings.text, /Same as every visit/);
 });
