@@ -10518,7 +10518,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790375225298",
+      "activeVersion": "promoted-1794069735012",
       "versions": {
         "original": {
           "name": "original",
@@ -10581,6 +10581,24 @@
           "voiceSettings": {},
           "parentVersion": "promoted-1790302424665",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1794069735012": {
+          "name": "promoted-1794069735012",
+          "file": "art/guard.walk-left.promoted-1794069735012.png",
+          "prompt": "walk left animation for the orc:\n\nFrame 1 (Contact - Left Foot Forward): Legs are at their maximum spread. The left heel touches the ground, and the right toe is about to leave it. The body is at its lowest point of the contact phase. Arms swing opposite to the legs (right arm forward, left arm back).Frame 2 (Down / Recoil): The body dips to its lowest vertical position as the front knee bends slightly to absorb the weight. Both feet are flat or planted on the ground.Frame 3 (Passing): The passing position. The right leg swings past the stationary left leg, knees pass each other, and the body rises back to neutral height.Frame 4 (Up / High Point): The body reaches its highest vertical point as the character pushes off the back foot, with the passing leg extending forward.Frame 5 (Contact - Right Foot Forward): Mirror of Frame 1. The right heel makes contact ahead, and the left toe prepares to lift. Legs are at maximum width again.Frame 6 (Down / Recoil): Mirror of Frame 2. The body dips as weight shifts onto the right leg, with the right knee bending to cushion the impact.Frame 7 (Passing): Mirror of Frame 3. The left leg swings past the right leg moving forward, and the body rises back up.Frame 8 (Up / High Point): Mirror of Frame 4. The body reaches its peak height on the right foot before transitioning smoothly back into Frame 1.",
+          "createdAt": "2026-11-07T16:42:15.170Z",
+          "model": "gpt-image-2.6-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.6-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790375225298",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -10592,7 +10610,7 @@
       ],
       "settings": {
         "format": "png",
-        "model": "gpt-image-2.5-sunburst",
+        "model": "gpt-image-2.6-sunburst",
         "background": "transparent",
         "frameAlignment": "center"
       },

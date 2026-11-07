@@ -9141,7 +9141,7 @@
               "id": "camp.npc.guard",
               "prefabId": "forest.character.guard",
               "name": "Grub the guard",
-              "visible": false,
+              "visible": true,
               "locked": false,
               "overrides": {
                 "object": {
