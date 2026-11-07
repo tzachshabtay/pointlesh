@@ -335,10 +335,12 @@ export class ForestCinematic {
     }
     const speaker = (this.kind === 'intro' ? introScript : endingScript)[this.stepIndex]?.speaker;
     const speaking = ({ Borin: 'borin', 'King Aldric': 'king', 'Elder Rowan': 'elder', Mara: 'innkeeper', Orrin: 'miner' } as Record<string, string>)[speaker ?? ''] === characterId;
+    const walkPhaseOffsetMs = this.kind === 'intro' && id === 'guard-rear' && actor.walking ? 170 : 0;
+    const animationElapsedMs = actor.sleeping ? Number.MAX_SAFE_INTEGER : (pose.actionElapsedMs ?? this.elapsedMs + walkPhaseOffsetMs);
     actor.binding.renderPose({ position: { x: pose.x, y: pose.y },
       activity: actor.action ? 'idle' : pose.walking ? 'walking' : speaking ? 'speaking' : 'idle',
       facing: pose.facing ?? (pose.facingLeft ? 'left' : pose.walking ? 'right' : 'down'),
-    }, actor.sleeping ? Number.MAX_SAFE_INTEGER : pose.actionElapsedMs ?? this.elapsedMs, { loop: !actor.action });
+    }, animationElapsedMs, { loop: !actor.action });
     sprite.setVisible(true).setAlpha(pose.alpha ?? 1);
     return sprite;
   }
