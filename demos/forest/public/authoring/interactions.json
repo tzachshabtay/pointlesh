@@ -58,23 +58,28 @@
       },
       "item:forest.inventory.coin": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "I don't think he would take a bribe.",
+        "mode": "sequence"
       },
       "item:forest.inventory.mushroom": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
+        "mode": "sequence"
       },
       "item:forest.inventory.sleepyStout": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "I can't just give it to him! I cannot be seen.",
+        "mode": "sequence"
       },
       "item:forest.inventory.pickaxe": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "I might be brave but I'm not a fool. I will not win this with a fight.",
+        "mode": "sequence"
       },
       "item:forest.inventory.stout": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "The honey stout alone will not put him to sleep.",
+        "mode": "sequence"
       }
     },
     "prefab:forest.character.king": {
@@ -91,7 +96,8 @@
       },
       "item:forest.inventory.coin": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "The king doesn't need my money. He needs me to break him free!",
+        "mode": "sequence"
       },
       "item:forest.inventory.mushroom": {
         "kind": "simple",
@@ -99,7 +105,8 @@
       },
       "item:forest.inventory.sleepyStout": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "The king is not who I need to put to sleep.",
+        "mode": "sequence"
       },
       "item:forest.inventory.pickaxe": {
         "kind": "code"
@@ -265,7 +272,8 @@
       },
       "item:forest.inventory.stout": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "The honey stout alone will not put him to sleep.",
+        "mode": "sequence"
       }
     },
     "scene:[\"camp\",\"cauldron\"]": {
@@ -286,7 +294,8 @@
       },
       "item:forest.inventory.mushroom": {
         "kind": "simple",
-        "text": "I cannot see how that would help here."
+        "text": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
+        "mode": "sequence"
       },
       "item:forest.inventory.sleepyStout": {
         "kind": "code"
@@ -762,23 +771,23 @@
     "scene:[\"village\",\"hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90\"]": {
       "verb:look": {
         "kind": "simple",
-        "text": "I almost fell here as a dwarfling.",
-        "mode": "sequence"
+        "mode": "sequence",
+        "text": "I almost fell here as a dwarfling."
       },
       "verb:interact": {
         "kind": "simple",
-        "text": "I don't need a drink right now, thank you for offering.",
-        "mode": "sequence"
+        "mode": "sequence",
+        "text": "I don't need a drink right now, thank you for offering."
       },
       "item:forest.inventory.rope": {
         "kind": "simple",
-        "text": "I don't need to get down there.",
-        "mode": "sequence"
+        "mode": "sequence",
+        "text": "I don't need to get down there."
       },
       "item:forest.inventory.coin": {
         "kind": "simple",
-        "text": "I would make a wish but I don't want to lose the coin.",
-        "mode": "sequence"
+        "mode": "sequence",
+        "text": "I would make a wish but I don't want to lose the coin."
       }
     }
   }

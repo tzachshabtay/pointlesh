@@ -1996,6 +1996,10 @@
           "label": "I will return your pickaxe.",
           "assetId": "line.miner.goodbye"
         },
+        "voice.line.interaction.3ceacffa41427889.sentence-2": {
+          "assetId": "voice.line.interaction.3ceacffa41427889.sentence-2",
+          "label": "Ah, nice job. Now go get our king back! Make me proud!"
+        },
         "line.miner.chest-open": {
           "assetId": "line.miner.chest-open",
           "label": "Orrin · chest-open"
@@ -19295,8 +19299,8 @@
     "voice.line.interaction.43752f855987864f": {
       "id": "voice.line.interaction.43752f855987864f",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-9",
+      "prompt": "I don't think he would take a bribe.",
+      "activeVersion": "promoted-1793930404134-1",
       "versions": {
         "promoted-1793322485366-9": {
           "name": "promoted-1793322485366-9",
@@ -19334,7 +19338,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "I don't think he would take a bribe.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -19413,12 +19417,129 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.43752f855987864f.promoted-1793324543306-9.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-1": {
+          "recordedText": "I don't think he would take a bribe.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I don't think he would take a bribe.",
+            "language": "en",
+            "duration": 2.08,
+            "audioHash": "f7146181b3ebdcca22703f179969e2c4af2b804430a606ccbc2ad038cfa1c2f7",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.09,
+                "shape": "C"
+              },
+              {
+                "start": 0.09,
+                "end": 0.21,
+                "shape": "B"
+              },
+              {
+                "start": 0.21,
+                "end": 0.28,
+                "shape": "E"
+              },
+              {
+                "start": 0.28,
+                "end": 0.35,
+                "shape": "F"
+              },
+              {
+                "start": 0.35,
+                "end": 0.84,
+                "shape": "B"
+              },
+              {
+                "start": 0.84,
+                "end": 0.91,
+                "shape": "F"
+              },
+              {
+                "start": 0.91,
+                "end": 0.98,
+                "shape": "B"
+              },
+              {
+                "start": 0.98,
+                "end": 1.26,
+                "shape": "C"
+              },
+              {
+                "start": 1.26,
+                "end": 1.42,
+                "shape": "A"
+              },
+              {
+                "start": 1.42,
+                "end": 1.52,
+                "shape": "B"
+              },
+              {
+                "start": 1.52,
+                "end": 1.62,
+                "shape": "D"
+              },
+              {
+                "start": 1.62,
+                "end": 1.66,
+                "shape": "C"
+              },
+              {
+                "start": 1.66,
+                "end": 1.85,
+                "shape": "A"
+              },
+              {
+                "start": 1.85,
+                "end": 1.99,
+                "shape": "B"
+              },
+              {
+                "start": 1.99,
+                "end": 2.08,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.43752f855987864f.promoted-1793930404134-1.mp3"
+          },
+          "name": "promoted-1793930404134-1",
+          "file": "art/voice.line.interaction.43752f855987864f.promoted-1793930404134-1.mp3",
+          "prompt": "I don't think he would take a bribe.",
+          "createdAt": "2026-11-06T02:00:12.329Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "I don't think he would take a bribe.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-9",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "I don't think he would take a bribe.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -19434,8 +19555,8 @@
     "voice.line.interaction.cd0b439a2208d184": {
       "id": "voice.line.interaction.cd0b439a2208d184",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-10",
+      "prompt": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
+      "activeVersion": "promoted-1793930404134-2",
       "versions": {
         "promoted-1793322485366-10": {
           "name": "promoted-1793322485366-10",
@@ -19473,7 +19594,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -19562,12 +19683,184 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.cd0b439a2208d184.promoted-1793324543306-10.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-2": {
+          "recordedText": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
+            "language": "en",
+            "duration": 5.36,
+            "audioHash": "63ebd81febba5e6b7365ac8b44e275dd1ad80e551391b836c14b3f8e1d7c37fd",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.06,
+                "shape": "X"
+              },
+              {
+                "start": 0.06,
+                "end": 0.35,
+                "shape": "B"
+              },
+              {
+                "start": 0.35,
+                "end": 0.43,
+                "shape": "A"
+              },
+              {
+                "start": 0.43,
+                "end": 0.57,
+                "shape": "C"
+              },
+              {
+                "start": 0.57,
+                "end": 0.65,
+                "shape": "A"
+              },
+              {
+                "start": 0.65,
+                "end": 0.8,
+                "shape": "C"
+              },
+              {
+                "start": 0.8,
+                "end": 1.01,
+                "shape": "E"
+              },
+              {
+                "start": 1.01,
+                "end": 1.15,
+                "shape": "F"
+              },
+              {
+                "start": 1.15,
+                "end": 1.36,
+                "shape": "B"
+              },
+              {
+                "start": 1.36,
+                "end": 1.43,
+                "shape": "C"
+              },
+              {
+                "start": 1.43,
+                "end": 1.5,
+                "shape": "D"
+              },
+              {
+                "start": 1.5,
+                "end": 1.71,
+                "shape": "B"
+              },
+              {
+                "start": 1.71,
+                "end": 1.85,
+                "shape": "C"
+              },
+              {
+                "start": 1.85,
+                "end": 2.13,
+                "shape": "G"
+              },
+              {
+                "start": 2.13,
+                "end": 2.63,
+                "shape": "X"
+              },
+              {
+                "start": 2.63,
+                "end": 2.71,
+                "shape": "A"
+              },
+              {
+                "start": 2.71,
+                "end": 2.8,
+                "shape": "D"
+              },
+              {
+                "start": 2.8,
+                "end": 2.87,
+                "shape": "B"
+              },
+              {
+                "start": 2.87,
+                "end": 2.94,
+                "shape": "C"
+              },
+              {
+                "start": 2.94,
+                "end": 3.57,
+                "shape": "B"
+              },
+              {
+                "start": 3.57,
+                "end": 3.65,
+                "shape": "A"
+              },
+              {
+                "start": 3.65,
+                "end": 3.78,
+                "shape": "B"
+              },
+              {
+                "start": 3.78,
+                "end": 3.9,
+                "shape": "A"
+              },
+              {
+                "start": 3.9,
+                "end": 4.82,
+                "shape": "B"
+              },
+              {
+                "start": 4.82,
+                "end": 4.96,
+                "shape": "C"
+              },
+              {
+                "start": 4.96,
+                "end": 5.17,
+                "shape": "B"
+              },
+              {
+                "start": 5.17,
+                "end": 5.36,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.cd0b439a2208d184.promoted-1793930404134-2.mp3"
+          },
+          "name": "promoted-1793930404134-2",
+          "file": "art/voice.line.interaction.cd0b439a2208d184.promoted-1793930404134-2.mp3",
+          "prompt": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
+          "createdAt": "2026-11-06T02:00:23.793Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-10",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "The dreamcap alone is not enough. Mara said it needs to be mixed with honey stout.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -19583,8 +19876,8 @@
     "voice.line.interaction.59e849786fe74577": {
       "id": "voice.line.interaction.59e849786fe74577",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-11",
+      "prompt": "I can't just give it to him! I cannot be seen.",
+      "activeVersion": "promoted-1793930404134-3",
       "versions": {
         "promoted-1793322485366-11": {
           "name": "promoted-1793322485366-11",
@@ -19622,7 +19915,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "I can't just give it to him! I cannot be seen.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -19686,12 +19979,139 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.59e849786fe74577.promoted-1793324543306-11.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-3": {
+          "recordedText": "I can't just give it to him! I cannot be seen.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I can't just give it to him! I cannot be seen.",
+            "language": "en",
+            "duration": 3.6,
+            "audioHash": "71bdbb744d94f10872bfb66d30c74c6bf64bd858dcf997320e25f6106e940538",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.35,
+                "shape": "C"
+              },
+              {
+                "start": 0.35,
+                "end": 0.49,
+                "shape": "B"
+              },
+              {
+                "start": 0.49,
+                "end": 0.56,
+                "shape": "C"
+              },
+              {
+                "start": 0.56,
+                "end": 0.91,
+                "shape": "B"
+              },
+              {
+                "start": 0.91,
+                "end": 0.98,
+                "shape": "G"
+              },
+              {
+                "start": 0.98,
+                "end": 1.33,
+                "shape": "F"
+              },
+              {
+                "start": 1.33,
+                "end": 1.48,
+                "shape": "B"
+              },
+              {
+                "start": 1.48,
+                "end": 1.5,
+                "shape": "A"
+              },
+              {
+                "start": 1.5,
+                "end": 1.58,
+                "shape": "C"
+              },
+              {
+                "start": 1.58,
+                "end": 2.04,
+                "shape": "A"
+              },
+              {
+                "start": 2.04,
+                "end": 2.14,
+                "shape": "C"
+              },
+              {
+                "start": 2.14,
+                "end": 2.35,
+                "shape": "B"
+              },
+              {
+                "start": 2.35,
+                "end": 2.49,
+                "shape": "C"
+              },
+              {
+                "start": 2.49,
+                "end": 2.56,
+                "shape": "B"
+              },
+              {
+                "start": 2.56,
+                "end": 2.64,
+                "shape": "A"
+              },
+              {
+                "start": 2.64,
+                "end": 3.41,
+                "shape": "B"
+              },
+              {
+                "start": 3.41,
+                "end": 3.6,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.59e849786fe74577.promoted-1793930404134-3.mp3"
+          },
+          "name": "promoted-1793930404134-3",
+          "file": "art/voice.line.interaction.59e849786fe74577.promoted-1793930404134-3.mp3",
+          "prompt": "I can't just give it to him! I cannot be seen.",
+          "createdAt": "2026-11-06T02:00:34.147Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "I can't just give it to him! I cannot be seen.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-11",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "I can't just give it to him! I cannot be seen.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -19707,8 +20127,8 @@
     "voice.line.interaction.97ca58039f69e6af": {
       "id": "voice.line.interaction.97ca58039f69e6af",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-12",
+      "prompt": "I might be brave but I'm not a fool. I will not win this with a fight.",
+      "activeVersion": "promoted-1793930404134-4",
       "versions": {
         "promoted-1793322485366-12": {
           "name": "promoted-1793322485366-12",
@@ -19746,7 +20166,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "I might be brave but I'm not a fool. I will not win this with a fight.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -19815,12 +20235,249 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.97ca58039f69e6af.promoted-1793324543306-12.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-4": {
+          "recordedText": "I might be brave but I'm not a fool. I will not win this with a fight.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I might be brave but I'm not a fool. I will not win this with a fight.",
+            "language": "en",
+            "duration": 5.12,
+            "audioHash": "85740609e6aed01b03d6b92696c28124082c7fbdaaf090e37def5ffa0c67e3ce",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.08,
+                "shape": "C"
+              },
+              {
+                "start": 0.08,
+                "end": 0.13,
+                "shape": "B"
+              },
+              {
+                "start": 0.13,
+                "end": 0.25,
+                "shape": "A"
+              },
+              {
+                "start": 0.25,
+                "end": 0.29,
+                "shape": "B"
+              },
+              {
+                "start": 0.29,
+                "end": 0.37,
+                "shape": "A"
+              },
+              {
+                "start": 0.37,
+                "end": 0.48,
+                "shape": "B"
+              },
+              {
+                "start": 0.48,
+                "end": 0.64,
+                "shape": "A"
+              },
+              {
+                "start": 0.64,
+                "end": 0.75,
+                "shape": "B"
+              },
+              {
+                "start": 0.75,
+                "end": 0.82,
+                "shape": "C"
+              },
+              {
+                "start": 0.82,
+                "end": 0.96,
+                "shape": "B"
+              },
+              {
+                "start": 0.96,
+                "end": 1.1,
+                "shape": "G"
+              },
+              {
+                "start": 1.1,
+                "end": 1.24,
+                "shape": "B"
+              },
+              {
+                "start": 1.24,
+                "end": 1.39,
+                "shape": "A"
+              },
+              {
+                "start": 1.39,
+                "end": 1.45,
+                "shape": "B"
+              },
+              {
+                "start": 1.45,
+                "end": 1.57,
+                "shape": "C"
+              },
+              {
+                "start": 1.57,
+                "end": 1.74,
+                "shape": "A"
+              },
+              {
+                "start": 1.74,
+                "end": 1.81,
+                "shape": "D"
+              },
+              {
+                "start": 1.81,
+                "end": 1.88,
+                "shape": "B"
+              },
+              {
+                "start": 1.88,
+                "end": 2.02,
+                "shape": "C"
+              },
+              {
+                "start": 2.02,
+                "end": 2.16,
+                "shape": "G"
+              },
+              {
+                "start": 2.16,
+                "end": 2.23,
+                "shape": "F"
+              },
+              {
+                "start": 2.23,
+                "end": 2.51,
+                "shape": "H"
+              },
+              {
+                "start": 2.51,
+                "end": 3.11,
+                "shape": "X"
+              },
+              {
+                "start": 3.11,
+                "end": 3.16,
+                "shape": "C"
+              },
+              {
+                "start": 3.16,
+                "end": 3.21,
+                "shape": "B"
+              },
+              {
+                "start": 3.21,
+                "end": 3.28,
+                "shape": "F"
+              },
+              {
+                "start": 3.28,
+                "end": 3.35,
+                "shape": "B"
+              },
+              {
+                "start": 3.35,
+                "end": 3.49,
+                "shape": "C"
+              },
+              {
+                "start": 3.49,
+                "end": 3.63,
+                "shape": "D"
+              },
+              {
+                "start": 3.63,
+                "end": 3.7,
+                "shape": "B"
+              },
+              {
+                "start": 3.7,
+                "end": 3.91,
+                "shape": "F"
+              },
+              {
+                "start": 3.91,
+                "end": 4.26,
+                "shape": "B"
+              },
+              {
+                "start": 4.26,
+                "end": 4.33,
+                "shape": "F"
+              },
+              {
+                "start": 4.33,
+                "end": 4.4,
+                "shape": "B"
+              },
+              {
+                "start": 4.4,
+                "end": 4.47,
+                "shape": "C"
+              },
+              {
+                "start": 4.47,
+                "end": 4.68,
+                "shape": "G"
+              },
+              {
+                "start": 4.68,
+                "end": 4.75,
+                "shape": "C"
+              },
+              {
+                "start": 4.75,
+                "end": 4.96,
+                "shape": "B"
+              },
+              {
+                "start": 4.96,
+                "end": 5.12,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.97ca58039f69e6af.promoted-1793930404134-4.mp3"
+          },
+          "name": "promoted-1793930404134-4",
+          "file": "art/voice.line.interaction.97ca58039f69e6af.promoted-1793930404134-4.mp3",
+          "prompt": "I might be brave but I'm not a fool. I will not win this with a fight.",
+          "createdAt": "2026-11-06T02:00:45.131Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "I might be brave but I'm not a fool. I will not win this with a fight.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-12",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "I might be brave but I'm not a fool. I will not win this with a fight.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -19836,8 +20493,8 @@
     "voice.line.interaction.f45bd2e1c0b3a945": {
       "id": "voice.line.interaction.f45bd2e1c0b3a945",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-13",
+      "prompt": "The honey stout alone will not put him to sleep.",
+      "activeVersion": "promoted-1793930404134-5",
       "versions": {
         "promoted-1793322485366-13": {
           "name": "promoted-1793322485366-13",
@@ -19875,7 +20532,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "The honey stout alone will not put him to sleep.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -19959,12 +20616,154 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.f45bd2e1c0b3a945.promoted-1793324543306-13.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-5": {
+          "recordedText": "The honey stout alone will not put him to sleep.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "The honey stout alone will not put him to sleep.",
+            "language": "en",
+            "duration": 2.88,
+            "audioHash": "06cafd75d3ba8410a22147dab38d4627776de51e260decaa2aa20bbcd5c78f1a",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.06,
+                "shape": "X"
+              },
+              {
+                "start": 0.06,
+                "end": 0.13,
+                "shape": "B"
+              },
+              {
+                "start": 0.13,
+                "end": 0.34,
+                "shape": "C"
+              },
+              {
+                "start": 0.34,
+                "end": 0.62,
+                "shape": "B"
+              },
+              {
+                "start": 0.62,
+                "end": 0.69,
+                "shape": "C"
+              },
+              {
+                "start": 0.69,
+                "end": 0.76,
+                "shape": "B"
+              },
+              {
+                "start": 0.76,
+                "end": 0.9,
+                "shape": "C"
+              },
+              {
+                "start": 0.9,
+                "end": 1.11,
+                "shape": "E"
+              },
+              {
+                "start": 1.11,
+                "end": 1.39,
+                "shape": "F"
+              },
+              {
+                "start": 1.39,
+                "end": 1.46,
+                "shape": "B"
+              },
+              {
+                "start": 1.46,
+                "end": 1.6,
+                "shape": "C"
+              },
+              {
+                "start": 1.6,
+                "end": 1.67,
+                "shape": "D"
+              },
+              {
+                "start": 1.67,
+                "end": 1.74,
+                "shape": "B"
+              },
+              {
+                "start": 1.74,
+                "end": 1.82,
+                "shape": "A"
+              },
+              {
+                "start": 1.82,
+                "end": 1.92,
+                "shape": "F"
+              },
+              {
+                "start": 1.92,
+                "end": 1.99,
+                "shape": "B"
+              },
+              {
+                "start": 1.99,
+                "end": 2.07,
+                "shape": "A"
+              },
+              {
+                "start": 2.07,
+                "end": 2.35,
+                "shape": "F"
+              },
+              {
+                "start": 2.35,
+                "end": 2.49,
+                "shape": "B"
+              },
+              {
+                "start": 2.49,
+                "end": 2.68,
+                "shape": "A"
+              },
+              {
+                "start": 2.68,
+                "end": 2.88,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.f45bd2e1c0b3a945.promoted-1793930404134-5.mp3"
+          },
+          "name": "promoted-1793930404134-5",
+          "file": "art/voice.line.interaction.f45bd2e1c0b3a945.promoted-1793930404134-5.mp3",
+          "prompt": "The honey stout alone will not put him to sleep.",
+          "createdAt": "2026-11-06T02:00:52.313Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "The honey stout alone will not put him to sleep.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-13",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "The honey stout alone will not put him to sleep.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -20333,8 +21132,8 @@
     "voice.line.interaction.a099d65e8705d7ad": {
       "id": "voice.line.interaction.a099d65e8705d7ad",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-16",
+      "prompt": "The king doesn't need my money. He needs me to break him free!",
+      "activeVersion": "promoted-1793930404134-6",
       "versions": {
         "promoted-1793322485366-16": {
           "name": "promoted-1793322485366-16",
@@ -20372,7 +21171,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "The king doesn't need my money. He needs me to break him free!",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -20456,12 +21255,149 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.a099d65e8705d7ad.promoted-1793324543306-16.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-6": {
+          "recordedText": "The king doesn't need my money. He needs me to break him free!",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "The king doesn't need my money. He needs me to break him free!",
+            "language": "en",
+            "duration": 4.4,
+            "audioHash": "e807e2558c4c03cb698a936163b0da667bce21cfbaf42a8573aa7f515b0b2a69",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.07,
+                "shape": "X"
+              },
+              {
+                "start": 0.07,
+                "end": 0.67,
+                "shape": "B"
+              },
+              {
+                "start": 0.67,
+                "end": 0.88,
+                "shape": "C"
+              },
+              {
+                "start": 0.88,
+                "end": 1.02,
+                "shape": "B"
+              },
+              {
+                "start": 1.02,
+                "end": 1.1,
+                "shape": "A"
+              },
+              {
+                "start": 1.1,
+                "end": 1.15,
+                "shape": "C"
+              },
+              {
+                "start": 1.15,
+                "end": 1.2,
+                "shape": "B"
+              },
+              {
+                "start": 1.2,
+                "end": 1.34,
+                "shape": "A"
+              },
+              {
+                "start": 1.34,
+                "end": 1.44,
+                "shape": "C"
+              },
+              {
+                "start": 1.44,
+                "end": 1.65,
+                "shape": "B"
+              },
+              {
+                "start": 1.65,
+                "end": 2.13,
+                "shape": "X"
+              },
+              {
+                "start": 2.13,
+                "end": 2.56,
+                "shape": "B"
+              },
+              {
+                "start": 2.56,
+                "end": 2.74,
+                "shape": "A"
+              },
+              {
+                "start": 2.74,
+                "end": 3.07,
+                "shape": "B"
+              },
+              {
+                "start": 3.07,
+                "end": 3.24,
+                "shape": "A"
+              },
+              {
+                "start": 3.24,
+                "end": 3.5,
+                "shape": "B"
+              },
+              {
+                "start": 3.5,
+                "end": 3.59,
+                "shape": "A"
+              },
+              {
+                "start": 3.59,
+                "end": 3.76,
+                "shape": "G"
+              },
+              {
+                "start": 3.76,
+                "end": 4.18,
+                "shape": "B"
+              },
+              {
+                "start": 4.18,
+                "end": 4.4,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.a099d65e8705d7ad.promoted-1793930404134-6.mp3"
+          },
+          "name": "promoted-1793930404134-6",
+          "file": "art/voice.line.interaction.a099d65e8705d7ad.promoted-1793930404134-6.mp3",
+          "prompt": "The king doesn't need my money. He needs me to break him free!",
+          "createdAt": "2026-11-06T02:01:07.167Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "The king doesn't need my money. He needs me to break him free!",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-16",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "The king doesn't need my money. He needs me to break him free!",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -20606,8 +21542,8 @@
     "voice.line.interaction.5a90a869a78532d9": {
       "id": "voice.line.interaction.5a90a869a78532d9",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-18",
+      "prompt": "The king is not who I need to put to sleep.",
+      "activeVersion": "promoted-1793930404134-7",
       "versions": {
         "promoted-1793322485366-18": {
           "name": "promoted-1793322485366-18",
@@ -20645,7 +21581,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "The king is not who I need to put to sleep.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -20724,12 +21660,114 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.5a90a869a78532d9.promoted-1793324543306-18.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-7": {
+          "recordedText": "The king is not who I need to put to sleep.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "The king is not who I need to put to sleep.",
+            "language": "en",
+            "duration": 2.88,
+            "audioHash": "ec09e22582e3ecc66809c521213ff8b76a42265a6ca34429d01411abcbb901a7",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.77,
+                "shape": "B"
+              },
+              {
+                "start": 0.77,
+                "end": 0.91,
+                "shape": "C"
+              },
+              {
+                "start": 0.91,
+                "end": 0.98,
+                "shape": "D"
+              },
+              {
+                "start": 0.98,
+                "end": 1.05,
+                "shape": "B"
+              },
+              {
+                "start": 1.05,
+                "end": 1.4,
+                "shape": "F"
+              },
+              {
+                "start": 1.4,
+                "end": 1.54,
+                "shape": "B"
+              },
+              {
+                "start": 1.54,
+                "end": 1.68,
+                "shape": "F"
+              },
+              {
+                "start": 1.68,
+                "end": 1.76,
+                "shape": "A"
+              },
+              {
+                "start": 1.76,
+                "end": 2.22,
+                "shape": "F"
+              },
+              {
+                "start": 2.22,
+                "end": 2.36,
+                "shape": "B"
+              },
+              {
+                "start": 2.36,
+                "end": 2.55,
+                "shape": "A"
+              },
+              {
+                "start": 2.55,
+                "end": 2.88,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.5a90a869a78532d9.promoted-1793930404134-7.mp3"
+          },
+          "name": "promoted-1793930404134-7",
+          "file": "art/voice.line.interaction.5a90a869a78532d9.promoted-1793930404134-7.mp3",
+          "prompt": "The king is not who I need to put to sleep.",
+          "createdAt": "2026-11-06T02:01:14.754Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "The king is not who I need to put to sleep.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-18",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "The king is not who I need to put to sleep.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -22518,8 +23556,8 @@
     "voice.line.interaction.3ceacffa41427889": {
       "id": "voice.line.interaction.3ceacffa41427889",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-31",
+      "prompt": "proud",
+      "activeVersion": "promoted-1794013020441-1",
       "versions": {
         "promoted-1793322485366-31": {
           "name": "promoted-1793322485366-31",
@@ -22642,15 +23680,121 @@
             ],
             "sourceFile": "art/voice.line.interaction.3ceacffa41427889.promoted-1793324543306-31.mp3"
           }
+        },
+        "promoted-1794013020441-1": {
+          "recordedText": "I got your famous pickaxe.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "I got your famous pickaxe.",
+            "language": "en",
+            "duration": 2.16,
+            "audioHash": "a4f680e6e31d3257998af34a6647e93c4e8808881214e4339cd27abb7c4081c9",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.11,
+                "shape": "X"
+              },
+              {
+                "start": 0.11,
+                "end": 0.22,
+                "shape": "C"
+              },
+              {
+                "start": 0.22,
+                "end": 0.36,
+                "shape": "D"
+              },
+              {
+                "start": 0.36,
+                "end": 0.43,
+                "shape": "B"
+              },
+              {
+                "start": 0.43,
+                "end": 0.71,
+                "shape": "F"
+              },
+              {
+                "start": 0.71,
+                "end": 0.85,
+                "shape": "G"
+              },
+              {
+                "start": 0.85,
+                "end": 0.92,
+                "shape": "B"
+              },
+              {
+                "start": 0.92,
+                "end": 1.03,
+                "shape": "A"
+              },
+              {
+                "start": 1.03,
+                "end": 1.07,
+                "shape": "C"
+              },
+              {
+                "start": 1.07,
+                "end": 1.15,
+                "shape": "A"
+              },
+              {
+                "start": 1.15,
+                "end": 1.27,
+                "shape": "B"
+              },
+              {
+                "start": 1.27,
+                "end": 1.55,
+                "shape": "C"
+              },
+              {
+                "start": 1.55,
+                "end": 1.9,
+                "shape": "B"
+              },
+              {
+                "start": 1.9,
+                "end": 2.16,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.3ceacffa41427889.promoted-1794013020441-1.mp3"
+          },
+          "name": "promoted-1794013020441-1",
+          "file": "art/voice.line.interaction.3ceacffa41427889.promoted-1794013020441-1.mp3",
+          "prompt": "proud",
+          "createdAt": "2026-11-07T00:57:44.512Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "I got your famous pickaxe.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": "proud"
+          },
+          "parentVersion": "promoted-1793324543306-31",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "I got your famous pickaxe.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
-        "direction": ""
+        "direction": "proud"
       },
       "settings": {},
       "audioSettings": {
@@ -25339,8 +26483,8 @@
     "voice.line.interaction.c558d2fb37658d2f": {
       "id": "voice.line.interaction.c558d2fb37658d2f",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-50",
+      "prompt": "The honey stout alone will not put him to sleep.",
+      "activeVersion": "promoted-1793930404134-8",
       "versions": {
         "promoted-1793322485366-50": {
           "name": "promoted-1793322485366-50",
@@ -25378,7 +26522,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "The honey stout alone will not put him to sleep.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -25452,12 +26596,144 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.c558d2fb37658d2f.promoted-1793324543306-50.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-8": {
+          "recordedText": "The honey stout alone will not put him to sleep.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "The honey stout alone will not put him to sleep.",
+            "language": "en",
+            "duration": 2.96,
+            "audioHash": "dfec9c75ef335e636b10e3ebb709e03d3c9d9318fe33ac5aada6a2c20f49b8e8",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.11,
+                "shape": "B"
+              },
+              {
+                "start": 0.11,
+                "end": 0.24,
+                "shape": "C"
+              },
+              {
+                "start": 0.24,
+                "end": 0.52,
+                "shape": "B"
+              },
+              {
+                "start": 0.52,
+                "end": 0.87,
+                "shape": "C"
+              },
+              {
+                "start": 0.87,
+                "end": 1.15,
+                "shape": "E"
+              },
+              {
+                "start": 1.15,
+                "end": 1.36,
+                "shape": "F"
+              },
+              {
+                "start": 1.36,
+                "end": 1.5,
+                "shape": "B"
+              },
+              {
+                "start": 1.5,
+                "end": 1.64,
+                "shape": "C"
+              },
+              {
+                "start": 1.64,
+                "end": 1.71,
+                "shape": "D"
+              },
+              {
+                "start": 1.71,
+                "end": 1.78,
+                "shape": "B"
+              },
+              {
+                "start": 1.78,
+                "end": 1.86,
+                "shape": "A"
+              },
+              {
+                "start": 1.86,
+                "end": 2,
+                "shape": "F"
+              },
+              {
+                "start": 2,
+                "end": 2.07,
+                "shape": "B"
+              },
+              {
+                "start": 2.07,
+                "end": 2.14,
+                "shape": "A"
+              },
+              {
+                "start": 2.14,
+                "end": 2.41,
+                "shape": "F"
+              },
+              {
+                "start": 2.41,
+                "end": 2.55,
+                "shape": "B"
+              },
+              {
+                "start": 2.55,
+                "end": 2.74,
+                "shape": "A"
+              },
+              {
+                "start": 2.74,
+                "end": 2.96,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.c558d2fb37658d2f.promoted-1793930404134-8.mp3"
+          },
+          "name": "promoted-1793930404134-8",
+          "file": "art/voice.line.interaction.c558d2fb37658d2f.promoted-1793930404134-8.mp3",
+          "prompt": "The honey stout alone will not put him to sleep.",
+          "createdAt": "2026-11-06T02:01:22.520Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "The honey stout alone will not put him to sleep.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-50",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "The honey stout alone will not put him to sleep.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -25955,8 +27231,8 @@
     "voice.line.interaction.d6d0cc23b03483d0": {
       "id": "voice.line.interaction.d6d0cc23b03483d0",
       "kind": "voice-line",
-      "prompt": "I cannot see how that would help here.",
-      "activeVersion": "promoted-1793324543306-54",
+      "prompt": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
+      "activeVersion": "promoted-1793930404134-9",
       "versions": {
         "promoted-1793322485366-54": {
           "name": "promoted-1793322485366-54",
@@ -25994,7 +27270,7 @@
           "audioPlayback": {},
           "voiceSettings": {
             "voiceAssetId": "voice.borin",
-            "text": "I cannot see how that would help here.",
+            "text": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
             "provider": "elevenlabs",
             "voiceId": "XSzftlYznGd6V2b0eoYJ",
             "model": "eleven_v4",
@@ -26058,12 +27334,184 @@
               }
             ],
             "sourceFile": "art/voice.line.interaction.d6d0cc23b03483d0.promoted-1793324543306-54.mp3"
-          }
+          },
+          "recordedText": "I cannot see how that would help here."
+        },
+        "promoted-1793930404134-9": {
+          "recordedText": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
+            "language": "en",
+            "duration": 4.72,
+            "audioHash": "b2eba12e62ea876801f909ccd1cc7ef8cf43369bd0112f9d633c8ed70c8f70cb",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.06,
+                "shape": "X"
+              },
+              {
+                "start": 0.06,
+                "end": 0.35,
+                "shape": "B"
+              },
+              {
+                "start": 0.35,
+                "end": 0.43,
+                "shape": "A"
+              },
+              {
+                "start": 0.43,
+                "end": 0.6,
+                "shape": "C"
+              },
+              {
+                "start": 0.6,
+                "end": 0.68,
+                "shape": "A"
+              },
+              {
+                "start": 0.68,
+                "end": 0.8,
+                "shape": "C"
+              },
+              {
+                "start": 0.8,
+                "end": 1.08,
+                "shape": "E"
+              },
+              {
+                "start": 1.08,
+                "end": 1.15,
+                "shape": "F"
+              },
+              {
+                "start": 1.15,
+                "end": 1.36,
+                "shape": "B"
+              },
+              {
+                "start": 1.36,
+                "end": 1.43,
+                "shape": "C"
+              },
+              {
+                "start": 1.43,
+                "end": 1.5,
+                "shape": "D"
+              },
+              {
+                "start": 1.5,
+                "end": 1.71,
+                "shape": "B"
+              },
+              {
+                "start": 1.71,
+                "end": 1.85,
+                "shape": "C"
+              },
+              {
+                "start": 1.85,
+                "end": 2.13,
+                "shape": "G"
+              },
+              {
+                "start": 2.13,
+                "end": 2.58,
+                "shape": "X"
+              },
+              {
+                "start": 2.58,
+                "end": 2.98,
+                "shape": "B"
+              },
+              {
+                "start": 2.98,
+                "end": 3.06,
+                "shape": "A"
+              },
+              {
+                "start": 3.06,
+                "end": 3.17,
+                "shape": "B"
+              },
+              {
+                "start": 3.17,
+                "end": 3.31,
+                "shape": "A"
+              },
+              {
+                "start": 3.31,
+                "end": 3.57,
+                "shape": "B"
+              },
+              {
+                "start": 3.57,
+                "end": 3.64,
+                "shape": "F"
+              },
+              {
+                "start": 3.64,
+                "end": 3.71,
+                "shape": "B"
+              },
+              {
+                "start": 3.71,
+                "end": 3.92,
+                "shape": "C"
+              },
+              {
+                "start": 3.92,
+                "end": 4.2,
+                "shape": "B"
+              },
+              {
+                "start": 4.2,
+                "end": 4.34,
+                "shape": "C"
+              },
+              {
+                "start": 4.34,
+                "end": 4.55,
+                "shape": "B"
+              },
+              {
+                "start": 4.55,
+                "end": 4.72,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.d6d0cc23b03483d0.promoted-1793930404134-9.mp3"
+          },
+          "name": "promoted-1793930404134-9",
+          "file": "art/voice.line.interaction.d6d0cc23b03483d0.promoted-1793930404134-9.mp3",
+          "prompt": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
+          "createdAt": "2026-11-06T02:01:33.216Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4",
+            "direction": ""
+          },
+          "parentVersion": "promoted-1793324543306-54",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "I cannot see how that would help here.",
+        "text": "The dreamcap alone is not enough. It needs to be mixed with honey stout.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
         "model": "eleven_v4",
@@ -60260,233 +61708,173 @@
       },
       "audioPlayback": {}
     },
-    "line.elder.father": {
-      "id": "line.elder.father",
+    "voice.line.interaction.3ceacffa41427889.sentence-2": {
+      "id": "voice.line.interaction.3ceacffa41427889.sentence-2",
       "kind": "voice-line",
-      "prompt": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+      "prompt": "Natural conversational delivery.",
       "voiceSettings": {
-        "voiceAssetId": "voice.elder",
-        "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
-        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "voiceAssetId": "voice.miner",
+        "text": "Ah, nice job. Now go get our king back! Make me proud!",
         "direction": "",
+        "voiceId": "J6KOvhFRxt7YCo4Igg4n",
         "provider": "elevenlabs",
         "model": "eleven_v4"
       },
-      "activeVersion": "promoted-1794016665432-1",
+      "activeVersion": "promoted-1794013149359-1",
       "versions": {
-        "promoted-1794016665432-1": {
-          "recordedText": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+        "promoted-1794013149359-1": {
+          "recordedText": "Ah, nice job. Now go get our king back! Make me proud!",
           "lipSyncTrack": {
             "schemaVersion": 1,
             "source": "rhubarb",
-            "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+            "text": "Ah, nice job. Now go get our king back! Make me proud!",
             "language": "en",
-            "duration": 6.8,
-            "audioHash": "a1bcefcdd6116cf776b7d168ccb105ed4c9826b8ea2070b56d1a84b0715b3dcf",
+            "duration": 4.72,
+            "audioHash": "a2062899dac9454be9b39e9daa74143d8cf061dcd9e60775cf1a027e8d0ae8b5",
             "analyzer": "rhubarb-1.14.0",
             "cues": [
               {
                 "start": 0,
-                "end": 0.09,
+                "end": 0.05,
                 "shape": "X"
               },
               {
-                "start": 0.09,
-                "end": 0.35,
-                "shape": "B"
-              },
-              {
-                "start": 0.35,
-                "end": 0.56,
-                "shape": "F"
-              },
-              {
-                "start": 0.56,
-                "end": 0.7,
-                "shape": "A"
-              },
-              {
-                "start": 0.7,
-                "end": 0.8,
-                "shape": "C"
-              },
-              {
-                "start": 0.8,
-                "end": 1.01,
-                "shape": "B"
-              },
-              {
-                "start": 1.01,
-                "end": 1.08,
-                "shape": "G"
-              },
-              {
-                "start": 1.08,
-                "end": 1.43,
-                "shape": "B"
-              },
-              {
-                "start": 1.43,
-                "end": 1.5,
-                "shape": "H"
-              },
-              {
-                "start": 1.5,
-                "end": 1.64,
+                "start": 0.05,
+                "end": 0.27,
                 "shape": "D"
               },
               {
-                "start": 1.64,
-                "end": 1.99,
-                "shape": "B"
-              },
-              {
-                "start": 1.99,
-                "end": 2.03,
+                "start": 0.27,
+                "end": 0.33,
                 "shape": "C"
               },
               {
-                "start": 2.03,
-                "end": 2.07,
+                "start": 0.33,
+                "end": 0.58,
                 "shape": "B"
               },
               {
-                "start": 2.07,
-                "end": 2.15,
+                "start": 0.58,
+                "end": 0.72,
+                "shape": "C"
+              },
+              {
+                "start": 0.72,
+                "end": 1.07,
+                "shape": "B"
+              },
+              {
+                "start": 1.07,
+                "end": 1.14,
+                "shape": "D"
+              },
+              {
+                "start": 1.14,
+                "end": 1.39,
                 "shape": "A"
               },
               {
-                "start": 2.15,
-                "end": 2.2,
+                "start": 1.39,
+                "end": 1.77,
+                "shape": "X"
+              },
+              {
+                "start": 1.77,
+                "end": 1.88,
                 "shape": "C"
               },
               {
-                "start": 2.2,
-                "end": 2.53,
+                "start": 1.88,
+                "end": 2.16,
+                "shape": "E"
+              },
+              {
+                "start": 2.16,
+                "end": 2.37,
                 "shape": "B"
               },
               {
-                "start": 2.53,
-                "end": 2.61,
+                "start": 2.37,
+                "end": 2.51,
+                "shape": "D"
+              },
+              {
+                "start": 2.51,
+                "end": 2.79,
+                "shape": "B"
+              },
+              {
+                "start": 2.79,
+                "end": 2.87,
                 "shape": "A"
               },
               {
-                "start": 2.61,
-                "end": 2.81,
-                "shape": "C"
-              },
-              {
-                "start": 2.81,
-                "end": 2.95,
-                "shape": "B"
-              },
-              {
-                "start": 2.95,
+                "start": 2.87,
                 "end": 3.02,
-                "shape": "F"
+                "shape": "C"
               },
               {
                 "start": 3.02,
-                "end": 3.16,
+                "end": 3.46,
                 "shape": "B"
               },
               {
-                "start": 3.16,
-                "end": 3.3,
-                "shape": "G"
-              },
-              {
-                "start": 3.3,
-                "end": 3.37,
-                "shape": "E"
-              },
-              {
-                "start": 3.37,
-                "end": 3.44,
-                "shape": "C"
-              },
-              {
-                "start": 3.44,
-                "end": 3.58,
-                "shape": "F"
-              },
-              {
-                "start": 3.58,
-                "end": 3.86,
-                "shape": "B"
-              },
-              {
-                "start": 3.86,
-                "end": 4.43,
-                "shape": "X"
-              },
-              {
-                "start": 4.43,
-                "end": 4.92,
-                "shape": "B"
-              },
-              {
-                "start": 4.92,
-                "end": 4.99,
-                "shape": "C"
-              },
-              {
-                "start": 4.99,
-                "end": 5.27,
-                "shape": "B"
-              },
-              {
-                "start": 5.27,
-                "end": 5.36,
+                "start": 3.46,
+                "end": 3.56,
                 "shape": "A"
               },
               {
-                "start": 5.36,
-                "end": 5.5,
-                "shape": "E"
-              },
-              {
-                "start": 5.5,
-                "end": 5.88,
-                "shape": "B"
-              },
-              {
-                "start": 5.88,
-                "end": 6.02,
-                "shape": "F"
-              },
-              {
-                "start": 6.02,
-                "end": 6.09,
+                "start": 3.56,
+                "end": 3.62,
                 "shape": "C"
               },
               {
-                "start": 6.09,
-                "end": 6.37,
+                "start": 3.62,
+                "end": 3.68,
                 "shape": "B"
               },
               {
-                "start": 6.37,
-                "end": 6.44,
-                "shape": "G"
+                "start": 3.68,
+                "end": 3.76,
+                "shape": "A"
               },
               {
-                "start": 6.44,
-                "end": 6.65,
+                "start": 3.76,
+                "end": 3.84,
                 "shape": "B"
               },
               {
-                "start": 6.65,
-                "end": 6.8,
+                "start": 3.84,
+                "end": 3.99,
+                "shape": "A"
+              },
+              {
+                "start": 3.99,
+                "end": 4.12,
+                "shape": "B"
+              },
+              {
+                "start": 4.12,
+                "end": 4.26,
+                "shape": "C"
+              },
+              {
+                "start": 4.26,
+                "end": 4.54,
+                "shape": "B"
+              },
+              {
+                "start": 4.54,
+                "end": 4.72,
                 "shape": "X"
               }
             ],
-            "sourceFile": "art/line.elder.father.promoted-1794016665432-1.mp3"
+            "sourceFile": "art/voice.line.interaction.3ceacffa41427889.sentence-2.promoted-1794013149359-1.mp3"
           },
-          "name": "promoted-1794016665432-1",
-          "file": "art/line.elder.father.promoted-1794016665432-1.mp3",
-          "prompt": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
-          "createdAt": "2026-11-07T02:00:33.021Z",
+          "name": "promoted-1794013149359-1",
+          "file": "art/voice.line.interaction.3ceacffa41427889.sentence-2.promoted-1794013149359-1.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-07T00:59:30.959Z",
           "model": "eleven_v4",
           "settings": {},
           "audioSettings": {
@@ -60495,10 +61883,10 @@
           },
           "audioPlayback": {},
           "voiceSettings": {
-            "voiceAssetId": "voice.elder",
-            "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
-            "voiceId": "607NIeNPjD2aeZAq4oGc",
+            "voiceAssetId": "voice.miner",
+            "text": "Ah, nice job. Now go get our king back! Make me proud!",
             "direction": "",
+            "voiceId": "J6KOvhFRxt7YCo4Igg4n",
             "provider": "elevenlabs",
             "model": "eleven_v4"
           },
@@ -61722,6 +63110,258 @@
             "voiceAssetId": "voice.miner",
             "text": "That old thing has had three handles and one name. Bring it back with Aldric; I will call us even.",
             "voiceId": "J6KOvhFRxt7YCo4Igg4n",
+            "direction": "",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.elder.father": {
+      "id": "line.elder.father",
+      "kind": "voice-line",
+      "prompt": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.elder",
+        "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+        "voiceId": "607NIeNPjD2aeZAq4oGc",
+        "direction": "",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1794016665432-1",
+      "versions": {
+        "promoted-1794016665432-1": {
+          "recordedText": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+            "language": "en",
+            "duration": 6.8,
+            "audioHash": "a1bcefcdd6116cf776b7d168ccb105ed4c9826b8ea2070b56d1a84b0715b3dcf",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.09,
+                "shape": "X"
+              },
+              {
+                "start": 0.09,
+                "end": 0.35,
+                "shape": "B"
+              },
+              {
+                "start": 0.35,
+                "end": 0.56,
+                "shape": "F"
+              },
+              {
+                "start": 0.56,
+                "end": 0.7,
+                "shape": "A"
+              },
+              {
+                "start": 0.7,
+                "end": 0.8,
+                "shape": "C"
+              },
+              {
+                "start": 0.8,
+                "end": 1.01,
+                "shape": "B"
+              },
+              {
+                "start": 1.01,
+                "end": 1.08,
+                "shape": "G"
+              },
+              {
+                "start": 1.08,
+                "end": 1.43,
+                "shape": "B"
+              },
+              {
+                "start": 1.43,
+                "end": 1.5,
+                "shape": "H"
+              },
+              {
+                "start": 1.5,
+                "end": 1.64,
+                "shape": "D"
+              },
+              {
+                "start": 1.64,
+                "end": 1.99,
+                "shape": "B"
+              },
+              {
+                "start": 1.99,
+                "end": 2.03,
+                "shape": "C"
+              },
+              {
+                "start": 2.03,
+                "end": 2.07,
+                "shape": "B"
+              },
+              {
+                "start": 2.07,
+                "end": 2.15,
+                "shape": "A"
+              },
+              {
+                "start": 2.15,
+                "end": 2.2,
+                "shape": "C"
+              },
+              {
+                "start": 2.2,
+                "end": 2.53,
+                "shape": "B"
+              },
+              {
+                "start": 2.53,
+                "end": 2.61,
+                "shape": "A"
+              },
+              {
+                "start": 2.61,
+                "end": 2.81,
+                "shape": "C"
+              },
+              {
+                "start": 2.81,
+                "end": 2.95,
+                "shape": "B"
+              },
+              {
+                "start": 2.95,
+                "end": 3.02,
+                "shape": "F"
+              },
+              {
+                "start": 3.02,
+                "end": 3.16,
+                "shape": "B"
+              },
+              {
+                "start": 3.16,
+                "end": 3.3,
+                "shape": "G"
+              },
+              {
+                "start": 3.3,
+                "end": 3.37,
+                "shape": "E"
+              },
+              {
+                "start": 3.37,
+                "end": 3.44,
+                "shape": "C"
+              },
+              {
+                "start": 3.44,
+                "end": 3.58,
+                "shape": "F"
+              },
+              {
+                "start": 3.58,
+                "end": 3.86,
+                "shape": "B"
+              },
+              {
+                "start": 3.86,
+                "end": 4.43,
+                "shape": "X"
+              },
+              {
+                "start": 4.43,
+                "end": 4.92,
+                "shape": "B"
+              },
+              {
+                "start": 4.92,
+                "end": 4.99,
+                "shape": "C"
+              },
+              {
+                "start": 4.99,
+                "end": 5.27,
+                "shape": "B"
+              },
+              {
+                "start": 5.27,
+                "end": 5.36,
+                "shape": "A"
+              },
+              {
+                "start": 5.36,
+                "end": 5.5,
+                "shape": "E"
+              },
+              {
+                "start": 5.5,
+                "end": 5.88,
+                "shape": "B"
+              },
+              {
+                "start": 5.88,
+                "end": 6.02,
+                "shape": "F"
+              },
+              {
+                "start": 6.02,
+                "end": 6.09,
+                "shape": "C"
+              },
+              {
+                "start": 6.09,
+                "end": 6.37,
+                "shape": "B"
+              },
+              {
+                "start": 6.37,
+                "end": 6.44,
+                "shape": "G"
+              },
+              {
+                "start": 6.44,
+                "end": 6.65,
+                "shape": "B"
+              },
+              {
+                "start": 6.65,
+                "end": 6.8,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.elder.father.promoted-1794016665432-1.mp3"
+          },
+          "name": "promoted-1794016665432-1",
+          "file": "art/line.elder.father.promoted-1794016665432-1.mp3",
+          "prompt": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+          "createdAt": "2026-11-07T02:00:33.021Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.elder",
+            "text": "He tried to mend the village clock and made it run backward for a week. He said the extra mornings were a gift.",
+            "voiceId": "607NIeNPjD2aeZAq4oGc",
             "direction": "",
             "provider": "elevenlabs",
             "model": "eleven_v4"
@@ -63702,7 +65342,7 @@
     "line.game.borin.look.village-hotspot.443236dd-0c3c-4020-b681-0e1bb1769d90-74e1ca29": [
       "Voices"
     ],
-    "line.elder.father": [
+    "voice.line.interaction.3ceacffa41427889.sentence-2": [
       "Voices"
     ],
     "line.innkeeper.king-tab": [
@@ -63715,6 +65355,9 @@
       "Voices"
     ],
     "line.miner.pickaxe": [
+      "Voices"
+    ],
+    "line.elder.father": [
       "Voices"
     ],
     "voice.line.dialog-option.46070ea3d971e5cb": [
