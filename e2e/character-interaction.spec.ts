@@ -97,3 +97,29 @@ test('NPC sprite pixels are clickable and follow native authored movement, scale
   await page.screenshot({ path: testInfo.outputPath('moved-character-direct-dialog.png'), fullPage: true });
   expect(errors).toEqual([]);
 });
+
+test('using inventory on a character approaches before speaking, while looking stays in place', async ({ page }) => {
+  await openAdventure(page);
+  await page.getByRole('button', { name: 'Skip introduction', exact: true }).click();
+  const start = await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.introArrival = undefined;
+    scene.dismissSpeech();
+    scene.character.place({ x: 500, y: 465 }, 'left');
+    return { ...scene.character.state.position };
+  });
+
+  await page.evaluate(() => (window as any).pointleshDemo.scene.look('elder'));
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position)).toEqual(start);
+
+  await page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    scene.dismissSpeech();
+    scene.story.inventory.push('coin');
+    scene.selected = 'coin';
+    scene.render();
+    void scene.act('elder');
+  });
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBeLessThan(start.x - 20);
+  await expect(page.locator('#speech')).toContainText('I cannot see how that would help here.');
+});

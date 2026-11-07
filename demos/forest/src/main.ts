@@ -549,11 +549,17 @@ class ForestAdventure extends Phaser.Scene {
     if (!entity) return;
     this.cursor.click(this.selected ? this.inventoryCursor(this.selected) : undefined);
     const selected = this.selected;
-    if (this.authoredInteraction(sceneInteractionTarget(this.story.roomId, entity), selected ? itemInteractionColumn(inventoryPrefabId(selected)) : verbInteractionColumn('interact'))) return;
+    const interactionRow = sceneInteractionTarget(this.story.roomId, entity);
+    const interactionColumn = selected ? itemInteractionColumn(inventoryPrefabId(selected)) : verbInteractionColumn('interact');
     // Door and approach clocks start together; the transition waits at the safe
     // inside point until the leaf is clear before crossing the sill.
-    if (targets[this.story.roomId].some(target => target.id === targetId && target.exit)) { this.applyInteraction(targetId); return; }
+    if (targets[this.story.roomId].some(target => target.id === targetId && target.exit) &&
+      resolveInteraction(interactions, interactionRow, interactionColumn).cell?.kind === 'code') {
+      this.applyInteraction(targetId); return;
+    }
     if (this.campRestricted()) {
+      // Stealth interactions are deliberately handled from cover while the guard is awake.
+      if (this.authoredInteraction(interactionRow, interactionColumn)) return;
       if (targetId === 'camp-exit') { this.applyInteraction(targetId); return; }
       if (targetId === 'cauldron' && selected === 'sleepyStout' && this.story.inventory.includes(selected) && !this.story.flags.stewSpiked) {
         if (!guardLookingAway(this.story)) { this.say(spokenLines["he-is-watching-wait-until-he-turns"].text); return; }
@@ -572,6 +578,7 @@ class ForestAdventure extends Phaser.Scene {
     const current = this.interactionEntity(targetId, instanceId);
     if (operation !== this.epoch || !current) return;
     if (!arrived) return this.say(spokenLines["i-cannot-reach-that-from-here-there"].text);
+    if (this.authoredInteraction(interactionRow, interactionColumn)) return;
     try { await this.behaviors.dispatch(current.behaviors, { type: 'interact', payload: targetId }, { targetId, item: selected }); }
     catch (error) { toast(error instanceof Error ? error.message : String(error)); }
   }
