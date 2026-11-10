@@ -10,6 +10,7 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   const groups = page.locator('.pointlesh-scene-groups');
   const background = groups.locator('section.pointlesh-scene-group[aria-label="Background"]');
   await expect(background.getByText('background.village', { exact: true })).toBeVisible();
+  await expect(background.getByRole('button', { name: 'Add background' })).toHaveCount(0);
   await background.getByRole('button', { name: 'Hide background' }).click();
   expect(await page.evaluate(() => (window as any).sceneGroupsFixture.designer.getManifest().scenes.village.pointleshBackground.visible)).toBe(false);
   await background.getByRole('button', { name: 'Show background' }).click();
@@ -17,7 +18,7 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await expect(background.getByRole('button', { name: 'Unlock background' })).toBeVisible();
   await expect(background.getByRole('button', { name: 'Edit background' })).toBeDisabled();
   await background.getByRole('button', { name: 'Unlock background' }).click();
-  await background.getByRole('button', { name: 'Change background' }).click();
+  await background.getByRole('button', { name: 'Edit background' }).click();
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('combobox', { name: 'Background image asset' }).selectOption('background.forest');
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('button', { name: 'Apply' }).click();
   await expect(background.getByText('background.forest', { exact: true })).toBeVisible();

@@ -88,9 +88,9 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     const eye = button(`${background?.visible ? 'Hide' : 'Show'} background`, background?.visible ? '👁' : '○', () => toggleBackground(sceneId, 'visible'));
     const lock = button(`${background?.locked ? 'Unlock' : 'Lock'} background`, background?.locked ? '🔒' : '🔓', () => toggleBackground(sceneId, 'locked'));
     eye.disabled = lock.disabled = !background;
-    const add = button(background ? 'Change background' : 'Add background', background ? 'Change' : '+ Add', () => editBackground(sceneId));
-    add.disabled = background?.locked === true;
-    controls.append(eye, lock, add); heading.append(title, controls); section.append(heading);
+    controls.append(eye, lock);
+    if (!background) controls.append(button('Add background', '+ Add', () => editBackground(sceneId)));
+    heading.append(title, controls); section.append(heading);
     if (background) {
       const row = document.createElement('div'); row.className = 'scene-designer__item pointlesh-scene-background';
       const preview = assetPreviewUrl?.(background.assetId);
