@@ -25,6 +25,7 @@ import { prefabAttributeId, prefabInstanceIdFromAttributeId, resolvePrefabNumber
 import { installSceneDesigner, type SceneDesigner, type SceneDesignerOptions } from "@scene-designer/designer";
 import { installPrefabBrowser } from './prefab-browser.js';
 import { installSceneAreas } from './scene-areas.js';
+import { installSceneGroups } from './scene-groups.js';
 import { inventoryItemEditor } from './inventory-editor.js';
 
 export type PointleshPointAction = { sceneId: string; pointId: string; characterId: string; action: 'move' | 'walk' };
@@ -129,6 +130,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   const nativeUndo = designer.undo, nativeRedo = designer.redo;
   const prefabBrowser = installPrefabBrowser(designer, next => apply(next));
   const sceneAreas = installSceneAreas(designer, next => apply(next));
+  const sceneGroups = installSceneGroups(designer, next => apply(next), sceneAreas.add);
 
   function exportJSON() {
     const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
@@ -445,7 +447,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   function syncNativeContext() {
     if (destroyed || restoring) return;
     prefabBrowser.sync(last);
-    sceneAreas.sync(last);
+    sceneGroups.sync(last);
     const target = targetFromNativeSelection(last);
     const view = designer.getOpenView();
     const editor = view && designer.root.querySelector<HTMLElement>(`.scene-designer__panel[data-panel="${view}"] .scene-designer__editor`);
@@ -725,7 +727,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     undo, redo, exportManifest() { return JSON.stringify(designer.getManifest(), null, 2) + "\n"; },
     destroy() {
       if (destroyed) return;
-      destroyed = true; nativeObserver.disconnect(); prefabBrowser.destroy(); sceneAreas.destroy(); restoreNativeFields(); root.remove();
+      destroyed = true; nativeObserver.disconnect(); prefabBrowser.destroy(); sceneAreas.destroy(); sceneGroups.destroy(); restoreNativeFields(); root.remove();
       if (designer.undo === undo) designer.undo = nativeUndo;
       if (designer.redo === redo) designer.redo = nativeRedo;
     },

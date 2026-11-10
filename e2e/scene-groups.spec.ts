@@ -1,0 +1,47 @@
+import { expect, test } from '@playwright/test';
+import { fileURLToPath } from 'node:url';
+
+test('Pointlesh scene groups organize items and expose add, visibility, and lock controls', async ({ page }) => {
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+  const fixture = fileURLToPath(new URL('./scene-groups-fixture.ts', import.meta.url));
+  await page.route('**/scene-groups-fixture', route => route.fulfill({ contentType: 'text/html', body: `<!doctype html><html><body><script type="module" src="/@fs${fixture}"></script></body></html>` }));
+  await page.goto('/scene-groups-fixture');
+  const groups = page.locator('.pointlesh-scene-groups');
+  for (const [title, kind] of [['Characters', 'character'], ['Objects', 'object'], ['Points', 'point'], ['Areas', 'area'], ['Hotspots', 'hotspot']]) {
+    const section = groups.locator(`section.pointlesh-scene-group[aria-label="${title}"]`);
+    await expect(section).toBeVisible();
+    await expect(section.getByRole('button', { name: `Add ${kind}`, exact: true })).toBeVisible();
+  }
+  await expect(groups.getByText('Copper Tankard door · outside', { exact: true })).toHaveCount(1);
+  await expect(groups.locator('.scene-designer__subhead').getByText('Copper Tankard door · outside', { exact: true })).toHaveCount(0);
+  const characters = groups.locator('section.pointlesh-scene-group[aria-label="Characters"]');
+  await characters.getByRole('button', { name: 'Hide characters' }).click();
+  expect(await page.evaluate(() => (window as any).sceneGroupsFixture.designer.getManifest().scenes.village.layers[0].prefabs[0].visible)).toBe(false);
+  await characters.getByRole('button', { name: 'Show characters' }).click();
+  await characters.getByRole('button', { name: 'Lock characters' }).click();
+  await expect(characters.getByRole('button', { name: 'Unlock characters' })).toBeVisible();
+  await characters.getByRole('button', { name: 'Unlock characters' }).click();
+  await groups.getByRole('button', { name: 'Add point', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Add point' });
+  await expect(dialog.getByRole('combobox', { name: 'Choose point' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'Add', exact: true }).click();
+  await expect(groups.locator('section.pointlesh-scene-group[aria-label="Points"] .scene-designer__item')).toHaveCount(2);
+  await groups.getByRole('button', { name: 'Add point', exact: true }).click();
+  const newPoint = page.getByRole('dialog', { name: 'Add point' });
+  await newPoint.getByRole('combobox', { name: 'Choose point' }).selectOption('__new__');
+  await newPoint.getByRole('textbox', { name: 'New point name' }).fill('Far entrance');
+  await newPoint.getByRole('button', { name: 'Add', exact: true }).click();
+  await expect(groups.locator('section.pointlesh-scene-group[aria-label="Points"] .scene-designer__item')).toHaveCount(3);
+  await expect(groups.getByText('Far entrance', { exact: true })).toBeVisible();
+  await groups.getByRole('button', { name: 'Add area', exact: true }).click();
+  const areaDialog = page.getByRole('dialog', { name: 'New area' });
+  await areaDialog.getByRole('textbox', { name: 'Name' }).fill('New floor');
+  await areaDialog.getByRole('button', { name: 'Draw shape' }).click();
+  await expect(groups.locator('section.pointlesh-scene-group[aria-label="Areas"] .scene-designer__item')).toHaveCount(2);
+  await groups.getByRole('button', { name: 'Add hotspot', exact: true }).click();
+  const hotspotDialog = page.getByRole('dialog', { name: 'New hotspot' });
+  await hotspotDialog.getByRole('textbox', { name: 'Name' }).fill('New clue');
+  await hotspotDialog.getByRole('button', { name: 'Draw shape' }).click();
+  await expect(groups.locator('section.pointlesh-scene-group[aria-label="Hotspots"] .scene-designer__item')).toHaveCount(2);
+  expect(errors).toEqual([]);
+});

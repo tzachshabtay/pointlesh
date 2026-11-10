@@ -131,7 +131,7 @@ export function installPrefabBrowser(designer: SceneDesigner, commit: (manifest:
     }
     // The native Add Prefab dialog retains its placement/shape-drawing behavior.
     // Only replace its flat catalog chooser, using the same folder navigation.
-    for (const dialog of designer.root.querySelectorAll<HTMLDialogElement>('dialog.scene-designer__dialog:not(.pointlesh-new-prefab)')) {
+    for (const dialog of designer.root.querySelectorAll<HTMLDialogElement>('dialog.scene-designer__dialog:not(.pointlesh-new-prefab):not(.pointlesh-add-scene-item)')) {
       const select = dialog.querySelector<HTMLSelectElement>('select');
       if (!select || ![...select.options].some(option => manifest.prefabs?.[option.value])) continue;
       let picker = pickers.get(dialog);
