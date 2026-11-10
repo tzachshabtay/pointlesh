@@ -31,6 +31,8 @@ Collapsible **Directional animations**, **Movement**, **Properties** and **Custo
 
 ## Native shapes and directional characters
 
+The Scenes panel includes a **Background** section for each room. Its asset picker stores `scene.pointleshBackground = { assetId, visible: true, locked: false }`; games can read it through `sceneBackground(scene)` and render that image. The background eye and lock are editor metadata and do not affect gameplay.
+
 The Scenes panel groups placed items as **Characters**, **Objects**, **Points**, **Areas** and **Hotspots** across the scene's native layers. Each group has an **Add**, eye and lock control; its eye and lock affect authoring only, like the controls on individual items. The grouping does not move items between layers or change render order. Character, object and point Add controls place an existing named prefab or create and place one from the matching template. **Add area** and **Add hotspot** create a named native polygon and start drawing. These are scene-owned data, with editable names, properties, schemas and behavior IDs; they have no prefab definition or inheritance controls. **Edit shape** selects the original Scene Designer polygon and its canvas tools. Closed shapes use native selection mode for vertex dragging, edge insertion/deletion and quadratic curves; empty shapes enter native drawing mode. No parallel geometry format or rectangle editor is used.
 
 Character instances and prefab definitions expose Idle/Walk/Speak tabs with front/back/left/right slots, optional diagonal slots, asset and animation selectors, and per-slot horizontal Flip. Sparse instance overrides inherit untouched slots; **Use prefab**, undo/redo and JSON export retain that behavior.

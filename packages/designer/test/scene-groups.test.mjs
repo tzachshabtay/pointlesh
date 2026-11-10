@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { createCharacterPrefab, createObjectPrefab, createPointPrefab, createPointleshArea, createPointleshInstance } from '@pointlesh/core';
+import { createCharacterPrefab, createObjectPrefab, createPointPrefab, createPointleshArea, createPointleshInstance, sceneBackground } from '@pointlesh/core';
 import { createLayer, createObject, createScene } from '@scene-designer/core';
 import { sceneGroupItems } from '../dist/scene-groups.js';
 
@@ -32,4 +32,12 @@ test('Bramblehollow doors are objects rather than group headings', async () => {
   const items = sceneGroupItems(manifest, 'village');
   assert.deepEqual(new Set(items.map(item => item.kind)), new Set(['character', 'object', 'point', 'area', 'hotspot']));
   assert.deepEqual(items.filter(item => item.name === 'Copper Tankard door · outside').map(item => item.kind), ['object']);
+});
+
+test('scene backgrounds are scene-level assets, separate from placed objects', () => {
+  const scene = createScene({ id: 'village', name: 'Bramblehollow' });
+  scene.pointleshBackground = { assetId: 'background.village', visible: false, locked: true };
+  const manifest = { schemaVersion: 2, scenes: { village: scene } };
+  assert.deepEqual(sceneBackground(scene), { assetId: 'background.village', visible: false, locked: true });
+  assert.deepEqual(sceneGroupItems(manifest, 'village'), []);
 });

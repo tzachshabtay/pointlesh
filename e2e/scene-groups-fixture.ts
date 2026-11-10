@@ -6,6 +6,8 @@ const character = createCharacterPrefab({ id: 'borin', name: 'Borin' });
 const object = createObjectPrefab({ id: 'door', name: 'Copper Tankard door · outside' });
 const point = createPointPrefab({ id: 'entry', name: 'Entry point' });
 const scene = createScene({ id: 'village', name: 'Bramblehollow' });
+(scene as typeof scene & { pointleshBackground: { assetId: string; visible: boolean; locked: boolean } }).pointleshBackground =
+  { assetId: 'background.village', visible: true, locked: false };
 const layer = createLayer({ id: 'adventure', name: 'Adventure' });
 layer.prefabs = [
   createPointleshInstance({ id: 'hero', prefabId: character.id }),
@@ -15,6 +17,9 @@ layer.prefabs = [
 layer.areas.push(createPointleshArea({ id: 'ground', kind: 'area', name: 'Ground' }), createPointleshArea({ id: 'well', kind: 'hotspot', name: 'Well' }));
 scene.layers = [layer];
 const manifest = { schemaVersion: 2, prefabs: { ...pointleshPrefabs(), borin: character, door: object, entry: point }, scenes: { village: scene } };
-const installed = installPointleshDesigner({ manifest, aiAssets: { schemaVersion: 1, assets: {} }, mount: document.body });
+const installed = installPointleshDesigner({ manifest, aiAssets: { schemaVersion: 1, assets: {
+  'background.village': { id: 'background.village', kind: 'image', dimensions: { width: 960, height: 540 }, activeVersion: 'base', versions: { base: { name: 'base', file: 'village.png' } } },
+  'background.forest': { id: 'background.forest', kind: 'image', dimensions: { width: 960, height: 540 }, activeVersion: 'base', versions: { base: { name: 'base', file: 'forest.png' } } },
+} }, mount: document.body });
 installed.designer.open();
 (window as any).sceneGroupsFixture = installed;

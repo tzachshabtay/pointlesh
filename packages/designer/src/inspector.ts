@@ -130,7 +130,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   const nativeUndo = designer.undo, nativeRedo = designer.redo;
   const prefabBrowser = installPrefabBrowser(designer, next => apply(next));
   const sceneAreas = installSceneAreas(designer, next => apply(next));
-  const sceneGroups = installSceneGroups(designer, next => apply(next), sceneAreas.add);
+  const sceneGroups = installSceneGroups(designer, next => apply(next), sceneAreas.add, () => aiAssets, options.assetPreviewUrl);
 
   function exportJSON() {
     const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
@@ -700,7 +700,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   }
   const api: PointleshInspector = {
     root, sync, open() { designer.open(); sync(); }, close() { designer.close(); },
-    setAiAssets(manifest) { aiAssets = structuredClone(manifest); assetsRevision++; render(); },
+    setAiAssets(manifest) { aiAssets = structuredClone(manifest); assetsRevision++; sceneGroups.invalidate(); render(); },
     editShape(instanceId, attributeId = 'area') {
       const target = instanceTarget(designer.getManifest(), instanceId);
       if (!target) throw new Error(`Unknown Pointlesh entity "${instanceId}".`);

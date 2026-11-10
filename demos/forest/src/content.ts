@@ -3,8 +3,8 @@ import { prepareForestDialogs } from './dialog-returns';
 import { addForestStoryDialogs } from './dialog-story';
 import { defineAiAssets, type AiAssetDefinition, type AiAssetManifest } from '@ai-game-assets/core';
 import { defineDialogManifest, syncDialogOptionVoiceLines, type DialogDefinition, type DialogNode } from '@dialog-designer/core';
-import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab } from '@pointlesh/core';
-import { createLayer, createScene, defineSceneManifest, type ScenePrefabInstance } from '@scene-designer/core';
+import { createPointleshArea, createPointleshInstance, pointleshPrefabs, extendPointleshPrefab, type PointleshSceneWithBackground } from '@pointlesh/core';
+import { createLayer, createScene, defineSceneManifest, type SceneDesignerManifest, type ScenePrefabInstance } from '@scene-designer/core';
 import { addForestPoints } from './points';
 import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
@@ -38,6 +38,13 @@ export const atlasRooms = {
   house: { asset: 'background.house', row: null }, forest: { asset: 'background.forest-wide', row: null },
   mine: { asset: 'background.mine-camp', row: 0 }, camp: { asset: 'background.camp', row: null }
 } as const;
+export function addForestBackgrounds(manifest: SceneDesignerManifest): SceneDesignerManifest {
+  for (const room of roomIds) {
+    const scene = manifest.scenes[room] as PointleshSceneWithBackground | undefined;
+    if (scene && !scene.pointleshBackground) scene.pointleshBackground = { assetId: atlasRooms[room].asset, visible: true, locked: false };
+  }
+  return manifest;
+}
 const definitions: Record<string, AiAssetDefinition> = {};
 for (const id of ['village-pub', 'house-forest', 'mine-camp']) {
   const assetId = `background.${id}`;
@@ -303,7 +310,8 @@ export const scenes = addForestTransitions(withForestLighting(addLamps(addFirepl
     ...targets[roomId].filter(target => !(roomCharacters[roomId] ?? []).some(npc => npc.actorName !== 'king' && npc.actorName === target.id) && !(roomPickups[roomId] ?? []).some(pickup => pickup.pickupId === target.id)).map(target => createPointleshArea({ id: `${target.id}::area`, entityId: target.id, kind: 'hotspot', name: target.name, properties: { label: target.name, exit: target.exit ?? '', description: target.description }, behaviors: ['forest.interact'], vertices: rectangle(target.x - 34, target.y - 35, 68, 64), closed: true, approachX: target.walkX ?? target.x, approachY: target.walkY ?? Math.max(403, Math.min(494, target.y + 25)) }))
   ];
   const layer = { ...createLayer({ id: `${roomId}.adventure`, name: 'Adventure' }), prefabs: instances, areas };
-  const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }), layers: [layer] };
+  const scene = { ...createScene({ id: roomId, name: roomNames[roomId], ...roomDimensions[roomId] }),
+    pointleshBackground: { assetId: atlasRooms[roomId].asset, visible: true, locked: false }, layers: [layer] };
   return [roomId, scene];
 })) }))))))));
 addForestInventoryPrefabs(scenes);

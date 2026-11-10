@@ -7,6 +7,7 @@ export * from './behaviors.js';
 export * from './cutscene.js';
 export * from './prefabs.js';
 export * from './scene-areas.js';
+export * from './background.js';
 export * from './dialog.js';
 export * from './points.js';
 export * from './interactions.js';

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
+import { openAdventure } from './start-helpers';
 
 test('Pointlesh scene groups organize items and expose add, visibility, and lock controls', async ({ page }) => {
   const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
@@ -7,6 +8,19 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await page.route('**/scene-groups-fixture', route => route.fulfill({ contentType: 'text/html', body: `<!doctype html><html><body><script type="module" src="/@fs${fixture}"></script></body></html>` }));
   await page.goto('/scene-groups-fixture');
   const groups = page.locator('.pointlesh-scene-groups');
+  const background = groups.locator('section.pointlesh-scene-group[aria-label="Background"]');
+  await expect(background.getByText('background.village', { exact: true })).toBeVisible();
+  await background.getByRole('button', { name: 'Hide background' }).click();
+  expect(await page.evaluate(() => (window as any).sceneGroupsFixture.designer.getManifest().scenes.village.pointleshBackground.visible)).toBe(false);
+  await background.getByRole('button', { name: 'Show background' }).click();
+  await background.getByRole('button', { name: 'Lock background' }).click();
+  await expect(background.getByRole('button', { name: 'Unlock background' })).toBeVisible();
+  await expect(background.getByRole('button', { name: 'Edit background' })).toBeDisabled();
+  await background.getByRole('button', { name: 'Unlock background' }).click();
+  await background.getByRole('button', { name: 'Change background' }).click();
+  await page.getByRole('dialog', { name: 'Edit background' }).getByRole('combobox', { name: 'Background image asset' }).selectOption('background.forest');
+  await page.getByRole('dialog', { name: 'Edit background' }).getByRole('button', { name: 'Apply' }).click();
+  await expect(background.getByText('background.forest', { exact: true })).toBeVisible();
   for (const [title, kind] of [['Characters', 'character'], ['Objects', 'object'], ['Points', 'point'], ['Areas', 'area'], ['Hotspots', 'hotspot']]) {
     const section = groups.locator(`section.pointlesh-scene-group[aria-label="${title}"]`);
     await expect(section).toBeVisible();
@@ -44,4 +58,15 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await hotspotDialog.getByRole('button', { name: 'Draw shape' }).click();
   await expect(groups.locator('section.pointlesh-scene-group[aria-label="Hotspots"] .scene-designer__item')).toHaveCount(2);
   expect(errors).toEqual([]);
+});
+
+test('the demo exposes its real room background and restores it after editor hiding', async ({ page }) => {
+  await openAdventure(page, true);
+  await expect(page.locator('#loading')).toBeHidden({ timeout: 60000 });
+  const background = page.locator('section.pointlesh-scene-group[aria-label="Background"]');
+  await expect(background.getByText('background.village-pub', { exact: true })).toBeVisible();
+  await background.getByRole('button', { name: 'Hide background' }).click();
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.background.visible)).toBe(false);
+  await page.getByRole('button', { name: 'Toggle scene designer' }).click();
+  expect(await page.evaluate(() => (window as any).pointleshDemo.scene.background.visible)).toBe(true);
 });

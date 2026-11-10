@@ -1,4 +1,5 @@
-import { createPointleshInstance, extendPointleshPrefab, isPointleshArea, isPointleshPrefab } from '@pointlesh/core';
+import { createPointleshInstance, extendPointleshPrefab, isPointleshArea, isPointleshPrefab, sceneBackground, type PointleshSceneWithBackground } from '@pointlesh/core';
+import type { AiAssetManifest } from '@ai-game-assets/core';
 import type { SceneArea, SceneDesignerManifest, SceneLayer, SceneObject, ScenePrefabInstance } from '@scene-designer/core';
 import type { SceneDesigner } from '@scene-designer/designer';
 import { isPrefabTemplate } from './prefab-browser.js';
@@ -32,11 +33,75 @@ export function sceneGroupItems(manifest: SceneDesignerManifest, sceneId: string
 }
 
 export function installSceneGroups(designer: SceneDesigner, commit: (manifest: SceneDesignerManifest) => void,
-  addArea: (sceneId: string, layerId: string, kind: 'area' | 'hotspot') => void) {
+  addArea: (sceneId: string, layerId: string, kind: 'area' | 'hotspot') => void,
+  getAssets: () => AiAssetManifest,
+  assetPreviewUrl?: (assetId: string) => string | undefined) {
   const document = designer.root.ownerDocument;
   const root = document.createElement('div'); root.className = 'pointlesh-scene-groups'; root.setAttribute('aria-label', 'Scene groups');
   const previous = new Map<string, Map<string, boolean>>();
   let renderedKey = '';
+  function editBackground(sceneId: string) {
+    const available = Object.values(getAssets().assets).filter(asset => asset.kind === 'image');
+    const current = sceneBackground(designer.getManifest().scenes[sceneId]);
+    const dialog = document.createElement('dialog'); dialog.className = 'scene-designer__dialog pointlesh-scene-background-dialog';
+    dialog.setAttribute('aria-label', current ? 'Edit background' : 'Add background');
+    const form = document.createElement('form'); form.className = 'scene-designer__stack';
+    const title = document.createElement('strong'); title.textContent = current ? 'Edit scene background' : 'Add scene background';
+    const label = document.createElement('label'); label.textContent = 'Image asset';
+    const select = document.createElement('select'); select.className = 'scene-designer__select'; select.setAttribute('aria-label', 'Background image asset');
+    for (const asset of available) {
+      const option = document.createElement('option'); option.value = asset.id; option.textContent = asset.id;
+      select.append(option);
+    }
+    if (current && !available.some(asset => asset.id === current.assetId)) {
+      const option = document.createElement('option'); option.value = current.assetId; option.textContent = `${current.assetId} (missing asset)`;
+      select.prepend(option);
+    }
+    if (current) select.value = current.assetId;
+    label.append(select);
+    const actions = document.createElement('div'); actions.className = 'scene-designer__dialog-actions';
+    const cancel = button('Cancel', 'Cancel', () => dialog.close());
+    const save = document.createElement('button'); save.type = 'submit'; save.className = 'scene-designer__button'; save.textContent = current ? 'Apply' : 'Add';
+    save.disabled = !select.options.length;
+    actions.append(cancel, save); form.append(title, label, actions); dialog.append(form); designer.root.append(dialog);
+    dialog.addEventListener('close', () => dialog.remove());
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const next = designer.getManifest(), scene = next.scenes[sceneId] as PointleshSceneWithBackground;
+      if (!scene || !select.value) return;
+      scene.pointleshBackground = { assetId: select.value, visible: current?.visible ?? true, locked: current?.locked ?? false };
+      commit(next); dialog.close();
+    });
+    dialog.showModal();
+  }
+  function toggleBackground(sceneId: string, property: 'visible' | 'locked') {
+    const next = designer.getManifest(), background = sceneBackground(next.scenes[sceneId]);
+    if (!background) return;
+    background[property] = !background[property]; commit(next);
+  }
+  function renderBackground(sceneId: string, manifest: SceneDesignerManifest) {
+    const background = sceneBackground(manifest.scenes[sceneId]);
+    const section = document.createElement('section'); section.className = 'pointlesh-scene-group'; section.setAttribute('aria-label', 'Background');
+    const heading = document.createElement('div'); heading.className = 'scene-designer__subhead';
+    const title = document.createElement('span'); title.textContent = `Background (${background ? 1 : 0})`;
+    const controls = document.createElement('div'); controls.className = 'pointlesh-scene-group-controls';
+    const eye = button(`${background?.visible ? 'Hide' : 'Show'} background`, background?.visible ? '👁' : '○', () => toggleBackground(sceneId, 'visible'));
+    const lock = button(`${background?.locked ? 'Unlock' : 'Lock'} background`, background?.locked ? '🔒' : '🔓', () => toggleBackground(sceneId, 'locked'));
+    eye.disabled = lock.disabled = !background;
+    const add = button(background ? 'Change background' : 'Add background', background ? 'Change' : '+ Add', () => editBackground(sceneId));
+    add.disabled = background?.locked === true;
+    controls.append(eye, lock, add); heading.append(title, controls); section.append(heading);
+    if (background) {
+      const row = document.createElement('div'); row.className = 'scene-designer__item pointlesh-scene-background';
+      const preview = assetPreviewUrl?.(background.assetId);
+      if (preview) { const image = document.createElement('img'); image.src = preview; image.alt = ''; row.append(image); }
+      const name = document.createElement('div'); name.className = 'scene-designer__item-title'; name.textContent = background.assetId;
+      const edit = button('Edit background', 'Edit', () => editBackground(sceneId)); edit.disabled = background.locked;
+      row.append(name, edit);
+      section.append(row);
+    }
+    return section;
+  }
   function button(label: string, text: string, action: () => void) {
     const node = document.createElement('button'); node.type = 'button'; node.className = 'scene-designer__button';
     node.textContent = text; node.title = label; node.setAttribute('aria-label', label);
@@ -131,9 +196,9 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     // that view, rather than hide it, so duplicate rows cannot receive clicks.
     if (list.childElementCount !== 1 || list.firstElementChild !== root) list.replaceChildren(root);
     const selection = designer.getSelection();
-    const key = JSON.stringify([sceneId, manifest.scenes[sceneId].layers, selection]);
+    const key = JSON.stringify([sceneId, sceneBackground(manifest.scenes[sceneId]), manifest.scenes[sceneId].layers, selection]);
     if (key === renderedKey) return;
-    renderedKey = key; root.replaceChildren();
+    renderedKey = key; root.replaceChildren(renderBackground(sceneId, manifest));
     const items = sceneGroupItems(manifest, sceneId);
     for (const group of groups) {
       const subset = items.filter(item => item.kind === group.kind);
@@ -175,6 +240,7 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     .pointlesh-scene-group-controls{display:flex;align-items:center;gap:3px}
     .pointlesh-scene-group-controls .scene-designer__button{padding:3px 7px;white-space:nowrap}
     .pointlesh-scene-group .scene-designer__item-title{min-width:0;overflow-wrap:anywhere}
+    .pointlesh-scene-background img{width:52px;height:32px;object-fit:cover;flex:none;border:1px solid #566071}
   `; designer.root.append(style);
-  return { sync, destroy() { root.remove(); style.remove(); designer.root.querySelector<HTMLDialogElement>('.pointlesh-add-scene-item')?.close(); } };
+  return { sync, invalidate() { renderedKey = ''; }, destroy() { root.remove(); style.remove(); designer.root.querySelector<HTMLDialogElement>('.pointlesh-add-scene-item,.pointlesh-scene-background-dialog')?.close(); } };
 }
