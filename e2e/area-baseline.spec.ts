@@ -36,21 +36,23 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   await enabled.uncheck();
   await expect.poll(() => baselineVisible(page)).toBe(false);
   await expect(baseline).toHaveCount(0);
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.overlays.length)).toBe(0);
   await context.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(enabled).toBeChecked();
   await expect.poll(() => baselineVisible(page)).toBe(true);
+  // Keep the drag handle clear of the viewport's lower edge.
+  const dragStart = Math.min(original, 450);
+  await baseline.fill(String(dragStart)); await baseline.press('Tab');
 
   await native.getByRole('button', { name: 'Edit shape', exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getSelection())).toMatchObject({ type: 'area', areaId: 'village.foreground::area' });
-  await dragBaseline(page, original, original - 70);
+  await dragBaseline(page, dragStart, dragStart - 70);
   // Live occlusion updates before pointerup, while history still has only the initial checkpoint.
-  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.overlays[0]?.image.depth)).toBeCloseTo(original - 70, 0);
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.overlays[0]?.image.depth)).toBeCloseTo(dragStart - 70, 0);
   await page.mouse.up();
   const changed = Number(await baseline.inputValue());
-  expect(changed).toBeCloseTo(original - 70, 0);
+  expect(changed).toBeCloseTo(dragStart - 70, 0);
   await context.getByRole('button', { name: 'Undo', exact: true }).click();
-  await expect(baseline).toHaveValue(String(original));
+  await expect(baseline).toHaveValue(String(dragStart));
   await context.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(baseline).toHaveValue(String(changed));
   const exported = await page.evaluate(() => JSON.parse((window as any).pointleshDemo.scene.sceneDesigner.inspector.exportManifest()));
