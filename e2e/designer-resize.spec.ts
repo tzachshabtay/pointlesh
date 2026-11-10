@@ -5,7 +5,6 @@ test('Scenes bottom edge expands a scrolled panel and retains its size after swi
   await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const panel = page.locator('.scene-designer__panel[data-panel="scenes"]');
-  await panel.getByRole('button', { name: 'Expand layer', exact: true }).click();
   const id = await panel.getAttribute('id');
   const grip = page.locator(`[data-resize-panel="${id}"] [data-edge="s"]`);
   const dragBottom = async (dy: number) => {
@@ -34,6 +33,5 @@ test('Scenes bottom edge expands a scrolled panel and retains its size after swi
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   expect(await panel.boundingBox()).toEqual(expanded);
   // Keeping editor controls usable proves the border frame doesn't cover the panel.
-  await panel.getByRole('button', { name: 'Collapse layer', exact: true }).click();
-  await expect(panel.getByRole('button', { name: 'Expand layer', exact: true })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Add area', exact: true })).toBeVisible();
 });

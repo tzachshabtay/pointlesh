@@ -26,7 +26,6 @@ test('native area selection exposes Walk-behind and a live baseline with one und
   await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
-  await native.getByRole('button', { name: 'Expand layer', exact: true }).click();
   await native.locator('.scene-designer__item-title').getByText('Foreground occlusion', { exact: true }).click();
   const context = native.getByRole('region', { name: 'Selected area adventure properties' });
   const enabled = context.getByRole('checkbox', { name: 'Walk-behind', exact: true });
@@ -114,7 +113,6 @@ test('inline area controls remain clickable while resize handles stay outside sc
   await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   const native = page.locator('.scene-designer__panel[data-panel="scenes"]');
-  await native.getByRole('button', { name: 'Expand layer', exact: true }).click();
   await native.locator('.scene-designer__item-title').getByText('Foreground occlusion', { exact: true }).click();
   const context = native.getByRole('region', { name: 'Selected area adventure properties' });
   const enabled = context.getByRole('checkbox', { name: 'Walk-behind', exact: true });

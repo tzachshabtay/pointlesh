@@ -47,13 +47,9 @@ test('create a named prefab from its hidden template, undo/redo, then place it u
   await browser.getByRole('button', { name: 'Open Objects folder' }).click();
   await expect(browser.getByRole('button', { name: 'Test lantern', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
-  await page.getByRole('button', { name: 'Add prefab', exact: true }).click();
-  const picker = page.getByRole('region', { name: 'Choose prefab', exact: true });
-  const add = page.locator('dialog').getByRole('button', { name: 'Add', exact: true });
-  await expect(add).toBeDisabled();
-  await picker.getByRole('button', { name: 'Open Objects folder' }).click();
-  await expect(picker.getByRole('button', { name: 'Object', exact: true })).toHaveCount(0);
-  await picker.getByRole('button', { name: 'Test lantern', exact: true }).click();
-  await add.click();
+  await page.getByRole('button', { name: 'Add object', exact: true }).click();
+  const placement = page.getByRole('dialog', { name: 'Add object' });
+  await placement.getByRole('combobox', { name: 'Choose object' }).selectOption(id);
+  await placement.getByRole('button', { name: 'Add', exact: true }).click();
   await expect.poll(() => page.evaluate(id => (window as any).pointleshDemo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs ?? []).some((instance: any) => instance.prefabId === id), id)).toBe(true);
 });

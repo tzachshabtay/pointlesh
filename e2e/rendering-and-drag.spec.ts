@@ -42,8 +42,7 @@ test('Mara can be dragged from inside her prefab rectangle after selection in th
   await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('combobox').selectOption({ label: 'The Copper Tankard' });
-  await page.getByRole('button', { name: 'Expand layer', exact: true }).click();
-  await page.getByRole('button', { name: 'Mara the innkeeper Hide instance Lock instance Remove instance', exact: true }).click();
+  await page.getByRole('button', { name: 'Select Mara the innkeeper', exact: true }).click();
   const position = () => page.evaluate(() => {
     const object = (window as any).pointleshDemo.scene.resolved().objects.find((object: any) => object.id === 'pub.npc.innkeeper');
     return object.position;

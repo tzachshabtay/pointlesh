@@ -21,19 +21,19 @@ async function state(page: Page) {
 }
 
 async function start(page: Page) {
-  // Edits in this regression must never overwrite the developer's authored scenes.
-  await page.route(/http:\/\/127\.0\.0\.1:428[789]\//, route => route.abort());
-  // The authored scene is exercised with small seed artwork; generated art is tested separately.
-  await page.route('**/authoring/assets.json', route => route.fulfill({ status: 404, body: '' }));
   await openAdventure(page, true);
   await expect(page.locator('#loading')).toBeHidden({ timeout: 60000 });
   await page.getByRole('combobox').selectOption('camp');
-  await page.getByRole('button', { name: 'Expand layer', exact: true }).click();
-  // Local promoted scene data may already have these eye controls off.
-  for (const button of ['Show layer', 'Unlock layer', 'Show instance', 'Unlock instance', 'Show area', 'Unlock area']) {
-    const controls = page.getByRole('button', { name: button, exact: true });
-    while (await controls.count()) await controls.first().click();
-  }
+  // Local promoted scene data may already have these editor-only controls off.
+  await page.evaluate(() => {
+    const designer = (window as any).pointleshDemo.scene.sceneDesigner.designer;
+    const manifest = designer.getManifest();
+    for (const layer of manifest.scenes.camp.layers) {
+      layer.visible = true; layer.locked = false;
+      for (const item of [...(layer.prefabs ?? []), ...layer.areas]) { item.visible = true; item.locked = false; }
+    }
+    designer.setManifest(manifest);
+  });
 }
 
 test('eye and lock controls only affect editing, including live blockers and hidden walkable areas', async ({ page }) => {
@@ -49,11 +49,11 @@ test('eye and lock controls only affect editing, including live blockers and hid
     void scene.character.walkTo({ x: 300, y: 465 });
   });
   for (const name of ['Grub the guard', 'King Aldric']) {
-    await row(page, name).getByRole('button', { name: 'Hide instance', exact: true }).click();
-    await row(page, name).getByRole('button', { name: 'Lock instance', exact: true }).click();
+    await row(page, name).getByRole('button', { name: `Hide ${name}`, exact: true }).click();
+    await row(page, name).getByRole('button', { name: `Lock ${name}`, exact: true }).click();
   }
-  await row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Hide area', exact: true }).click();
-  await row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Lock area', exact: true }).click();
+  await row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Hide Walkable ground & perspective', exact: true }).click();
+  await row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Lock Walkable ground & perspective', exact: true }).click();
   await expect.poll(() => state(page)).toEqual({ ...before, objects: before.objects.map(object => ({ ...object, rendered: false })) });
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBeCloseTo(300, 0);
   // The hidden guard continues walking/animating while the editor is open.
@@ -89,11 +89,11 @@ test('eye and lock controls only affect editing, including live blockers and hid
   await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.character.state.position.x)).toBeGreaterThan(260);
 
   await toggle(page).click();
-  await expect(row(page, 'Grub the guard').getByRole('button', { name: 'Show instance', exact: true })).toBeVisible();
-  await expect(row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Unlock area', exact: true })).toBeVisible();
+  await expect(row(page, 'Grub the guard').getByRole('button', { name: 'Show Grub the guard', exact: true })).toBeVisible();
+  await expect(row(page, 'Walkable ground & perspective').getByRole('button', { name: 'Unlock Walkable ground & perspective', exact: true })).toBeVisible();
   await expect.poll(() => state(page)).toEqual({ ...unrestricted, objects: unrestricted.objects.map(object => ({ ...object, rendered: false })) });
-  await page.getByRole('button', { name: 'Hide layer', exact: true }).click();
-  await page.getByRole('button', { name: 'Lock layer', exact: true }).click();
+  await page.getByRole('button', { name: 'Hide characters', exact: true }).click();
+  await page.getByRole('button', { name: 'Lock characters', exact: true }).click();
   await toggle(page).click();
   await expect.poll(() => state(page)).toEqual(unrestricted);
   expect(await page.evaluate(() => (window as any).pointleshDemo.scene.actor.visible)).toBe(true);

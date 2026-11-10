@@ -179,12 +179,12 @@ test('create and place a Point through the prefab browser', async ({ page }) => 
   await dialog.getByRole('textbox', { name: 'Prefab name' }).fill('Lookout');
   await dialog.getByRole('button', { name: 'Create', exact: true }).click();
   await expect(context(page).getByRole('spinbutton', { name: 'X', exact: true })).toBeVisible();
+  const prefabId = await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getSelectedPrefabId());
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
-  await page.getByRole('button', { name: 'Add prefab', exact: true }).click();
-  const picker = page.getByRole('region', { name: 'Choose prefab', exact: true });
-  await picker.getByRole('button', { name: 'Open Points folder' }).click();
-  await picker.getByRole('button', { name: 'Lookout', exact: true }).click();
-  await page.locator('dialog').getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add point', exact: true }).click();
+  const placement = page.getByRole('dialog', { name: 'Add point' });
+  await placement.getByRole('combobox', { name: 'Choose point' }).selectOption(prefabId);
+  await placement.getByRole('button', { name: 'Add', exact: true }).click();
   await expect(page.locator('.pointlesh-point-handle[aria-label="Point: Lookout"]')).toBeVisible();
 });
 

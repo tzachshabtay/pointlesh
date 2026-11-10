@@ -24,7 +24,6 @@ test('designer drawings sit above visible game controls, keep drag priority and 
   await scenes.click();
   await expect.poll(position).toBeLessThan(initialX - 30);
 
-  await page.getByRole('button', { name: 'Expand layer', exact: true }).click();
   await page.locator('.scene-designer__item-title').getByText('Foreground occlusion', { exact: true }).click();
   // Move the floating properties panel away from the game button under test.
   const title = (await page.locator('.scene-designer__panel[data-panel="scenes"] .scene-designer__title').boundingBox())!;

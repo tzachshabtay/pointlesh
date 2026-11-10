@@ -32,7 +32,6 @@ test('areas and hotspots belong to scenes, retain edits and never appear in the 
 
 for (const kind of ['area', 'hotspot'] as const) test(`draw a new scene ${kind}, extend it, delete it and undo without creating a prefab`, async ({ page }) => {
   await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
-  await page.getByRole('button', { name: 'Expand layer', exact: true }).click();
   const prefabs = await page.evaluate(() => (window as any).pointleshDemo.manifest.prefabs);
   await page.getByRole('button', { name: `Add ${kind}`, exact: true }).click();
   const dialog = page.getByRole('dialog', { name: `New ${kind}` });
@@ -62,7 +61,7 @@ for (const kind of ['area', 'hotspot'] as const) test(`draw a new scene ${kind},
   expect(current.manifest.prefabs).toEqual(prefabs);
   expect(current.region).toMatchObject({ kind, behaviors: ['test.interact'], properties: { quest: 'rescue' }, closed: true });
   const row = page.getByRole('button', { name: 'Select Test region', exact: true });
-  await row.getByRole('button', { name: 'Remove area', exact: true }).click();
+  await row.getByRole('button', { name: 'Remove Test region', exact: true }).click();
   await expect(row).toHaveCount(0);
   await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.undo());
   await expect(row).toBeVisible();
