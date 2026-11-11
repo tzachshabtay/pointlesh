@@ -22,12 +22,16 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await background.getByRole('button', { name: 'Unlock background' }).click();
   await expect(background.getByRole('button', { name: 'Lock background' })).toHaveAttribute('data-locked', 'false');
   await background.getByRole('button', { name: 'Edit background' }).click();
-  const search = page.getByRole('dialog', { name: 'Edit background' }).getByRole('searchbox', { name: 'Search background image asset' });
+  const picker = page.getByRole('dialog', { name: 'Edit background' }).getByRole('button', { name: 'Background image asset' });
+  const search = page.getByRole('dialog', { name: 'Edit background' }).getByRole('combobox', { name: 'Search background image asset' });
+  await expect(search).toBeHidden();
+  await picker.click();
   await expect(search).toBeVisible();
   await search.fill('forest');
-  await expect(page.getByRole('dialog', { name: 'Edit background' }).locator('option[value="background.extra-1"]')).toHaveJSProperty('hidden', true);
-  await page.getByRole('dialog', { name: 'Edit background' }).getByRole('combobox', { name: 'Background image asset' }).selectOption('background.forest');
-  await expect(search).toHaveValue('');
+  await expect(page.getByRole('dialog', { name: 'Edit background' }).getByRole('option')).toHaveCount(1);
+  await page.getByRole('dialog', { name: 'Edit background' }).getByRole('option', { name: 'background.forest' }).click();
+  await expect(search).toBeHidden();
+  await expect(picker).toContainText('background.forest');
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('button', { name: 'Apply' }).click();
   await expect(background.getByText('background.forest', { exact: true })).toBeVisible();
   for (const [title, kind] of [['Characters', 'character'], ['Objects', 'object'], ['Points', 'point'], ['Areas', 'area'], ['Hotspots', 'hotspot']]) {

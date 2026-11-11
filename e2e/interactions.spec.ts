@@ -73,8 +73,10 @@ test('matrix discovers all target kinds, supports arbitrary verbs, and edits all
 test('hovering speech and empty cells previews the effective sentence', async ({ page }) => {
   await ready(page);
   await panel(page).getByRole('combobox', { name: 'Interaction target type' }).selectOption('inventory-item');
+  await expect(cell(page, rope, 'verb:look')).toHaveAttribute('title', seed.cells[rope]['verb:look'].text);
   await cell(page, rope, 'verb:look').hover();
   await expect(page.getByRole('tooltip')).toHaveText(seed.cells[rope]['verb:look'].text);
+  await expect(cell(page, rope, 'item:forest.inventory.coin')).toHaveAttribute('title', `Default: ${seed.cells.defaults['item:forest.inventory.coin'].text}`);
   await cell(page, rope, 'item:forest.inventory.coin').hover();
   await expect(page.getByRole('tooltip')).toHaveText(`Default: ${seed.cells.defaults['item:forest.inventory.coin'].text}`);
   await panel(page).getByRole('searchbox', { name: 'Find interaction target' }).click();

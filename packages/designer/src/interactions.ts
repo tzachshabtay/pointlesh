@@ -143,6 +143,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
         const spoken = cell?.kind === 'simple' ? interactionSentences(cell) : (!cell || cell.kind === 'impossible') && fallback?.kind === 'simple' ? interactionSentences(fallback) : [];
         if (spoken.length) {
           const preview = `${cell?.kind === 'simple' ? '' : 'Default: '}${spoken.join('\n')}`;
+          b.title = preview;
           b.addEventListener('pointerenter', event => showTooltip(b, preview, event.clientX, event.clientY));
           b.addEventListener('pointermove', event => showTooltip(b, preview, event.clientX, event.clientY));
           b.addEventListener('pointerleave', hideTooltip);
