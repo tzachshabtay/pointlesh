@@ -1,6 +1,7 @@
 import { registerInGameDesignerPanel, type AiAssetManifest } from '@ai-game-assets/core';
 import { assertInteractionManifest, DEFAULT_INTERACTION_TARGET, interactionSentences, interactionTargets, interactionVoiceLineId, itemInteractionColumn, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, verbInteractionColumn, type InteractionManifest, type InteractionTarget, type InteractionSpeechMode } from '@pointlesh/core';
 import type { SceneDesignerManifest } from '@scene-designer/core';
+import { installDesignerSelectSearch } from './select-search.js';
 
 export class InteractionDesignerDebugClient {
   constructor(readonly baseUrl = 'http://127.0.0.1:4290') {}
@@ -69,6 +70,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   };
   scroll.addEventListener('scroll', hideTooltip);
   (options.mount ?? document.body).append(root);
+  const selectSearch = installDesignerSelectSearch(root);
   const dialog = document.createElement('dialog'); dialog.className = 'pointlesh-interaction-edit'; dialog.setAttribute('aria-label', 'Edit interaction'); root.append(dialog);
   const dock = registerInGameDesignerPanel({ id: 'pointlesh.interactions', label: 'Interactions', ariaLabel: 'Toggle interaction designer', panel: root, dragHandle: title, order: 50,
     onOpenChange(open) { if (open) render(); else { hideTooltip(); dialog.close(); } } });
@@ -303,7 +305,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       }
       render();
     },
-    destroy() { destroyed = true; hideTooltip(); tooltip.remove(); dialog.close(); dock.destroy(); root.remove(); } };
+    destroy() { destroyed = true; hideTooltip(); tooltip.remove(); selectSearch.destroy(); dialog.close(); dock.destroy(); root.remove(); } };
 }
 
 const styles = `

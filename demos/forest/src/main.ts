@@ -59,13 +59,14 @@ import { addJournalAssets } from './journal-assets';
 import { ForestJournal, renderJournal } from './journal';
 import { captureSavePreview } from './save-preview';
 import { assertInteractionManifest, syncInteractionVoiceLines, syncInteractionTextFromVoiceLines, interactionTargets, sceneInteractionTarget, prefabInteractionTarget, itemInteractionColumn, verbInteractionColumn, resolveInteraction, selectInteractionSpeech, createInteractionPlaybackState, type InteractionManifest, type InteractionSpeechLine } from '@pointlesh/core';
-import { installInteractionDesigner, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
+import { installInteractionDesigner, installDesignerSelectSearch, InteractionDesignerDebugClient, type InteractionDesigner } from '@pointlesh/designer';
 import { createForestInteractions, entityInteractionId } from './interactions';
 import { playTitleDeparture } from './title-departure';
 import { addWorldMapAsset, renderWorldMap, WORLD_MAP_ASSET } from './world-map';
 import './world-map.css';
 
 document.body.classList.toggle('debug-build', import.meta.env.DEV);
+installDesignerSelectSearch(document.body);
 
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 el('designer').hidden = !import.meta.env.DEV;

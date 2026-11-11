@@ -22,7 +22,12 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await background.getByRole('button', { name: 'Unlock background' }).click();
   await expect(background.getByRole('button', { name: 'Lock background' })).toHaveAttribute('data-locked', 'false');
   await background.getByRole('button', { name: 'Edit background' }).click();
+  const search = page.getByRole('dialog', { name: 'Edit background' }).getByRole('searchbox', { name: 'Search background image asset' });
+  await expect(search).toBeVisible();
+  await search.fill('forest');
+  await expect(page.getByRole('dialog', { name: 'Edit background' }).locator('option[value="background.extra-1"]')).toHaveJSProperty('hidden', true);
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('combobox', { name: 'Background image asset' }).selectOption('background.forest');
+  await expect(search).toHaveValue('');
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('button', { name: 'Apply' }).click();
   await expect(background.getByText('background.forest', { exact: true })).toBeVisible();
   for (const [title, kind] of [['Characters', 'character'], ['Objects', 'object'], ['Points', 'point'], ['Areas', 'area'], ['Hotspots', 'hotspot']]) {
@@ -62,6 +67,25 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await hotspotDialog.getByRole('button', { name: 'Draw shape' }).click();
   await expect(groups.locator('section.pointlesh-scene-group[aria-label="Hotspots"] .scene-designer__item')).toHaveCount(2);
   expect(errors).toEqual([]);
+});
+
+test('scene item controls keep the scenes panel at the same scroll position', async ({ page }) => {
+  const fixture = fileURLToPath(new URL('./scene-groups-fixture.ts', import.meta.url));
+  await page.route('**/scene-groups-fixture', route => route.fulfill({ contentType: 'text/html', body: `<!doctype html><html><body><script type="module" src="/@fs${fixture}"></script></body></html>` }));
+  await page.goto('/scene-groups-fixture');
+  const result = await page.evaluate(() => {
+    const panel = document.querySelector<HTMLElement>('.scene-designer__panel[data-panel="scenes"]')!;
+    panel.style.maxHeight = '180px';
+    panel.scrollTop = panel.scrollHeight;
+    const before = panel.scrollTop;
+    panel.querySelector<HTMLButtonElement>('[aria-label="Lock Copper Tankard door · outside"]')!.click();
+    const afterLock = panel.scrollTop;
+    panel.querySelector<HTMLButtonElement>('[aria-label="Hide Copper Tankard door · outside"]')!.click();
+    return { before, afterLock, afterHide: panel.scrollTop };
+  });
+  expect(result.before).toBeGreaterThan(0);
+  expect(result.afterLock).toBe(result.before);
+  expect(result.afterHide).toBe(result.before);
 });
 
 test('the demo exposes its real room background and restores it after editor hiding', async ({ page }) => {

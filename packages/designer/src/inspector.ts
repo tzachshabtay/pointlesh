@@ -27,6 +27,7 @@ import { installPrefabBrowser } from './prefab-browser.js';
 import { installSceneAreas } from './scene-areas.js';
 import { installSceneGroups } from './scene-groups.js';
 import { inventoryItemEditor } from './inventory-editor.js';
+import { installDesignerSelectSearch } from './select-search.js';
 
 export type PointleshPointAction = { sceneId: string; pointId: string; characterId: string; action: 'move' | 'walk' };
 export type PointleshInspectorOptions = {
@@ -131,6 +132,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   const prefabBrowser = installPrefabBrowser(designer, next => apply(next));
   const sceneAreas = installSceneAreas(designer, next => apply(next));
   const sceneGroups = installSceneGroups(designer, next => apply(next), sceneAreas.add, () => aiAssets, options.assetPreviewUrl);
+  const selectSearch = installDesignerSelectSearch(designer.root);
 
   function exportJSON() {
     const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
@@ -147,6 +149,9 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   function apply(next: SceneDesignerManifest, saveHistory = true) {
     if (saveHistory) { past.push(structuredClone(last)); if (past.length > 100) past.shift(); future.length = 0; }
     const selection = designer.getSelection();
+    const sceneId = designer.getSceneId();
+    const scenePanel = designer.root.querySelector<HTMLElement>('.scene-designer__panel[data-panel="scenes"]');
+    const sceneScrollTop = scenePanel?.scrollTop;
     restoring = true;
     try {
       designer.setManifest(next);
@@ -154,6 +159,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     } finally { restoring = false; }
     last = designer.getManifest(); lastJson = JSON.stringify(last);
     render(); preview(); notify();
+    if (scenePanel && designer.getSceneId() === sceneId && sceneScrollTop !== undefined) scenePanel.scrollTop = sceneScrollTop;
   }
 
   function undo() {
@@ -727,7 +733,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     undo, redo, exportManifest() { return JSON.stringify(designer.getManifest(), null, 2) + "\n"; },
     destroy() {
       if (destroyed) return;
-      destroyed = true; nativeObserver.disconnect(); prefabBrowser.destroy(); sceneAreas.destroy(); sceneGroups.destroy(); restoreNativeFields(); root.remove();
+      destroyed = true; nativeObserver.disconnect(); selectSearch.destroy(); prefabBrowser.destroy(); sceneAreas.destroy(); sceneGroups.destroy(); restoreNativeFields(); root.remove();
       if (designer.undo === undo) designer.undo = nativeUndo;
       if (designer.redo === redo) designer.redo = nativeRedo;
     },
