@@ -46848,8 +46848,8 @@
     "line.game.borin.he-would-never-let-me-tie-him": {
       "id": "line.game.borin.he-would-never-let-me-tie-him",
       "kind": "voice-line",
-      "prompt": "He would never let me tie him up while he is awake. Sleep first, knots second.",
-      "activeVersion": "promoted-1793360305654-9",
+      "prompt": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
+      "activeVersion": "promoted-1794403457378",
       "versions": {
         "promoted-1793360305654-9": {
           "name": "promoted-1793360305654-9",
@@ -47049,11 +47049,192 @@
             ],
             "sourceFile": "art/line.game.borin.he-would-never-let-me-tie-him.promoted-1793360305654-9.mp3"
           }
+        },
+        "promoted-1794403457378": {
+          "recordedText": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
+            "language": "en",
+            "duration": 4.88,
+            "audioHash": "a67e5f8dafc79fb2ff43ae2ad298a586b2576cbdbe387bfa5a99c5ee27d2250a",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.06,
+                "shape": "B"
+              },
+              {
+                "start": 0.06,
+                "end": 0.19,
+                "shape": "C"
+              },
+              {
+                "start": 0.19,
+                "end": 0.4,
+                "shape": "B"
+              },
+              {
+                "start": 0.4,
+                "end": 0.48,
+                "shape": "A"
+              },
+              {
+                "start": 0.48,
+                "end": 0.55,
+                "shape": "C"
+              },
+              {
+                "start": 0.55,
+                "end": 0.62,
+                "shape": "A"
+              },
+              {
+                "start": 0.62,
+                "end": 0.79,
+                "shape": "B"
+              },
+              {
+                "start": 0.79,
+                "end": 0.86,
+                "shape": "C"
+              },
+              {
+                "start": 0.86,
+                "end": 1,
+                "shape": "B"
+              },
+              {
+                "start": 1,
+                "end": 1.14,
+                "shape": "C"
+              },
+              {
+                "start": 1.14,
+                "end": 1.42,
+                "shape": "B"
+              },
+              {
+                "start": 1.42,
+                "end": 1.63,
+                "shape": "D"
+              },
+              {
+                "start": 1.63,
+                "end": 1.77,
+                "shape": "B"
+              },
+              {
+                "start": 1.77,
+                "end": 1.89,
+                "shape": "A"
+              },
+              {
+                "start": 1.89,
+                "end": 1.97,
+                "shape": "C"
+              },
+              {
+                "start": 1.97,
+                "end": 2.18,
+                "shape": "B"
+              },
+              {
+                "start": 2.18,
+                "end": 2.25,
+                "shape": "D"
+              },
+              {
+                "start": 2.25,
+                "end": 2.39,
+                "shape": "B"
+              },
+              {
+                "start": 2.39,
+                "end": 2.46,
+                "shape": "F"
+              },
+              {
+                "start": 2.46,
+                "end": 2.74,
+                "shape": "B"
+              },
+              {
+                "start": 2.74,
+                "end": 2.81,
+                "shape": "C"
+              },
+              {
+                "start": 2.81,
+                "end": 3.02,
+                "shape": "F"
+              },
+              {
+                "start": 3.02,
+                "end": 3.09,
+                "shape": "C"
+              },
+              {
+                "start": 3.09,
+                "end": 3.79,
+                "shape": "B"
+              },
+              {
+                "start": 3.79,
+                "end": 4.21,
+                "shape": "E"
+              },
+              {
+                "start": 4.21,
+                "end": 4.35,
+                "shape": "B"
+              },
+              {
+                "start": 4.35,
+                "end": 4.43,
+                "shape": "A"
+              },
+              {
+                "start": 4.43,
+                "end": 4.7,
+                "shape": "B"
+              },
+              {
+                "start": 4.7,
+                "end": 4.88,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.he-would-never-let-me-tie-him.promoted-1794403457378.mp3"
+          },
+          "name": "promoted-1794403457378",
+          "file": "art/line.game.borin.he-would-never-let-me-tie-him.promoted-1794403457378.mp3",
+          "prompt": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
+          "createdAt": "2026-11-11T13:24:17.426Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
+            "direction": "",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4"
+          },
+          "parentVersion": "promoted-1793360305654-9",
+          "notes": "Borin replies to rope on awake guard."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "He would never let me tie him up while he is awake. Sleep first, knots second.",
+        "text": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
         "direction": "",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",

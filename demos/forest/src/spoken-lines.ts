@@ -47,8 +47,8 @@ export const spokenLines = {
   },
   "he-would-never-let-me-tie-him": {
     "voice": "borin",
-    "text": "He would never let me tie him up while he is awake. Sleep first, knots second.",
-    "label": "He would never let me tie him up while he is awake. Sleep first, knots second."
+    "text": "Tying him up is a good idea, but not while he's awake, he's stronger than me!",
+    "label": "Tying him up is a good idea, but not while he's awake, he's stronger than me!"
   },
   "one-clang-and-that-guard-will-catch": {
     "voice": "borin",

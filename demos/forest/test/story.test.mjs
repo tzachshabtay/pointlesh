@@ -64,7 +64,7 @@ test('inventory and conversation prerequisites prevent premature puzzle solution
   state.roomId = 'camp';
   assert.match(interact(state, 'cage', 'pickaxe').text, /no longer/);
   state.inventory = ['rope', 'pickaxe'];
-  assert.match(interact(state, 'guard', 'rope').text, /while he is awake/);
+  assert.equal(interact(state, 'guard', 'rope').text, "Tying him up is a good idea, but not while he's awake, he's stronger than me!");
   assert.match(interact(state, 'cage', 'rope').text, /cannot see how/);
   assert.match(interact(state, 'cage', 'pickaxe').text, /guard will catch/);
   assert.deepEqual(state.inventory, ['rope', 'pickaxe']);

@@ -575,6 +575,10 @@ class ForestAdventure extends Phaser.Scene {
         const point = resolvePointleshPoint(this.resolved(), String(entity.properties.walkPointId || 'camp.walk.cauldron')).position;
         this.campStealth.poison(point, this.campClearance()); this.binding.sync(); this.renderNearby(); return;
       }
+      if (targetId === 'guard' && selected === 'rope' && this.story.inventory.includes('rope')) {
+        this.say(spokenLines["he-would-never-let-me-tie-him"].text);
+        return;
+      }
       this.say(this.story.flags.stewSpiked ? spokenLines["the-stew-is-ready-i-should-keep"].text : spokenLines["i-need-to-keep-hidden-a-little"].text);
       return;
     }

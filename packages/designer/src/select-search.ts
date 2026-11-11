@@ -8,7 +8,11 @@ export function installDesignerSelectSearch(root: HTMLElement, minimumOptions = 
     const name = select.getAttribute('aria-label') || select.closest('label')?.querySelector(':scope > span')?.textContent?.trim() || 'options';
     const trigger = document.createElement('button'); trigger.type = 'button'; trigger.className = 'pointlesh-select-trigger';
     trigger.setAttribute('aria-label', name); trigger.setAttribute('aria-haspopup', 'listbox'); trigger.setAttribute('aria-expanded', 'false');
-    trigger.style.cssText = 'box-sizing:border-box;width:100%;min-width:0;text-align:left;white-space:normal;overflow-wrap:anywhere;padding:7px 10px;font:inherit;color:#e6eaf2;background:#202938;border:1px solid #59677d;border-radius:5px;cursor:pointer';
+    trigger.style.cssText = 'box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-width:0;text-align:left;white-space:normal;overflow-wrap:anywhere;padding:7px 10px;font:inherit;color:#e6eaf2;background:#202938;border:1px solid #59677d;border-radius:5px;cursor:pointer';
+    const triggerLabel = document.createElement('span'); triggerLabel.style.cssText = 'min-width:0;overflow-wrap:anywhere';
+    const triggerArrow = document.createElement('span'); triggerArrow.textContent = '▾'; triggerArrow.setAttribute('aria-hidden', 'true');
+    triggerArrow.style.cssText = 'flex:none;margin-left:auto';
+    trigger.append(triggerLabel, triggerArrow);
     const panel = document.createElement('div'); panel.className = 'pointlesh-select-menu'; panel.hidden = true;
     panel.style.cssText = 'position:fixed;z-index:2147483646;box-sizing:border-box;padding:8px;background:#202938;color:#e6eaf2;border:1px solid #72839e;border-radius:6px;box-shadow:0 10px 28px #000a;font:13px system-ui';
     const search = document.createElement('input'); search.type = 'search'; search.autocomplete = 'off';
@@ -26,7 +30,7 @@ export function installDesignerSelectSearch(root: HTMLElement, minimumOptions = 
 
     const refresh = () => {
       const selected = select.selectedOptions[0];
-      trigger.textContent = `${selected?.dataset.searchText || selected?.textContent || 'Choose an option'} ▾`;
+      triggerLabel.textContent = selected?.dataset.searchText || selected?.textContent || 'Choose an option';
       trigger.disabled = select.disabled;
       if (select.disabled) close();
     };
