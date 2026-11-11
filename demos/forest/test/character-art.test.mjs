@@ -6,7 +6,7 @@ import { assertManifest, topLevelAiAssetIds } from '@ai-game-assets/core';
 import { readCharacterAnimations, resolvePointleshScene } from '@pointlesh/core';
 
 const { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, characterFramePixels } = await tsImport('../src/sprites.ts', import.meta.url);
-const { assets: seedAssets, scenes: seedScenes } = await tsImport('../src/content.ts', import.meta.url);
+const { assets: seedAssets, scenes: seedScenes, completeForestAssetManifest } = await tsImport('../src/content.ts', import.meta.url);
 const publicDirectory = new URL('../public/', import.meta.url);
 const authoredAssets = JSON.parse(await readFile(new URL('authoring/assets.json', publicDirectory), 'utf8'));
 const authoredScenes = JSON.parse(await readFile(new URL('authoring/scenes.json', publicDirectory), 'utf8'));
@@ -60,6 +60,9 @@ test('all six authored character images expose nine playable native AI Assets an
 test('seed and authored catalogs group short asset names and resolve every scene reference', () => {
   for (const [assets, scenes] of [[seedAssets, seedScenes], [authoredAssets, authoredScenes]]) {
     assertManifest(assets);
+    assert.equal(assets.assets['background.house-forest'], undefined, 'retired atlas is not a selectable game asset');
+    for (const id of Object.keys(assets.assets).filter(id => id.startsWith('background.')))
+      assert.deepEqual(assets.assetPaths[id], ['Graphics', 'Backgrounds'], `${id} shares the Backgrounds folder`);
     const topLevel = new Set(topLevelAiAssetIds(assets));
     for (const id of CHARACTER_IDS) {
       assert.ok(topLevel.has(id));
@@ -84,6 +87,15 @@ test('seed and authored catalogs group short asset names and resolve every scene
       }
     }
   }
+});
+
+test('older background folder paths migrate without moving custom folders', () => {
+  const manifest = completeForestAssetManifest({ ...structuredClone(authoredAssets), assetPaths: {
+    ...structuredClone(authoredAssets.assetPaths), 'background.forest-wide': ['Graphics', 'Background'],
+    'background.pub': ['Custom scenery'],
+  } });
+  assert.deepEqual(manifest.assetPaths['background.forest-wide'], ['Graphics', 'Backgrounds']);
+  assert.deepEqual(manifest.assetPaths['background.pub'], ['Custom scenery']);
 });
 
 test('Borin has separate promoted artwork for back-facing dialogue and pickup speech', async () => {

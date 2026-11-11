@@ -46,7 +46,7 @@ export function addForestBackgrounds(manifest: SceneDesignerManifest): SceneDesi
   return manifest;
 }
 const definitions: Record<string, AiAssetDefinition> = {};
-for (const id of ['village-pub', 'house-forest', 'mine-camp']) {
+for (const id of ['village-pub', 'mine-camp']) {
   const assetId = `background.${id}`;
   definitions[assetId] = {
     id: assetId, kind: 'image', prompt: `Two vertically stacked pixel-art adventure rooms: ${id}. 16:9 each, no characters or text. See demos/forest/docs/art-prompts.md for full production prompt.`,
@@ -206,6 +206,7 @@ export const assets = {
   ...defineAiAssets(definitions), styleGuide: bramblehollowStyleGuide,
   assetPaths: {
     ...interfaceAssetPaths,
+    ...Object.fromEntries(Object.keys(definitions).filter(id => id.startsWith('background.')).map(id => [id, ['Graphics', 'Backgrounds']])),
     ...Object.fromEntries(Object.keys(characterAssetDefinitions).map(id => [id, ['Graphics', 'Characters']])),
     ...Object.fromEntries(['coin', 'rope', 'mushroom'].map(id => [id, ['Graphics', 'Objects']])),
   },
@@ -335,6 +336,10 @@ export function completeForestAssetManifest(manifest: AiAssetManifest): AiAssetM
   }
   const complete = { ...manifest, assets: { ...defaults, ...manifest.assets },
     assetPaths: { ...structuredClone(gameAssetDefaults.assetPaths), ...manifest.assetPaths } };
+  for (const id of Object.keys(complete.assets).filter(id => id.startsWith('background.'))) {
+    const path = complete.assetPaths[id];
+    if (!path || path.join('/') === 'Graphics/Background') complete.assetPaths[id] = ['Graphics', 'Backgrounds'];
+  }
   addGameSpeechAssets(complete);
   return complete;
 }

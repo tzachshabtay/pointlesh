@@ -28,25 +28,6 @@
         }
       }
     },
-    "background.house-forest": {
-      "id": "background.house-forest",
-      "kind": "image",
-      "prompt": "Two vertically stacked pixel-art adventure rooms: house-forest. 16:9 each, no characters or text. See demos/forest/docs/art-prompts.md for full production prompt.",
-      "dimensions": {
-        "width": 1182,
-        "height": 1330
-      },
-      "activeVersion": "original",
-      "versions": {
-        "original": {
-          "name": "original",
-          "file": "art/atlas-house-forest.png",
-          "prompt": "Pixel-art house-forest room atlas",
-          "createdAt": "2026-09-07T00:00:00.000Z",
-          "model": "imagegen"
-        }
-      }
-    },
     "background.mine-camp": {
       "id": "background.mine-camp",
       "kind": "image",
@@ -65368,6 +65349,18 @@
     ],
     "voice.line.dialog-option.5d392ff104c1ae13": [
       "Voices"
+    ],
+    "background.village-pub": [
+      "Graphics",
+      "Backgrounds"
+    ],
+    "background.mine-camp": [
+      "Graphics",
+      "Backgrounds"
+    ],
+    "background.forest-wide": [
+      "Graphics",
+      "Backgrounds"
     ]
   }
 }
