@@ -16,8 +16,11 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await background.getByRole('button', { name: 'Show background' }).click();
   await background.getByRole('button', { name: 'Lock background' }).click();
   await expect(background.getByRole('button', { name: 'Unlock background' })).toBeVisible();
+  await expect(background.getByRole('button', { name: 'Unlock background' })).toHaveAttribute('data-locked', 'true');
+  await expect(background.getByRole('button', { name: 'Unlock background' })).toContainText('Locked');
   await expect(background.getByRole('button', { name: 'Edit background' })).toBeDisabled();
   await background.getByRole('button', { name: 'Unlock background' }).click();
+  await expect(background.getByRole('button', { name: 'Lock background' })).toHaveAttribute('data-locked', 'false');
   await background.getByRole('button', { name: 'Edit background' }).click();
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('combobox', { name: 'Background image asset' }).selectOption('background.forest');
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('button', { name: 'Apply' }).click();

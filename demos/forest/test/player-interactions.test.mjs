@@ -25,17 +25,30 @@ for (const [name, source] of [['seed', scenes], ['authored', authored]]) {
   });
 }
 
-test('Borin actions use editable interaction cells and synced hero voice lines', () => {
+test('Borin speech uses editable interaction cells and linked hero voice lines', () => {
   const manifest = createForestInteractions(addForestInventoryPrefabs(structuredClone(authored)));
   const row = 'prefab:forest.character.borin';
   const voices = syncInteractionVoiceLines(manifest, structuredClone(assets));
-  for (const column of ['verb:interact', 'verb:look', 'item:forest.inventory.rope']) {
+  for (const column of ['verb:interact', 'verb:look']) {
     const { cell } = resolveInteraction(manifest, row, column);
     assert.equal(cell.kind, 'simple');
     assert.ok(cell.text.length);
     assert.ok(voices.assets[interactionVoiceLineId(row, column)]);
   }
+  assert.equal(manifest.cells[row]['item:forest.inventory.rope'], undefined);
   assert.equal(entityInteractionId({ id: 'camp.npc.king', properties: { targetId: 'cage' } }), 'cage');
+});
+
+test('generic inventory responses inherit defaults while story-specific interactions remain', () => {
+  const saved = JSON.parse(readFileSync(new URL('../public/authoring/interactions.json', import.meta.url), 'utf8'));
+  const seed = createForestInteractions(addForestInventoryPrefabs(structuredClone(authored)));
+  for (const manifest of [saved, seed]) {
+    assert.equal(manifest.cells['prefab:forest.character.elder']['item:forest.inventory.rope'], undefined);
+    assert.equal(manifest.cells['prefab:forest.inventory.rope']['item:forest.inventory.coin'], undefined);
+    assert.equal(manifest.cells['prefab:forest.character.guard']['item:forest.inventory.rope'].kind, 'code');
+  }
+  assert.equal(resolveInteraction(saved, 'prefab:forest.character.elder', 'item:forest.inventory.rope').cell.text,
+    "There's no point in tying that.");
 });
 
 

@@ -86,7 +86,7 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     const title = document.createElement('span'); title.textContent = `Background (${background ? 1 : 0})`;
     const controls = document.createElement('div'); controls.className = 'pointlesh-scene-group-controls';
     const eye = button(`${background?.visible ? 'Hide' : 'Show'} background`, background?.visible ? '👁' : '○', () => toggleBackground(sceneId, 'visible'));
-    const lock = button(`${background?.locked ? 'Unlock' : 'Lock'} background`, background?.locked ? '🔒' : '🔓', () => toggleBackground(sceneId, 'locked'));
+    const lock = lockButton('background', !!background?.locked, () => toggleBackground(sceneId, 'locked'));
     eye.disabled = lock.disabled = !background;
     controls.append(eye, lock);
     if (!background) controls.append(button('Add background', '+ Add', () => editBackground(sceneId)));
@@ -106,6 +106,13 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     const node = document.createElement('button'); node.type = 'button'; node.className = 'scene-designer__button';
     node.textContent = text; node.title = label; node.setAttribute('aria-label', label);
     node.addEventListener('click', event => { event.stopPropagation(); action(); }); return node;
+  }
+  function lockButton(name: string, locked: boolean, action: () => void) {
+    const node = button(`${locked ? 'Unlock' : 'Lock'} ${name}`, locked ? '🔒 Locked' : '🔓', action);
+    node.classList.add('pointlesh-scene-lock');
+    node.dataset.locked = String(locked);
+    node.setAttribute('aria-pressed', String(locked));
+    return node;
   }
   function targetLayer(sceneId: string, kind: SceneGroupKind, manifest = designer.getManifest()): SceneLayer | undefined {
     const scene = manifest.scenes[sceneId];
@@ -209,7 +216,7 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
       const visible = subset.some(item => item.entity.visible);
       const locked = subset.length > 0 && subset.every(item => item.entity.locked);
       const eye = button(`${visible ? 'Hide' : 'Show'} ${group.title.toLowerCase()}`, visible ? '👁' : '○', () => toggleGroup(sceneId, group.kind, 'visible'));
-      const lock = button(`${locked ? 'Unlock' : 'Lock'} ${group.title.toLowerCase()}`, locked ? '🔒' : '🔓', () => toggleGroup(sceneId, group.kind, 'locked'));
+      const lock = lockButton(group.title.toLowerCase(), locked, () => toggleGroup(sceneId, group.kind, 'locked'));
       eye.disabled = lock.disabled = !subset.length;
       const add = button(`Add ${group.kind}`, '+ Add', () => {
         if (group.kind === 'area' || group.kind === 'hotspot') {
@@ -227,7 +234,7 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
         row.addEventListener('keydown', event => { if (event.target === row && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); select(sceneId, item); } });
         const name = document.createElement('div'); name.className = 'scene-designer__item-title'; name.textContent = item.name;
         row.append(name, button(`${item.entity.visible ? 'Hide' : 'Show'} ${item.name}`, item.entity.visible ? '👁' : '○', () => updateItem(sceneId, item, 'visible')),
-          button(`${item.entity.locked ? 'Unlock' : 'Lock'} ${item.name}`, item.entity.locked ? '🔒' : '🔓', () => updateItem(sceneId, item, 'locked')),
+          lockButton(item.name, item.entity.locked, () => updateItem(sceneId, item, 'locked')),
           button(`Remove ${item.name}`, '×', () => removeItem(sceneId, item)));
         section.append(row);
       }
@@ -239,6 +246,9 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     .pointlesh-scene-group .scene-designer__subhead{align-items:center;gap:8px}
     .pointlesh-scene-group-controls{display:flex;align-items:center;gap:3px}
     .pointlesh-scene-group-controls .scene-designer__button{padding:3px 7px;white-space:nowrap}
+    .pointlesh-scene-lock[data-locked="true"]{background:#793a3a;color:#fff0e8;border-color:#d87e6e;font-weight:700}
+    .pointlesh-scene-lock[data-locked="false"]{background:transparent;color:#afc8e7;border-color:#627791}
+    .pointlesh-scene-lock[data-locked="true"]:hover{background:#934747}
     .pointlesh-scene-group .scene-designer__item-title{min-width:0;overflow-wrap:anywhere}
     .pointlesh-scene-background img{width:52px;height:32px;object-fit:cover;flex:none;border:1px solid #566071}
   `; designer.root.append(style);

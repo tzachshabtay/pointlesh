@@ -70,6 +70,17 @@ test('matrix discovers all target kinds, supports arbitrary verbs, and edits all
   expect(errors).toEqual([]);
 });
 
+test('hovering speech and empty cells previews the effective sentence', async ({ page }) => {
+  await ready(page);
+  await panel(page).getByRole('combobox', { name: 'Interaction target type' }).selectOption('inventory-item');
+  await cell(page, rope, 'verb:look').hover();
+  await expect(page.getByRole('tooltip')).toHaveText(seed.cells[rope]['verb:look'].text);
+  await cell(page, rope, 'item:forest.inventory.coin').hover();
+  await expect(page.getByRole('tooltip')).toHaveText(`Default: ${seed.cells.defaults['item:forest.inventory.coin'].text}`);
+  await panel(page).getByRole('searchbox', { name: 'Find interaction target' }).click();
+  await expect(page.getByRole('tooltip')).toBeHidden();
+});
+
 test('speech edits sync native voice lines, survive reload and promotion, and run in the game', async ({ page }) => {
   let promoted = structuredClone(seed);
   await page.route('**/authoring/interactions.json', route => route.fulfill({ json: promoted }));
@@ -85,7 +96,7 @@ test('speech edits sync native voice lines, survive reload and promotion, and ru
   await panel(page).getByRole('button', { name: 'Promote', exact: true }).click();
   await expect(panel(page).getByRole('status')).toContainText('Draft kept.');
   await ready(page); // Fresh game page, same local draft.
-  await expect(cell(page, rope, 'verb:look')).toHaveAttribute('title', 'A rope with ambitions far beyond this satchel.');
+  await expect(cell(page, rope, 'verb:look')).toHaveAttribute('data-state', 'simple');
   await page.route('http://127.0.0.1:4290/manifest', route => {
     promoted = route.request().postDataJSON(); return route.fulfill({ json: promoted });
   });

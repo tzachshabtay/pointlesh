@@ -54,10 +54,24 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   root.append(legend);
   const scroll = document.createElement('div'); scroll.className = 'pointlesh-interactions-scroll'; root.append(scroll);
   const count = document.createElement('p'); count.className = 'pointlesh-interactions-count'; root.append(count);
+  const tooltip = document.createElement('div'); tooltip.className = 'pointlesh-interaction-tooltip'; tooltip.id = `pointlesh-interaction-tooltip-${crypto.randomUUID()}`;
+  tooltip.setAttribute('role', 'tooltip'); tooltip.hidden = true; document.body.append(tooltip);
+  let tooltipOwner: HTMLButtonElement | undefined;
+  const hideTooltip = () => { tooltip.hidden = true; tooltipOwner?.removeAttribute('aria-describedby'); tooltipOwner = undefined; };
+  const showTooltip = (button: HTMLButtonElement, text: string, x: number, y: number) => {
+    if (tooltipOwner !== button) hideTooltip();
+    tooltipOwner = button;
+    tooltip.textContent = text; tooltip.hidden = false;
+    button.setAttribute('aria-describedby', tooltip.id);
+    const width = tooltip.offsetWidth, height = tooltip.offsetHeight, view = document.defaultView!;
+    tooltip.style.left = `${Math.max(8, Math.min(x + 14, view.innerWidth - width - 8))}px`;
+    tooltip.style.top = `${Math.max(8, Math.min(y + 16, view.innerHeight - height - 8))}px`;
+  };
+  scroll.addEventListener('scroll', hideTooltip);
   (options.mount ?? document.body).append(root);
   const dialog = document.createElement('dialog'); dialog.className = 'pointlesh-interaction-edit'; dialog.setAttribute('aria-label', 'Edit interaction'); root.append(dialog);
   const dock = registerInGameDesignerPanel({ id: 'pointlesh.interactions', label: 'Interactions', ariaLabel: 'Toggle interaction designer', panel: root, dragHandle: title, order: 50,
-    onOpenChange(open) { if (open) render(); else dialog.close(); } });
+    onOpenChange(open) { if (open) render(); else { hideTooltip(); dialog.close(); } } });
   try {
     const saved = options.storageKey && document.defaultView!.localStorage.getItem(options.storageKey);
     if (saved) { const draft = JSON.parse(saved); if (draft.base === base) { assertInteractionManifest(draft.manifest); manifest = draft.manifest; dirty = true; } }
@@ -103,6 +117,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
   }
   const defaults: InteractionTarget = { id: DEFAULT_INTERACTION_TARGET, name: 'Defaults', kind: 'object', properties: {}, locations: [] };
   function renderTable() {
+    hideTooltip();
     const columns = interactionColumns();
     const table = document.createElement('table'); table.setAttribute('aria-label', 'Game interactions');
     const head = table.createTHead().insertRow(); const corner = document.createElement('th'); corner.scope = 'col'; corner.textContent = 'Target'; head.append(corner);
@@ -121,7 +136,18 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
         const state = cell?.kind ?? 'empty', label = state === 'code' ? 'Game code' : state === 'simple' ? 'Hero speech' : state === 'impossible' ? 'Should not happen' : 'Empty';
         const b = makeButton(state === 'code' ? '★' : state === 'simple' ? '✓' : state === 'impossible' ? '✕' : '', () => edit(row, column));
         b.className = state; b.dataset.target = row.id; b.dataset.column = column.id; b.dataset.state = state;
-        b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`); b.title = cell?.kind === 'simple' ? interactionSentences(cell).join('\n') : (!cell || cell.kind === 'impossible') && row.id !== DEFAULT_INTERACTION_TARGET ? 'Uses Defaults when assigned' : label; td.append(b);
+        b.setAttribute('aria-label', `${row.name} / ${column.name}: ${label}`);
+        const fallback = row.id === DEFAULT_INTERACTION_TARGET ? undefined : manifest.cells[DEFAULT_INTERACTION_TARGET]?.[column.id];
+        const spoken = cell?.kind === 'simple' ? interactionSentences(cell) : (!cell || cell.kind === 'impossible') && fallback?.kind === 'simple' ? interactionSentences(fallback) : [];
+        if (spoken.length) {
+          const preview = `${cell?.kind === 'simple' ? '' : 'Default: '}${spoken.join('\n')}`;
+          b.addEventListener('pointerenter', event => showTooltip(b, preview, event.clientX, event.clientY));
+          b.addEventListener('pointermove', event => showTooltip(b, preview, event.clientX, event.clientY));
+          b.addEventListener('pointerleave', hideTooltip);
+          b.addEventListener('focus', () => { const bounds = b.getBoundingClientRect(); showTooltip(b, preview, bounds.left, bounds.bottom); });
+          b.addEventListener('blur', hideTooltip);
+        } else b.title = (!cell || cell.kind === 'impossible') && row.id !== DEFAULT_INTERACTION_TARGET ? 'Uses Defaults when assigned' : label;
+        td.append(b);
       }
     }
     scroll.replaceChildren(table); count.textContent = `${visible.length} of ${interactiveRows.length} interactive targets · ${columns.length} actions${dirty ? ' · Local draft' : ''}`;
@@ -155,6 +181,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
     dialog.append(h, description, categories, total, actions); refresh(); dialog.showModal();
   }
   function edit(row: InteractionTarget, column: { id: string; name: string }, marathon?: Marathon) {
+    hideTooltip();
     const cell = manifest.cells[row.id]?.[column.id]; dialog.replaceChildren(); dialog.setAttribute('aria-label', 'Edit interaction');
     const h = document.createElement('h3'); h.textContent = column.id.startsWith('item:')
       ? row.id === DEFAULT_INTERACTION_TARGET ? `Default for using ${column.name}` : `Use ${column.name} on ${row.name}`
@@ -276,7 +303,7 @@ export function installInteractionDesigner(options: InteractionDesignerOptions) 
       }
       render();
     },
-    destroy() { destroyed = true; dialog.close(); dock.destroy(); root.remove(); } };
+    destroy() { destroyed = true; hideTooltip(); tooltip.remove(); dialog.close(); dock.destroy(); root.remove(); } };
 }
 
 const styles = `
@@ -291,6 +318,7 @@ const styles = `
 .pointlesh-interactions table{border-collapse:separate;border-spacing:0;width:100%;table-layout:auto}.pointlesh-interactions th,.pointlesh-interactions td{border-bottom:1px solid #2d3647;border-right:1px solid #2d3647;padding:0;text-align:center;min-width:110px}
 .pointlesh-interactions th{padding:10px;background:#202938;font-weight:600}.pointlesh-interactions thead th{position:sticky;top:0;z-index:2}.pointlesh-interactions tbody th{position:sticky;left:0;z-index:1;text-align:left;min-width:235px;max-width:300px}.pointlesh-interactions thead th:first-child{left:0;z-index:3;min-width:235px}.pointlesh-interactions small{display:block;font-size:10px;font-weight:400;color:#99a8bf;margin-top:5px}
 .pointlesh-interactions td button{display:block;border:0;border-radius:0;width:100%;height:51px;font-size:21px;background:#171e29}.pointlesh-interactions tr:nth-child(even) td button{background:#1b2330}.pointlesh-interactions tr td button:hover{background:#35435a}.pointlesh-interactions-count{font-size:11px;color:#aab6ca;margin:0;flex:none}
+.pointlesh-interaction-tooltip:not([hidden]){position:fixed;z-index:2147483646;max-width:min(360px,calc(100vw - 16px));padding:9px 12px;background:#101926;color:#f2f5fb;border:1px solid #8da3c2;border-radius:6px;box-shadow:0 6px 22px #0009;white-space:pre-line;font:13px/1.5 system-ui;pointer-events:none}
 .pointlesh-interaction-defaults th,.pointlesh-interactions .pointlesh-interaction-defaults td button{background:#283449;border-bottom:2px solid #6883a8}.pointlesh-interaction-sentences>div{border:1px solid #49546b;border-radius:7px;padding:12px;margin-bottom:12px}.pointlesh-interaction-sentences textarea{min-height:58px}.pointlesh-interaction-sentences label{margin-bottom:10px}.pointlesh-interaction-sentences button{margin-left:auto;display:block}.pointlesh-interaction-edit [hidden]{display:none!important}
 .pointlesh-marathon-categories{border:1px solid #49546b;border-radius:6px;padding:14px}.pointlesh-interaction-edit .pointlesh-marathon-categories label{display:flex;align-items:center;gap:10px;margin:8px 0}.pointlesh-marathon-categories input{accent-color:#8cbaff}.pointlesh-marathon-progress{margin:0 32px 12px 0;font-size:12px}.pointlesh-interaction-edit .pointlesh-marathon-close{position:absolute;right:12px;top:12px;font-size:20px;padding:2px 8px}.pointlesh-interaction-edit .pointlesh-marathon-note{font-size:11px}.pointlesh-interaction-actions{flex-wrap:wrap}
 .pointlesh-interaction-edit{max-height:85vh;overflow:auto;width:min(540px,90vw);padding:24px;color:#e6eaf2;background:#192230;border:1px solid #677a99;border-radius:10px;font:13px system-ui}.pointlesh-interaction-edit::backdrop{background:#060b1399}.pointlesh-interaction-edit h3{margin:0 0 20px;font-size:17px}.pointlesh-interaction-edit label{display:grid;gap:8px;margin-bottom:16px}.pointlesh-interaction-edit label[hidden]{display:none}.pointlesh-interaction-edit textarea{resize:vertical;min-height:100px}.pointlesh-interaction-edit p{color:#aab9cf;line-height:1.5}.pointlesh-interaction-actions{display:flex;gap:8px;justify-content:flex-end}.pointlesh-interaction-actions button:first-child{margin-right:auto}

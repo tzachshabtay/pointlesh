@@ -20,14 +20,12 @@ export function createForestInteractions(scenes: SceneDesignerManifest): Interac
       cells['verb:interact'] = { kind: 'code' }; // Select/put away the item.
       for (const item of inventory) {
         const other = String(item.properties.itemId), column = itemInteractionColumn(item.id.slice('prefab:'.length));
-        cells[column] = other === itemId ? { kind: 'impossible' }
-          : [itemId, other].includes('stout') && [itemId, other].includes('mushroom') ? { kind: 'code' }
-          : { kind: 'simple', text: 'An inspired idea. Unfortunately, inspiration is not enough here.' };
+        if (other === itemId) cells[column] = { kind: 'impossible' };
+        else if ([itemId, other].includes('stout') && [itemId, other].includes('mushroom')) cells[column] = { kind: 'code' };
       }
     } else if (row.properties.role === 'player') {
       cells[verbInteractionColumn('look')] = { kind: 'simple', text: 'A fine beard, sturdy boots, and only a slightly unreasonable rescue plan.' };
       cells[verbInteractionColumn('interact')] = { kind: 'simple', text: 'Come on, Borin. There is a king to rescue.' };
-      for (const item of inventory) cells[itemInteractionColumn(item.id.slice('prefab:'.length))] = { kind: 'simple', text: 'I had better save that for the rescue.' };
     } else if (target && row.properties.interactive !== false) {
       cells[verbInteractionColumn('look')] = targetId === 'tool-chest' ? { kind: 'code' }
         : { kind: 'simple', text: typeof row.properties.description === 'string' ? row.properties.description : target.description };
@@ -39,7 +37,7 @@ export function createForestInteractions(scenes: SceneDesignerManifest): Interac
         const id = String(item.properties.itemId), column = itemInteractionColumn(item.id.slice('prefab:'.length));
         const scripted = (id === 'coin' && targetId === 'innkeeper') || (id === 'sleepyStout' && targetId === 'cauldron') ||
           (id === 'rope' && targetId === 'guard') || (id === 'pickaxe' && targetId === 'cage');
-        cells[column] = scripted ? { kind: 'code' } : { kind: 'simple', text: 'I cannot see how that would help here.' };
+        if (scripted) cells[column] = { kind: 'code' };
       }
     }
     if (!Object.keys(cells).length) delete manifest.cells[row.id];
