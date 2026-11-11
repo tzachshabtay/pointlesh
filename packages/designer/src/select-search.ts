@@ -31,6 +31,11 @@ export function installDesignerSelectSearch(root: HTMLElement, minimumOptions = 
     const refresh = () => {
       const selected = select.selectedOptions[0];
       triggerLabel.textContent = selected?.dataset.searchText || selected?.textContent || 'Choose an option';
+      const description = select.getAttribute('aria-description');
+      if (description) {
+        trigger.dataset.pointleshFieldHelp = description;
+        trigger.setAttribute('aria-description', description);
+      }
       trigger.disabled = select.disabled;
       if (select.disabled) close();
     };

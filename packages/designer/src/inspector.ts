@@ -28,6 +28,7 @@ import { installSceneAreas } from './scene-areas.js';
 import { installSceneGroups } from './scene-groups.js';
 import { inventoryItemEditor } from './inventory-editor.js';
 import { installDesignerSelectSearch } from './select-search.js';
+import { annotatePrefabFields, installPrefabFieldTooltips } from './prefab-tooltips.js';
 
 export type PointleshPointAction = { sceneId: string; pointId: string; characterId: string; action: 'move' | 'walk' };
 export type PointleshInspectorOptions = {
@@ -133,6 +134,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
   const sceneAreas = installSceneAreas(designer, next => apply(next));
   const sceneGroups = installSceneGroups(designer, next => apply(next), sceneAreas.add, () => aiAssets, options.assetPreviewUrl);
   const selectSearch = installDesignerSelectSearch(designer.root);
+  const fieldTooltips = installPrefabFieldTooltips(designer.root);
 
   function exportJSON() {
     const url = URL.createObjectURL(new Blob([api.exportManifest()], { type: 'application/json' }));
@@ -461,7 +463,10 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       root.remove(); nativeContextKey = ''; restoreNativeFields(); return;
     }
     const key = `${view}:${target.id}:${JSON.stringify(designer.getSelection())}:${lastJson}:${past.length}:${future.length}:${activeAnimationActivity}:${assetsRevision}`;
-    if (root.parentElement === editor && nativeContextKey === key) return;
+    if (root.parentElement === editor && nativeContextKey === key) {
+      annotatePrefabFields(editor, target.metadata, target.attributes, target.area ? 'area' : target.instance ? 'instance' : 'prefab');
+      return;
+    }
     restoreNativeFields();
     nativeContextKey = key;
     const isBody = target.metadata.kind === 'character' || target.metadata.kind === 'object';
@@ -474,6 +479,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     body.append(history, status);
     root.replaceChildren(body);
     editor.prepend(root);
+    annotatePrefabFields(editor, target.metadata, target.attributes, target.area ? 'area' : target.instance ? 'instance' : 'prefab');
     for (const control of editor.querySelectorAll<HTMLButtonElement>('button')) {
       if (!root.contains(control) && control.textContent === 'Edit shape') {
         control.hidden = true; control.dataset.pointleshHiddenField = 'true';
@@ -733,7 +739,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
     undo, redo, exportManifest() { return JSON.stringify(designer.getManifest(), null, 2) + "\n"; },
     destroy() {
       if (destroyed) return;
-      destroyed = true; nativeObserver.disconnect(); selectSearch.destroy(); prefabBrowser.destroy(); sceneAreas.destroy(); sceneGroups.destroy(); restoreNativeFields(); root.remove();
+      destroyed = true; nativeObserver.disconnect(); fieldTooltips.destroy(); selectSearch.destroy(); prefabBrowser.destroy(); sceneAreas.destroy(); sceneGroups.destroy(); restoreNativeFields(); root.remove();
       if (designer.undo === undo) designer.undo = nativeUndo;
       if (designer.redo === redo) designer.redo = nativeRedo;
     },
@@ -816,7 +822,6 @@ function propertyField(document: Document, key: string, value: PointleshProperty
   }
   input.value = type === "json" ? JSON.stringify(value) : String(value);
   input.setAttribute("aria-label", schema?.label ?? key);
-  if (schema?.description) input.title = schema.description;
   input.addEventListener("change", () => {
     try {
       const next = type === "json" ? JSON.parse(input.value) as PointleshProperty : type === "boolean" ? (input as HTMLInputElement).checked : type === "number" ? Number(input.value) : input.value;

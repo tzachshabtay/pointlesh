@@ -34,7 +34,7 @@ export function inventoryItemEditor(options: {
   const dimensions = asset?.frameGrid ? { width: asset.frameGrid.frameWidth, height: asset.frameGrid.frameHeight } : asset?.dimensions;
   preview.style.aspectRatio = `${dimensions?.width ?? 1} / ${dimensions?.height ?? 1}`;
   const marker = document.createElement('button'); marker.type = 'button'; marker.className = 'pointlesh-inventory-interaction-point';
-  marker.setAttribute('aria-label', 'Interaction point'); marker.title = 'Drag the interaction point. Arrow keys move it one pixel.';
+  marker.setAttribute('aria-label', 'Interaction point');
   const redraw = () => {
     marker.style.left = `${point.x * 100}%`; marker.style.top = `${point.y * 100}%`;
     controls.forEach((input, index) => { input.value = String(index ? point.y : point.x); });
