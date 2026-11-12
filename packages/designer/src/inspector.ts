@@ -596,13 +596,24 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       if (title) expanded.set(title, details.open);
     }
     body.replaceChildren();
-    if (target.instance && target.metadata.kind !== 'point') {
+    if (target.instance && target.metadata.kind !== 'point' && !target.metadata.editor?.sceneLocal) {
       const identity = element(document, 'div', 'pointlesh-prefab-link');
       identity.append(element(document, 'span', '', `Prefab: ${target.name}`));
       identity.append(button(document, 'Edit prefab', () => {
         const toggle = document.querySelector<HTMLButtonElement>('button[aria-label="Toggle prefab designer"]');
         if (toggle?.getAttribute('aria-expanded') !== 'true') toggle?.click();
         prefabBrowser.reveal(target.id);
+      }));
+      body.append(identity);
+    }
+    if (target.instance && target.metadata.kind === 'object' && target.metadata.editor?.sceneLocal) {
+      const identity = element(document, 'div', 'pointlesh-prefab-link');
+      identity.append(element(document, 'span', '', `Scene object: ${target.name}`));
+      identity.append(button(document, 'Make reusable prefab', () => {
+        const next = designer.getManifest(), prefab = next.prefabs?.[target.id];
+        if (!prefab || !isPointleshPrefab(prefab)) return;
+        prefab.pointlesh.editor = { ...prefab.pointlesh.editor, sceneLocal: false };
+        apply(next);
       }));
       body.append(identity);
     }

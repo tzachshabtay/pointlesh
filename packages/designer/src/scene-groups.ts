@@ -124,7 +124,8 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
   }
   function addPrefab(sceneId: string, kind: 'character' | 'object' | 'point') {
     const manifest = designer.getManifest();
-    const choices = Object.values(manifest.prefabs ?? {}).filter(prefab => isPointleshPrefab(prefab) && prefab.pointlesh.kind === kind && !isPrefabTemplate(prefab));
+    const choices = Object.values(manifest.prefabs ?? {}).filter(prefab => isPointleshPrefab(prefab) && prefab.pointlesh.kind === kind && !isPrefabTemplate(prefab)
+      && (kind !== 'object' || !prefab.pointlesh.editor?.sceneLocal));
     const template = Object.values(manifest.prefabs ?? {}).find(prefab => isPointleshPrefab(prefab) && prefab.pointlesh.kind === kind && isPrefabTemplate(prefab));
     if (!choices.length && !template) return;
     const dialog = document.createElement('dialog'); dialog.className = 'scene-designer__dialog pointlesh-add-scene-item';
@@ -133,7 +134,8 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
     const title = document.createElement('strong'); title.textContent = `Add ${kind}`;
     const select = document.createElement('select'); select.className = 'scene-designer__select'; select.setAttribute('aria-label', `Choose ${kind}`);
     for (const prefab of choices) { const option = document.createElement('option'); option.value = prefab.id; option.textContent = prefab.name; select.append(option); }
-    if (template) { const option = document.createElement('option'); option.value = '__new__'; option.textContent = `New ${kind} prefab…`; select.append(option); }
+    if (template) { const option = document.createElement('option'); option.value = '__new__'; option.textContent = kind === 'object' ? 'New scene object…' : `New ${kind} prefab…`;
+      if (kind === 'object') { select.prepend(option); select.value = '__new__'; } else select.append(option); }
     const name = document.createElement('input'); name.className = 'scene-designer__input'; name.setAttribute('aria-label', `New ${kind} name`); name.placeholder = 'Name';
     const updateNew = () => { name.hidden = select.value !== '__new__'; name.required = !name.hidden; };
     select.addEventListener('change', updateNew); updateNew();
@@ -148,7 +150,9 @@ export function installSceneGroups(designer: SceneDesigner, commit: (manifest: S
       if (select.value === '__new__' && template && isPointleshPrefab(template)) {
         const newName = name.value.trim(); if (!newName) { name.focus(); return; }
         const id = `prefab.${crypto.randomUUID()}`;
-        prefab = extendPointleshPrefab(template, { id, name: newName, editor: { folderPath: [groups.find(group => group.kind === kind)!.title] }, properties: { label: newName } });
+        prefab = extendPointleshPrefab(template, { id, name: newName,
+          editor: { folderPath: [groups.find(group => group.kind === kind)!.title], sceneLocal: kind === 'object' },
+          properties: { label: newName } });
         next.prefabs ??= {}; next.prefabs[id] = prefab;
       }
       if (!layer || !prefab || !isPointleshPrefab(prefab) || prefab.pointlesh.kind !== kind) return;

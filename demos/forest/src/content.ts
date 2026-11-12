@@ -9,7 +9,7 @@ import { addForestPoints } from './points';
 import { roomIds, roomNames, targets } from './story';
 import { CHARACTER_IDS, CHARACTER_VIEWS, CHARACTER_ACTIVITY_FRAMES, type ForestCharacterId } from './sprites';
 import { bramblehollowStyleGuide } from './art-style';
-import { specializeForestEntities } from './entity-prefabs';
+import { markForestSceneObjects, specializeForestEntities } from './entity-prefabs';
 import { interfaceAssetDefinitions, interfaceAssetPaths } from './interface-assets';
 import { guardAnimationDefinitions, guardAnimationLinks } from './guard-assets';
 import { addForestObjectAssets, updateForestInteractions, kingRescueReply } from './scene-content-updates';
@@ -316,6 +316,7 @@ export const scenes = addForestTransitions(withForestLighting(addLamps(addFirepl
   return [roomId, scene];
 })) }))))))));
 addForestInventoryPrefabs(scenes);
+markForestSceneObjects(scenes);
 
 // The authoring server can predate game-supplied assets. Reapply only game defaults,
 // never old user-created assets, when accepting a fresh server manifest.

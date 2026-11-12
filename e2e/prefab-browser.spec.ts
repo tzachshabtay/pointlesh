@@ -54,3 +54,18 @@ test('create a named prefab from its hidden template, undo/redo, then place it u
   await placement.getByRole('button', { name: 'Add', exact: true }).click();
   await expect.poll(() => page.evaluate(id => (window as any).pointleshDemo.manifest.scenes.village.layers.flatMap((layer: any) => layer.prefabs ?? []).some((instance: any) => instance.prefabId === id), id)).toBe(true);
 });
+
+test('scene-local objects stay in the scene and can become reusable prefabs', async ({ page }) => {
+  await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
+  await selectInstance(page, 'village.door.village-house');
+  const properties = page.getByRole('region', { name: 'Pointlesh properties', exact: true });
+  await expect(properties.getByRole('button', { name: 'Edit prefab', exact: true })).toHaveCount(0);
+  await expect(properties.getByRole('button', { name: 'Make reusable prefab', exact: true })).toBeVisible();
+  await properties.getByRole('button', { name: 'Make reusable prefab', exact: true }).click();
+  await expect(properties.getByRole('button', { name: 'Edit prefab', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
+  const browser = page.getByRole('region', { name: 'Prefab browser', exact: true });
+  await browser.getByRole('button', { name: 'Open Objects folder' }).click();
+  await browser.getByRole('button', { name: 'Open Doors folder' }).click();
+  await expect(browser.getByRole('button', { name: 'Cottage door · outside', exact: true })).toBeVisible();
+});

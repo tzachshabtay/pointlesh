@@ -60,6 +60,17 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await newPoint.getByRole('button', { name: 'Add', exact: true }).click();
   await expect(groups.locator('section.pointlesh-scene-group[aria-label="Points"] .scene-designer__item')).toHaveCount(3);
   await expect(groups.getByText('Far entrance', { exact: true })).toBeVisible();
+  await groups.getByRole('button', { name: 'Add object', exact: true }).click();
+  const newObject = page.getByRole('dialog', { name: 'Add object' });
+  await expect(newObject.getByRole('combobox', { name: 'Choose object' })).toHaveValue('__new__');
+  await newObject.getByRole('textbox', { name: 'New object name' }).fill('Local prop');
+  await newObject.getByRole('button', { name: 'Add', exact: true }).click();
+  const local = await page.evaluate(() => {
+    const manifest = (window as any).sceneGroupsFixture.designer.getManifest();
+    const instance = manifest.scenes.village.layers[0].prefabs.find((item: any) => item.name === 'Local prop');
+    return manifest.prefabs[instance.prefabId].pointlesh.editor.sceneLocal;
+  });
+  expect(local).toBe(true);
   await groups.getByRole('button', { name: 'Add area', exact: true }).click();
   const areaDialog = page.getByRole('dialog', { name: 'New area' });
   await areaDialog.getByRole('textbox', { name: 'Name' }).fill('New floor');

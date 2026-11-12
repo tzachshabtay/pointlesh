@@ -3,7 +3,8 @@ import type { SceneDesignerManifest, ScenePrefabDefinition } from '@scene-design
 import type { SceneDesigner } from '@scene-designer/designer';
 
 const categories = ['Characters', 'Objects', 'Inventory items'];
-const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) || ['character', 'object', 'inventory-item'].includes(prefab.pointlesh.kind);
+const isReusable = (prefab: ScenePrefabDefinition) => !isPointleshPrefab(prefab) ||
+  (!prefab.pointlesh.editor?.sceneLocal && ['character', 'object', 'inventory-item'].includes(prefab.pointlesh.kind));
 export function isPrefabTemplate(prefab: ScenePrefabDefinition): boolean {
   return isPointleshPrefab(prefab) && (prefab.pointlesh.editor?.template ?? prefab.id === `pointlesh.${prefab.pointlesh.kind}`);
 }

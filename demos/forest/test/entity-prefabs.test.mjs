@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { tsImport } from 'tsx/esm/api';
 import { createAreaPrefab, createHotspotPrefab, createCharacterPrefab, createPointleshInstance, resolvePointleshScene } from '@pointlesh/core';
 import { createScene, createLayer, defineSceneManifest } from '@scene-designer/core';
-const { specializeForestEntities } = await tsImport('../src/entity-prefabs.ts', import.meta.url);
+const { markForestSceneObjects, specializeForestEntities } = await tsImport('../src/entity-prefabs.ts', import.meta.url);
 const { scenes: seed } = await tsImport('../src/content.ts', import.meta.url);
 const authored = JSON.parse(readFileSync(new URL('../public/authoring/scenes.json', import.meta.url), 'utf8'));
 const normalized = value => {
@@ -34,6 +34,17 @@ for (const [label, manifest] of [['seed', seed], ['authored', authored]]) test(`
   edited.prefabs['forest.character.borin'].attributes.find(attribute => attribute.id === 'walkStep').number.value = 12;
   for (const scene of Object.values(edited.scenes)) assert.equal(resolvePointleshScene(edited, scene.id).objects.find(object => object.properties.role === 'player').properties.walkStep, 12);
   assert.deepEqual(specializeForestEntities(manifest), manifest);
+});
+
+test('one-off demo objects stay scene-local while shared objects remain reusable', () => {
+  const manifest = markForestSceneObjects(structuredClone(authored));
+  assert.equal(manifest.prefabs['forest.object.coin'].pointlesh.editor.sceneLocal, true);
+  assert.equal(manifest.prefabs['forest.object.door.village-house'].pointlesh.editor.sceneLocal, true);
+  assert.equal(manifest.prefabs['forest.object.fireplace'].pointlesh.editor.sceneLocal, false);
+  manifest.prefabs['forest.object.coin'].pointlesh.editor.sceneLocal = false;
+  markForestSceneObjects(manifest);
+  assert.equal(manifest.prefabs['forest.object.coin'].pointlesh.editor.sceneLocal, false);
+  assert.deepEqual(normalized(resolvePointleshScene(manifest, 'house')), normalized(resolvePointleshScene(authored, 'house')));
 });
 
 test('named room shapes preserve curved geometry, inherited numbers, extensions and behavior order', () => {

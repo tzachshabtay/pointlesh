@@ -74,3 +74,17 @@ export function specializeForestEntities(input: SceneDesignerManifest): SceneDes
   assertSceneManifest(manifest);
   return migratePointleshSceneAreas(manifest);
 }
+
+/** Keep the demo's one-off props in their scenes while retaining their authored definitions. */
+export function markForestSceneObjects(manifest: SceneDesignerManifest): SceneDesignerManifest {
+  const uses = new Map<string, number>();
+  for (const scene of Object.values(manifest.scenes)) for (const layer of scene.layers) for (const instance of layer.prefabs ?? []) {
+    uses.set(instance.prefabId, (uses.get(instance.prefabId) ?? 0) + 1);
+  }
+  for (const prefab of Object.values(manifest.prefabs ?? {})) {
+    if (!isPointleshPrefab(prefab) || prefab.pointlesh.kind !== 'object' || !prefab.id.startsWith('forest.object.')) continue;
+    prefab.pointlesh.editor ??= {};
+    prefab.pointlesh.editor.sceneLocal ??= uses.get(prefab.id) === 1;
+  }
+  return manifest;
+}

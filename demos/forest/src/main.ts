@@ -15,6 +15,7 @@ import { assertSceneManifest, type SceneDesignerManifest } from '@scene-designer
 import { assertDialogManifest, syncDialogOptionVoiceLines, type DialogTurn } from '@dialog-designer/core';
 import { assertManifest, selectScaledVariant } from '@ai-game-assets/core';
 import { assets, atlasRooms, dialogs, roomDimensions, scenes, addChestGuesses, completeForestAssetManifest, addForestBackgrounds } from './content';
+import { markForestSceneObjects } from './entity-prefabs';
 import { CHEST_OPEN_DURATION_MS } from './chest-assets';
 import { applyDialogChoice, combineItems, ending, finishOpeningChest, finishPouringBrew, finishGuardDrink, finishTyingGuard, guardLookingAway, hint, interact, lookAtTarget, intro, introArrivalLine, items, migrateRescueStory, newStory, roomIds, roomNames, targets, targetVisible, type ItemId, type RoomId, type StoryState } from './story';
 import { createPixelActors } from './sprites';
@@ -1658,7 +1659,7 @@ for (const [name, validate] of [['assets', assertManifest], ['dialogs', assertDi
   const response = await fetch(`${import.meta.env.BASE_URL}authoring/${name}.json`);
   if (response.ok) {
     const value = await response.json(); validate(value);
-    if (name === 'scenes') authoredScenes = addForestBackgrounds(addForestTransitions(withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(value)))))));
+    if (name === 'scenes') authoredScenes = markForestSceneObjects(addForestBackgrounds(addForestTransitions(withForestLighting(addLamps(addFireplace(addForestPoints(updateForestInteractions(value))))))));
     else Object.assign(name === 'assets' ? assets : dialogs, value);
   } else if (response.status !== 404) throw new Error(`Could not load authored ${name}: ${response.status}`);
 }

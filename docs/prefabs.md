@@ -1,13 +1,13 @@
 # Pointlesh prefabs
 
-Characters, objects and named points are Scene Designer prefabs. Areas and hotspots belong directly to one scene, stored as native `SceneArea` values in `layer.areas`. Both use the same extensible Pointlesh properties and behavior IDs.
+Characters and reusable objects appear in the Prefabs browser. Scene-local objects and named points use internal definitions but are edited in Scenes. Areas and hotspots belong directly to one scene, stored as native `SceneArea` values in `layer.areas`. All use extensible Pointlesh properties and behavior IDs.
 
 | Factory | Storage | Adventure settings |
 | --- | --- | --- |
 | `createPointleshArea({ kind: 'area' })` | Scene layer's native areas | Walking, character scale, camera zoom, walk-behind, baseline |
 | `createPointleshArea({ kind: 'hotspot' })` | Scene layer's native areas | Label, cursor, approach point and radius |
-| `createPointPrefab` | Reusable prefab with X/Y number attributes | Named coordinate, live move/walk preview |
-| `createObjectPrefab` | Reusable prefab definition | Sprite, interaction, scaling, navigation |
+| `createPointPrefab` | Internal definition with X/Y number attributes | Named coordinate, live move/walk preview |
+| `createObjectPrefab` | Reusable or scene-local definition | Sprite, interaction, scaling, navigation |
 | `createCharacterPrefab` | Reusable prefab definition | Object settings, directional animations, movement and optional dialog portrait |
 
 One area can supply any combination of navigation, character scaling, camera zoom and walk-behind scenery. Each role has its own enable switch; global `enabled` disables all roles. The inspector shows the relevant settings. Switching a role off preserves its values and geometry. Use separate areas when their boundaries differ.
@@ -52,7 +52,7 @@ For existing projects, `migratePointleshSceneAreas(manifest)` returns a detached
 
 `createPointPrefab({ id, name, x, y })` creates a coordinate without a sprite or polygon. Place instances with `createPointleshInstance`, give each instance a name, and override `x: { value }` / `y: { value }` as needed. `resolvePointleshScene(...).points` exposes each stable instance ID, name and position. Point markers appear only while editing; Phaser provides canvas dragging with undo/redo, visibility and lock support.
 
-In **Prefabs → Points → New prefab**, choose **Point**, name the definition, then place it with **Scenes → Add prefab**. Select a scene point to rename it, edit X/Y, or choose a **Character** and click **Move character here** or **Walk character here**. Move teleports; Walk follows navigation to the closest reachable position to the coordinate. These actions preview live actors without changing their authored placements. A host supplies `onPointAction` to the engine-neutral designer, or `getCharacter(instanceId, sceneId)` to the Phaser installer.
+Use **Scenes → Points → Add** to place and name a point. Point definitions do not appear in the Prefabs browser. Select a scene point to rename it, edit X/Y, or choose a **Character** and click **Move character here** or **Walk character here**. Move teleports; Walk follows navigation to the closest reachable position to the coordinate. These actions preview live actors without changing their authored placements. A host supplies `onPointAction` to the engine-neutral designer, or `getCharacter(instanceId, sceneId)` to the Phaser installer.
 
 Hotspots, objects and characters expose an optional **Walk point** dropdown. It stores `properties.walkPointId`, a point instance ID in the same scene, so renaming preserves references. Instance overrides can assign different points per room. **None (normal approach)** retains normal approach behavior, including legacy approach coordinates/offsets if present. Hiding a point or its layer hides its editor marker; the coordinate remains usable by gameplay and in the Walk point dropdown. Missing points and points explicitly disabled with `properties.enabled: false` report an error.
 
@@ -118,8 +118,8 @@ The library leaves game-specific interaction code in TypeScript. Rebuild geometr
 
 ## Prefab browser
 
-The prefab browser shows **Characters**, **Objects** and **Points**, with clickable breadcrumbs. Generic templates stay hidden from browsing and placement; **New prefab** creates a named definition. Each expanded scene layer lists its own **Areas** and **Hotspots**, with **Add area** and **Add hotspot** controls that start native shape drawing.
+The prefab browser shows reusable **Characters**, **Objects** and **Inventory items**, with clickable breadcrumbs. Generic templates and scene-local definitions stay hidden; **New prefab** creates a reusable named definition. **Scenes → Objects → Add** creates a scene-local object by default, or places a reusable object. A scene-local object can be made reusable from its scene inspector. Scenes also list their **Points**, **Areas** and **Hotspots** with Add controls.
 
-Factories accept `editor: { template?: boolean, folderPath?: string[] }`. Folder paths default to the prefab kind's category. `pointleshPrefabs()` marks the generic templates, and `extendPointleshPrefab()` makes the result visible unless explicitly marked as another template. This metadata affects authoring only; hiding a template never removes its definition or changes existing instances.
+Factories accept `editor: { template?: boolean, folderPath?: string[], sceneLocal?: boolean }`. Folder paths default to the prefab kind's category. `pointleshPrefabs()` marks the generic templates, and `extendPointleshPrefab()` makes a reusable result visible unless marked as a template or scene-local. This metadata affects authoring only; hiding a definition never removes it or changes existing instances.
 
 `extendPointleshPrefab` builds a concrete definition from shared defaults; it does not establish a live inheritance link between two prefab definitions. Scene instances inherit live edits from their named prefab.

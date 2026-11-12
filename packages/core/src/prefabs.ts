@@ -38,7 +38,7 @@ export type PointleshPropertySchema = {
 export type PointleshPrefabMetadata<P extends PointleshProperties = PointleshProperties> = {
   kind: PointleshPrefabKind;
   /** Authoring metadata; never participates in runtime property inheritance. */
-  editor?: { template?: boolean; folderPath?: string[] };
+  editor?: { template?: boolean; folderPath?: string[]; sceneLocal?: boolean };
   properties: P;
   behaviors: string[];
   propertySchema?: Record<string, PointleshPropertySchema>;
