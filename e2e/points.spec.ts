@@ -168,24 +168,23 @@ test('designer walks to the closest reachable position when the selected point i
   expect((await position(page, id)).y).toBe(-200);
 });
 
-test('create and place a Point through the prefab browser', async ({ page }) => {
+test('create and place a Point from its scene group without listing point prefabs', async ({ page }) => {
   await openAdventure(page, true); await expect(page.locator('#loading')).toBeHidden();
   await page.getByRole('button', { name: 'Toggle prefab designer', exact: true }).click();
   const browser = page.getByRole('region', { name: 'Prefab browser', exact: true });
-  await browser.getByRole('button', { name: 'Open Points folder' }).click();
+  await expect(browser.getByRole('button', { name: 'Open Points folder' })).toHaveCount(0);
   await browser.getByRole('button', { name: 'New prefab', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'New prefab', exact: true });
-  await expect(dialog.getByRole('combobox', { name: 'Prefab type' })).toHaveValue('pointlesh.point');
-  await dialog.getByRole('textbox', { name: 'Prefab name' }).fill('Lookout');
-  await dialog.getByRole('button', { name: 'Create', exact: true }).click();
-  await expect(context(page).getByRole('spinbutton', { name: 'X', exact: true })).toBeVisible();
-  const prefabId = await page.evaluate(() => (window as any).pointleshDemo.scene.sceneDesigner.designer.getSelectedPrefabId());
+  await expect(dialog.getByRole('combobox', { name: 'Prefab type' }).locator('option[value="pointlesh.point"]')).toHaveCount(0);
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await page.getByRole('button', { name: 'Toggle scene designer', exact: true }).click();
   await page.getByRole('button', { name: 'Add point', exact: true }).click();
   const placement = page.getByRole('dialog', { name: 'Add point' });
-  await placement.getByRole('combobox', { name: 'Choose point' }).selectOption(prefabId);
+  await placement.getByRole('combobox', { name: 'Choose point' }).selectOption('__new__');
+  await placement.getByRole('textbox', { name: 'New point name' }).fill('Lookout');
   await placement.getByRole('button', { name: 'Add', exact: true }).click();
   await expect(page.locator('.pointlesh-point-handle[aria-label="Point: Lookout"]')).toBeVisible();
+  await expect(context(page).getByRole('button', { name: 'Edit prefab', exact: true })).toHaveCount(0);
 });
 
 test('point dragging follows a panned and zoomed camera and respects instance locks', async ({ page }) => {

@@ -596,7 +596,7 @@ export function installPointleshInspector(options: PointleshInspectorOptions): P
       if (title) expanded.set(title, details.open);
     }
     body.replaceChildren();
-    if (target.instance) {
+    if (target.instance && target.metadata.kind !== 'point') {
       const identity = element(document, 'div', 'pointlesh-prefab-link');
       identity.append(element(document, 'span', '', `Prefab: ${target.name}`));
       identity.append(button(document, 'Edit prefab', () => {

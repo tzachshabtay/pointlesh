@@ -20,6 +20,7 @@ test('prefab folders hide templates, navigate with breadcrumbs and follow Edit p
   await browser.getByRole('button', { name: 'Prefabs', exact: true }).click();
   await expect(browser.getByRole('button', { name: 'Open Hotspots folder' })).toHaveCount(0);
   await expect(browser.getByRole('button', { name: 'Open Areas folder' })).toHaveCount(0);
+  await expect(browser.getByRole('button', { name: 'Open Points folder' })).toHaveCount(0);
   await selectInstance(page, 'village.borin');
   await page.getByRole('button', { name: 'Edit prefab', exact: true }).click();
   await expect(browser.locator('[aria-current="page"]')).toHaveText('Borin');
