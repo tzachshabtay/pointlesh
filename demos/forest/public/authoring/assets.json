@@ -6967,15 +6967,15 @@
       "kind": "animation",
       "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
       "dimensions": {
-        "width": 300,
-        "height": 420
+        "width": 400,
+        "height": 560
       },
       "frameGrid": {
         "frameWidth": 100,
         "frameHeight": 140,
-        "columns": 3,
-        "rows": 3,
-        "frameCount": 8
+        "columns": 4,
+        "rows": 4,
+        "frameCount": 16
       },
       "animations": [
         {
@@ -6990,11 +6990,149 @@
             4,
             5,
             6,
-            7
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frameTimings": [
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            },
+            {
+              "delayMs": 400,
+              "offsetX": 0,
+              "offsetY": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "rotation": 0
+            }
           ]
         }
       ],
-      "activeVersion": "promoted-1790377473998",
+      "activeVersion": "promoted-1795298127334",
       "versions": {
         "original": {
           "name": "original",
@@ -7057,6 +7195,24 @@
           "voiceSettings": {},
           "parentVersion": "promoted-1789163750111",
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1795298127334": {
+          "name": "promoted-1795298127334",
+          "file": "art/borin.idle-back.promoted-1795298127334.png",
+          "prompt": "idle animation of our dwarf, back facing, very subtle movement, mostly just breathing",
+          "createdAt": "2026-11-21T21:55:27.498Z",
+          "model": "gpt-image-2.6-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.6-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790377473998",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -7068,7 +7224,7 @@
       ],
       "settings": {
         "format": "png",
-        "model": "gpt-image-2.5-sunburst",
+        "model": "gpt-image-2.6-sunburst",
         "background": "transparent",
         "frameAlignment": "center"
       },
@@ -7371,7 +7527,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790377732351",
+      "activeVersion": "promoted-1795298213448",
       "versions": {
         "original": {
           "name": "original",
@@ -7415,6 +7571,24 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "parentVersion": "promoted-1788921701953",
+          "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1795298213448": {
+          "name": "promoted-1795298213448",
+          "file": "art/borin.walk-back.promoted-1795298213448.png",
+          "prompt": "Walking up/back animation for our dwarf.",
+          "createdAt": "2026-11-21T21:56:53.604Z",
+          "model": "gpt-image-2.5-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.5-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790377732351",
           "notes": "Promoted from the AI asset designer."
         }
       },
