@@ -20,6 +20,15 @@ test('prefab fields explain native geometry and Pointlesh behavior on hover and 
   expect(fields.missing).toEqual([]);
   const searchable = editor.locator('button.pointlesh-select-trigger').first();
   await expect(searchable).toHaveAttribute('aria-description', /\S+/);
+  await searchable.click();
+  const animationMenu = page.locator('.pointlesh-select-menu:popover-open');
+  await expect(animationMenu).toBeVisible();
+  expect(await animationMenu.evaluate(menu => {
+    const bounds = menu.getBoundingClientRect();
+    return menu.contains(document.elementFromPoint(bounds.left + 20, bounds.top + 20));
+  })).toBe(true);
+  await animationMenu.getByRole('combobox').press('Escape');
+  await expect(animationMenu).toHaveCount(0);
   await searchable.hover();
   await expect(page.getByRole('tooltip')).not.toBeEmpty();
   const walkThrough = editor.getByRole('checkbox', { name: 'WalkThrough', exact: true });

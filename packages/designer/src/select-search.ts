@@ -14,7 +14,10 @@ export function installDesignerSelectSearch(root: HTMLElement, minimumOptions = 
     triggerArrow.style.cssText = 'flex:none;margin-left:auto';
     trigger.append(triggerLabel, triggerArrow);
     const panel = document.createElement('div'); panel.className = 'pointlesh-select-menu'; panel.hidden = true;
-    panel.style.cssText = 'position:fixed;z-index:2147483646;box-sizing:border-box;padding:8px;background:#202938;color:#e6eaf2;border:1px solid #72839e;border-radius:6px;box-shadow:0 10px 28px #000a;font:13px system-ui';
+    // Popovers occupy the browser top layer, above designer dialogs and docks.
+    // A large z-index cannot escape an ancestor stacking context or a dialog.
+    panel.popover = 'manual';
+    panel.style.cssText = 'position:fixed;inset:auto;margin:0;box-sizing:border-box;padding:8px;background:#202938;color:#e6eaf2;border:1px solid #72839e;border-radius:6px;box-shadow:0 10px 28px #000a;font:13px system-ui';
     const search = document.createElement('input'); search.type = 'search'; search.autocomplete = 'off';
     search.placeholder = `Search ${name.toLowerCase()}…`; search.setAttribute('aria-label', `Search ${name.toLowerCase()}`);
     search.style.cssText = 'box-sizing:border-box;width:100%;margin-bottom:7px;padding:8px;font:inherit;color:#e6eaf2;background:#111722;border:1px solid #72839e;border-radius:4px';
@@ -49,6 +52,7 @@ export function installDesignerSelectSearch(root: HTMLElement, minimumOptions = 
     };
     const close = (focus = false) => {
       if (panel.hidden) return;
+      if (panel.matches(':popover-open')) panel.hidePopover();
       panel.hidden = true; panel.remove(); trigger.setAttribute('aria-expanded', 'false');
       document.removeEventListener('pointerdown', outside, true);
       document.defaultView!.removeEventListener('resize', position);
@@ -87,7 +91,7 @@ export function installDesignerSelectSearch(root: HTMLElement, minimumOptions = 
     const open = () => {
       if (select.disabled) return;
       (select.closest('dialog') ?? document.body).append(panel);
-      panel.hidden = false; trigger.setAttribute('aria-expanded', 'true');
+      panel.hidden = false; panel.showPopover(); trigger.setAttribute('aria-expanded', 'true');
       search.value = ''; filter(); search.focus();
       document.addEventListener('pointerdown', outside, true);
       document.defaultView!.addEventListener('resize', position);

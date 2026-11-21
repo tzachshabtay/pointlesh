@@ -27,6 +27,7 @@ test('Pointlesh scene groups organize items and expose add, visibility, and lock
   await expect(search).toBeHidden();
   await picker.click();
   await expect(search).toBeVisible();
+  await expect(page.locator('.pointlesh-select-menu:popover-open')).toBeVisible();
   await search.fill('forest');
   await expect(page.getByRole('dialog', { name: 'Edit background' }).getByRole('option')).toHaveCount(1);
   await page.getByRole('dialog', { name: 'Edit background' }).getByRole('option', { name: 'background.forest' }).click();
