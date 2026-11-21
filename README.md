@@ -29,6 +29,12 @@ The repository follows the same four-package structure as the existing libraries
 
 [▶ Play the game](https://tzachshabtay.github.io/pointlesh/demo/) · [Demo README](demos/forest/README.md)
 
+### Video walkthrough
+
+[![Watch the Pointlesh walkthrough on YouTube](https://i.ytimg.com/vi/cIQ67H1NOro/hqdefault.jpg)](https://youtu.be/cIQ67H1NOro)
+
+[Watch on YouTube](https://youtu.be/cIQ67H1NOro) or [play the video on the Pointlesh website](https://tzachshabtay.github.io/pointlesh/#walkthrough).
+
 ## Prefabs that remain extensible
 
 Pointlesh uses reusable Scene Designer prefabs for characters, objects and points, and native scene-owned polygons for areas and hotspots. A single area has independently enabled walking, character scaling, camera zoom and walk-behind roles; create another area when boundaries differ. Both models carry custom properties, schemas and behavior IDs in a JSON `pointlesh` extension.
