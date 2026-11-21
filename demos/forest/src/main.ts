@@ -186,6 +186,7 @@ class ForestAdventure extends Phaser.Scene {
   movementKeys = new Set<string>();
   talking = false;
   private pickupSpeech = false;
+  private pickupAnimationElapsedMs = 0;
   showHotspots = false;
   cursor!: PhaserAdventureCursor;
   inventoryIcons = new Map<ItemId, PhaserAdventureIcon>();
@@ -1042,7 +1043,7 @@ class ForestAdventure extends Phaser.Scene {
     this.interactionSpeechQueue = [];
     this.voiceAdvance.cancel();
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
-    this.epoch++; this.clearMovementKeys(); this.talking = true; this.pickupSpeech = pose === 'pick-up-back';
+    this.epoch++; this.clearMovementKeys(); this.talking = true; this.pickupSpeech = pose === 'pick-up-back'; this.pickupAnimationElapsedMs = 0;
     const speech = resolveGameSpeech(assets, text, speaker, lineAssetId);
     text = this.audioAssets.voiceText(speech.lineAssetId, speech.text); this.speakingVoice = speech.voice;
     this.conversationActive = false; this.character.stop();
@@ -1058,7 +1059,7 @@ class ForestAdventure extends Phaser.Scene {
     this.voiceAdvance.follow(this.interactionSound);
     this.portrait.speak(text, speech.lineAssetId ? this.audioAssets.asset(speech.lineAssetId) : undefined, this.interactionSound);
   }
-  dismissSpeech() { this.voiceAdvance.cancel(); this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.pickupSpeech = false; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
+  dismissSpeech() { this.voiceAdvance.cancel(); this.interactionSpeechQueue = []; this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined; this.talking = false; this.pickupSpeech = false; this.pickupAnimationElapsedMs = 0; this.conversationActive = false; this.character.finishSpeech(); el('dialog').hidden = true; this.portrait?.hide(); }
   renderTurn(turn: DialogTurn) {
     this.voiceAdvance.cancel();
     this.interactionSound?.stop(); this.interactionSound?.destroy(); this.interactionSound = undefined;
@@ -1288,13 +1289,14 @@ class ForestAdventure extends Phaser.Scene {
         ...(this.story.chestOpening ? { chestOpening: { ...this.story.chestOpening } } : {}),
         ...(this.story.tyingGuard ? { tyingGuard: { ...this.story.tyingGuard } } : {}),
         ...(this.guardPatrol || this.guardCheckpoint ? { guardPatrol: (this.guardPatrol?.snapshot() ?? this.guardCheckpoint) as unknown as JSONValue } : {}),
-        ...(this.pickupSpeech ? { pickupSpeech: true } : {}),
+        ...(this.pickupSpeech ? { pickupSpeech: true, pickupAnimationElapsedMs: this.pickupAnimationElapsedMs } : {}),
         speech: this.talking && !this.conversationActive ? el('speech').textContent ?? '' : '',
         speechSpeaker: this.talking && !this.conversationActive ? el('speaker').textContent ?? 'Borin' : '' } };
   }
   validateSave(save: GameState) {
     if (!roomIds.includes(save.roomId as RoomId) || !save.characters.borin || Object.keys(save.characters).length !== 1 || save.inventory.some(item => !(item in items)) || Object.values(save.flags).some(flag => typeof flag !== 'boolean')) throw new Error('Save references unknown adventure content');
     if (save.extensions.pickupSpeech !== undefined && typeof save.extensions.pickupSpeech !== 'boolean') throw new Error('Invalid pickup speech checkpoint');
+    if (save.extensions.pickupAnimationElapsedMs !== undefined && (typeof save.extensions.pickupAnimationElapsedMs !== 'number' || !Number.isFinite(save.extensions.pickupAnimationElapsedMs) || save.extensions.pickupAnimationElapsedMs < 0)) throw new Error('Invalid pickup animation checkpoint');
     const cutscene = save.cutscene as ForestCheckpoint;
     // Older introductions had a fourth cottage shot. Version two saves keep
     // that entrance in the normal character/door checkpoints instead.
@@ -1362,6 +1364,7 @@ class ForestAdventure extends Phaser.Scene {
     this.conversation = conversation; conversation.onTurn(next => this.renderTurn(next));
     if (turn && turn.type !== 'end') this.renderTurn(turn);
     else if (save.extensions.speech) this.say(save.extensions.speech as string, typeof save.extensions.speechSpeaker === 'string' ? save.extensions.speechSpeaker : 'Borin', undefined, save.extensions.pickupSpeech ? 'pick-up-back' : undefined);
+    if (this.pickupSpeech) this.pickupAnimationElapsedMs = save.extensions.pickupAnimationElapsedMs as number ?? 0;
     this.interactionPlayback = { rotations: { ...(save.extensions.interactionRotations as Record<string, number> ?? {}) } };
     this.interactionSpeechQueue = this.talking && !this.conversationActive ? structuredClone((save.extensions.interactionSpeechQueue ?? []) as InteractionSpeechLine[]) : [];
     // Rebuilding dialog UI may start speech. Adopt the saved pose and animation
@@ -1411,7 +1414,16 @@ class ForestAdventure extends Phaser.Scene {
     this.scrollingWalk.begin(this.story.roomId, !paused && !cameraEditing);
     if (!paused) {
       const cameraBefore = { x: this.cameras.main.scrollX, y: this.cameras.main.scrollY };
-      this.binding.update(Math.min(delta, 100), { smoothLinkedMovement: this.scrollingWalk.active });
+      const frameDelta = Math.min(delta, 100);
+      this.binding.update(frameDelta, { smoothLinkedMovement: this.scrollingWalk.active });
+      if (this.pickupSpeech && this.character.state.activity === 'speaking') {
+        this.pickupAnimationElapsedMs += frameDelta;
+        if (this.pickupAnimationElapsedMs >= this.binding.animationDurationMs) {
+          this.pickupSpeech = false;
+          this.character.finishSpeech();
+          this.binding.sync();
+        }
+      }
       const previousRoom = this.story.roomId;
       this.roomTransition.update(Math.min(delta, 100));
       if (!this.talking) this.campStealth.update(Math.min(delta, 100));

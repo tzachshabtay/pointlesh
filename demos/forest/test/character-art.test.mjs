@@ -106,7 +106,8 @@ test('Borin has separate promoted artwork for back-facing dialogue and pickup sp
     const speech = manifest.assets['borin.speak-back'];
     const pickup = manifest.assets['borin.pick-up-back'];
     assert.notEqual(speech.versions[speech.activeVersion].file, pickup.versions[pickup.activeVersion].file);
-    assert.equal(pickup.versions[pickup.activeVersion].file, 'art/borin.speak-back.promoted-1790475721109.png');
+    assert.match(pickup.versions[pickup.activeVersion].file, /^art\/borin\.(?:speak|pick-up)-back\.promoted-\d+\.png$/);
+    assert.equal(pickup.animations[0].repeat, 0);
     for (const asset of [speech, pickup]) {
       assert.equal(asset.frameGrid.frameCount, 8);
       assert.equal(asset.animations[0].key, asset.id);

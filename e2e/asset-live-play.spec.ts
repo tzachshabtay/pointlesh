@@ -37,6 +37,16 @@ test('Current loads character images and animation sheets from the game server w
   await expect.poll(() => current.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
 });
 
+test('pickup pose plays once, then Borin idles behind the open speech', async ({ page }) => {
+  await openAdventure(page, true);
+  await page.evaluate(() => (window as any).pointleshDemo.scene.say('A freshly gathered treasure.', 'Borin', undefined, 'pick-up-back'));
+  await expect.poll(() => page.evaluate(() => (window as any).pointleshDemo.scene.binding.animation?.key)).toBe('borin.pick-up-back');
+  await expect.poll(() => page.evaluate(() => {
+    const scene = (window as any).pointleshDemo.scene;
+    return { activity: scene.character.state.activity, animation: scene.binding.animation?.key, speechVisible: !document.querySelector('#dialog')!.hasAttribute('hidden') };
+  }), { timeout: 5000 }).toEqual({ activity: 'idle', animation: 'borin.idle-back', speechVisible: true });
+});
+
 test('Assets leaves animation, click walking and keyboard walking live while text inputs stay isolated', async ({ page }) => {
   await openAssets(page);
   const before = await actor(page);

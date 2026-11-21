@@ -95,7 +95,7 @@ pickupBack.id = 'borin.pick-up-back';
 pickupBack.prompt = 'Borin reaches forward while facing away to pick up an item, then settles back to standing.';
 pickupBack.dimensions = { width: 300, height: 420 };
 pickupBack.frameGrid = { frameWidth: 100, frameHeight: 140, columns: 3, rows: 3, frameCount: 8 };
-pickupBack.animations = [{ key: pickupBack.id, frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 6, repeat: -1 }];
+pickupBack.animations = [{ key: pickupBack.id, frames: [0, 1, 2, 3, 4, 5, 6, 7], frameRate: 6, repeat: 0 }];
 pickupBack.activeVersion = 'pickup';
 pickupBack.versions = { pickup: {
   name: 'pickup', file: 'art/borin.speak-back.promoted-1790475721109.png', prompt: pickupBack.prompt,

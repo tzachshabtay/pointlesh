@@ -7989,7 +7989,7 @@
     "borin.pick-up-back": {
       "id": "borin.pick-up-back",
       "kind": "animation",
-      "prompt": "Borin reaches forward while facing away to pick up an item, then settles back to standing.",
+      "prompt": "Borin reaches forward while facing away to pick up an item, then settles back to standing. the item is not on the floor but in front of him.",
       "dimensions": {
         "width": 300,
         "height": 420
@@ -8005,7 +8005,7 @@
         {
           "key": "borin.pick-up-back",
           "frameRate": 6,
-          "repeat": -1,
+          "repeat": 0,
           "frames": [
             0,
             1,
@@ -8018,7 +8018,7 @@
           ]
         }
       ],
-      "activeVersion": "promoted-1790475721109",
+      "activeVersion": "promoted-1795298792697",
       "versions": {
         "promoted-1790475721109": {
           "name": "promoted-1790475721109",
@@ -8036,6 +8036,24 @@
           "audioPlayback": {},
           "voiceSettings": {},
           "notes": "Promoted from the AI asset designer."
+        },
+        "promoted-1795298792697": {
+          "name": "promoted-1795298792697",
+          "file": "art/borin.pick-up-back.promoted-1795298792697.png",
+          "prompt": "Borin reaches forward while facing away to pick up an item, then settles back to standing. the item is not on the floor but in front of him.",
+          "createdAt": "2026-11-21T22:06:32.848Z",
+          "model": "gpt-image-2.6-sunburst",
+          "settings": {
+            "format": "png",
+            "model": "gpt-image-2.6-sunburst",
+            "background": "transparent",
+            "frameAlignment": "center"
+          },
+          "audioSettings": {},
+          "audioPlayback": {},
+          "voiceSettings": {},
+          "parentVersion": "promoted-1790475721109",
+          "notes": "Promoted from the AI asset designer."
         }
       },
       "tags": [
@@ -8047,7 +8065,7 @@
       ],
       "settings": {
         "format": "png",
-        "model": "gpt-image-2.5-sunburst",
+        "model": "gpt-image-2.6-sunburst",
         "background": "transparent",
         "frameAlignment": "center"
       },
