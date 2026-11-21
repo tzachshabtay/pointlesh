@@ -16,7 +16,7 @@
     "test:site": "node --test site/test.mjs",
     "build:packages": "tsc -b packages/core packages/designer packages/dev packages/phaser",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run build:packages && node --test packages/*/test/*.test.mjs demos/forest/test/*.test.mjs",
+    "test": "npm run build:packages && node --test --test-concurrency=1 packages/*/test/*.test.mjs demos/forest/test/*.test.mjs",
     "dev": "npm run build:packages && node dev.mjs",
     "dev:server": "npm run build:packages && npm run dev:server --workspace pointlesh-forest-demo",
     "test:e2e": "playwright test"
