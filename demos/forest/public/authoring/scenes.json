@@ -889,7 +889,10 @@
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {},
+        "editor": {
+          "sceneLocal": true
+        }
       }
     },
     "forest.object.rope": {
@@ -931,7 +934,10 @@
         "behaviors": [
           "forest.interact"
         ],
-        "propertySchema": {}
+        "propertySchema": {},
+        "editor": {
+          "sceneLocal": true
+        }
       }
     },
     "forest.character.guard": {
@@ -1397,7 +1403,8 @@
         "editor": {
           "folderPath": [
             "Objects"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -1447,7 +1454,8 @@
         "editor": {
           "folderPath": [
             "Objects"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -1494,7 +1502,8 @@
         "editor": {
           "folderPath": [
             "Objects"
-          ]
+          ],
+          "sceneLocal": false
         },
         "properties": {
           "enabled": true,
@@ -1625,7 +1634,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -1756,7 +1766,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -1887,7 +1898,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2018,7 +2030,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2149,7 +2162,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2280,7 +2294,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2411,7 +2426,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2542,7 +2558,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2673,7 +2690,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2804,7 +2822,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -2935,7 +2954,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3066,7 +3086,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3197,7 +3218,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3328,7 +3350,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3459,7 +3482,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3590,7 +3614,8 @@
           "folderPath": [
             "Objects",
             "Lamps"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3721,7 +3746,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3777,7 +3803,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3833,7 +3860,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3889,7 +3917,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -3945,7 +3974,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -4001,7 +4031,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -4057,7 +4088,8 @@
           "folderPath": [
             "Objects",
             "Doors"
-          ]
+          ],
+          "sceneLocal": true
         },
         "properties": {
           "enabled": true,
@@ -4650,10 +4682,10 @@
               "locked": false,
               "overrides": {
                 "x": {
-                  "value": 35
+                  "value": 549.8616704457231
                 },
                 "y": {
-                  "value": 494
+                  "value": 471.59290159066677
                 }
               }
             }
@@ -5548,7 +5580,12 @@
             }
           ]
         }
-      ]
+      ],
+      "pointleshBackground": {
+        "assetId": "background.village-pub",
+        "visible": true,
+        "locked": false
+      }
     },
     "pub": {
       "id": "pub",
@@ -6357,7 +6394,12 @@
             }
           ]
         }
-      ]
+      ],
+      "pointleshBackground": {
+        "assetId": "background.pub",
+        "visible": true,
+        "locked": false
+      }
     },
     "house": {
       "id": "house",
@@ -7215,7 +7257,12 @@
             }
           ]
         }
-      ]
+      ],
+      "pointleshBackground": {
+        "assetId": "background.house",
+        "visible": true,
+        "locked": false
+      }
     },
     "forest": {
       "id": "forest",
@@ -8458,7 +8505,12 @@
             }
           ]
         }
-      ]
+      ],
+      "pointleshBackground": {
+        "assetId": "background.forest-wide",
+        "visible": true,
+        "locked": false
+      }
     },
     "mine": {
       "id": "mine",
@@ -8480,8 +8532,8 @@
               "locked": false,
               "overrides": {
                 "object": {
-                  "x": 471,
-                  "y": 462,
+                  "x": 453.58049151139187,
+                  "y": 465.48390608776293,
                   "scaleX": 1,
                   "scaleY": 1
                 }
@@ -8495,7 +8547,7 @@
               "id": "mine.walk.tool-chest",
               "prefabId": "forest.point.interaction",
               "name": "Walk to Runed tool chest",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -8510,7 +8562,7 @@
               "id": "mine.walk.gold",
               "prefabId": "forest.point.interaction",
               "name": "Walk to Gold seam",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -8525,7 +8577,7 @@
               "id": "mine.entry.from-forest",
               "prefabId": "forest.point.entry",
               "name": "From The Whispering Wood",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -8540,7 +8592,7 @@
               "id": "tool-chest",
               "prefabId": "forest.object.tool-chest",
               "name": "Runed tool chest",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "object": {
@@ -8571,7 +8623,7 @@
               "id": "mine.lamp.entrance",
               "prefabId": "forest.object.lamp.mine.entrance",
               "name": "Mine entrance lantern",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "object": {
@@ -8586,7 +8638,7 @@
               "id": "mine.lamp.winch",
               "prefabId": "forest.object.lamp.mine.winch",
               "name": "Winch lantern",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "object": {
@@ -8601,7 +8653,7 @@
               "id": "mine.lamp.tunnel",
               "prefabId": "forest.object.lamp.mine.tunnel",
               "name": "Distant tunnel lantern",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "object": {
@@ -8616,7 +8668,7 @@
               "id": "mine.threshold.to-forest",
               "prefabId": "forest.point.entry",
               "name": "Threshold · Back to the wood",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -8631,7 +8683,7 @@
               "id": "mine.outside.to-forest",
               "prefabId": "forest.point.entry",
               "name": "Offscreen / behind doorway · Back to the wood",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "overrides": {
                 "x": {
@@ -8639,6 +8691,21 @@
                 },
                 "y": {
                   "value": 940
+                }
+              }
+            },
+            {
+              "id": "prefab-instance-mwqqa1hs-xwsqnv",
+              "prefabId": "forest.point.interaction",
+              "name": "Walk to giants",
+              "visible": true,
+              "locked": false,
+              "overrides": {
+                "x": {
+                  "value": 218.34229934048247
+                },
+                "y": {
+                  "value": 379.9628406003491
                 }
               }
             }
@@ -8668,8 +8735,8 @@
                 },
                 {
                   "id": "floor-3",
-                  "x": 710,
-                  "y": 355
+                  "x": 694.0440200371414,
+                  "y": 441.8899579339053
                 },
                 {
                   "id": "floor-4",
@@ -8764,7 +8831,7 @@
             },
             {
               "tag": "pointlesh:area",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [
@@ -8874,7 +8941,7 @@
             },
             {
               "tag": "pointlesh:hotspot",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [
@@ -8950,7 +9017,7 @@
             },
             {
               "tag": "pointlesh:hotspot",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [
@@ -9017,7 +9084,7 @@
             {
               "id": "mine.transition.to-forest::area",
               "tag": "pointlesh:area",
-              "visible": true,
+              "visible": false,
               "locked": false,
               "closed": true,
               "vertices": [
@@ -9101,10 +9168,210 @@
                   }
                 }
               }
+            },
+            {
+              "id": "area.02a036cd-077c-4996-bac5-29d6d78d5378",
+              "tag": "pointlesh:area",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "vertex-mwqpxt39-zoo6km",
+                  "x": 781.3211020962992,
+                  "y": 470.75844532254786
+                },
+                {
+                  "id": "vertex-mwqpxuon-rk7kio",
+                  "x": 781.3211020962992,
+                  "y": 421.19047181752893
+                },
+                {
+                  "id": "vertex-mwqpz9hv-y4prju",
+                  "x": 801.1399596534261,
+                  "y": 416.3324513738994
+                },
+                {
+                  "id": "vertex-mwqpzde7-u8y1nr",
+                  "x": 813.2000150724068,
+                  "y": 403.0248040150241
+                },
+                {
+                  "id": "vertex-mwqpzg4c-6s8uqo",
+                  "x": 829.0028463110712,
+                  "y": 402.19307605509437
+                },
+                {
+                  "id": "vertex-mwqpzivm-fnfts5",
+                  "x": 841.0629017300519,
+                  "y": 408.4310357545672
+                },
+                {
+                  "id": "vertex-mwqpxwaa-jvazgs",
+                  "x": 864.1517946638966,
+                  "y": 392.49322399883374
+                },
+                {
+                  "id": "vertex-mwqpxzll-s9xxbi",
+                  "x": 946.982487231494,
+                  "y": 417.2772107513432
+                },
+                {
+                  "id": "vertex-mwqpy0w6-9xz1jc",
+                  "x": 946.3302770537964,
+                  "y": 477.93275727722164
+                },
+                {
+                  "id": "vertex-mwqpy25l-3yzwmu",
+                  "x": 873.934947329361,
+                  "y": 501.4123236743358
+                }
+              ],
+              "pointlesh": {
+                "kind": "area",
+                "name": "Gold walk behind",
+                "properties": {
+                  "enabled": true,
+                  "walkable": false,
+                  "scaleEnabled": false,
+                  "zoomEnabled": false,
+                  "walkBehindEnabled": true,
+                  "scaleAxis": "y",
+                  "zoomAxis": "y",
+                  "minScale": 0.65,
+                  "maxScale": 1,
+                  "minZoom": 1.2,
+                  "maxZoom": 1,
+                  "smoothing": 5,
+                  "baseline": 502
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "minScale": {
+                    "type": "number",
+                    "label": "Scale at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxScale": {
+                    "type": "number",
+                    "label": "Scale at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "minZoom": {
+                    "type": "number",
+                    "label": "Zoom at start",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "maxZoom": {
+                    "type": "number",
+                    "label": "Zoom at end",
+                    "min": 0.01,
+                    "step": 0.05
+                  },
+                  "smoothing": {
+                    "type": "number",
+                    "label": "Camera response",
+                    "min": 0,
+                    "step": 0.5
+                  },
+                  "baseline": {
+                    "type": "number",
+                    "label": "Baseline",
+                    "step": 1
+                  }
+                }
+              }
+            },
+            {
+              "id": "hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72",
+              "tag": "pointlesh:hotspot",
+              "visible": true,
+              "locked": false,
+              "closed": true,
+              "vertices": [
+                {
+                  "id": "vertex-mwqq5y9y-jrsk2m",
+                  "x": 89.54409261235705,
+                  "y": 254.98557818814103
+                },
+                {
+                  "id": "vertex-mwqq5zie-z553lx",
+                  "x": 78.53621462630409,
+                  "y": 240.09256679524586,
+                  "curve": {
+                    "cx": 82.42134803314632,
+                    "cy": 201.24123272682368
+                  }
+                },
+                {
+                  "id": "vertex-mwqq61uo-q708jp",
+                  "x": 106.37967070867332,
+                  "y": 183.7581323960337
+                },
+                {
+                  "id": "vertex-mwqq636r-zthpd7",
+                  "x": 131.63303785314773,
+                  "y": 191.52839920971815,
+                  "curve": {
+                    "cx": 144.5834825426218,
+                    "cy": 209.01149954050808
+                  }
+                },
+                {
+                  "id": "vertex-mwqq643n-nra9fx",
+                  "x": 140.69834913577958,
+                  "y": 231.6747777470877
+                },
+                {
+                  "id": "vertex-mwqq64v9-2hvrog",
+                  "x": 127.10038221183181,
+                  "y": 253.6905337191936
+                }
+              ],
+              "pointlesh": {
+                "kind": "hotspot",
+                "name": "Outside",
+                "properties": {
+                  "enabled": true,
+                  "label": "Outside",
+                  "cursor": "interact",
+                  "walkPointId": "prefab-instance-mwqqa1hs-xwsqnv",
+                  "approachX": 0,
+                  "approachY": 0,
+                  "approachRadius": 10
+                },
+                "behaviors": [],
+                "propertySchema": {
+                  "approachX": {
+                    "type": "number",
+                    "label": "Approach X",
+                    "step": 1
+                  },
+                  "approachY": {
+                    "type": "number",
+                    "label": "Approach Y",
+                    "step": 1
+                  },
+                  "approachRadius": {
+                    "type": "number",
+                    "label": "Approach distance",
+                    "min": 0,
+                    "step": 1
+                  }
+                }
+              }
             }
           ]
         }
-      ]
+      ],
+      "pointleshBackground": {
+        "assetId": "background.mine-camp",
+        "visible": true,
+        "locked": false
+      }
     },
     "camp": {
       "id": "camp",
@@ -10357,7 +10624,12 @@
             }
           ]
         }
-      ]
+      ],
+      "pointleshBackground": {
+        "assetId": "background.camp",
+        "visible": true,
+        "locked": false
+      }
     }
   }
 }

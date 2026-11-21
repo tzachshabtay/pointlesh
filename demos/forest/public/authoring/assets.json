@@ -1698,7 +1698,7 @@
         },
         "voice.line.dialog-option.cdcbe94f662ea371": {
           "assetId": "voice.line.dialog-option.cdcbe94f662ea371",
-          "label": "innkeeper · How do I get past an orc guard?"
+          "label": "innkeeper · How do I get past the orc guard?"
         },
         "voice.line.dialog-option.fabbbe1ce05298b6": {
           "assetId": "voice.line.dialog-option.fabbbe1ce05298b6",
@@ -1771,6 +1771,26 @@
         "voice.line.dialog-option.5d392ff104c1ae13": {
           "assetId": "voice.line.dialog-option.5d392ff104c1ae13",
           "label": "miner · I found your pickaxe."
+        },
+        "voice.line.interaction.1b9d937b8b0ccdff": {
+          "assetId": "voice.line.interaction.1b9d937b8b0ccdff",
+          "label": "scene:[\"mine\",\"hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72\"] · Look"
+        },
+        "voice.line.interaction.752d7e8f7372e232": {
+          "assetId": "voice.line.interaction.752d7e8f7372e232",
+          "label": "scene:[\"mine\",\"hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72\"] · Interact"
+        },
+        "line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00": {
+          "assetId": "line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00",
+          "label": "Gold walk behind"
+        },
+        "line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64": {
+          "assetId": "line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64",
+          "label": "Outside"
+        },
+        "line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943": {
+          "assetId": "line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943",
+          "label": "Giants Village"
         }
       },
       "settings": {},
@@ -59706,7 +59726,7 @@
       "id": "voice.line.dialog-option.cdcbe94f662ea371",
       "kind": "voice-line",
       "prompt": "Natural conversational delivery.",
-      "activeVersion": "promoted-1793664858779-4",
+      "activeVersion": "promoted-1795295352017-1",
       "versions": {
         "promoted-1793664858779-4": {
           "recordedText": "How do I get past an orc guard?",
@@ -59812,11 +59832,112 @@
             "model": "eleven_v4"
           },
           "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        },
+        "promoted-1795295352017-1": {
+          "recordedText": "How do I get past the orc guard?",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "How do I get past the orc guard?",
+            "language": "en",
+            "duration": 2.16,
+            "audioHash": "e49688a25dd369c63936870631a6fefaace8ead9803ce99522385ecc9de7dbae",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.15,
+                "shape": "X"
+              },
+              {
+                "start": 0.15,
+                "end": 0.34,
+                "shape": "C"
+              },
+              {
+                "start": 0.34,
+                "end": 0.39,
+                "shape": "E"
+              },
+              {
+                "start": 0.39,
+                "end": 0.57,
+                "shape": "F"
+              },
+              {
+                "start": 0.57,
+                "end": 0.71,
+                "shape": "B"
+              },
+              {
+                "start": 0.71,
+                "end": 0.79,
+                "shape": "A"
+              },
+              {
+                "start": 0.79,
+                "end": 0.96,
+                "shape": "C"
+              },
+              {
+                "start": 0.96,
+                "end": 1.24,
+                "shape": "B"
+              },
+              {
+                "start": 1.24,
+                "end": 1.47,
+                "shape": "E"
+              },
+              {
+                "start": 1.47,
+                "end": 1.68,
+                "shape": "D"
+              },
+              {
+                "start": 1.68,
+                "end": 1.74,
+                "shape": "C"
+              },
+              {
+                "start": 1.74,
+                "end": 1.99,
+                "shape": "B"
+              },
+              {
+                "start": 1.99,
+                "end": 2.16,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.dialog-option.cdcbe94f662ea371.promoted-1795295352017-1.mp3"
+          },
+          "name": "promoted-1795295352017-1",
+          "file": "art/voice.line.dialog-option.cdcbe94f662ea371.promoted-1795295352017-1.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-21T21:09:18.231Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "How do I get past the orc guard?",
+            "direction": "Natural conversational delivery.",
+            "provider": "elevenlabs",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "model": "eleven_v4"
+          },
+          "parentVersion": "promoted-1793664858779-4",
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
         }
       },
       "voiceSettings": {
         "voiceAssetId": "voice.borin",
-        "text": "How do I get past an orc guard?",
+        "text": "How do I get past the orc guard?",
         "direction": "Natural conversational delivery.",
         "provider": "elevenlabs",
         "voiceId": "XSzftlYznGd6V2b0eoYJ",
@@ -64019,6 +64140,656 @@
         "format": "mp3"
       },
       "audioPlayback": {}
+    },
+    "voice.line.interaction.1b9d937b8b0ccdff": {
+      "id": "voice.line.interaction.1b9d937b8b0ccdff",
+      "kind": "voice-line",
+      "prompt": "This goes to the giants village, I do not want to go there.",
+      "activeVersion": "promoted-1795285065811-3",
+      "versions": {
+        "promoted-1795285065811-3": {
+          "recordedText": "This goes to the giants village, I do not want to go there.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "This goes to the giants village, I do not want to go there.",
+            "language": "en",
+            "duration": 3.92,
+            "audioHash": "89b14c587769a5030f61958e9c9e9854e546aa392998f1d01820ba4a91cf2ce5",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.05,
+                "shape": "X"
+              },
+              {
+                "start": 0.05,
+                "end": 0.2,
+                "shape": "B"
+              },
+              {
+                "start": 0.2,
+                "end": 0.41,
+                "shape": "E"
+              },
+              {
+                "start": 0.41,
+                "end": 0.69,
+                "shape": "F"
+              },
+              {
+                "start": 0.69,
+                "end": 0.76,
+                "shape": "B"
+              },
+              {
+                "start": 0.76,
+                "end": 0.83,
+                "shape": "C"
+              },
+              {
+                "start": 0.83,
+                "end": 0.97,
+                "shape": "B"
+              },
+              {
+                "start": 0.97,
+                "end": 1.04,
+                "shape": "C"
+              },
+              {
+                "start": 1.04,
+                "end": 1.32,
+                "shape": "B"
+              },
+              {
+                "start": 1.32,
+                "end": 1.39,
+                "shape": "G"
+              },
+              {
+                "start": 1.39,
+                "end": 1.81,
+                "shape": "B"
+              },
+              {
+                "start": 1.81,
+                "end": 2.2,
+                "shape": "X"
+              },
+              {
+                "start": 2.2,
+                "end": 2.27,
+                "shape": "C"
+              },
+              {
+                "start": 2.27,
+                "end": 2.47,
+                "shape": "F"
+              },
+              {
+                "start": 2.47,
+                "end": 2.61,
+                "shape": "C"
+              },
+              {
+                "start": 2.61,
+                "end": 2.75,
+                "shape": "D"
+              },
+              {
+                "start": 2.75,
+                "end": 2.89,
+                "shape": "B"
+              },
+              {
+                "start": 2.89,
+                "end": 3.1,
+                "shape": "F"
+              },
+              {
+                "start": 3.1,
+                "end": 3.31,
+                "shape": "E"
+              },
+              {
+                "start": 3.31,
+                "end": 3.38,
+                "shape": "F"
+              },
+              {
+                "start": 3.38,
+                "end": 3.73,
+                "shape": "B"
+              },
+              {
+                "start": 3.73,
+                "end": 3.92,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.1b9d937b8b0ccdff.promoted-1795285065811-3.mp3"
+          },
+          "name": "promoted-1795285065811-3",
+          "file": "art/voice.line.interaction.1b9d937b8b0ccdff.promoted-1795285065811-3.mp3",
+          "prompt": "This goes to the giants village, I do not want to go there.",
+          "createdAt": "2026-11-21T18:22:09.147Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "This goes to the giants village, I do not want to go there.",
+            "direction": "",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "This goes to the giants village, I do not want to go there.",
+        "direction": "",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "voice.line.interaction.752d7e8f7372e232": {
+      "id": "voice.line.interaction.752d7e8f7372e232",
+      "kind": "voice-line",
+      "prompt": "No, I really don't want to go there, please don't make me.",
+      "activeVersion": "promoted-1795285065811-4",
+      "versions": {
+        "promoted-1795285065811-4": {
+          "recordedText": "No, I really don't want to go there, please don't make me.",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "No, I really don't want to go there, please don't make me.",
+            "language": "en",
+            "duration": 4.16,
+            "audioHash": "467396b45901f808e71ba0281d48e4e73a6ee51d432a2d525869a30ec138557f",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.15,
+                "shape": "C"
+              },
+              {
+                "start": 0.15,
+                "end": 0.29,
+                "shape": "E"
+              },
+              {
+                "start": 0.29,
+                "end": 0.71,
+                "shape": "F"
+              },
+              {
+                "start": 0.71,
+                "end": 0.78,
+                "shape": "D"
+              },
+              {
+                "start": 0.78,
+                "end": 0.85,
+                "shape": "B"
+              },
+              {
+                "start": 0.85,
+                "end": 1.05,
+                "shape": "A"
+              },
+              {
+                "start": 1.05,
+                "end": 1.39,
+                "shape": "B"
+              },
+              {
+                "start": 1.39,
+                "end": 1.53,
+                "shape": "E"
+              },
+              {
+                "start": 1.53,
+                "end": 1.67,
+                "shape": "F"
+              },
+              {
+                "start": 1.67,
+                "end": 1.74,
+                "shape": "E"
+              },
+              {
+                "start": 1.74,
+                "end": 1.88,
+                "shape": "F"
+              },
+              {
+                "start": 1.88,
+                "end": 2.09,
+                "shape": "E"
+              },
+              {
+                "start": 2.09,
+                "end": 2.16,
+                "shape": "F"
+              },
+              {
+                "start": 2.16,
+                "end": 2.23,
+                "shape": "B"
+              },
+              {
+                "start": 2.23,
+                "end": 2.3,
+                "shape": "C"
+              },
+              {
+                "start": 2.3,
+                "end": 2.58,
+                "shape": "B"
+              },
+              {
+                "start": 2.58,
+                "end": 2.83,
+                "shape": "A"
+              },
+              {
+                "start": 2.83,
+                "end": 3.13,
+                "shape": "B"
+              },
+              {
+                "start": 3.13,
+                "end": 3.2,
+                "shape": "E"
+              },
+              {
+                "start": 3.2,
+                "end": 3.34,
+                "shape": "F"
+              },
+              {
+                "start": 3.34,
+                "end": 3.42,
+                "shape": "A"
+              },
+              {
+                "start": 3.42,
+                "end": 3.51,
+                "shape": "C"
+              },
+              {
+                "start": 3.51,
+                "end": 3.58,
+                "shape": "B"
+              },
+              {
+                "start": 3.58,
+                "end": 3.66,
+                "shape": "A"
+              },
+              {
+                "start": 3.66,
+                "end": 3.87,
+                "shape": "B"
+              },
+              {
+                "start": 3.87,
+                "end": 4.16,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/voice.line.interaction.752d7e8f7372e232.promoted-1795285065811-4.mp3"
+          },
+          "name": "promoted-1795285065811-4",
+          "file": "art/voice.line.interaction.752d7e8f7372e232.promoted-1795285065811-4.mp3",
+          "prompt": "No, I really don't want to go there, please don't make me.",
+          "createdAt": "2026-11-21T18:23:26.307Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "No, I really don't want to go there, please don't make me.",
+            "direction": "",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "No, I really don't want to go there, please don't make me.",
+        "direction": "",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00": {
+      "id": "line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00",
+      "kind": "voice-line",
+      "prompt": "Natural conversational delivery.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Gold walk behind",
+        "direction": "",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1795285065811-1",
+      "versions": {
+        "promoted-1795285065811-1": {
+          "recordedText": "Gold walk behind",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Gold walk behind",
+            "language": "en",
+            "duration": 1.68,
+            "audioHash": "a966e48c7df776aec669cc6abf1b74f721a3e09f2e14fa36969a4647c316ef26",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.24,
+                "shape": "E"
+              },
+              {
+                "start": 0.24,
+                "end": 0.38,
+                "shape": "F"
+              },
+              {
+                "start": 0.38,
+                "end": 0.59,
+                "shape": "B"
+              },
+              {
+                "start": 0.59,
+                "end": 0.66,
+                "shape": "F"
+              },
+              {
+                "start": 0.66,
+                "end": 0.73,
+                "shape": "E"
+              },
+              {
+                "start": 0.73,
+                "end": 0.8,
+                "shape": "C"
+              },
+              {
+                "start": 0.8,
+                "end": 0.88,
+                "shape": "A"
+              },
+              {
+                "start": 0.88,
+                "end": 1.01,
+                "shape": "B"
+              },
+              {
+                "start": 1.01,
+                "end": 1.22,
+                "shape": "C"
+              },
+              {
+                "start": 1.22,
+                "end": 1.43,
+                "shape": "B"
+              },
+              {
+                "start": 1.43,
+                "end": 1.68,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00.promoted-1795285065811-1.mp3"
+          },
+          "name": "promoted-1795285065811-1",
+          "file": "art/line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00.promoted-1795285065811-1.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-21T18:20:25.585Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "Gold walk behind",
+            "direction": "",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64": {
+      "id": "line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64",
+      "kind": "voice-line",
+      "prompt": "Natural conversational delivery.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Outside",
+        "direction": "",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1795285065811-2",
+      "versions": {
+        "promoted-1795285065811-2": {
+          "recordedText": "Outside",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Outside",
+            "language": "en",
+            "duration": 1.04,
+            "audioHash": "68829ceb079e3edc8ab9d23a93b891412568f24536b866d5f5621d735ff65145",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.03,
+                "shape": "X"
+              },
+              {
+                "start": 0.03,
+                "end": 0.08,
+                "shape": "C"
+              },
+              {
+                "start": 0.08,
+                "end": 0.33,
+                "shape": "B"
+              },
+              {
+                "start": 0.33,
+                "end": 0.47,
+                "shape": "D"
+              },
+              {
+                "start": 0.47,
+                "end": 0.75,
+                "shape": "B"
+              },
+              {
+                "start": 0.75,
+                "end": 1.04,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64.promoted-1795285065811-2.mp3"
+          },
+          "name": "promoted-1795285065811-2",
+          "file": "art/line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64.promoted-1795285065811-2.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-21T18:20:53.392Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "Outside",
+            "direction": "",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
+    },
+    "line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943": {
+      "id": "line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943",
+      "kind": "voice-line",
+      "prompt": "Natural conversational delivery.",
+      "voiceSettings": {
+        "voiceAssetId": "voice.borin",
+        "text": "Giants Village",
+        "direction": "",
+        "voiceId": "XSzftlYznGd6V2b0eoYJ",
+        "provider": "elevenlabs",
+        "model": "eleven_v4"
+      },
+      "activeVersion": "promoted-1795295311845-1",
+      "versions": {
+        "promoted-1795295311845-1": {
+          "recordedText": "Giants Village",
+          "lipSyncTrack": {
+            "schemaVersion": 1,
+            "source": "rhubarb",
+            "text": "Giants Village",
+            "language": "en",
+            "duration": 1.44,
+            "audioHash": "9abfc508587605f526c3f27e74966e7d1dd91d2c05b1a51aedbd96872b253a46",
+            "analyzer": "rhubarb-1.14.0",
+            "cues": [
+              {
+                "start": 0,
+                "end": 0.04,
+                "shape": "X"
+              },
+              {
+                "start": 0.04,
+                "end": 0.18,
+                "shape": "B"
+              },
+              {
+                "start": 0.18,
+                "end": 0.46,
+                "shape": "C"
+              },
+              {
+                "start": 0.46,
+                "end": 0.6,
+                "shape": "B"
+              },
+              {
+                "start": 0.6,
+                "end": 0.74,
+                "shape": "G"
+              },
+              {
+                "start": 0.74,
+                "end": 1.23,
+                "shape": "B"
+              },
+              {
+                "start": 1.23,
+                "end": 1.44,
+                "shape": "X"
+              }
+            ],
+            "sourceFile": "art/line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943.promoted-1795295311845-1.mp3"
+          },
+          "name": "promoted-1795295311845-1",
+          "file": "art/line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943.promoted-1795295311845-1.mp3",
+          "prompt": "Natural conversational delivery.",
+          "createdAt": "2026-11-21T21:08:36.870Z",
+          "model": "eleven_v4",
+          "settings": {},
+          "audioSettings": {
+            "provider": "elevenlabs",
+            "format": "mp3"
+          },
+          "audioPlayback": {},
+          "voiceSettings": {
+            "voiceAssetId": "voice.borin",
+            "text": "Giants Village",
+            "direction": "",
+            "voiceId": "XSzftlYznGd6V2b0eoYJ",
+            "provider": "elevenlabs",
+            "model": "eleven_v4"
+          },
+          "notes": "Regenerated from the selected base voice with Regenerate all lines."
+        }
+      },
+      "settings": {},
+      "audioSettings": {
+        "provider": "elevenlabs",
+        "format": "mp3"
+      },
+      "audioPlayback": {}
     }
   },
   "styleGuide": {
@@ -65542,6 +66313,21 @@
     "background.forest-wide": [
       "Graphics",
       "Backgrounds"
+    ],
+    "voice.line.interaction.1b9d937b8b0ccdff": [
+      "Voices"
+    ],
+    "voice.line.interaction.752d7e8f7372e232": [
+      "Voices"
+    ],
+    "line.game.borin.look.mine-area.568a4811-7ae2-494b-9212-5494f7bf47cd-cb33b00": [
+      "Voices"
+    ],
+    "line.game.borin.look.mine-hotspot.574baebc-ee9d-4fb7-957a-4f23153a1613-9b7f8b64": [
+      "Voices"
+    ],
+    "line.game.borin.look.mine-hotspot.037832c7-1ab2-4c04-9213-ea80c461ce72-c0328943": [
+      "Voices"
     ]
   }
 }

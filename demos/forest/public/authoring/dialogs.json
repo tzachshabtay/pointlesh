@@ -33,13 +33,21 @@
               "id": "king",
               "text": "Where did they take the king?",
               "enabled": true,
-              "nextNodeId": "answer-king"
+              "nextNodeId": "answer-king",
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.efe573a9753331ee"
             },
             {
               "id": "advice",
               "text": "Why did they take the king?",
               "enabled": true,
-              "nextNodeId": "answer-advice"
+              "nextNodeId": "answer-advice",
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.189fc2ce9efa5b2d"
             },
             {
               "id": "father",
@@ -58,7 +66,11 @@
               "id": "goodbye",
               "text": "I will bring him home.",
               "enabled": true,
-              "nextNodeId": "answer-goodbye"
+              "nextNodeId": "answer-goodbye",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.b1040f0800639f1a"
             }
           ]
         },
@@ -165,9 +177,13 @@
           "options": [
             {
               "id": "dreamcap",
-              "text": "How do I get past an orc guard?",
+              "text": "How do I get past the orc guard?",
               "enabled": true,
-              "nextNodeId": "answer-dreamcap"
+              "nextNodeId": "answer-dreamcap",
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.cdcbe94f662ea371"
             },
             {
               "id": "buy",
@@ -176,7 +192,11 @@
               "nextNodeId": "answer-buy",
               "metadata": {
                 "hideAfterFlag": "boughtStout"
-              }
+              },
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.fabbbe1ce05298b6"
             },
             {
               "id": "king-tab",
@@ -195,7 +215,11 @@
               "id": "goodbye",
               "text": "Keep a seat by the fire for us.",
               "enabled": true,
-              "nextNodeId": "answer-goodbye"
+              "nextNodeId": "answer-goodbye",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.6f5bb30fa9293565"
             }
           ]
         },
@@ -317,13 +341,21 @@
               "nextNodeId": "answer-password",
               "metadata": {
                 "hideAfterFlag": "tookPickaxe"
-              }
+              },
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.8f479503bbc05957"
             },
             {
               "id": "mining",
               "text": "Finding much gold these days?",
               "enabled": true,
-              "nextNodeId": "answer-mining"
+              "nextNodeId": "answer-mining",
+              "exitDialog": false,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.5e4b988c52975122"
             },
             {
               "id": "pickaxe",
@@ -342,7 +374,11 @@
               "id": "goodbye",
               "text": "I should get back to the road.",
               "enabled": true,
-              "nextNodeId": "answer-goodbye"
+              "nextNodeId": "answer-goodbye",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.f7174de91b1af51f"
             }
           ]
         },
@@ -439,25 +475,41 @@
               "id": "guess",
               "text": "…where I left my keys?",
               "enabled": true,
-              "nextNodeId": "answer-guess"
+              "nextNodeId": "answer-guess",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.5bf20e4bc535db3a"
             },
             {
               "id": "bar-tab",
               "text": "My bar tab? I was hoping it would forget.",
               "enabled": true,
-              "nextNodeId": "answer-bar-tab"
+              "nextNodeId": "answer-bar-tab",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.1c831174548e9e48"
             },
             {
               "id": "bad-beard",
               "text": "That terrible beard I had at sixteen?",
               "enabled": true,
-              "nextNodeId": "answer-bad-beard"
+              "nextNodeId": "answer-bad-beard",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.b62a8f76fa49d047"
             },
             {
               "id": "knock-knock",
               "text": "Knock knock. Who’s there? A pickaxe, hopefully.",
               "enabled": true,
-              "nextNodeId": "answer-knock-knock"
+              "nextNodeId": "answer-knock-knock",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.6e1fdbc5002f6d96"
             }
           ]
         },
@@ -551,31 +603,51 @@
               "id": "open-chest",
               "text": "Stone remembers.",
               "enabled": true,
-              "nextNodeId": "answer-open-chest"
+              "nextNodeId": "answer-open-chest",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.e22f3be6196e3351"
             },
             {
               "id": "guess",
               "text": "…where I left my keys?",
               "enabled": true,
-              "nextNodeId": "answer-guess"
+              "nextNodeId": "answer-guess",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.5c3ea178072910d4"
             },
             {
               "id": "bar-tab",
               "text": "My bar tab? I was hoping it would forget.",
               "enabled": true,
-              "nextNodeId": "answer-bar-tab"
+              "nextNodeId": "answer-bar-tab",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.278c75ada454ac0a"
             },
             {
               "id": "bad-beard",
               "text": "That terrible beard I had at sixteen?",
               "enabled": true,
-              "nextNodeId": "answer-bad-beard"
+              "nextNodeId": "answer-bad-beard",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.21345380fffebcf9"
             },
             {
               "id": "knock-knock",
               "text": "Knock knock. Who’s there? A pickaxe, hopefully.",
               "enabled": true,
-              "nextNodeId": "answer-knock-knock"
+              "nextNodeId": "answer-knock-knock",
+              "exitDialog": true,
+              "spokenByCharacter": true,
+              "voiceAssetId": "voice.borin",
+              "lineAssetId": "voice.line.dialog-option.587df86ca9a3aad4"
             }
           ]
         },
